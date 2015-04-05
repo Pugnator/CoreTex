@@ -1,0 +1,414 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:special
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:rfcom
+LIBS:dc-dc
+LIBS:stm32
+LIBS:diy_diodes
+LIBS:relays
+LIBS:sensors
+LIBS:tracker-cache
+EELAYER 27 0
+EELAYER END
+$Descr User 5315 4016
+encoding utf-8
+Sheet 1 5
+Title "Switching power supply"
+Date "5 apr 2015"
+Rev "1"
+Comp "Nonamegarage"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L ST1S10PHR IC1
+U 1 1 550D477A
+P 2550 1800
+F 0 "IC1" H 2200 2099 40  0000 C CNN
+F 1 "ST1S10PHR" H 2750 2100 40  0000 C CNN
+F 2 "HSOP8" H 2551 1799 35  0000 C CIN
+F 3 "" H 2550 1800 60  0000 C CNN
+	1    2550 1800
+	1    0    0    -1  
+$EndComp
+$Comp
+L BATTERY BT1
+U 1 1 550D48A5
+P 2700 900
+F 0 "BT1" H 2700 1100 50  0000 C CNN
+F 1 "3x1.5V" H 2700 710 50  0000 C CNN
+F 2 "~" H 2700 900 60  0000 C CNN
+F 3 "~" H 2700 900 60  0000 C CNN
+	1    2700 900 
+	1    0    0    -1  
+$EndComp
+$Comp
+L CP C2
+U 1 1 550D48D2
+P 2350 1250
+F 0 "C2" H 2400 1350 40  0000 L CNN
+F 1 "16uF" H 2400 1150 40  0000 L CNN
+F 2 "~" H 2450 1100 30  0000 C CNN
+F 3 "~" H 2350 1250 300 0000 C CNN
+	1    2350 1250
+	0    -1   -1   0   
+$EndComp
+$Comp
+L INDUCTOR_SMALL L1
+U 1 1 550D49E3
+P 3450 1600
+F 0 "L1" H 3450 1700 50  0000 C CNN
+F 1 "3.3uH" H 3450 1550 50  0000 C CNN
+F 2 "~" H 3450 1600 60  0000 C CNN
+F 3 "~" H 3450 1600 60  0000 C CNN
+	1    3450 1600
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR1
+U 1 1 550D4BC6
+P 2450 2400
+F 0 "#PWR1" H 2450 2400 30  0001 C CNN
+F 1 "GND" H 2450 2330 30  0001 C CNN
+F 2 "" H 2450 2400 60  0000 C CNN
+F 3 "" H 2450 2400 60  0000 C CNN
+	1    2450 2400
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R2
+U 1 1 550D4C63
+P 3750 1900
+F 0 "R2" V 3830 1900 40  0000 C CNN
+F 1 "R" V 3757 1901 40  0000 C CNN
+F 2 "~" V 3680 1900 30  0000 C CNN
+F 3 "~" H 3750 1900 30  0000 C CNN
+	1    3750 1900
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R1
+U 1 1 550D4C69
+P 3450 2350
+F 0 "R1" V 3530 2350 40  0000 C CNN
+F 1 "R" V 3457 2351 40  0000 C CNN
+F 2 "~" V 3380 2350 30  0000 C CNN
+F 3 "~" H 3450 2350 30  0000 C CNN
+	1    3450 2350
+	0    1    1    0   
+$EndComp
+$Comp
+L CP C4
+U 1 1 550D4CF0
+P 4000 1950
+F 0 "C4" H 4050 2050 40  0000 L CNN
+F 1 "22uF" H 4050 1850 40  0000 L CNN
+F 2 "~" H 4100 1800 30  0000 C CNN
+F 3 "~" H 4000 1950 300 0000 C CNN
+	1    4000 1950
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C5
+U 1 1 550D4D10
+P 4200 1950
+F 0 "C5" H 4200 2050 40  0000 L CNN
+F 1 "0.1uF" H 4206 1865 40  0000 L CNN
+F 2 "~" H 4238 1800 30  0000 C CNN
+F 3 "~" H 4200 1950 60  0000 C CNN
+	1    4200 1950
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C3
+U 1 1 550D4D32
+P 2350 1450
+F 0 "C3" H 2350 1550 40  0000 L CNN
+F 1 "0.1uF" H 2356 1365 40  0000 L CNN
+F 2 "~" H 2388 1300 30  0000 C CNN
+F 3 "~" H 2350 1450 60  0000 C CNN
+	1    2350 1450
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR2
+U 1 1 550D4E6C
+P 2650 1350
+F 0 "#PWR2" H 2650 1350 30  0001 C CNN
+F 1 "GND" H 2650 1280 30  0001 C CNN
+F 2 "" H 2650 1350 60  0000 C CNN
+F 3 "" H 2650 1350 60  0000 C CNN
+	1    2650 1350
+	0    -1   -1   0   
+$EndComp
+$Comp
+L C C1
+U 1 1 550D4F1B
+P 1850 2100
+F 0 "C1" H 1850 2200 40  0000 L CNN
+F 1 "0.1uF" H 1856 2015 40  0000 L CNN
+F 2 "~" H 1888 1950 30  0000 C CNN
+F 3 "~" H 1850 2100 60  0000 C CNN
+	1    1850 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR4
+U 1 1 550D5299
+P 4100 2250
+F 0 "#PWR4" H 4100 2250 30  0001 C CNN
+F 1 "GND" H 4100 2180 30  0001 C CNN
+F 2 "" H 4100 2250 60  0000 C CNN
+F 3 "" H 4100 2250 60  0000 C CNN
+	1    4100 2250
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR3
+U 1 1 550D54D4
+P 3050 900
+F 0 "#PWR3" H 3050 900 30  0001 C CNN
+F 1 "GND" H 3050 830 30  0001 C CNN
+F 2 "" H 3050 900 60  0000 C CNN
+F 3 "" H 3050 900 60  0000 C CNN
+	1    3050 900 
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	2450 2200 2450 2400
+Wire Wire Line
+	3750 2150 3750 2350
+Wire Wire Line
+	3750 2200 3450 2200
+Wire Wire Line
+	3450 2200 3450 1900
+Wire Wire Line
+	3450 1900 3100 1900
+Connection ~ 3750 2200
+Wire Wire Line
+	3200 1600 3100 1600
+Wire Wire Line
+	3700 1600 4200 1600
+Wire Wire Line
+	3750 1600 3750 1650
+Connection ~ 3750 1600
+Connection ~ 4000 1600
+Wire Wire Line
+	2100 1450 2150 1450
+Wire Wire Line
+	2600 1450 2550 1450
+Wire Wire Line
+	2600 1250 2600 1450
+Wire Wire Line
+	2600 1250 2550 1250
+Wire Wire Line
+	2150 1250 2100 1250
+Wire Wire Line
+	2600 1350 2650 1350
+Connection ~ 2600 1350
+Wire Wire Line
+	2100 1250 2100 1450
+Wire Wire Line
+	1850 1350 2100 1350
+Connection ~ 2100 1350
+Wire Wire Line
+	1950 1900 2000 1900
+Wire Wire Line
+	1950 1600 1950 1900
+Wire Wire Line
+	1850 2300 1850 2350
+Wire Wire Line
+	950  2350 3200 2350
+Connection ~ 2450 2350
+Wire Wire Line
+	1850 900  1850 1900
+Wire Wire Line
+	2000 2000 1950 2000
+Wire Wire Line
+	1950 2000 1950 2350
+Connection ~ 1950 2350
+Wire Wire Line
+	3750 2350 3700 2350
+Connection ~ 2700 2350
+Wire Wire Line
+	4000 1750 4000 1600
+Wire Wire Line
+	4200 1550 4200 1750
+Wire Wire Line
+	4000 2150 4000 2200
+Wire Wire Line
+	4000 2200 4200 2200
+Wire Wire Line
+	4200 2200 4200 2150
+Wire Wire Line
+	4100 2250 4100 2200
+Connection ~ 4100 2200
+Wire Wire Line
+	2300 900  2400 900 
+Wire Wire Line
+	1850 900  1900 900 
+Connection ~ 1850 1350
+Wire Wire Line
+	3000 900  3050 900 
+$Comp
+L DIODE_SCHOTTKY D2
+U 1 1 550D5B41
+P 1550 1650
+F 0 "D2" H 1550 1750 50  0000 C CNN
+F 1 " " H 1550 1550 50  0000 C CNN
+F 2 "" H 1550 1650 60  0000 C CNN
+F 3 "" H 1550 1650 60  0000 C CNN
+	1    1550 1650
+	1    0    0    -1  
+$EndComp
+$Comp
+L DIODE_SCHOTTKY D3
+U 1 1 550D5B58
+P 2100 900
+F 0 "D3" H 2100 1000 50  0000 C CNN
+F 1 " " H 2100 800 50  0000 C CNN
+F 2 "" H 2100 900 60  0000 C CNN
+F 3 "" H 2100 900 60  0000 C CNN
+	1    2100 900 
+	-1   0    0    1   
+$EndComp
+Connection ~ 1850 2350
+Text Notes 2850 1300 0    60   ~ 0
+Switching power supply
+Wire Wire Line
+	2700 2350 2700 2200
+Text GLabel 1300 1650 1    60   Input ~ 0
+PWRIN
+$Sheet
+S -200 900  500  450 
+U 550D5521
+F0 "MCU" 50
+F1 "mcu.sch" 50
+$EndSheet
+$Sheet
+S -200 1600 500  500 
+U 550D576D
+F0 "GSM" 50
+F1 "gsm.sch" 50
+$EndSheet
+$Comp
+L TVS D1
+U 1 1 550D5B4A
+P 1200 2000
+F 0 "D1" H 1200 2150 60  0000 C CNN
+F 1 "TVS" H 1200 1850 60  0000 C CNN
+F 2 "" H 1200 2000 60  0000 C CNN
+F 3 "" H 1200 2000 60  0000 C CNN
+	1    1200 2000
+	0    -1   -1   0   
+$EndComp
+Connection ~ 4200 1600
+Wire Wire Line
+	1750 1750 2000 1750
+Connection ~ 1850 1750
+Connection ~ 1950 1750
+Connection ~ 1850 1650
+Wire Wire Line
+	2000 1600 1950 1600
+Text GLabel 1850 1350 0    60   Input ~ 0
+PWRIN2
+$Sheet
+S -200 2300 500  400 
+U 550F0684
+F0 "GPS" 50
+F1 "gps.sch" 50
+$EndSheet
+$Sheet
+S -200 2900 500  400 
+U 550F1EA1
+F0 "AUX" 50
+F1 "aux.sch" 50
+$EndSheet
+$Comp
+L MOS_P Q1
+U 1 1 55208042
+P 1550 1850
+F 0 "Q1" H 1550 2040 60  0000 R CNN
+F 1 "MOS_P" H 1550 1670 60  0000 R CNN
+F 2 "" H 1550 1850 60  0000 C CNN
+F 3 "" H 1550 1850 60  0000 C CNN
+	1    1550 1850
+	0    -1   -1   0   
+$EndComp
+Text Notes 2200 700  0    60   ~ 0
+Backup\nbattery
+Wire Wire Line
+	1750 1650 1850 1650
+Wire Wire Line
+	1350 1750 1300 1750
+Wire Wire Line
+	1300 1750 1300 1650
+Wire Wire Line
+	1300 1650 1350 1650
+Wire Wire Line
+	950  1700 1300 1700
+Connection ~ 1300 1700
+Wire Wire Line
+	1200 2350 1200 2300
+Wire Wire Line
+	1550 2050 1550 2350
+Connection ~ 1550 2350
+$Comp
+L +3V3 #PWR5
+U 1 1 55208422
+P 4200 1550
+F 0 "#PWR5" H 4200 1400 60  0001 C CNN
+F 1 "+3V3" H 4200 1690 60  0000 C CNN
+F 2 "" H 4200 1550 60  0000 C CNN
+F 3 "" H 4200 1550 60  0000 C CNN
+	1    4200 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_02X01 P1
+U 1 1 55209F18
+P 950 2000
+F 0 "P1" H 950 2100 50  0000 C CNN
+F 1 "MAIN BATTERY" H 950 2200 50  0000 C CNN
+F 2 "" H 950 800 60  0000 C CNN
+F 3 "" H 950 800 60  0000 C CNN
+	1    950  2000
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	950  1750 950  1700
+Connection ~ 1200 1700
+Wire Wire Line
+	950  2250 950  2350
+Connection ~ 1200 2350
+$EndSCHEMATC

@@ -42,7 +42,7 @@ $Descr User 9843 5512
 encoding utf-8
 Sheet 2 5
 Title ""
-Date "5 apr 2015"
+Date "9 apr 2015"
 Rev ""
 Comp ""
 Comment1 ""
@@ -1263,4 +1263,55 @@ Wire Wire Line
 Connection ~ 5650 3100
 Text GLabel 5100 2150 2    60   Input ~ 0
 SIMSLP
+Text Notes 7900 4400 0    60   ~ 0
+Magnetometer
+$Comp
+L CP C?
+U 1 1 5521E44F
+P 9100 3700
+F 0 "C?" H 9150 3800 40  0000 L CNN
+F 1 "4.7uF" H 9150 3600 40  0000 L CNN
+F 2 "" H 9200 3550 30  0000 C CNN
+F 3 "" H 9100 3700 300 0000 C CNN
+	1    9100 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 5521E455
+P 9100 3950
+F 0 "#PWR?" H 9100 3700 60  0001 C CNN
+F 1 "GND" H 9100 3800 60  0000 C CNN
+F 2 "" H 9100 3950 60  0000 C CNN
+F 3 "" H 9100 3950 60  0000 C CNN
+	1    9100 3950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8700 3400 9100 3400
+Wire Wire Line
+	9100 3400 9100 3500
+Wire Wire Line
+	9100 3900 9100 3950
+$Comp
+L C C?
+U 1 1 5521E7D5
+P 8200 4200
+F 0 "C?" H 8200 4300 40  0000 L CNN
+F 1 "0.22u" H 8206 4115 40  0000 L CNN
+F 2 "" H 8238 4050 30  0000 C CNN
+F 3 "" H 8200 4200 60  0000 C CNN
+	1    8200 4200
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7650 4000 7650 4200
+Wire Wire Line
+	7650 4200 8000 4200
+Wire Wire Line
+	8700 3600 8950 3600
+Wire Wire Line
+	8950 3600 8950 4200
+Wire Wire Line
+	8950 4200 8400 4200
 $EndSCHEMATC

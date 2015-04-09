@@ -42,7 +42,7 @@ $Descr User 5315 4016
 encoding utf-8
 Sheet 1 5
 Title "Switching power supply"
-Date "5 apr 2015"
+Date "9 apr 2015"
 Rev "1"
 Comp "Nonamegarage"
 Comment1 ""
@@ -246,7 +246,7 @@ Wire Wire Line
 Wire Wire Line
 	1950 1600 1950 1900
 Wire Wire Line
-	1850 2300 1850 2350
+	1850 2350 1850 2300
 Wire Wire Line
 	950  2350 3200 2350
 Connection ~ 2450 2350
@@ -281,17 +281,6 @@ Connection ~ 1850 1350
 Wire Wire Line
 	3000 900  3050 900 
 $Comp
-L DIODE_SCHOTTKY D2
-U 1 1 550D5B41
-P 1550 1650
-F 0 "D2" H 1550 1750 50  0000 C CNN
-F 1 " " H 1550 1550 50  0000 C CNN
-F 2 "" H 1550 1650 60  0000 C CNN
-F 3 "" H 1550 1650 60  0000 C CNN
-	1    1550 1650
-	1    0    0    -1  
-$EndComp
-$Comp
 L DIODE_SCHOTTKY D3
 U 1 1 550D5B58
 P 2100 900
@@ -307,7 +296,7 @@ Text Notes 2850 1300 0    60   ~ 0
 Switching power supply
 Wire Wire Line
 	2700 2350 2700 2200
-Text GLabel 1300 1650 1    60   Input ~ 0
+Text GLabel 1200 1700 1    60   Input ~ 0
 PWRIN
 $Sheet
 S -200 900  500  450 
@@ -334,10 +323,9 @@ F 3 "" H 1200 2000 60  0000 C CNN
 $EndComp
 Connection ~ 4200 1600
 Wire Wire Line
-	1750 1750 2000 1750
+	1850 1750 2000 1750
 Connection ~ 1850 1750
 Connection ~ 1950 1750
-Connection ~ 1850 1650
 Wire Wire Line
 	2000 1600 1950 1600
 Text GLabel 1850 1350 0    60   Input ~ 0
@@ -357,31 +345,22 @@ $EndSheet
 $Comp
 L MOS_P Q1
 U 1 1 55208042
-P 1550 1850
-F 0 "Q1" H 1550 2040 60  0000 R CNN
-F 1 "MOS_P" H 1550 1670 60  0000 R CNN
-F 2 "" H 1550 1850 60  0000 C CNN
-F 3 "" H 1550 1850 60  0000 C CNN
-	1    1550 1850
+P 1550 1800
+F 0 "Q1" H 1550 1990 60  0000 R CNN
+F 1 "MOS_P" H 1550 1620 60  0000 R CNN
+F 2 "" H 1550 1800 60  0000 C CNN
+F 3 "" H 1550 1800 60  0000 C CNN
+	1    1550 1800
 	0    -1   -1   0   
 $EndComp
 Text Notes 2200 700  0    60   ~ 0
 Backup\nbattery
 Wire Wire Line
-	1750 1650 1850 1650
-Wire Wire Line
-	1350 1750 1300 1750
-Wire Wire Line
-	1300 1750 1300 1650
-Wire Wire Line
-	1300 1650 1350 1650
-Wire Wire Line
-	950  1700 1300 1700
-Connection ~ 1300 1700
+	950  1700 1350 1700
 Wire Wire Line
 	1200 2350 1200 2300
 Wire Wire Line
-	1550 2050 1550 2350
+	1550 2000 1550 2350
 Connection ~ 1550 2350
 $Comp
 L +3V3 #PWR5
@@ -411,4 +390,7 @@ Connection ~ 1200 1700
 Wire Wire Line
 	950  2250 950  2350
 Connection ~ 1200 2350
+Wire Wire Line
+	1750 1700 1850 1700
+Connection ~ 1850 1700
 $EndSCHEMATC

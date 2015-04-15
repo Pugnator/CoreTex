@@ -3,4 +3,4 @@
 #define CRYSTAL 8000000UL
 #define PROGRAM_END for(;;)
 
-void SystemInit ( void );
+extern "C"  void SystemInit ( void );

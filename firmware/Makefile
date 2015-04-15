@@ -1,5 +1,5 @@
-CC:=arm-none-eabi-gcc
-AS:=arm-none-eabi-gcc
+CC:=arm-none-eabi-g++
+AS:=arm-none-eabi-g++
 OCOPY:=arm-none-eabi-objcopy
 STRIP:=arm-none-eabi-strip
 COPY:=cp
@@ -10,7 +10,7 @@ STARTUP:=startup_stm32f10x_md.s
 SRC=main.c usart.c config.c \
 $(STARTUP)
 
-CFLAGS+=-O0 -g3 -std=gnu99 -Wall -I. -DSTM32F10X_MD -D_GNU_SOURCE \
+CFLAGS+=-O0 -g3 --std=c++98 -Wall -I. -DSTM32F10X_MD -D_GNU_SOURCE \
 -fno-exceptions -ffunction-sections -fdata-sections -fno-builtin \
 -mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float 
 

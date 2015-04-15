@@ -1,4 +1,4 @@
-update=Вс. 05 апр. 2015 03:39:32
+update=Ср. 15 апр. 2015 03:34:17
 version=1
 last_client=eeschema
 [cvpcb]
@@ -90,3 +90,7 @@ LibName33=stm32
 LibName34=/mnt/data/Dropbox/Dev/EDA/Kicad/LIBs/kicad_diy_libraries/diy_diodes
 LibName35=relays
 LibName36=sensors
+LibName37=/mnt/data/Dropbox/Dev/EDA/Kicad/LIBs/kicad_diy_libraries/diy_connectors
+LibName38=/mnt/data/Dropbox/Dev/EDA/Kicad/LIBs/converted/con-usb
+LibName39=/mnt/data/Dropbox/Dev/EDA/Kicad/LIBs/converted/con-usb-2
+LibName40=/mnt/data/Dropbox/Dev/EDA/Kicad/LIBs/converted/con-usb-3

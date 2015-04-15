@@ -1,4 +1,4 @@
-void SystemInit( void )
+extern "C" void SystemInit( void )
 {
 	
 }

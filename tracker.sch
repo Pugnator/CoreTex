@@ -35,6 +35,10 @@ LIBS:stm32
 LIBS:diy_diodes
 LIBS:relays
 LIBS:sensors
+LIBS:diy_connectors
+LIBS:con-usb
+LIBS:con-usb-2
+LIBS:con-usb-3
 LIBS:tracker-cache
 EELAYER 27 0
 EELAYER END
@@ -42,7 +46,7 @@ $Descr User 5315 4016
 encoding utf-8
 Sheet 1 5
 Title "Switching power supply"
-Date "9 apr 2015"
+Date "15 apr 2015"
 Rev "1"
 Comp "Nonamegarage"
 Comment1 ""
@@ -281,10 +285,10 @@ Connection ~ 1850 1350
 Wire Wire Line
 	3000 900  3050 900 
 $Comp
-L DIODE_SCHOTTKY D3
+L DIODE_SCHOTTKY D2
 U 1 1 550D5B58
 P 2100 900
-F 0 "D3" H 2100 1000 50  0000 C CNN
+F 0 "D2" H 2100 1000 50  0000 C CNN
 F 1 " " H 2100 800 50  0000 C CNN
 F 2 "" H 2100 900 60  0000 C CNN
 F 3 "" H 2100 900 60  0000 C CNN

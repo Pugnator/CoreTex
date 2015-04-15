@@ -1,2 +1,2 @@
 #!/bin/bash
-arm-none-eabi-gdb ./program.elf
+arm-none-eabi-gdb ./bin/program.elf

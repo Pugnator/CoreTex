@@ -1,15 +1,5 @@
 #include <global.hpp>
 
-/*void uprint_str ( char* text )
-{
-	char* p = text;
-	while ( *p )
-	{
-		uart1_putc ( *p );
-		p++;
-	}
-}*/
-
 /* UART handling class */
 
 using namespace uart;
@@ -20,34 +10,19 @@ Uart::Uart ( int ch, int bd )
 	switch ( ch )
 	{
 		case 1:
-		#ifdef __arm__
 			init = &Uart::stm32_init1;
 			sendchr = &Uart::stm32_sendchr1;
 			getchr = &Uart::stm32_getchr1;
-		#elif _WIN32
-			//TODO
-		#elif __linux
-			//TODO
-		#endif
 			break;
-
 		case 2:
-		#ifdef __arm__
 			init = &Uart::stm32_init2;
 			sendchr = &Uart::stm32_sendchr2;
 			getchr = &Uart::stm32_getchr2;
-		#elif _WIN32
-			//TODO
-		#elif __linux
-			//TODO
-		#endif
 			break;
 		default:
 			//TODO: Check maximum channel number on current system
 			;
 	}
-	memset ( rxbuf, 0, sizeof  rxbuf );
-	memset ( txbuf, 0, sizeof  txbuf );
 }
 
 Uart::~Uart ( void )
@@ -99,4 +74,19 @@ void Uart::stm32_init2 ( void )
 	USART2->CR1 &= ~USART_CR1_M;
 	USART2->CR2 &= ~USART_CR2_STOP;
 	USART2->CR1 |= USART_CR1_UE | USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE;
+}
+
+void Uart::print ( char ch )
+{
+	( this->*sendchr ) ( ch );
+}
+
+void Uart::print ( char const* str )
+{
+	char const* p = str;
+	while ( *p )
+	{
+		( this->*sendchr ) ( *p );
+		p++;
+	}
 }

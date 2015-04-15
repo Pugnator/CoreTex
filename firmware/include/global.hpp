@@ -4,6 +4,7 @@
 #include <string.h>
 #include "io_macro.hpp"
 #include "usart.hpp"
+#include "log.hpp"
 #include "config.hpp"
 
 #define LED C, 13, SPEED_50MHz

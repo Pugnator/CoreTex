@@ -7,27 +7,27 @@ DEL:=rm
 
 STARTUP:=startup_stm32f10x_md.s
 
-SRC=main.c usart.c config.c \
+SRC=main.cc usart.cc config.cc \
 $(STARTUP)
 
 CFLAGS+=-O0 -g3 --std=c++98 -Wall -I. -DSTM32F10X_MD -D_GNU_SOURCE \
 -fno-exceptions -ffunction-sections -fdata-sections -fno-builtin \
--mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float 
+-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 
-LDFLAGS+=-Tstm32_link.ld -nostartfiles 
+LDFLAGS+=-Tstm32_link.ld -nostartfiles
 
-OBJ=$(SRC:%.c=%.o)
+OBJ=$(SRC:%.cc=%.o)
 EXEC:=program
 
 all: $(EXEC).elf
-	
-%.o: %.c	
+
+%.o: %.cc
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(EXEC).elf: $(OBJ)
-	$(CC) -o $@ $^ $(LDFLAGS)		
+	$(CC) -o $@ $^ $(LDFLAGS)
 	$(OCOPY) -O binary $(EXEC).elf $(EXEC).bin
-	
+
 
 clean:
 	rm -f $(EXEC).*

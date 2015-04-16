@@ -8,7 +8,11 @@ typedef void* HANDLE;
 
 #include "usart.hpp"
 #include "log.hpp"
-#include "hardware.hpp"
+#include "spi.hpp"
+#include "i2c.hpp"
+#include "rtc.hpp"
+#include "timers.hpp"
+#include "sdcard.hpp"
 #include "config.hpp"
 #include "text.hpp"
 

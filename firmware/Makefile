@@ -12,7 +12,11 @@ SRC:=\
 	irq.cc \
 	compat.cc \
 	log.cc \
-	hardware.cc \
+	spi.cc \
+	i2c.cc \
+	timers.cc \
+	rtc.cc \
+	sdcard.cc \
 	$(STARTUP)
 
 CFLAGS+=-O0 -g3 --std=c++98 -Wall -Iinclude -DSTM32F10X_MD -D_GNU_SOURCE \

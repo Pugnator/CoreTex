@@ -1,10 +1,17 @@
 #include <global.hpp>
 
+void assert ( int value )
+{
+	;
+}
+
+using namespace uart;
+
 int main ( void )
 {
-	uart::Uart newu ( 1,9600 );
-	
-//__ASM volatile ( "cpsie i" : : : "memory" );
-	newu.print ( "232323" );
+__ASM volatile ( "cpsie i" : : : "memory" );
+	Uart dbgout ( 1,9600, true ); //Channel 1, 9600 baud, init = true
+	//(dbgout.*init)();
+	dbgout.print ( WELCOME_TEXT );
 	PROGRAM_END;
 }

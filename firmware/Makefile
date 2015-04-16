@@ -5,8 +5,15 @@ DEL:=rm
 
 STARTUP:=startup_stm32f10x_md.s
 
-SRC=main.cc usart.cc config.cc irq.cc compat.cc log.cc \
-$(STARTUP)
+SRC:=\
+	main.cc \
+	usart.cc \
+	config.cc \
+	irq.cc \
+	compat.cc \
+	log.cc \
+	hardware.cc \
+	$(STARTUP)
 
 CFLAGS+=-O0 -g3 --std=c++98 -Wall -Iinclude -DSTM32F10X_MD -D_GNU_SOURCE \
 -fno-exceptions -ffunction-sections -fdata-sections -fno-builtin \

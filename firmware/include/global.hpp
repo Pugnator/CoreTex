@@ -3,9 +3,16 @@
 #include <stdio.h>
 #include <string.h>
 #include "io_macro.hpp"
+
+typedef void* HANDLE;
+
 #include "usart.hpp"
 #include "log.hpp"
+#include "hardware.hpp"
 #include "config.hpp"
+#include "text.hpp"
+
+
 
 #define LED C, 13, SPEED_50MHz
 
@@ -18,3 +25,5 @@ typedef enum CHANNELS
 {
 	CH1 = 1, CH2, CH3, CH4
 } CHANNELS;
+
+void assert ( int value );

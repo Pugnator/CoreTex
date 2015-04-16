@@ -3,7 +3,7 @@
 /* UART handling class */
 
 using namespace uart;
-Uart::Uart ( int ch, int bd )
+Uart::Uart ( int ch, int bd, bool doinit )
 {
 	channel = ch;
 	baud = bd;
@@ -22,6 +22,10 @@ Uart::Uart ( int ch, int bd )
 		default:
 			//TODO: Check maximum channel number on current system
 			;
+	}
+	if ( doinit )
+	{
+		( this->*init ) ();
 	}
 }
 
@@ -86,7 +90,25 @@ void Uart::print ( char const* str )
 	char const* p = str;
 	while ( *p )
 	{
-		( this->*sendchr ) ( *p );
-		p++;
+		( this->*sendchr ) ( *p++ );
 	}
+}
+
+void Uart::print ( int num )
+{
+	if ( num > 9999 )
+	{
+		this->print ( NUMBER_TOO_LARGE );
+		return;
+	}
+	int out = num;
+	buf[4] = '\0';
+	buf[3] = ( out % 10 ) + '0';
+	out /= 10;
+	buf[2] = ( out % 10 ) + '0';
+	out /= 10;
+	buf[1] = ( out % 10 ) + '0';
+	out /= 10;
+	buf[0] = ( out % 10 ) + '0';
+	this->print ( buf );
 }

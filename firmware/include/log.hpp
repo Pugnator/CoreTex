@@ -7,7 +7,7 @@ class Log
 public:
 	Log();
 	~Log();
-	void print(char const* msg);
+	void print ( char const* msg );
 private:
 	uart::Uart* debug;
 };

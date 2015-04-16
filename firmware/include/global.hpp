@@ -16,6 +16,10 @@ typedef void* HANDLE;
 #include "config.hpp"
 #include "text.hpp"
 
+/* FAT32 */
+#include "ff.h"
+#include "diskio.h"
+
 
 
 #define LED C, 13, SPEED_50MHz

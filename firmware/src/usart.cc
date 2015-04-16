@@ -10,22 +10,21 @@ Uart::Uart ( int ch, int bd, bool doinit )
 	switch ( ch )
 	{
 		case 1:
-			init = &Uart::stm32_init1;
-			sendchr = &Uart::stm32_sendchr1;
-			getchr = &Uart::stm32_getchr1;
+			Reg = ( USART_TypeDef* ) USART1_BASE;
 			break;
 		case 2:
-			init = &Uart::stm32_init2;
-			sendchr = &Uart::stm32_sendchr2;
-			getchr = &Uart::stm32_getchr2;
+			Reg = ( USART_TypeDef* ) USART2_BASE;
+			break;
+		case 3:
+			Reg = ( USART_TypeDef* ) USART3_BASE;
 			break;
 		default:
-			//TODO: Check maximum channel number on current system
+			assert ( 0 );
 			;
 	}
 	if ( doinit )
 	{
-		( this->*init ) ();
+		this->stm32_init ( );
 	}
 }
 
@@ -34,55 +33,43 @@ Uart::~Uart ( void )
 	;
 }
 
-void Uart::stm32_sendchr1 ( char ch )
+void Uart::stm32_sendchr ( char ch )
 {
-	while ( ! ( USART1->SR & USART_SR_TC ) );
-	USART1->DR=ch;
+	while ( ! ( Reg->SR & USART_SR_TC ) );
+	Reg->DR=ch;
 }
 
-char Uart::stm32_getchr1 ( void )
+char Uart::stm32_getchr ( void )
 {
-	while ( ! ( USART1->SR & USART_SR_RXNE ) );
-	return USART1->DR;
+	while ( ! ( Reg->SR & USART_SR_RXNE ) );
+	return Reg->DR;
 }
 
-void Uart::stm32_sendchr2 ( char ch )
-{
-	while ( ! ( USART2->SR & USART_SR_TC ) );
-	USART2->DR=ch;
-}
-
-char Uart::stm32_getchr2 ( void )
-{
-	while ( ! ( USART2->SR & USART_SR_RXNE ) );
-	return USART2->DR;
-}
-
-void Uart::stm32_init1 ( void )
+void Uart::stm32_init ( void )
 {
 	RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
-	PIN_OUT_ALT_PP ( TX1 );
-	PIN_INPUT_FLOATING ( RX1 );
-	USART1->BRR = ( CRYSTAL+baud/2 ) / baud;
-	USART1->CR1 &= ~USART_CR1_M;
-	USART1->CR2 &= ~USART_CR2_STOP;
-	USART1->CR1 |= USART_CR1_UE | USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE;
-}
-
-void Uart::stm32_init2 ( void )
-{
-	RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
-	PIN_OUT_ALT_PP ( TX2 );
-	PIN_INPUT_FLOATING ( RX2 );
-	USART2->BRR = ( CRYSTAL+baud/2 ) / baud;
-	USART2->CR1 &= ~USART_CR1_M;
-	USART2->CR2 &= ~USART_CR2_STOP;
-	USART2->CR1 |= USART_CR1_UE | USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE;
+	Reg->BRR = ( CRYSTAL+baud/2 ) / baud;
+	Reg->CR1 &= ~USART_CR1_M;
+	Reg->CR2 &= ~USART_CR2_STOP;
+	Reg->CR1 |= USART_CR1_UE | USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE;
+	switch ( channel )
+	{
+		case 1:
+			PIN_OUT_ALT_PP ( TX1 );
+			PIN_INPUT_FLOATING ( RX1 );
+			break;
+		case 2:
+			PIN_OUT_ALT_PP ( TX2 );
+			PIN_INPUT_FLOATING ( RX2 );
+			break;
+		case 3:
+			break;
+	}
 }
 
 void Uart::print ( char ch )
 {
-	( this->*sendchr ) ( ch );
+	this->stm32_sendchr ( ch );
 }
 
 void Uart::print ( char const* str )
@@ -90,7 +77,7 @@ void Uart::print ( char const* str )
 	char const* p = str;
 	while ( *p )
 	{
-		( this->*sendchr ) ( *p++ );
+		this->stm32_sendchr ( *p++ );
 	}
 }
 

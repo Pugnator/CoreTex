@@ -12,8 +12,8 @@ void assert ( int value )
 
 void printGPS ( Uart port )
 {
-	port.print("UTC: ");
-	port.print(rmc.utc);
+	port+"UTC: ";
+	//port+rmc.utc;
 }
 
 
@@ -25,9 +25,10 @@ __ASM volatile ( "cpsie i" : : : "memory" );
 	rmc.utc = 15;
 	Uart dbgout ( 1,115200, true );
 	Uart gps ( 2,115200, true ); //Channel 2, 115200 baud, init = true	
-	dbgout.print ( WELCOME_TEXT );	
+	dbgout+WELCOME_TEXT;	
+	dbgout+="!!!";
 	//FATFS FatFs;
 	//f_mount(&FatFs, "", 0);
-	printGPS(dbgout);
+	//printGPS(dbgout);
 	PROGRAM_END;
 }

@@ -6,18 +6,24 @@ class Uart
 {
 public:
 	Uart ( int ch, int bd, bool doinit );
-	~Uart ( void );
+	~Uart ( void );		
+	void operator+(char const* str);
+	void operator+(char c);
+	void operator+(int num);	
+	void operator+=(char const* str);
+	void operator+=(char c);
+	void operator+=(int num);	
+private:
 	void send ( char c );
 	char get ( void );
-	void getnmea ( char* buffer );
 	void print ( char ch );
 	void print ( int num );
 	void print ( char const* str );
-private:
+	void crlf ( void );
 	void init ( void );
 	int channel;
 	int baud;
-	char buf[11];
+	char buf[64];
 	USART_TypeDef* Reg;
 };
 }

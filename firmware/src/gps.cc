@@ -4,3 +4,9 @@
 4 - TX (out)
 5 - RX (in)
 6 - GND*/
+
+
+void nmea_parse ( char c )
+{
+
+}

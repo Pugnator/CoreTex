@@ -16,6 +16,8 @@ SRC:=\
 	i2c.cc \
 	timers.cc \
 	rtc.cc \
+	gps.cc \
+	gsm.cc \
 	sdcard.cc \
 	$(STARTUP)
 
@@ -23,7 +25,7 @@ CFLAGS+=-O0 -g3 --std=c++98 -Wall -Iinclude -Isrc/fat32/src -DSTM32F10X_MD -D_GN
 -fno-exceptions -ffunction-sections -fdata-sections -fno-builtin \
 -mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 
-LDFLAGS+=-Tstm32_link.ld -nostartfiles src/fat32/lib/libfat32.a
+LDFLAGS+=-Tstm32_link.ld -nostartfiles src/fat32/lib/libfat32.a -lm
 
 OBJ=$(join $(addsuffix src/, $(dir $(SRC))), $(notdir $(SRC:.cc=.o)))
 

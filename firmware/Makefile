@@ -22,7 +22,7 @@ SRC:=\
 	common.cc \
 	$(STARTUP)
 
-CFLAGS+=-O2 -g3 --std=c++98 -Wall -Iinclude -Isrc/fat32/src -DSTM32F10X_MD -D_GNU_SOURCE \
+CFLAGS+=-O0 -g3 --std=c++11 -Wall -Iinclude -Isrc/fat32/src -DSTM32F10X_MD -D_GNU_SOURCE \
 -fno-exceptions -ffunction-sections -fdata-sections -fno-builtin \
 -mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 

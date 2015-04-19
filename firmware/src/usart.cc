@@ -2,11 +2,12 @@
 
 /* UART handling class */
 
+#define UARTirq (USART1_IRQn - 1)
+
 using namespace uart;
 Uart::Uart ( int ch, int bd, bool doinit )
 {
 	channel = ch;
-	baud = bd;
 	switch ( ch )
 	{
 		case 1:
@@ -24,7 +25,7 @@ Uart::Uart ( int ch, int bd, bool doinit )
 	}
 	if ( doinit )
 	{
-		this->init ( );
+		this->init ( ch, bd );
 	}
 }
 
@@ -57,7 +58,7 @@ Uart::get ( void )
 }
 
 void
-Uart::init ( void )
+Uart::init ( int channel, int baud )
 {
 	switch ( channel )
 	{
@@ -65,20 +66,18 @@ Uart::init ( void )
 			RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
 			PIN_OUT_ALT_PP ( TX1 );
 			PIN_INPUT_FLOATING ( RX1 );
-			NVIC_EnableIRQ ( USART1_IRQn );
-			NVIC_SetPriority ( USART1_IRQn, 3 );
 			break;
 		case 2:
 			RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
 			PIN_OUT_ALT_PP ( TX2 );
 			PIN_INPUT_FLOATING ( RX2 );
-			NVIC_EnableIRQ ( USART2_IRQn );
-			NVIC_SetPriority ( USART2_IRQn, 3 );
 			break;
 		case 3:
 			break;
-	}
-	stack_pointer = -1;
+	}	
+	volatile int irqnum = UARTirq + channel;
+	NVIC_EnableIRQ ( ( IRQn_Type ) irqnum );
+	NVIC_SetPriority ( ( IRQn_Type ) irqnum, 3 );
 	Reg->BRR = ( CRYSTAL + baud / 2 ) / baud;
 	Reg->CR1 &= ~USART_CR1_M;
 	Reg->CR2 &= ~USART_CR2_STOP;
@@ -177,6 +176,17 @@ Uart::operator= ( int num )
 void
 Uart::operator& ( char const* str )
 {
-	strcpy ( buf, str );
+
 }
 
+void
+Uart::recv ( char* c, int timeout )
+{
+
+}
+
+void
+Uart::recv ( char* str, int len, int timeout )
+{
+
+}

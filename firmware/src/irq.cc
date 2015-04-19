@@ -9,37 +9,12 @@ RMCFIELD;
 int field = NONE;
 char fieldbuf[16] = {0};
 char* fieldp = 0;
-static int stack_pointer;
-char uart2stack[16];
-bool stack_ok = false;
 
 extern "C"
 {
-	static int
-	push ( char c , char* stack )
-	{
-		if ( stack_pointer < 16 )
-		{
-			stack[++stack_pointer] = c;
-			return 0;
-		}
-		return 1;
-	}
-	
-	static int
-	pop ( char* c , char* stack )
-	{
-		if ( stack_pointer >= 0 )
-		{
-			*c = stack[stack_pointer--];
-			return 0;
-		}
-		return 1;
-	}
-	
+
 	void nmea ( char c )
 	{
-		push ( c, uart2stack );
 		if ( '\n' == c )
 		{
 			PIN_TOGGLE ( LED );
@@ -72,14 +47,16 @@ extern "C"
 		USART1->SR&=~ ( USART_SR_TC|USART_SR_RXNE );
 	}
 	
-	/* GPS */
 	void USART2_IRQHandler ( void )
 	{
 		if ( USART2->SR & USART_SR_RXNE ) //receive
 		{
 			char c = USART2->DR;
-			USART1->DR = c;// echo
-			nmea ( c );
+			//USART1->DR = c;// echo
+			if ( '\n' == c )
+			{				
+				PIN_TOGGLE ( LED );				
+			}
 		}
 		else if ( USART2->SR & USART_SR_TC ) //transfer
 		{
@@ -88,7 +65,6 @@ extern "C"
 		USART2->SR&=~ ( USART_SR_TC|USART_SR_RXNE );
 	}
 	
-	/* GSM */
 	void USART3_IRQHandler ( void )
 	{
 		if ( USART3->SR & USART_SR_RXNE ) //receive
@@ -102,23 +78,11 @@ extern "C"
 		USART3->SR&=~ ( USART_SR_TC|USART_SR_RXNE );
 	}
 	
-	void RCC_IRQHandler ( void )
+	extern int main(void);
+	void Reset_Handler ( void )
 	{
-	
-	}
-	
-	void RTC_IRQHandler ( void )
-	{
-	
-	}
-	
-	void SysTick_Handler ( void )
-	{
-	
-	}
-	
-	void HardFault_Handler ( void )
-	{
-	
+		__ASM volatile ( "cpsie i" : : : "memory" );
+		main ();
+		PROGRAM_END;
 	}
 }

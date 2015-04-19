@@ -42,3 +42,7 @@ typedef struct RMC
 } RMC;
 
 extern RMC rmc;
+
+extern int ustack_pointer;
+extern char ustack[16];
+extern bool ustack_ok;

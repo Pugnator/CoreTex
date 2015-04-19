@@ -1,19 +1,49 @@
 #include <global.hpp>
 
+typedef enum RMCFIELD
+{
+	NONE = 0, GPRMC , UTC, LAT, LATDIR, LONGT, LONGDIR, SPD, HEAD, DATE, MAGVAR, MAGVARDIR, MODE, END
+}
+RMCFIELD;
+
+int field = NONE;
+char fieldbuf[16] = {0};
+char* fieldp = 0;
+static int stack_pointer;
+char uart2stack[16];
+bool stack_ok = false;
+
 extern "C"
 {
-	typedef enum RMCFIELD
+	static int
+	push ( char c , char* stack )
 	{
-		NONE = 0, GPRMC , UTC, LAT, LATDIR, LONGT, LONGDIR, SPD, HEAD, DATE, MAGVAR, MAGVARDIR, MODE, END
+		if ( stack_pointer < 16 )
+		{
+			stack[++stack_pointer] = c;
+			return 0;
+		}
+		return 1;
 	}
-	RMCFIELD;
 	
-	int field = NONE;
-	char fieldbuf[16] = {0};
-	char* fieldp = 0;
+	static int
+	pop ( char* c , char* stack )
+	{
+		if ( stack_pointer >= 0 )
+		{
+			*c = stack[stack_pointer--];
+			return 0;
+		}
+		return 1;
+	}
 	
 	void nmea ( char c )
 	{
+		push ( c, uart2stack );
+		if ( '\n' == c )
+		{
+			PIN_TOGGLE ( LED );
+		}
 		switch ( field )
 		{
 			case GPRMC:
@@ -23,8 +53,8 @@ extern "C"
 				*fieldp = c;
 				break;
 			case END:
-				*fieldp=0;				
-				field = NONE;				
+				*fieldp=0;
+				field = NONE;
 				break;
 		}
 	}
@@ -48,25 +78,8 @@ extern "C"
 		if ( USART2->SR & USART_SR_RXNE ) //receive
 		{
 			char c = USART2->DR;
-			//USART1->DR = c;// echo
-			switch ( c )
-			{
-				case '$':
-				case '\r':
-					break;
-				case '\n':
-					field++;
-					*fieldp = 0;
-					PIN_TOGGLE(LED);
-					break;
-				case ',':
-					field++;
-					fieldp = fieldbuf;
-					*fieldp = 0;
-					break;
-				default:
-					;nmea ( c );
-			}
+			USART1->DR = c;// echo
+			nmea ( c );
 		}
 		else if ( USART2->SR & USART_SR_TC ) //transfer
 		{
@@ -87,5 +100,25 @@ extern "C"
 			;
 		}
 		USART3->SR&=~ ( USART_SR_TC|USART_SR_RXNE );
+	}
+	
+	void RCC_IRQHandler ( void )
+	{
+	
+	}
+	
+	void RTC_IRQHandler ( void )
+	{
+	
+	}
+	
+	void SysTick_Handler ( void )
+	{
+	
+	}
+	
+	void HardFault_Handler ( void )
+	{
+	
 	}
 }

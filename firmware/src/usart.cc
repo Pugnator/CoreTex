@@ -28,7 +28,8 @@ Uart::Uart ( int ch, int bd, bool doinit )
 	}
 }
 
-void Uart::disable ( void )
+void
+Uart::disable ( void )
 {
 	switch ( channel )
 	{
@@ -41,19 +42,22 @@ void Uart::disable ( void )
 	}
 }
 
-void Uart::send ( char ch )
+void
+Uart::send ( char ch )
 {
 	while ( ! ( Reg->SR & USART_SR_TC ) );
 	Reg->DR=ch;
 }
 
-char Uart::get ( void )
+char
+Uart::get ( void )
 {
 	while ( ! ( Reg->SR & USART_SR_RXNE ) );
 	return Reg->DR;
 }
 
-void Uart::init ( void )
+void
+Uart::init ( void )
 {
 	switch ( channel )
 	{
@@ -74,18 +78,21 @@ void Uart::init ( void )
 		case 3:
 			break;
 	}
+	stack_pointer = -1;
 	Reg->BRR = ( CRYSTAL + baud / 2 ) / baud;
 	Reg->CR1 &= ~USART_CR1_M;
 	Reg->CR2 &= ~USART_CR2_STOP;
 	Reg->CR1 |= USART_CR1_UE | USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE;
 }
 
-void Uart::print ( char ch )
+void
+Uart::print ( char ch )
 {
 	this->send ( ch );
 }
 
-void Uart::print ( char const* str )
+void
+Uart::print ( char const* str )
 {
 	char const* p = str;
 	while ( *p )
@@ -94,72 +101,82 @@ void Uart::print ( char const* str )
 	}
 }
 
-void Uart::print ( int num )
-{		
+void
+Uart::print ( int num )
+{
 	int temp = num;
 	if ( num > INT_MAX || num < 0 )
-	{		
+	{
 		return;
-	}		
+	}
 	
 	int dcount = -1;
 	/* Calculate number of digits */
-	while (0!= temp )
+	while ( 0!= temp )
 	{
 		temp /= 10;
 		++ dcount;
-	}	
+	}
 	
 	temp = num;
 	buf[dcount+1] = '\0';
-	for(int i = dcount; i>=0 ; i--)
+	for ( int i = dcount; i>=0 ; i-- )
 	{
 		buf[i] = ( temp % 10 ) + '0';
-		temp /= 10;	
+		temp /= 10;
 	}
 	
 	this->print ( buf );
 }
 
-void Uart::crlf ( void)
+void
+Uart::crlf ( void )
 {
 	this->print ( "\r\n" );
 }
 
-void Uart::operator+=(char const *str) 
+void
+Uart::operator+= ( char const* str )
 {
-    this->print ( str );
+	this->print ( str );
 }
 
-void Uart::operator+=(char c) 
+void
+Uart::operator+= ( char c )
 {
-    this->print ( c );
+	this->print ( c );
 }
 
-void Uart::operator+=(int num) 
+void
+Uart::operator+= ( int num )
 {
-    this->print ( num );
+	this->print ( num );
 }
 
-void Uart::operator=(char const *str) 
+void
+Uart::operator= ( char const* str )
 {
-    this->print ( str );
-    this->crlf();
+	this->print ( str );
+	this->crlf();
 }
 
-void Uart::operator=(char c) 
+void
+Uart::operator= ( char c )
 {
-    this->print ( c );
-    this->crlf();
+	this->print ( c );
+	this->crlf();
 }
 
-void Uart::operator=(int num) 
+void
+Uart::operator= ( int num )
 {
-    this->print ( num );
-    this->crlf();
+	this->print ( num );
+	this->crlf();
 }
 
-void Uart::operator&(char const *str) 
+void
+Uart::operator& ( char const* str )
 {
-    strcpy(buf, str);
+	strcpy ( buf, str );
 }
+

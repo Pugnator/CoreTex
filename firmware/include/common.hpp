@@ -2,16 +2,16 @@
 
 namespace mcu
 {
-class Mcu 
+class Mcu
 {
 public:
 	Mcu();
 	~Mcu();
-	void sleep(void);
+	void sleep ( void );
 private:
 };
 }
 
 
-void delay_ms (int ms);
-void delay (int s);
+void delay_ms ( int ms );
+void delay ( int s );

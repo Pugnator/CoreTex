@@ -6,17 +6,18 @@ class Uart
 {
 public:
 	Uart ( int ch, int bd, bool doinit );
-	void disable ( void );		
-	void operator=(char const* str);
-	void operator=(char c);
-	void operator=(int num);	
-	void operator+=(char const* str);
-	void operator+=(char c);
-	void operator+=(int num);		
-	void operator&(char const* str);			
+	void disable ( void );
+	void operator= ( char const* str );
+	void operator= ( char c );
+	void operator= ( int num );
+	void operator+= ( char const* str );
+	void operator+= ( char c );
+	void operator+= ( int num );
+	void operator& ( char const* str );
+	void print_stack ( void );
+	int push ( char c );
+	int pop ( char* c );
 private:
-	int push (char c);
-	int pop (char c);
 	void send ( char c );
 	char get ( void );
 	void print ( char ch );
@@ -27,6 +28,8 @@ private:
 	int channel;
 	int baud;
 	char buf[64];
+	int stack_pointer;
+	char stack[16];
 	USART_TypeDef* Reg;
 };
 }

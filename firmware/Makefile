@@ -19,6 +19,7 @@ SRC:=\
 	gps.cc \
 	gsm.cc \
 	sdcard.cc \
+	common.cc \
 	$(STARTUP)
 
 CFLAGS+=-O0 -g3 --std=c++98 -Wall -Iinclude -Isrc/fat32/src -DSTM32F10X_MD -D_GNU_SOURCE \

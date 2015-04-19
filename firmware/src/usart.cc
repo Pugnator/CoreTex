@@ -28,7 +28,7 @@ Uart::Uart ( int ch, int bd, bool doinit )
 	}
 }
 
-Uart::~Uart ( void )
+void Uart::disable ( void )
 {
 	switch ( channel )
 	{
@@ -74,7 +74,7 @@ void Uart::init ( void )
 		case 3:
 			break;
 	}
-	Reg->BRR = ( CRYSTAL+baud / 2 ) / baud;
+	Reg->BRR = ( CRYSTAL + baud / 2 ) / baud;
 	Reg->CR1 &= ~USART_CR1_M;
 	Reg->CR2 &= ~USART_CR2_STOP;
 	Reg->CR1 |= USART_CR1_UE | USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE;
@@ -126,35 +126,40 @@ void Uart::crlf ( void)
 	this->print ( "\r\n" );
 }
 
-void Uart::operator+(char const *str) 
-{
-    this->print ( str );
-}
-
-void Uart::operator+(char c) 
-{
-    this->print ( c );
-}
-
-void Uart::operator+(int num) 
-{
-    this->print ( num );
-}
-
 void Uart::operator+=(char const *str) 
 {
     this->print ( str );
-    this->crlf();
 }
 
 void Uart::operator+=(char c) 
 {
     this->print ( c );
-    this->crlf();
 }
 
 void Uart::operator+=(int num) 
 {
     this->print ( num );
+}
+
+void Uart::operator=(char const *str) 
+{
+    this->print ( str );
     this->crlf();
+}
+
+void Uart::operator=(char c) 
+{
+    this->print ( c );
+    this->crlf();
+}
+
+void Uart::operator=(int num) 
+{
+    this->print ( num );
+    this->crlf();
+}
+
+void Uart::operator&(char const *str) 
+{
+    strcpy(buf, str);
 }

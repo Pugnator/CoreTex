@@ -7,6 +7,7 @@
 using namespace uart;
 Uart::Uart ( int ch, int bd, bool doinit )
 {
+	data.ready = false;
 	channel = ch;
 	switch ( ch )
 	{
@@ -74,7 +75,7 @@ Uart::init ( int channel, int baud )
 			break;
 		case 3:
 			break;
-	}	
+	}
 	volatile int irqnum = UARTirq + channel;
 	NVIC_EnableIRQ ( ( IRQn_Type ) irqnum );
 	NVIC_SetPriority ( ( IRQn_Type ) irqnum, 3 );
@@ -189,4 +190,44 @@ void
 Uart::recv ( char* str, int len, int timeout )
 {
 
+}
+
+/* Clear terminal ESC[2J */
+void
+Uart::cls ( void )
+{
+	this->print ( ( char ) 27 );
+	this->print ( "[2J" );
+	this->print ( ( char ) 27 );
+	this->print ( "[H" );
+}
+
+int Stack::push ( char c )
+{
+	if ( stackp < STACK_DEPTH - 1 )
+	{
+		stack[++stackp] = c;
+		return 0;
+	}
+	return 1;
+}
+
+int Stack::pop ( char* c )
+{
+	if ( stackp >= 0 )
+	{
+		*c = stack[stackp--];
+		return 0;
+	}
+	return 1;
+}
+
+void Stack::print_stack ( void )
+{
+
+	for ( int i=0; i <= stackp; i++ )
+	{
+		;
+	}
+	
 }

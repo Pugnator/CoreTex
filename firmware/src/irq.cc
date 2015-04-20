@@ -1,38 +1,41 @@
 #include <global.hpp>
 
-typedef enum RMCFIELD
-{
-	NONE = 0, GPRMC , UTC, LAT, LATDIR, LONGT, LONGDIR, SPD, HEAD, DATE, MAGVAR, MAGVARDIR, MODE, END
-}
-RMCFIELD;
-
-int field = NONE;
-char fieldbuf[16] = {0};
-char* fieldp = 0;
-
+char stack[STACK_DEPTH];
+int stackp = -1;
+bool nmeaready= false;;
 extern "C"
 {
 
-	void nmea ( char c )
+	int push ( char c )
 	{
-		if ( '\n' == c )
+		if ( stackp < STACK_DEPTH - 1 )
 		{
-			PIN_TOGGLE ( LED );
+			stack[++stackp] = c;
+			return 0;
 		}
-		switch ( field )
-		{
-			case GPRMC:
-				fieldp = fieldbuf;
-				break;
-			case UTC:
-				*fieldp = c;
-				break;
-			case END:
-				*fieldp=0;
-				field = NONE;
-				break;
-		}
+		return 1;
 	}
+	
+	int pop ( char* c )
+	{
+		if ( stackp >= 0 )
+		{
+			*c = stack[stackp--];
+			return 0;
+		}
+		return 1;
+	}
+	
+	void print_stack ( void )
+	{
+	
+		for ( int i=0; i <= stackp; i++ )
+		{
+			;
+		}
+		
+	}
+	
 	/* Debug */
 	void USART1_IRQHandler ( void )
 	{
@@ -53,9 +56,14 @@ extern "C"
 		{
 			char c = USART2->DR;
 			//USART1->DR = c;// echo
-			if ( '\n' == c )
-			{				
-				PIN_TOGGLE ( LED );				
+			if ( '\n' != c && ! nmeaready )
+			{
+				push ( c );
+			}
+			else if ( '\n' == c )
+			{
+				nmeaready = true;
+				PIN_TOGGLE ( LED );
 			}
 		}
 		else if ( USART2->SR & USART_SR_TC ) //transfer
@@ -76,13 +84,5 @@ extern "C"
 			;
 		}
 		USART3->SR&=~ ( USART_SR_TC|USART_SR_RXNE );
-	}
-	
-	extern int main(void);
-	void Reset_Handler ( void )
-	{
-		__ASM volatile ( "cpsie i" : : : "memory" );
-		main ();
-		PROGRAM_END;
 	}
 }

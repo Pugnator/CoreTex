@@ -1,7 +1,7 @@
 #include <global.hpp>
 
 using namespace uart;
-Stack nmea;
+Stack usart2data;
 
 void assert ( int value )
 {
@@ -11,12 +11,19 @@ void assert ( int value )
 int main ( void )
 {
 __ASM volatile ( "cpsie i" : : : "memory" );
-	nmea.ready = false;
+	
 	Uart dbgout ( 1, 115200, true );
 	Uart gps ( 2, 115200, true );
 	dbgout.cls();
-	dbgout = WELCOME_TEXT;
+	dbgout > WELCOME_TEXT;
+	while(false == usart2data.full);
+	usart2data >> dbgout;
+	//char res = 0;
+	//gps.recv(&res, 0);
+	//delay(2);
+	//dbgout = gps.data.get();
 	//FATFS FatFs;
 	//f_mount(&FatFs, "", 0);
 	PROGRAM_END;
 }
+

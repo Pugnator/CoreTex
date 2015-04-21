@@ -25,7 +25,6 @@
 #include "ff.h"
 #include "diskio.h"
 
-#define STACK_DEPTH 16
 #define LED C,13,SPEED_50MHz
 
 #define RX1 A,10,SPEED_50MHz
@@ -35,8 +34,4 @@
 
 void assert ( int value );
 
-extern char stack[STACK_DEPTH];
-extern int stackp;
-extern bool nmeaready;
-
-extern uart::Stack nmea;
+extern uart::Stack usart2data;

@@ -54,7 +54,8 @@ extern "C"
 	{
 		if ( USART2->SR & USART_SR_RXNE ) //receive
 		{
-			char c = USART2->DR;
+			char c = USART2->DR;			
+			usart2data + c;			
 			//USART1->DR = c;// echo
 			if ( '\n' != c && ! nmeaready )
 			{

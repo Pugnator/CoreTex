@@ -6,8 +6,7 @@
 
 using namespace uart;
 Uart::Uart ( int ch, int bd, bool doinit )
-{
-	data.ready = false;
+{	
 	channel = ch;
 	switch ( ch )
 	{
@@ -27,7 +26,7 @@ Uart::Uart ( int ch, int bd, bool doinit )
 	if ( doinit )
 	{
 		this->init ( ch, bd );
-	}
+	}	
 }
 
 void
@@ -136,60 +135,48 @@ Uart::crlf ( void )
 }
 
 void
-Uart::operator+= ( char const* str )
+Uart::operator>> ( char const* str )
 {
 	this->print ( str );
 }
 
 void
-Uart::operator+= ( char c )
+Uart::operator>> ( char c )
 {
 	this->print ( c );
 }
 
 void
-Uart::operator+= ( int num )
+Uart::operator>> ( int num )
 {
 	this->print ( num );
 }
 
 void
-Uart::operator= ( char const* str )
+Uart::operator> ( char const* str )
 {
 	this->print ( str );
 	this->crlf();
 }
 
 void
-Uart::operator= ( char c )
+Uart::operator> ( char c )
 {
 	this->print ( c );
 	this->crlf();
 }
 
 void
-Uart::operator= ( int num )
+Uart::operator> ( int num )
 {
 	this->print ( num );
 	this->crlf();
 }
 
 void
-Uart::operator& ( char const* str )
+Uart::recv ( char* c, int timeout)
 {
-
-}
-
-void
-Uart::recv ( char* c, int timeout )
-{
-
-}
-
-void
-Uart::recv ( char* str, int len, int timeout )
-{
-
+	recvsize = 1;	
 }
 
 /* Clear terminal ESC[2J */
@@ -209,6 +196,7 @@ int Stack::push ( char c )
 		stack[++stackp] = c;
 		return 0;
 	}
+	full = true;
 	return 1;
 }
 
@@ -222,12 +210,24 @@ int Stack::pop ( char* c )
 	return 1;
 }
 
-void Stack::print_stack ( void )
+void Stack::operator>> ( Uart port )
 {
 
 	for ( int i=0; i <= stackp; i++ )
 	{
-		;
+		port = stack[i];
 	}
 	
+}
+
+char Stack::get(void)
+{
+	char res;
+	this->pop(&res);
+	return res;
+}
+
+void Stack::operator+ ( char c)
+{
+	this->push(c);
 }

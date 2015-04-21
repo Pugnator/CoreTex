@@ -1,17 +1,23 @@
 #pragma once
-
-namespace mcu
-{
-class Mcu
-{
-public:
-	Mcu();
-	~Mcu();
-	void sleep ( void );
-private:
-};
-}
-
+#include <global.hpp>
 
 void delay_ms ( int ms );
 void delay ( int s );
+
+namespace Common
+{
+	class Error
+	{
+	public:
+		Error();
+		bool status;
+		char getlast();
+		char next();
+		void operator+ (char c);
+		char operator-- (void);
+	private:
+		uart::Stack errors;
+	};
+
+
+}

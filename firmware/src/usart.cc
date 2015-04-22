@@ -144,10 +144,7 @@ Uart::recv ( char* c, int timeout)
 void
 Uart::cls ( void )
 {
-	this->print ( ( char ) 27 );
-	this->print ( "[2J" );
-	this->print ( ( char ) 27 );
-	this->print ( "[H" );
+	this->print ( "\x1B[2J\x1B[H" );
 }
 
 /* Stack */

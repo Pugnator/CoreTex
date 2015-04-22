@@ -135,45 +135,6 @@ Uart::crlf ( void )
 }
 
 void
-Uart::operator<< ( char const* str )
-{
-	this->print ( str );
-}
-
-void
-Uart::operator<< ( char c )
-{
-	this->print ( c );
-}
-
-void
-Uart::operator<< ( int num )
-{
-	this->print ( num );
-}
-
-void
-Uart::operator< ( char const* str )
-{
-	this->print ( str );
-	this->crlf();
-}
-
-void
-Uart::operator< ( char c )
-{
-	this->print ( c );
-	this->crlf();
-}
-
-void
-Uart::operator< ( int num )
-{
-	this->print ( num );
-	this->crlf();
-}
-
-void
 Uart::recv ( char* c, int timeout)
 {
 	recvsize = 1;	

@@ -5,7 +5,7 @@ Stack usart2data;
 
 void assert ( int value )
 {
-	//NVIC_SystemReset();
+	NVIC_SystemReset();
 }
 
 int main ( void )
@@ -15,10 +15,10 @@ int main ( void )
 	PIN_LOW(LED);
 	Uart dbgout ( 1, 115200, true );
 	Uart gps ( 2, 115200, true );
-	dbgout.cls();
+	dbgout.cls();	
 	dbgout < WELCOME_TEXT;
-	//while(false == usart2data.full);
-	//dbgout > usart2data.str();
+	while(false == usart2data.full);
+	dbgout << "Stack size is " << (int)usart2data.len() < " bytes";
 	//char res = 0;
 	//gps.recv(&res, 0);
 	//delay(2);

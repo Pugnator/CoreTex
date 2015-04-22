@@ -1,6 +1,5 @@
 #pragma once
 #include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
@@ -33,5 +32,8 @@
 #define TX2 A,2,SPEED_50MHz
 
 void assert ( int value );
+void freopen(uart::Uart what, uart::Uart where );
 
 extern uart::Stack usart2data;
+
+

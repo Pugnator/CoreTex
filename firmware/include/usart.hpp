@@ -14,8 +14,9 @@ public:
 	Stack(void) {stackp = -1; full = false;};		
 	void operator+ ( char c );		
 	char get();	
+	char len(void){return stackp;};	
 	void reset(void){stackp = -1;};	
-	void operator>> ( Uart port );
+	void operator>> ( Uart port );	
 	char *str();	
 	bool full;
 private:	
@@ -32,12 +33,8 @@ class Uart
 public:
 	Uart ( int ch, int bd = 9600, bool doinit = false );
 	void disable ( void );
-	void operator<< ( char const* str );
-	void operator<< ( char c );
-	void operator<< ( int num );
-	void operator< ( char const* str );
-	void operator< ( char c );
-	void operator< ( int num );		
+	template<typename T> Uart& operator<< ( T x ){ print ( x ); return *this;};
+	template<typename T> Uart& operator< ( T x ){ print ( x ); crlf();return *this;};	
 	void recv ( char* c, int timeout = 0 );	
 	void cls ( void );	
 	Stack data;

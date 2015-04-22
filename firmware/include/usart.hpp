@@ -14,12 +14,12 @@ public:
 	Stack(void) {stackp = -1; full = false;};		
 	void operator+ ( char c );		
 	char get();	
-	void reset(void){stackp = -1;};
-	char operator--();	
+	void reset(void){stackp = -1;};	
 	void operator>> ( Uart port );
+	char *str();	
 	bool full;
 private:	
-	char stack[STACK_DEPTH];	
+	char stack[STACK_DEPTH + 1];	
 	int stackp;
 	int push ( char c );
 	int pop ( char* c );	
@@ -32,12 +32,12 @@ class Uart
 public:
 	Uart ( int ch, int bd = 9600, bool doinit = false );
 	void disable ( void );
-	void operator>> ( char const* str );
-	void operator>> ( char c );
-	void operator>> ( int num );
-	void operator> ( char const* str );
-	void operator> ( char c );
-	void operator> ( int num );		
+	void operator<< ( char const* str );
+	void operator<< ( char c );
+	void operator<< ( int num );
+	void operator< ( char const* str );
+	void operator< ( char c );
+	void operator< ( int num );		
 	void recv ( char* c, int timeout = 0 );	
 	void cls ( void );	
 	Stack data;

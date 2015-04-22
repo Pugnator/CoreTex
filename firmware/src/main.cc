@@ -5,19 +5,20 @@ Stack usart2data;
 
 void assert ( int value )
 {
-	NVIC_SystemReset();
+	//NVIC_SystemReset();
 }
 
 int main ( void )
 {
-__ASM volatile ( "cpsie i" : : : "memory" );
 	
+	__ASM volatile ( "cpsie i" : : : "memory" );
+	PIN_LOW(LED);
 	Uart dbgout ( 1, 115200, true );
 	Uart gps ( 2, 115200, true );
 	dbgout.cls();
-	dbgout > WELCOME_TEXT;
-	while(false == usart2data.full);
-	usart2data >> dbgout;
+	dbgout < WELCOME_TEXT;
+	//while(false == usart2data.full);
+	//dbgout > usart2data.str();
 	//char res = 0;
 	//gps.recv(&res, 0);
 	//delay(2);

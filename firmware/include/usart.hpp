@@ -1,6 +1,6 @@
 #pragma once
 
-#define STACK_DEPTH 64
+#define STACK_DEPTH 128
 
 namespace uart
 {
@@ -11,16 +11,26 @@ class Stack
 {
 
 public:	
-	Stack(void) {stackp = -1; full = false;};		
+	Stack(void) 
+	{
+		reset();
+	};		
 	void operator+ ( char c );		
 	char get();	
-	char len(void){return stackp;};	
-	void reset(void){stackp = -1;};	
+	int len(void)
+	{
+		return stackp;
+	};	
+	void reset(void)
+	{
+		stackp = -1;
+		ready = false;
+	};	
 	void operator>> ( Uart port );	
 	char *str();	
-	bool full;
-private:	
-	char stack[STACK_DEPTH + 1];	
+	bool ready;	
+	char stack[STACK_DEPTH + 1];			
+private:			
 	int stackp;
 	int push ( char c );
 	int pop ( char* c );	
@@ -33,8 +43,17 @@ class Uart
 public:
 	Uart ( int ch, int bd = 9600, bool doinit = false );
 	void disable ( void );
-	template<typename T> Uart& operator<< ( T x ){ print ( x ); return *this;};
-	template<typename T> Uart& operator< ( T x ){ print ( x ); crlf();return *this;};	
+	template <typename T> Uart& operator<< ( T arg )
+	{ 
+		print ( arg ); 
+		return *this;
+	};
+	template <typename T> Uart& operator< ( T arg )
+	{ 
+		print ( arg ); 
+		crlf();
+		return *this;
+	};	
 	void recv ( char* c, int timeout = 0 );	
 	void cls ( void );	
 	Stack data;

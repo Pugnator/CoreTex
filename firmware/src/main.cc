@@ -8,6 +8,11 @@ void assert ( int value )
 	NVIC_SystemReset();
 }
 
+bool isGPGGA (char *nmea)
+{
+	return strncmp(nmea, "$GPGGA", 6) ? false : true;
+}
+
 int main ( void )
 {
 	
@@ -16,15 +21,25 @@ int main ( void )
 	Uart dbgout ( 1, 115200, true );
 	Uart gps ( 2, 115200, true );
 	dbgout.cls();	
-	dbgout < WELCOME_TEXT;
-	while(false == usart2data.full);
-	dbgout << "Stack size is " << (int)usart2data.len() < " bytes";
-	//char res = 0;
-	//gps.recv(&res, 0);
-	//delay(2);
-	//dbgout = gps.data.get();
+	usart2data.reset();
+	dbgout < WELCOME_TEXT;	
 	//FATFS FatFs;
 	//f_mount(&FatFs, "", 0);
-	PROGRAM_END;
+	for(;;)
+	{
+		if(usart2data.ready)
+		{			
+			/* Check if string inside stack is GPGGA */			
+			if(isGPGGA(usart2data.stack))
+			{
+				dbgout < "NMEA: $GPGGA";
+			}
+			else
+			{
+				dbgout << usart2data.stack;
+			}
+			usart2data.reset();									
+		}
+	}
 }
 

@@ -18,14 +18,26 @@ extern "C"
 	
 	void USART2_IRQHandler ( void )
 	{
-		if ( USART2->SR & USART_SR_RXNE ) //receive
+		if ( USART2->SR & USART_SR_RXNE && !usart2data.ready) //receive
 		{			
 			char c = USART2->DR;			
+			if('$' != c && -1 == usart2data.len())
+			{
+				USART2->SR&=~ ( USART_SR_TC|USART_SR_RXNE );
+				return;
+			}
+
 			if('\n' == c)
 			{
-				PIN_TOGGLE(LED);
+				usart2data + c;	
+				PIN_TOGGLE(LED);				
+				usart2data.ready = true;								
 			}
-			usart2data + c;			
+			else
+			{
+				usart2data + c;			
+			}
+			
 			//USART1->DR = c;// echo			
 		}
 		else if ( USART2->SR & USART_SR_TC ) //transfer

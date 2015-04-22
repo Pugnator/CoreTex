@@ -154,12 +154,15 @@ Uart::cls ( void )
 
 int Stack::push ( char c )
 {
+	if(0 == c)
+		return 1;
+
 	if ( stackp < STACK_DEPTH - 1 )
 	{
 		stack[++stackp] = c;
 		return 0;
 	}
-	full = true;
+	ready = true;
 	return 1;
 }
 
@@ -175,7 +178,7 @@ int Stack::pop ( char* c )
 
 void Stack::operator>> ( Uart port )
 {
-	for ( int i=0; i <= stackp; i++ )
+	for ( int i=1; i < stackp; i++ )
 	{
 		port < stack[i];
 	}
@@ -192,4 +195,10 @@ char Stack::get(void)
 void Stack::operator+ ( char c)
 {
 	this->push(c);
+}
+
+
+char *Stack::str(void)
+{	
+	return stack;
 }

@@ -3,9 +3,11 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <limits.h>
 #include "io_macro.hpp"
 
+#include "version.hpp"
 #include "usart.hpp"
 #include "log.hpp"
 #include "spi.hpp"
@@ -24,6 +26,9 @@
 #include "ff.h"
 #include "diskio.h"
 
+#define OFF false
+#define ON true
+
 #define LED C,13,SPEED_50MHz
 
 #define RX1 A,10,SPEED_50MHz
@@ -32,8 +37,9 @@
 #define TX2 A,2,SPEED_50MHz
 
 void assert ( int value );
-void freopen(uart::Uart what, uart::Uart where );
+void freopen ( uart::Uart what, uart::Uart where );
 
 extern uart::Stack usart2data;
 
+extern uint16_t spresponse;
 

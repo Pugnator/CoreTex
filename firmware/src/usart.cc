@@ -6,7 +6,7 @@
 
 using namespace uart;
 Uart::Uart ( int ch, int bd, bool doinit )
-{	
+{
 	channel = ch;
 	switch ( ch )
 	{
@@ -25,8 +25,8 @@ Uart::Uart ( int ch, int bd, bool doinit )
 	}
 	if ( doinit )
 	{
-		this->init ( ch, bd );
-	}	
+		init ( ch, bd );
+	}
 }
 
 void
@@ -87,7 +87,7 @@ Uart::init ( int channel, int baud )
 void
 Uart::print ( char ch )
 {
-	this->send ( ch );
+	send ( ch );
 }
 
 void
@@ -96,7 +96,7 @@ Uart::print ( char const* str )
 	char const* p = str;
 	while ( *p )
 	{
-		this->send ( *p++ );
+		send ( *p++ );
 	}
 }
 
@@ -106,6 +106,7 @@ Uart::print ( int num )
 	int temp = num;
 	if ( num > INT_MAX || num < 0 )
 	{
+		print ( "Can't display number" );
 		return;
 	}
 	
@@ -125,35 +126,28 @@ Uart::print ( int num )
 		temp /= 10;
 	}
 	
-	this->print ( buf );
+	print ( buf );
 }
 
 void
 Uart::crlf ( void )
 {
-	this->print ( "\r\n" );
+	print ( "\r\n" );
 }
 
 void
-Uart::recv ( char* c, int timeout)
+Uart::recv ( char* c, int timeout )
 {
-	recvsize = 1;	
-}
-
-/* Clear terminal ESC[2J */
-void
-Uart::cls ( void )
-{
-	this->print ( "\x1B[2J\x1B[H" );
+	recvsize = 1;
 }
 
 /* Stack */
 
 int Stack::push ( char c )
 {
-	if(0 == c)
+	if ( 0 == c )
 		return 1;
-
+		
 	if ( stackp < STACK_DEPTH - 1 )
 	{
 		stack[++stackp] = c;
@@ -182,20 +176,28 @@ void Stack::operator>> ( Uart port )
 	
 }
 
-char Stack::get(void)
+char Stack::get ( void )
 {
 	char res;
-	this->pop(&res);
+	pop ( &res );
 	return res;
 }
 
-void Stack::operator+ ( char c)
+void Stack::operator+ ( char c )
 {
-	this->push(c);
+	push ( c );
 }
 
 
-char *Stack::str(void)
-{	
+char* Stack::str ( void )
+{
 	return stack;
 }
+
+
+int NMEA::utc ( void )
+{
+	//char *p = nmea;
+	return 132;
+}
+

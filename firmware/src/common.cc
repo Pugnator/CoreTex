@@ -1,5 +1,38 @@
 #include <global.hpp>
 
+uint32_t str16_to_uint ( char const* str )
+{
+	uint32_t res = 0;
+	char c = 0;
+	while ( *str )
+	{
+		c = *str;
+		res <<= 4;
+		res += ( c > '9' ) ? ( c & 0xDFu ) - 0x37u: ( c - '0' );
+		++str;
+	}
+	return res;
+}
+
+uint32_t str10_to_uint ( char const* str )
+{
+	uint32_t res = 0;
+	while ( *str )
+	{
+		if ( ( *str >= '0' ) && ( *str <= '9' ) )
+		{
+			res = ( res * 10 ) + ( ( *str ) - '0' );
+		}
+		else
+		{
+			//error here!
+			return 0;
+		}
+		str++;
+	}
+	return res;
+}
+
 void delay_ms ( int ms )
 {
 	volatile int nCount= ( CRYSTAL/10000/2 ) *ms;
@@ -9,14 +42,6 @@ void delay_ms ( int ms )
 void delay ( int s )
 {
 	delay_ms ( s*1000 );
-}
-
-using namespace Common;
-
-
-Error::Error(void)
-{
-	status = false;
 }
 
 

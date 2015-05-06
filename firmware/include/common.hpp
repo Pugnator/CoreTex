@@ -3,21 +3,5 @@
 
 void delay_ms ( int ms );
 void delay ( int s );
-
-namespace Common
-{
-	class Error
-	{
-	public:
-		Error();
-		bool status;
-		char getlast();
-		char next();
-		void operator+ (char c);
-		char operator-- (void);
-	private:
-		uart::Stack errors;
-	};
-
-
-}
+uint32_t str16_to_uint ( char const* str );
+uint32_t str10_to_uint ( char const* str );

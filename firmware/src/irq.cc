@@ -1,15 +1,22 @@
 #include <global.hpp>
 
-uint16_t spresponse = 0;
-
 extern "C"
 {
+	void SysTick_Handler(void)
+	{
+		--tickcounter;				
+		if(!tickcounter)
+		{			
+			//SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
+		}
+	}
+
 	void SPI1_IRQHandler ( void )
 	{
 		if ( SET == (SPI1->SR & SPI_SR_RXNE) )
 		{
 			PIN_TOGGLE ( LED );			
-			spresponse = SPI1->DR;
+			//spresponse = SPI1->DR;
 		}
 		else
 		{
@@ -34,8 +41,11 @@ extern "C"
 	void USART2_IRQHandler ( void )
 	{
 		if ( USART2->SR & USART_SR_RXNE && !usart2data.ready ) //receive
-		{
+		{		
 			char c = USART2->DR;
+			USART1->DR = c;
+			USART2->SR&=~ ( USART_SR_TC|USART_SR_RXNE );
+			return;
 			parseNMEA ( c );
 			if ( '$' != c && -1 == usart2data.len() )
 			{
@@ -51,9 +61,7 @@ extern "C"
 			else
 			{
 				usart2data + c;
-			}
-
-			//USART1->DR = c;// echo
+			}			
 		}
 		else if ( USART2->SR & USART_SR_TC ) //transfer
 		{
@@ -65,8 +73,8 @@ extern "C"
 	void USART3_IRQHandler ( void )
 	{
 		if ( USART3->SR & USART_SR_RXNE ) //receive
-		{
-
+		{				
+			USART1->DR = USART3->DR;
 		}
 		else if ( USART3->SR & USART_SR_TC ) //transfer
 		{

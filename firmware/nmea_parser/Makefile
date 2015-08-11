@@ -3,9 +3,9 @@ OCOPY:=arm-none-eabi-objcopy
 STRIP:=arm-none-eabi-strip
 DEL:=rm
 
-SRC:=main.c
+SRC:=main.c gga.c
 
-CFLAGS+=-O0 -g3 --std=gnu99 -Wall
+CFLAGS+=-O0 -g3 --std=gnu99 -Wall -I.
 
 EXEC:=znmea
 OBJ:=$(SRC:.c=.o)

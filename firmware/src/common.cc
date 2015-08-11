@@ -1,5 +1,7 @@
 #include <global.hpp>
 
+uint32_t tickcounter;
+
 uint32_t str16_to_uint ( char const* str )
 {
 	uint32_t res = 0;
@@ -33,13 +35,13 @@ uint32_t str10_to_uint ( char const* str )
 	return res;
 }
 
-void delay_ms ( int ms )
+void delay_ms(uint32_t ms)
 {
-	volatile int nCount= ( CRYSTAL/10000/2 ) *ms;
-	for ( ; nCount!=0; nCount-- );
+    tickcounter = ms;        
+    while(tickcounter);    
 }
 
-void delay ( int s )
+void delay ( uint32_t s )
 {
 	delay_ms ( s*1000 );
 }

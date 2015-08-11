@@ -20,6 +20,7 @@ SRC:=\
 	gsm.cc \
 	sdcard.cc \
 	common.cc \
+	morse.cc \
 	$(STARTUP)
 
 CFLAGS+=-O0 -g3 --std=c++11 -Wall -Iinclude -Isrc/fat32/src -DSTM32F10X_MD -D_GNU_SOURCE \

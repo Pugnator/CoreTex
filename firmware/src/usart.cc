@@ -40,13 +40,16 @@ Uart::disable ( void )
 		case 2:
 			NVIC_DisableIRQ ( USART2_IRQn );
 			break;
+		case 3:
+			NVIC_DisableIRQ ( USART3_IRQn );
+			break;
 	}
 }
 
 void
 Uart::send ( char ch )
 {
-	while ( ! ( Reg->SR & USART_SR_TC ) );
+	while ( ! ( Reg->SR & USART_SR_TC ) );	
 	Reg->DR=ch;
 }
 
@@ -73,6 +76,9 @@ Uart::init ( int channel, int baud )
 			PIN_INPUT_FLOATING ( RX2 );
 			break;
 		case 3:
+			RCC->APB1ENR |= RCC_APB1ENR_USART3EN;
+			PIN_OUT_ALT_PP ( TX3 );
+			PIN_INPUT_FLOATING ( RX3 );
 			break;
 	}
 	volatile int irqnum = UARTirq + channel;

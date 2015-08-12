@@ -30,9 +30,6 @@ void (*fillNMEActx)(int,const char*);
 nmeactx nmea;
 int nmeaerr = 0;
 
-static const char* nmeastr =
-	"$GPGGA,090712.000,5553.2371,N,03739.1067,E,1,10,0.90,182.9,M,14.4,M,,*65\r\n$GPGGA,090713.000,5553.2371,N,03739.1066,E,1,10,0.90,182.9,M,14.4,M,,*65\r\n";
-
 void parseNMEA ( char c );
 
 #define NMEA_MAX_LEN 82
@@ -40,7 +37,7 @@ void parseNMEA ( char c );
 int sect = 0;
 char fstr[16] = {0};
 char* fp = NULL;
-uint16_t checksum = 0;
+uint8_t checksum = 0;
 bool sumdone = false;
 bool nmeaok = false;
 
@@ -52,7 +49,7 @@ typedef enum NMEATALKER
 
 typedef enum NMEATYPE
 {
-	GGA, GSV, VTG, RMC, GSA, WRONG
+	GGA=1, GSV, VTG, RMC, GSA, WRONG
 }NMEATYPE;
 
 const char nmeatempl;
@@ -99,7 +96,7 @@ NMEATALKER get_nmea_talker (const char *field)
 }
 
 
-//From http://stackoverflow.com/questions/19569965/hexadecimal-string-conversion-to-integer-in-c
+//by Fallout [FXD team]
 uint32_t str16_to_uint ( char const* str )
 {
 	uint32_t res = 0;
@@ -149,7 +146,7 @@ void latlon2crd (const char *str, coord *c)
 	c->deg = str10_to_uint(latlon);
 }
 
-bool ckecknmea ( uint16_t sum, char* string )
+bool ckecknmea ( uint8_t sum, char* string )
 {
 	return str16_to_uint ( string ) == sum;
 }
@@ -164,28 +161,36 @@ void nmeactxreset (void)
 	checksum = 0;
 }
 
+void printPS (void)
+{
+	printf ( "Checksum: %s\n", nmeaok ? "OK":"ERROR" );
+	if(!nmeaok)
+	{
+		printf("%d\n", checksum);
+	}
+	printf("UTC:%u\n", nmea.utc);
+	printf("LAT: %.3u.%.2u\'%.2u\" %c\n", nmea.lat.deg, nmea.lat.min, nmea.lat.sec, nmea.lat.dir);
+	printf("LON: %.3u.%.2u\'%.2u\" %c\n", nmea.lon.deg, nmea.lon.min, nmea.lon.sec, nmea.lon.dir);
+	printf("KMH: %.2f\n", nmea.kmh);
+	printf("KTS: %.2f\n", nmea.knots);
+}
+
 void parseNMEA ( char c )
 {
 	if(nmeaerr && '$' != c)
 		return;
 	switch ( c )
 	{
-
-		case '\n':
-			printf ( "Checksum: %s\n", nmeaok ? "OK":"ERROR" );
-			printf("UTC:%u\n", nmea.utc);
-			printf("LAT: %.3u.%.2u\'%.2u\" %c\n", nmea.lat.deg, nmea.lat.min, nmea.lat.sec, nmea.lat.dir);
-			printf("LON: %.3u.%.2u\'%.2u\" %c\n", nmea.lon.deg, nmea.lon.min, nmea.lon.sec, nmea.lon.dir);
-			break;
 		case '$':
 			nmeactxreset();
 			*fp++ = c;
 			break;
 		case '*':
 			sumdone = true;
+		case '\n':
 		case '\r':
 		case ',':
-			if(TYPE == sect)
+			if(0 == sect)
 			{
 				switch(get_nmea_sent_type(fstr))
 				{
@@ -193,13 +198,18 @@ void parseNMEA ( char c )
 					puts("GGA string");
 					fillNMEActx = &fillGGActx;
 					break;
-					default:
+					case VTG:
+					puts("VTG string");
+					fillNMEActx = &fillVTGctx;
 					break;
 				}
 			}
 			if ( sumdone && '\r' == c )
 			{
 				nmeaok = ckecknmea ( checksum, fstr );
+				printPS();
+				checksum = 0;
+				break;
 			}
 			fillNMEActx(sect, fstr);
 			sect++;
@@ -209,12 +219,20 @@ void parseNMEA ( char c )
 		default:
 			*fp++ = c;
 			if ( !sumdone )
+			{
+				//printf ("Char: %c\n", c);
 				checksum ^= c;
+			}
 	}
 }
 
 int main ( void )
 {
+	static const char* nmeastr =
+	"$GPGGA,090712.000,5553.2371,N,03739.1067,E,1,10,0.90,182.9,M,14.4,M,,*65\r\n\
+	$GPVTG,113.81,T,,M,0.35,N,0.64,K,A*33\r\n\
+	$GPVTG,113.81,T,,M,0.35,N,0.64,K,A*33\r\n\
+	$GPGGA,090713.000,5553.2371,N,03739.1066,E,1,10,0.90,182.9,M,14.4,M,,*65\r\n";
 	char const* p = nmeastr;
 	while ( *p )
 	{

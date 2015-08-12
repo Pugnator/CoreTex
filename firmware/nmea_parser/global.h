@@ -24,14 +24,17 @@ typedef struct nmeactx
 	coord lat;
 	coord lon;
 	uint msl;
+	double knots;
+	double kmh;
 }nmeactx;
 
 uint32_t str16_to_uint ( char const* str );
 uint32_t str10_to_uint ( char const* str );
 void latlon2crd (const char *str, coord *c);
-bool ckecknmea ( uint16_t sum, char* string );
+bool ckecknmea ( uint8_t sum, char* string );
 
 extern nmeactx nmea;
 extern int nmeaerr;
 
 #include <gga.h>
+#include <vtg.h>

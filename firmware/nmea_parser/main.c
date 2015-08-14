@@ -28,18 +28,10 @@ $GPVTG,113.81,T,,M,0.31,N,0.58,K,A*38
 
 void (*fillNMEActx)(int,const char*);
 nmeactx nmea;
-int nmeaerr = 0;
 
 void parseNMEA ( char c );
 
 #define NMEA_MAX_LEN 82
-
-int sect = 0;
-char fstr[16] = {0};
-char* fp = NULL;
-uint8_t checksum = 0;
-bool sumdone = false;
-bool nmeaok = false;
 
 
 typedef enum NMEATALKER
@@ -153,21 +145,17 @@ bool ckecknmea ( uint8_t sum, char* string )
 
 void nmeactxreset (void)
 {
-	fp = fstr;
-	sect = 0;
-	sumdone = false;
-	nmeaok = false;
-	nmeaerr = 0;
-	checksum = 0;
+	nmea.fp = nmea.fstr;
+	nmea.sect = 0;
+	nmea.sumdone = false;
+	nmea.nmeaok = false;
+	nmea.nmeaerr = 0;
+	nmea.checksum = 0;
 }
 
 void printPS (void)
 {
-	printf ( "Checksum: %s\n", nmeaok ? "OK":"ERROR" );
-	if(!nmeaok)
-	{
-		printf("%d\n", checksum);
-	}
+	printf ( "Checksum: %s\n", nmea.nmeaok ? "OK":"ERROR" );
 	printf("UTC:%u\n", nmea.utc);
 	printf("LAT: %.3u.%.2u\'%.2u\" %c\n", nmea.lat.deg, nmea.lat.min, nmea.lat.sec, nmea.lat.dir);
 	printf("LON: %.3u.%.2u\'%.2u\" %c\n", nmea.lon.deg, nmea.lon.min, nmea.lon.sec, nmea.lon.dir);
@@ -177,22 +165,34 @@ void printPS (void)
 
 void parseNMEA ( char c )
 {
-	if(nmeaerr && '$' != c)
+	if(nmea.nmeaerr && '$' != c)
 		return;
 	switch ( c )
 	{
 		case '$':
 			nmeactxreset();
-			*fp++ = c;
+			*nmea.fp++ = c;
 			break;
-		case '*':
-			sumdone = true;
+		case '*':	
+			nmea.sumdone=true;
+			nmea.sect++;
+			memset ( nmea.fstr, 0, sizeof nmea.fstr );
+			nmea.fp = nmea.fstr;
+			break;
 		case '\n':
+			break;
 		case '\r':
+			//printf("Calculated sum: %X [%s]\n", checksum, fstr);
+			nmea.nmeaok = ckecknmea ( nmea.checksum, nmea.fstr );
+			printPS();
+			nmea.checksum = 0;
+			break;
 		case ',':
-			if(0 == sect)
+			nmea.checksum ^= c;
+			//printf("char: \"%c\", [%X]\n",c , checksum);
+			if(0 == nmea.sect)
 			{
-				switch(get_nmea_sent_type(fstr))
+				switch(get_nmea_sent_type(nmea.fstr))
 				{
 					case GGA:
 					puts("GGA string");
@@ -202,26 +202,24 @@ void parseNMEA ( char c )
 					puts("VTG string");
 					fillNMEActx = &fillVTGctx;
 					break;
+					case RMC:
+					puts("RMC string");
+					fillNMEActx = &fillRMCctx;
+					break;
 				}
 			}
-			if ( sumdone && '\r' == c )
-			{
-				nmeaok = ckecknmea ( checksum, fstr );
-				printPS();
-				checksum = 0;
-				break;
-			}
-			fillNMEActx(sect, fstr);
-			sect++;
-			memset ( fstr, 0, sizeof fstr );
-			fp = fstr;
+			fillNMEActx(nmea.sect, nmea.fstr);
+			nmea.sect++;
+			memset ( nmea.fstr, 0, sizeof nmea.fstr );
+			nmea.fp = nmea.fstr;
 			break;
 		default:
-			*fp++ = c;
-			if ( !sumdone )
+			*nmea.fp++ = c;
+			if ( !nmea.sumdone )
 			{
-				//printf ("Char: %c\n", c);
-				checksum ^= c;
+				//printf ("%c", c);
+				//printf("char: \"%c\", [%X]\n",c , checksum);
+				nmea.checksum ^= c;
 			}
 	}
 }
@@ -229,10 +227,9 @@ void parseNMEA ( char c )
 int main ( void )
 {
 	static const char* nmeastr =
-	"$GPGGA,090712.000,5553.2371,N,03739.1067,E,1,10,0.90,182.9,M,14.4,M,,*65\r\n\
-	$GPVTG,113.81,T,,M,0.35,N,0.64,K,A*33\r\n\
-	$GPVTG,113.81,T,,M,0.35,N,0.64,K,A*33\r\n\
-	$GPGGA,090713.000,5553.2371,N,03739.1066,E,1,10,0.90,182.9,M,14.4,M,,*65\r\n";
+	"$GPVTG,113.81,T,,M,0.31,N,0.58,K,A*38\r\n\
+	$GPGGA,090712.000,5553.2371,N,03739.1067,E,1,10,0.90,182.9,M,14.4,M,,*65\r\n\
+	";
 	char const* p = nmeastr;
 	while ( *p )
 	{

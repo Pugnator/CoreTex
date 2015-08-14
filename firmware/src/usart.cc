@@ -3,6 +3,7 @@
 /* UART handling class */
 
 #define UARTirq (USART1_IRQn - 1)
+uint32_t uarttimeout = 0;
 
 using namespace uart;
 Uart::Uart ( int ch, int bd, bool doinit )
@@ -49,14 +50,16 @@ Uart::disable ( void )
 void
 Uart::send ( char ch )
 {
-	while ( ! ( Reg->SR & USART_SR_TC ) );	
+	uarttimeout = 1000;
+	while ( ! ( Reg->SR & USART_SR_TC ) && uarttimeout);
 	Reg->DR=ch;
 }
 
 char
 Uart::get ( void )
-{
-	while ( ! ( Reg->SR & USART_SR_RXNE ) );
+{	
+	uarttimeout = 1000;
+	while ( ! ( Reg->SR & USART_SR_RXNE ) && uarttimeout);
 	return Reg->DR;
 }
 

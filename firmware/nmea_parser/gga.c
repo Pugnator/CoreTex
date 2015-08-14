@@ -1,9 +1,10 @@
 #include <global.h>
 
+
 typedef enum NMEAFORMAT
 {
     TYPE , UTC, LAT, LATDIR, LONG, LONGDIR, QUAL, SATNUM, HDOP, MSL, ALT, GEOSEP, GEOSEPU, AGE, ID, CS, END
-} NMEAFORMAT;
+}NMEAFORMAT;
 
 void fillGGActx (int sect, const char *field)
 {
@@ -29,7 +30,6 @@ void fillGGActx (int sect, const char *field)
 		nmea.msl = str10_to_uint(field);
 		break;
 		case END:
-		nmeaerr = 1;
 		break;
 	}
 }

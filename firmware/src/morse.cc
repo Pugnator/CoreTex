@@ -106,8 +106,7 @@ void morse_dit(void)
 		PIN_TOGGLE(SWEEP);
 		delay_ms(1);		
 	}
-	delay_ms(500);
-    BLINK;
+	delay_ms(500); 
 }
 
 void morse_dash()

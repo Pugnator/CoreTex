@@ -1,14 +1,17 @@
 #include <global.hpp>
 
+int gsmerr = 0;
+
 extern "C"
-{
+{	
 	void SysTick_Handler(void)
 	{
-		--tickcounter;				
-		if(!tickcounter)
+		--tickcounter;		
+		--uarttimeout;		
+		/*if(!tickcounter)
 		{			
 			//SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
-		}
+		}*/
 	}
 
 	void SPI1_IRQHandler ( void )
@@ -40,28 +43,10 @@ extern "C"
 
 	void USART2_IRQHandler ( void )
 	{
-		if ( USART2->SR & USART_SR_RXNE && !usart2data.ready ) //receive
+		if ( USART2->SR & USART_SR_RXNE) //receive
 		{		
 			char c = USART2->DR;
-			USART1->DR = c;
-			USART2->SR&=~ ( USART_SR_TC|USART_SR_RXNE );
-			return;
-			parseNMEA ( c );
-			if ( '$' != c && -1 == usart2data.len() )
-			{
-				USART2->SR&=~ ( USART_SR_TC|USART_SR_RXNE );
-				return;
-			}
-
-			if ( '\n' == c )
-			{
-				usart2data + c;
-				usart2data.ready = true;
-			}
-			else
-			{
-				usart2data + c;
-			}			
+			USART1->DR = c;			
 		}
 		else if ( USART2->SR & USART_SR_TC ) //transfer
 		{
@@ -73,8 +58,9 @@ extern "C"
 	void USART3_IRQHandler ( void )
 	{
 		if ( USART3->SR & USART_SR_RXNE ) //receive
-		{				
-			USART1->DR = USART3->DR;
+		{
+			char c = USART3->DR;
+			USART1->DR = c;
 		}
 		else if ( USART3->SR & USART_SR_TC ) //transfer
 		{

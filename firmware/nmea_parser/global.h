@@ -7,7 +7,6 @@
 #include <stdbool.h>
 #include <assert.h>
 
-#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wswitch"
 
 typedef struct coord
@@ -26,6 +25,15 @@ typedef struct nmeactx
 	uint msl;
 	double knots;
 	double kmh;
+	float course;
+	bool isvalid;
+	int nmeaerr;
+	int sect;
+	char fstr[16];
+	char* fp;
+	uint8_t checksum;
+	bool sumdone;
+	bool nmeaok;
 }nmeactx;
 
 uint32_t str16_to_uint ( char const* str );
@@ -34,7 +42,7 @@ void latlon2crd (const char *str, coord *c);
 bool ckecknmea ( uint8_t sum, char* string );
 
 extern nmeactx nmea;
-extern int nmeaerr;
 
 #include <gga.h>
 #include <vtg.h>
+#include <rmc.h>

@@ -3,7 +3,7 @@ OCOPY:=arm-none-eabi-objcopy
 STRIP:=arm-none-eabi-strip
 DEL:=rm
 
-SRC:=main.c gga.c vtg.c
+SRC:=main.c gga.c vtg.c rmc.c
 
 CFLAGS+=-O0 -g3 --std=gnu99 -Wall -I.
 

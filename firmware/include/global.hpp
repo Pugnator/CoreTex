@@ -47,4 +47,5 @@ void freopen ( uart::Uart what, uart::Uart where );
 extern uart::Stack usart2data;
 
 extern uint32_t tickcounter;
+extern uint32_t uarttimeout;
 

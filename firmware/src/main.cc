@@ -21,12 +21,14 @@ __ASM volatile ( "cpsie i" : : : "memory" );
 	PIN_LOW ( LED );
 	PIN_LOW ( SWEEP );
 	Uart dbgout ( 1, 115200, true );
-	Uart gsm ( 2, 19200, true );
-	Uart gps ( 3, 115200, true );
+	//Uart gsm ( 2, 19200, true );
+	Uart gps ( 3, 19200, true );
 	dbgout.cls();
 	dbgout.cursor ( OFF );
 	usart2data.reset();
 	dbgout < WELCOME_TEXT;
+	delay_ms(1000);
+	dbgout < "===========";
 	//FATFS FatFs;
 	//f_mount(&FatFs, "", 0);
 
@@ -50,20 +52,17 @@ __ASM volatile ( "cpsie i" : : : "memory" );
 	//NVIC_EnableIRQ ( ( IRQn_Type ) SPI1_IRQn );
 	//NVIC_SetPriority ( ( IRQn_Type ) SPI1_IRQn, 2 );
 	
-	dbgout < "SPI inited";	*/						
-	/*gsm < "AT+CMGF=1";	
-	BLINK;
-	delay_ms(1000);	
-	gsm < "AT+CMGS=\"+79670769685\"";	
-	BLINK;
-	delay_ms(1000);			
-	gsm < "TEST TEST TEST";	
-	delay_ms(1000);			
-	BLINK;
-	gsm < 0x1A;*/	
+	dbgout < "SPI inited";	*/							
+	gps < "AT+CMGF=1";	
+	delay_ms(1000);
+	gps < "AT+CMGS=\"+79670769685\"";
 	
+	delay_ms(1000);			
+	gps < "TEST TEST TEST";		
+	delay_ms(1000);			
+	gps < (char)26;		
 	for ( ;; )
 	{
-		morse_print("StratoProbe-1, Alt 32599, Spd 12, VSI -2");
+		//morse_print("StratoProbe-1, Alt 32599, Spd 12, VSI -2");
 	}
 }

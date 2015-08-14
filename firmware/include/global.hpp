@@ -11,7 +11,6 @@
 #include "usart.hpp"
 #include "log.hpp"
 #include "spi.hpp"
-#include "gps.hpp"
 #include "gsm.hpp"
 #include "i2c.hpp"
 #include "rtc.hpp"
@@ -28,7 +27,18 @@
 #include "diskio.h"
 
 /* NMEA */
-#include <parser.h>
+extern "C"
+{
+/*
+1 - +3.3
+2 - VBAT
+3 - GND
+4 - TX (out)
+5 - RX (in)
+6 - GND
+*/
+#include "parser.h"
+}
 
 #define OFF false
 #define ON true

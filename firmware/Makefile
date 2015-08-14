@@ -1,4 +1,5 @@
-GCC:=arm-none-eabi-g++
+CC:=arm-none-eabi-gcc
+GPP:=arm-none-eabi-g++
 OCOPY:=arm-none-eabi-objcopy
 STRIP:=arm-none-eabi-strip
 DEL:=rm
@@ -16,7 +17,6 @@ SRC:=\
 	i2c.cc \
 	timers.cc \
 	rtc.cc \
-	gps.cc \
 	gsm.cc \
 	sdcard.cc \
 	common.cc \
@@ -39,10 +39,10 @@ EXEC:=bin/program
 all: $(EXEC).elf
 
 %.o: %.cc
-	$(GCC) -c -o $@ $< $(CFLAGS)
+	$(GPP) -c -o $@ $< $(CFLAGS)
 
 $(EXEC).elf: $(OBJ)
-	$(GCC) -o $@ $^ $(LDFLAGS)
+	$(GPP) -o $@ $^ $(LDFLAGS)
 	$(OCOPY) -O binary $(EXEC).elf $(EXEC).bin
 
 

@@ -14,25 +14,44 @@ void assert ( int value )
 		NVIC_SystemReset();
 }
 
+void check_last_reset_state (void)
+{	
+	if (RCC->CSR & RCC_CSR_SFTRSTF)
+	{
+
+	}
+	else if (RCC->CSR & RCC_CSR_PINRSTF)
+	{
+		NVIC_SystemReset();
+	}	
+	else if (RCC->CSR & RCC_CSR_LPWRRSTF)
+	{
+		NVIC_SystemReset();
+	}
+	else if (RCC->CSR & RCC_CSR_PORRSTF)
+	{
+		NVIC_SystemReset();
+	}	
+}
+
 int main ( void )
 {
-
-__ASM volatile ( "cpsie i" : : : "memory" );
+	__ASM volatile ( "cpsie i" : : : "memory" );	
 	PIN_LOW ( LED );
 	PIN_LOW ( SWEEP );
 	Uart dbgout ( 1, 115200, true );
-	//Uart gsm ( 2, 19200, true );
-	Uart gps ( 3, 19200, true );
+	Uart gsm ( 2, 19200, true );
+	Uart gps ( 3, 115200, true );
 	dbgout.cls();
 	dbgout.cursor ( OFF );
 	usart2data.reset();
-	dbgout < WELCOME_TEXT;
-	delay_ms(1000);
-	dbgout < "===========";
+	dbgout < WELCOME_TEXT;	
+	dbgout < "===========";	
+	
 	//FATFS FatFs;
 	//f_mount(&FatFs, "", 0);
 
-	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
+	//RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
 
 	
 	//SCK and MOSI with default alternate function (not re-mapped) push-pull
@@ -53,16 +72,12 @@ __ASM volatile ( "cpsie i" : : : "memory" );
 	//NVIC_SetPriority ( ( IRQn_Type ) SPI1_IRQn, 2 );
 	
 	dbgout < "SPI inited";	*/							
-	gps < "AT+CMGF=1";	
-	delay_ms(1000);
-	gps < "AT+CMGS=\"+79670769685\"";
-	
-	delay_ms(1000);			
-	gps < "TEST TEST TEST";		
-	delay_ms(1000);			
-	gps < (char)26;		
+	//sendSMS (gps, "+79670769685", "This is the text message");
 	for ( ;; )
 	{
+		BLINK;
+		delay_ms(1500);
+		
 		//morse_print("StratoProbe-1, Alt 32599, Spd 12, VSI -2");
 	}
 }

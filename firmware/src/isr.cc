@@ -27,19 +27,25 @@ extern "C"
 		}
 		SPI1->SR&=~  SPI_SR_RXNE;
 	}
-	
+
+	/* Camera/debug port */	
+
 	void USART1_IRQHandler ( void )
 	{
 		if ( USART1->SR & USART_SR_RXNE ) //receive
 		{
-			;
+			char c = USART2->DR;
+			USART1->DR = c;	
+			USART1->SR&= ~USART_SR_RXNE;;
 		}
 		else if ( USART1->SR & USART_SR_TC ) //transfer
 		{
-			;
+			USART1->SR&= ~USART_SR_TC;
 		}
-		USART1->SR&=~ ( USART_SR_TC|USART_SR_RXNE );
+		
 	}
+
+	/* GSM port */
 
 	void USART2_IRQHandler ( void )
 	{
@@ -47,26 +53,30 @@ extern "C"
 		{		
 			char c = USART2->DR;
 			USART1->DR = c;			
+			USART2->SR&= ~USART_SR_RXNE;
 		}
 		else if ( USART2->SR & USART_SR_TC ) //transfer
 		{
-			;
+			USART2->SR&= ~USART_SR_TC;
 		}
-		USART2->SR&=~ ( USART_SR_TC|USART_SR_RXNE );
+		
 	}
 
+	/* GPS port */
 	void USART3_IRQHandler ( void )
 	{
 		if ( USART3->SR & USART_SR_RXNE ) //receive
 		{
 			char c = USART3->DR;
 			USART1->DR = c;
+			gsmData + c;
+			USART3->SR&= ~USART_SR_RXNE;
 		}
 		else if ( USART3->SR & USART_SR_TC ) //transfer
 		{
-			;
+			USART3->SR&= ~USART_SR_TC;
 		}
-		USART3->SR&=~ ( USART_SR_TC|USART_SR_RXNE );
+		
 	}
 
 	void HardFault_Handler(void)

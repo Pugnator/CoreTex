@@ -49,15 +49,14 @@ Uart::disable ( void )
 
 void
 Uart::send ( char ch )
-{
-	uarttimeout = 1000;
-	while ( ! ( Reg->SR & USART_SR_TC ) && uarttimeout);
+{	
+	while ( ! ( Reg->SR & USART_SR_TC ));		
 	Reg->DR=ch;
 }
 
 char
 Uart::get ( void )
-{	
+{		
 	uarttimeout = 1000;
 	while ( ! ( Reg->SR & USART_SR_RXNE ) && uarttimeout);
 	return Reg->DR;
@@ -201,12 +200,5 @@ void Stack::operator+ ( char c )
 char* Stack::str ( void )
 {
 	return stack;
-}
-
-
-int NMEA::utc ( void )
-{
-	//char *p = nmea;
-	return 132;
 }
 

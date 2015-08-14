@@ -10,7 +10,7 @@ SRC:=\
 	main.cc \
 	usart.cc \
 	config.cc \
-	irq.cc \
+	isr.cc \
 	compat.cc \
 	log.cc \
 	spi.cc \

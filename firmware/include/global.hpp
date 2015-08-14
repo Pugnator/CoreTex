@@ -57,7 +57,7 @@ extern "C"
 void assert ( int value );
 void freopen ( uart::Uart what, uart::Uart where );
 
-extern uart::Stack usart2data;
+extern uart::Stack gsmData;
 
 extern uint32_t tickcounter;
 extern uint32_t uarttimeout;

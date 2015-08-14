@@ -27,6 +27,9 @@
 #include "ff.h"
 #include "diskio.h"
 
+/* NMEA */
+#include <parser.h>
+
 #define OFF false
 #define ON true
 

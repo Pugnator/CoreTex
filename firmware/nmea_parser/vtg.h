@@ -1,5 +1,5 @@
 #pragma once
-#include <global.h>
+#include <nmea.h>
 
 /*
 $--VTG,x.x,T,x.x,M,x.x,N,x.x,K*hh

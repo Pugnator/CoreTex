@@ -1,4 +1,4 @@
-#include <global.h>
+#include <nmea.h>
 
 /*
 RMC
@@ -22,33 +22,33 @@ Checksum
 
 typedef enum NMEAFORMAT
 {
-    TYPE , UTC, STATUS, LAT, LATDIR, LONG, LONGDIR, KNOTS, TMG, DATE, CS, LONGDIR2, END
-}NMEAFORMAT;
+	TYPE , UTC, STATUS, LAT, LATDIR, LONG, LONGDIR, KNOTS, TMG, DATE, CS, LONGDIR2, END
+} NMEAFORMAT;
 
-void fillRMCctx (int sect, const char *field)
+void fillRMCctx ( int sect, const char* field )
 {
-	switch (sect)
+	switch ( sect )
 	{
 		case UTC:
-		*strstr(field, ".") = 0;
-		nmea.utc = str10_to_uint(field);
-		break;
+			*strstr ( field, "." ) = 0;
+			nmea.utc = str10_to_uint ( field );
+			break;
 		case LONG:
-		latlon2crd(field, &nmea.lon);
-		break;
+			latlon2crd ( field, &nmea.lon );
+			break;
 		case LONGDIR:
-		nmea.lon.dir = *field;
-		break;
+			nmea.lon.dir = *field;
+			break;
 		case LAT:
-		latlon2crd(field, &nmea.lat);
-		break;
+			latlon2crd ( field, &nmea.lat );
+			break;
 		case LATDIR:
-		nmea.lat.dir = *field;
-		break;
+			nmea.lat.dir = *field;
+			break;
 		case KNOTS:
-		nmea.knots = strtod(field, NULL);
-		break;
+			nmea.knots = strtod ( field, NULL );
+			break;
 		case END:
-		break;
+			break;
 	}
 }

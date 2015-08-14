@@ -23,11 +23,14 @@ SRC:=\
 	morse.cc \
 	$(STARTUP)
 
-CFLAGS+=-O0 -g3 --std=c++11 -Wall -Iinclude -Isrc/fat32/src -DSTM32F10X_MD -D_GNU_SOURCE \
+CFLAGS+=\
+-O0 -g3 --std=c++11 -Wall \
+-Iinclude -Isrc/fat32/src -Inmea_parser \
+-DSTM32F10X_MD -D_GNU_SOURCE \
 -fno-exceptions -ffunction-sections -fdata-sections -fno-builtin \
 -mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 
-LDFLAGS+=-Tstm32_link.ld -nostartfiles src/fat32/lib/libfat32.a -lm
+LDFLAGS+=-Tstm32_link.ld -nostartfiles src/fat32/lib/libfat32.a -lm nmea_parser/libnmea.a
 
 OBJ=$(join $(addsuffix src/, $(dir $(SRC))), $(notdir $(SRC:.cc=.o)))
 

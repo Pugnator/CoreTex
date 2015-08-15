@@ -61,6 +61,30 @@ extern "C"
 	{
 		return -1;
 	}
+
+	char *
+	strstr(const char *in, const char *str)
+	{
+	    char c;
+	    size_t len;
+
+	    c = *str++;
+	    if (!c)
+	        return (char *) in;	// Trivial empty string case
+
+	    len = strlen(str);
+	    do {
+	        char sc;
+
+	        do {
+	            sc = *in++;
+	            if (!sc)
+	                return (char *) 0;
+	        } while (sc != c);
+	    } while (strncmp(in, str, len) != 0);
+
+	    return (char *) (in - 1);
+	}
 	
 	int
 	strncmp ( const char* s1, const char* s2, size_t n )

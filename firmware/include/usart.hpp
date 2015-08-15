@@ -8,7 +8,6 @@ namespace uart
 
 class Uart;
 class Stack;
-class NMEA;
 
 /**
  * @brief [brief description]

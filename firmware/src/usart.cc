@@ -199,6 +199,6 @@ void Stack::operator+ ( char c )
 
 char* Stack::str ( void )
 {
-	return stack;
+	return stack ? stack : (char*)"";
 }
 

@@ -1,7 +1,6 @@
 #include <global.hpp>
 
 using namespace uart;
-Stack usart2data;
 
 #define SCK A,5,SPEED_10MHz
 #define MOSI A,7,SPEED_10MHz
@@ -38,24 +37,23 @@ int main ( void )
 {
 	__ASM volatile ( "cpsie i" : : : "memory" );	
 	PIN_LOW ( LED );
-	PIN_LOW ( SWEEP );
+	PIN_LOW ( SWEEP );	
 	Uart dbgout ( 1, 115200, true );
 	Uart gsm ( 2, 19200, true );
 	Uart gps ( 3, 115200, true );
-	dbgout.cls();
-	dbgout.cursor ( OFF );
-	usart2data.reset();
-	dbgout < WELCOME_TEXT;	
-	dbgout < "===========";	
 	
+	dbgout.cls();
+	dbgout.cursor ( OFF );	
+	dbgout < WELCOME_TEXT;	
+	dbgout < "===========";		
 	//FATFS FatFs;
 	//f_mount(&FatFs, "", 0);
 
-	//RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
+	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
 
 	
 	//SCK and MOSI with default alternate function (not re-mapped) push-pull
-	/*PIN_OUT_ALT_PP ( SCK );
+	//PIN_OUT_ALT_PP ( SCK );
 	PIN_OUT_ALT_PP ( MOSI );
 	// Configure MISO as Input with internal pull-up 
 	PIN_INPUT_PU ( MISO );
@@ -68,16 +66,19 @@ int main ( void )
 			  | SPI_CR1_SPE;
 	
 	SPI1->CR2 |= SPI_CR2_RXNEIE;
-	//NVIC_EnableIRQ ( ( IRQn_Type ) SPI1_IRQn );
-	//NVIC_SetPriority ( ( IRQn_Type ) SPI1_IRQn, 2 );
+	NVIC_EnableIRQ ( ( IRQn_Type ) SPI1_IRQn );
+	NVIC_SetPriority ( ( IRQn_Type ) SPI1_IRQn, 2 );
 	
-	dbgout < "SPI inited";	*/							
-	//sendSMS (gps, "+79670769685", "This is the text message");
+	dbgout < "Sending SMS";
+	//sendSMS (gsm, "+79670769685", "This is the text message");	
+	Modem m(gsm);
+	m.smsw("+79670769685", "Class Modem");
+	
+	//sendSMS(gsm, "+79670769685", "test");
 	for ( ;; )
 	{
 		BLINK;
 		delay_ms(1500);
-		
 		//morse_print("StratoProbe-1, Alt 32599, Spd 12, VSI -2");
 	}
 }

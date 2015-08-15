@@ -1,24 +1,24 @@
 #include <global.hpp>
 
-int gsmerr = 0;
+char gsmResponse[16];
+char *gsmResponsePnt = gsmResponse;
+bool gsmResponseRcvd = false;
+static char gsmRcvdCtr = 0;
 
 extern "C"
 {	
 	void SysTick_Handler(void)
-	{
+	{	
 		--tickcounter;		
 		--uarttimeout;		
-		/*if(!tickcounter)
-		{			
-			//SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
-		}*/
+		--gsmtimeout;		
 	}
 
 	void SPI1_IRQHandler ( void )
 	{
 		if ( SET == (SPI1->SR & SPI_SR_RXNE) )
 		{
-			PIN_TOGGLE ( LED );			
+					
 			//spresponse = SPI1->DR;
 		}
 		else
@@ -54,6 +54,19 @@ extern "C"
 			char c = USART2->DR;
 			USART1->DR = c;			
 			USART2->SR&= ~USART_SR_RXNE;
+			if('\n' == c)
+			{				
+				gsmResponseRcvd = true;
+				gsmRcvdCtr = 0;		
+			}
+			else if (!gsmResponseRcvd)
+			{
+				gsmRcvdCtr++;
+				if(gsmRcvdCtr < sizeof gsmResponse)
+				{
+					*gsmResponsePnt++ = c;
+				}				
+			}			
 		}
 		else if ( USART2->SR & USART_SR_TC ) //transfer
 		{
@@ -68,8 +81,7 @@ extern "C"
 		if ( USART3->SR & USART_SR_RXNE ) //receive
 		{
 			char c = USART3->DR;
-			USART1->DR = c;
-			gsmData + c;
+			USART1->DR = c;			
 			USART3->SR&= ~USART_SR_RXNE;
 		}
 		else if ( USART3->SR & USART_SR_TC ) //transfer

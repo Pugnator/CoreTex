@@ -47,6 +47,12 @@ extern "C"
 #define SWEEP A,6,SPEED_50MHz
 #define BLINK (PIN_TOGGLE ( LED ))
 
+/* GSM */
+#define GSMDCD A,11,SPEED_50MHz
+#define GSMCTS A,12,SPEED_50MHz
+#define GSMDTR A,13,SPEED_50MHz
+
+/* UART */
 #define RX1 A,10,SPEED_50MHz
 #define TX1 A,9,SPEED_50MHz
 #define RX2 A,3,SPEED_50MHz
@@ -57,8 +63,7 @@ extern "C"
 void assert ( int value );
 void freopen ( uart::Uart what, uart::Uart where );
 
-extern uart::Stack gsmData;
-
 extern uint32_t tickcounter;
 extern uint32_t uarttimeout;
+extern uint32_t gsmtimeout;
 

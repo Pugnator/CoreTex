@@ -1,6 +1,9 @@
 #include <global.hpp>
 using namespace uart;
-uart::Stack gsmData;
+
+uint32_t gsmtimeout = 0;
+
+
 /* very important for correct SMS handling and sending
   "+CMGF=1", 1,                // PDU mode off
   "+CSCS=\"UCS2\"", 1,          
@@ -9,25 +12,69 @@ uart::Stack gsmData;
   //modem_write_c( 0x1A ); //Ctrl+Z
   */
 
-void prepareGSM (Uart& port)
+Modem::Modem(Uart& p)
+: port(p)
 {
-	port < "ATE0"; 
-  delay_ms(1000);
-  port < "AT+CMGF=1";  
-  delay_ms(1000);
+  memset(response, 0, sizeof response);
+  last_result = 0;
+  max_retry_count = 1;
+  init();
 }
 
-void sendSMS (Uart& port, char *number, char *text)
+bool Modem::cmd (char *command, bool partial)
 {  
-  port << "!AT+CMGS=\"";
-  port << number;  
-  port < "\"";
-  delay_ms(1000);     
-  port < text;   
-  delay_ms(1000);     
-  port < (char)26;   
+  if(partial)
+  {
+    port << command;  
+    return true;
+  }
+  reset_buf();
+  port < command;    
+  gsmtimeout = GSM_DEFAULT_TIMEOUT;
+  while (!gsmResponseRcvd);  
+  delay_ms(1500);
+  return gsmtimeout ? true : false;
 }
 
+bool Modem::cmd (char *command, int timeout, bool partial)
+{  
+  if(partial)
+  {
+    port << command;  
+    return true;
+  }   
+  reset_buf();
+  port < command;    
+  gsmtimeout = timeout;  
+  while (!gsmResponseRcvd);  
+  return gsmtimeout ? true : false;
+}
+
+void Modem::init (void)
+{
+  memset(gsmResponse, 0, sizeof gsmResponse);
+  gsmResponsePnt = gsmResponse;
+  PIN_LOW ( GSMDTR );
+  cmd ("ATE0");  
+  cmd ("AT+CMGF=1"); 
+}
+
+bool Modem::smsw (char *number, char *text)
+{  
+  cmd("AT+CMGS=\"", true);  
+  cmd(number, true);  
+  cmd("\"");  
+  cmd(text);  
+  port < (char)26;
+  return true;
+}
+
+void Modem::reset_buf (void)
+{
+  gsmResponseRcvd = false;
+  gsmResponsePnt = gsmResponse;
+  memset(gsmResponse, 0, sizeof gsmResponse);
+}
 
 /*static const char hex2char[] = "0123456789ABCDEF";
 static void modem2u16( uint16_t val )

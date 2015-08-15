@@ -12,4 +12,7 @@ extern "C" void SystemInit ( void )
 					SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
 	PIN_OUT_PP ( LED );
 	PIN_OUT_PP ( SWEEP );
+	PIN_INPUT_PU ( GSMDCD );
+	PIN_OUT_PP ( GSMCTS );
+	PIN_OUT_PP ( GSMDTR );
 }

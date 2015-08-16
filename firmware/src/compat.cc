@@ -61,29 +61,60 @@ extern "C"
 	{
 		return -1;
 	}
-
-	char *
-	strstr(const char *in, const char *str)
+	
+	
+	int strcmp ( const char* s1, const char* s2 )
 	{
-	    char c;
-	    size_t len;
+		const unsigned char* c1 = ( const unsigned char* ) s1;
+		const unsigned char* c2 = ( const unsigned char* ) s2;
+		unsigned char ch;
+		int d = 0;
+		
+		while ( 1 )
+		{
+			d = ( int ) ( ch = *c1++ ) - ( int ) *c2++;
+			if ( d || !ch )
+				break;
+		}
+		
+		return d;
+	}
 
-	    c = *str++;
-	    if (!c)
-	        return (char *) in;	// Trivial empty string case
+	size_t
+	strlen(const char *str)	
+	{
+		register const char *s;
 
-	    len = strlen(str);
-	    do {
-	        char sc;
-
-	        do {
-	            sc = *in++;
-	            if (!sc)
-	                return (char *) 0;
-	        } while (sc != c);
-	    } while (strncmp(in, str, len) != 0);
-
-	    return (char *) (in - 1);
+		for (s = str; *s; ++s);
+		return(s - str);
+	}
+	
+	char*
+	strstr ( const char* in, const char* str )
+	{
+		char c;
+		size_t len;
+		
+		c = *str++;
+		if ( !c )
+			return ( char* ) in; // Trivial empty string case
+			
+		len = strlen ( str );
+		do
+		{
+			char sc;
+			
+			do
+			{
+				sc = *in++;
+				if ( !sc )
+					return ( char* ) 0;
+			}
+			while ( sc != c );
+		}
+		while ( strncmp ( in, str, len ) != 0 );
+		
+		return ( char* ) ( in - 1 );
 	}
 	
 	int

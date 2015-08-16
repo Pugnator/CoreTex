@@ -1,79 +1,75 @@
 #include <global.hpp>
 using namespace uart;
-
+uart::Stack gsmStack;
 uint32_t gsmtimeout = 0;
 
 
 /* very important for correct SMS handling and sending
   "+CMGF=1", 1,                // PDU mode off
-  "+CSCS=\"UCS2\"", 1,          
+  "+CSCS=\"UCS2\"", 1,
   "+CSMP=17,167,0,8", 1,       // format to UCS2 16bit(8)
 
   //modem_write_c( 0x1A ); //Ctrl+Z
   */
 
-Modem::Modem(Uart& p)
-: port(p)
+Modem::Modem ( Uart& p, Uart* d )
+	: port ( p )    
+{	
+	last_result = 0;
+	max_retry_count = 1;
+  debug = d;
+	init();
+}
+
+bool Modem::rawcmd ( char* command, char* expectedResult, bool partial )
+{ 
+  gsmStack.reset();
+	if ( partial )
+	{
+		port << command;
+		return true;
+	}	  
+	port < command;
+	tickcounter = GSM_DEFAULT_TIMEOUT;
+	while ( !gsmStack.ready && tickcounter );
+	if ( expectedResult )
+	{
+    if(!strstr(gsmStack.str(), expectedResult))
+    {      
+      delay_ms(1500);      
+      gsmStack.reset();
+      rawcmd(command, expectedResult);
+    }	
+	}
+	return tickcounter ? true : false;
+}
+
+void Modem::init ( void )
 {
-  memset(response, 0, sizeof response);
-  last_result = 0;
-  max_retry_count = 1;
-  init();
+	PIN_LOW ( GSMDTR );
+	rawcmd ( "ATE0", "OK" );
+	rawcmd ( "AT+CMGF=1", "OK" );  	
+	rawcmd ("AT+CSCS=\"UCS2\"", NULL, true);	
+	rawcmd ("AT+CSMP=17,167,0,8", NULL);	
+	port < (char)26;
 }
 
-bool Modem::cmd (char *command, bool partial)
-{  
-  if(partial)
-  {
-    port << command;  
-    return true;
-  }
-  reset_buf();
-  port < command;    
-  gsmtimeout = GSM_DEFAULT_TIMEOUT;
-  while (!gsmResponseRcvd);  
-  delay_ms(1500);
-  return gsmtimeout ? true : false;
-}
-
-bool Modem::cmd (char *command, int timeout, bool partial)
-{  
-  if(partial)
-  {
-    port << command;  
-    return true;
-  }   
-  reset_buf();
-  port < command;    
-  gsmtimeout = timeout;  
-  while (!gsmResponseRcvd);  
-  return gsmtimeout ? true : false;
-}
-
-void Modem::init (void)
+bool Modem::smsw ( char* number, char* text )
 {
-  memset(gsmResponse, 0, sizeof gsmResponse);
-  gsmResponsePnt = gsmResponse;
-  PIN_LOW ( GSMDTR );
-  cmd ("ATE0");  
-  cmd ("AT+CMGF=1"); 
+	rawcmd ( "AT+CMGS=\"", NULL, true );
+	rawcmd ( number, NULL, true );
+	rawcmd ( "\"", NULL );
+	rawcmd ( text, NULL );
+	port < ( char ) 26;
+	return true;
 }
 
-bool Modem::smsw (char *number, char *text)
-{  
-  cmd("AT+CMGS=\"", true);  
-  cmd(number, true);  
-  cmd("\"");  
-  cmd(text);  
-  port < (char)26;
-  return true;
-}
-
-void Modem::reset_buf (void)
+int Modem::sigstr ( void )
 {
-  gsmResponseRcvd = false;
-  gsmResponsePnt = gsmResponse;
-  memset(gsmResponse, 0, sizeof gsmResponse);
+  rawcmd ( "AT+CSQ", "OK" );  
+  *debug < "response:";
+  *debug < gsmStack.str();
+  return 0;
 }
 
 /*static const char hex2char[] = "0123456789ABCDEF";

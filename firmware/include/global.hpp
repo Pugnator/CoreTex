@@ -29,14 +29,14 @@
 /* NMEA */
 extern "C"
 {
-/*
-1 - +3.3
-2 - VBAT
-3 - GND
-4 - TX (out)
-5 - RX (in)
-6 - GND
-*/
+	/*
+	1 - +3.3
+	2 - VBAT
+	3 - GND
+	4 - TX (out)
+	5 - RX (in)
+	6 - GND
+	*/
 #include "parser.h"
 }
 
@@ -66,4 +66,4 @@ void freopen ( uart::Uart what, uart::Uart where );
 extern uint32_t tickcounter;
 extern uint32_t uarttimeout;
 extern uint32_t gsmtimeout;
-
+extern uart::Stack gsmStack;

@@ -49,16 +49,16 @@ Uart::disable ( void )
 
 void
 Uart::send ( char ch )
-{	
-	while ( ! ( Reg->SR & USART_SR_TC ));		
+{
+	while ( ! ( Reg->SR & USART_SR_TC ) );
 	Reg->DR=ch;
 }
 
 char
 Uart::get ( void )
-{		
-	uarttimeout = 1000;
-	while ( ! ( Reg->SR & USART_SR_RXNE ) && uarttimeout);
+{
+	tickcounter = 1000;
+	while ( ! ( Reg->SR & USART_SR_RXNE ) && tickcounter );
 	return Reg->DR;
 }
 
@@ -143,6 +143,16 @@ Uart::crlf ( void )
 	print ( "\r\n" );
 }
 
+extern "C"
+{
+void
+Uart::isr ( void )
+{
+	
+}
+}
+
+
 void
 Uart::recv ( char* c, int timeout )
 {
@@ -199,6 +209,6 @@ void Stack::operator+ ( char c )
 
 char* Stack::str ( void )
 {
-	return stack ? stack : (char*)"";
+	return stack ? stack : ( char* ) "";
 }
 

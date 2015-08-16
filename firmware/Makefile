@@ -26,7 +26,7 @@ SRC:=\
 CFLAGS+=\
 -O0 -g3 --std=c++11 -Wall \
 -Iinclude -Isrc/fat32/src -Inmea_parser \
--DSTM32F10X_MD -D_GNU_SOURCE \
+-DSTM32F10X_MD -D_GNU_SOURCE -DDEBUG \
 -Wno-write-strings \
 -fno-exceptions -ffunction-sections -fdata-sections -fno-builtin \
 -mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float

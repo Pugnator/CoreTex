@@ -9,76 +9,78 @@ using namespace uart;
 
 void assert ( int value )
 {
-	if(!value)
+	if ( !value )
 		NVIC_SystemReset();
 }
 
-void check_last_reset_state (void)
-{	
-	if (RCC->CSR & RCC_CSR_SFTRSTF)
+void check_last_reset_state ( void )
+{
+	if ( RCC->CSR & RCC_CSR_SFTRSTF )
 	{
-
+	
 	}
-	else if (RCC->CSR & RCC_CSR_PINRSTF)
-	{
-		NVIC_SystemReset();
-	}	
-	else if (RCC->CSR & RCC_CSR_LPWRRSTF)
+	else if ( RCC->CSR & RCC_CSR_PINRSTF )
 	{
 		NVIC_SystemReset();
 	}
-	else if (RCC->CSR & RCC_CSR_PORRSTF)
+	else if ( RCC->CSR & RCC_CSR_LPWRRSTF )
 	{
 		NVIC_SystemReset();
-	}	
+	}
+	else if ( RCC->CSR & RCC_CSR_PORRSTF )
+	{
+		NVIC_SystemReset();
+	}
 }
 
 int main ( void )
 {
-	__ASM volatile ( "cpsie i" : : : "memory" );	
+__ASM volatile ( "cpsie i" : : : "memory" );
 	PIN_LOW ( LED );
-	PIN_LOW ( SWEEP );	
+	PIN_LOW ( SWEEP );
 	Uart dbgout ( 1, 115200, true );
 	Uart gsm ( 2, 19200, true );
 	Uart gps ( 3, 115200, true );
 	
 	dbgout.cls();
-	dbgout.cursor ( OFF );	
-	dbgout < WELCOME_TEXT;	
-	dbgout < "===========";		
+	dbgout.cursor ( OFF );
+	dbgout < WELCOME_TEXT;
+	dbgout < "===========";
 	//FATFS FatFs;
 	//f_mount(&FatFs, "", 0);
-
+	
 	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
-
+	
 	
 	//SCK and MOSI with default alternate function (not re-mapped) push-pull
 	//PIN_OUT_ALT_PP ( SCK );
 	PIN_OUT_ALT_PP ( MOSI );
-	// Configure MISO as Input with internal pull-up 
+	// Configure MISO as Input with internal pull-up
 	PIN_INPUT_PU ( MISO );
 	PIN_OUT_PP ( CS );
 	SPI1 -> CR1 = 0;
 	SPI1->CR1 |= SPI_CR1_BR
-			  | SPI_CR1_SSM
-			  | SPI_CR1_SSI
-			  | SPI_CR1_MSTR
-			  | SPI_CR1_SPE;
-	
+				 | SPI_CR1_SSM
+				 | SPI_CR1_SSI
+				 | SPI_CR1_MSTR
+				 | SPI_CR1_SPE;
+				 
 	SPI1->CR2 |= SPI_CR2_RXNEIE;
 	NVIC_EnableIRQ ( ( IRQn_Type ) SPI1_IRQn );
-	NVIC_SetPriority ( ( IRQn_Type ) SPI1_IRQn, 2 );
+	NVIC_SetPriority ( ( IRQn_Type ) SPI1_IRQn, 2 );	
 	
-	dbgout < "Sending SMS";
-	//sendSMS (gsm, "+79670769685", "This is the text message");	
-	Modem m(gsm);
-	m.smsw("+79670769685", "Class Modem");
-	
+	//sendSMS (gsm, "+79670769685", "This is the text message");
+	Modem m ( gsm, &dbgout);
+	dbgout < "Modem inited";
+	//m.smsw ( "+79670769685", "Class Modem" );
+	//m.sigstr();
+	m.rawcmd("AT+GSV", NULL);
+	dbgout < gsmStack.str();
 	//sendSMS(gsm, "+79670769685", "test");
 	for ( ;; )
 	{
 		BLINK;
-		delay_ms(1500);
+		delay_ms ( 1500 );
 		//morse_print("StratoProbe-1, Alt 32599, Spd 12, VSI -2");
 	}
 }

@@ -35,10 +35,10 @@ uint32_t str10_to_uint ( char const* str )
 	return res;
 }
 
-void delay_ms(uint32_t ms)
+void delay_ms ( uint32_t ms )
 {
-    tickcounter = ms;        
-    while(tickcounter);    
+	tickcounter = ms;
+	while ( tickcounter );
 }
 
 void delay ( uint32_t s )

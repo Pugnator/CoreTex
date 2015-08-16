@@ -1,6 +1,6 @@
 #pragma once
 
-#define STACK_DEPTH 128
+#define STACK_DEPTH 190
 #define NMEA_SIZE 82
 
 namespace uart
@@ -93,6 +93,7 @@ public:
 	}
 	Stack data;
 private:
+	void isr (void);
 	void send ( char c );
 	char get ( void );
 	void print ( char ch );
@@ -105,37 +106,5 @@ private:
 	char buf[8];
 	int channel;
 	USART_TypeDef* Reg;
-};
-
-class NMEA
-{
-public:
-	NMEA ( char* str )
-	{
-		strcpy ( nmea, str );
-	}
-	bool valid ( void )
-	{
-		return isGPGGA();
-	}
-	void parse ( void );
-	bool state ( void );
-	int satnum ( void );
-	double lon ( void );
-	double lat ( void );
-	int utc ( void );
-	int msl ( void );
-	int alt ( void );
-	int chksum ( void );
-	void operator= ( char* str );
-	char str ( void );
-protected:
-	char nmea[NMEA_SIZE];
-private:
-	bool isGPGGA ( void )
-	{
-		return strncmp ( nmea, "$GPGGA", 6 ) ? false : true;
-		//TODO: checksum
-	}
 };
 }

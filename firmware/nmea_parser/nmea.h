@@ -15,8 +15,6 @@ uint32_t str10_to_uint ( char const* str );
 void latlon2crd (const char *str, coord *c);
 bool ckecknmea ( uint8_t sum, char* string );
 
-extern nmeactx nmea;
-
 #include <gga.h>
 #include <vtg.h>
 #include <rmc.h>

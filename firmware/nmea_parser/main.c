@@ -27,7 +27,6 @@ $GPVTG,113.81,T,,M,0.31,N,0.58,K,A*38
  */
 
 void ( *fillNMEActx ) ( int, const char* );
-nmeactx nmea;
 
 #define NMEA_MAX_LEN 82
 

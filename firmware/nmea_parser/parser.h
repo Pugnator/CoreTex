@@ -32,6 +32,8 @@ typedef struct nmeactx
 	bool nmeaok;
 }nmeactx;
 
+extern nmeactx nmea;
+
 void parseNMEA ( char c ); 
 
 #ifdef __cplusplus

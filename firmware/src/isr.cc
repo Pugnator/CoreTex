@@ -2,23 +2,25 @@
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 
+static bool gsmgo = false;
+
 extern "C"
 {
 	void SysTick_Handler ( void )
 	{
-		if(tickcounter)
+		if ( tickcounter )
 		{
-			--tickcounter;	
-		}		
+			--tickcounter;
+		}
 	}
 	
 	void SPI1_IRQHandler ( void )
 	{
 		if ( SET == ( SPI1->SR & SPI_SR_RXNE ) )
 		{
-			SPI1->SR&=~  SPI_SR_RXNE;		
+			SPI1->SR&=~  SPI_SR_RXNE;
 			//spresponse = SPI1->DR;
-		}		
+		}
 	}
 	
 	/* Camera/debug port */
@@ -34,7 +36,7 @@ extern "C"
 		else if ( USART1->SR & USART_SR_TC ) //transfer
 		{
 			USART1->SR&= ~USART_SR_TC;
-		}		
+		}
 	}
 	
 	/* GSM port */
@@ -44,34 +46,39 @@ extern "C"
 		if ( USART2->SR & USART_SR_RXNE ) //receive
 		{
 			char c = USART2->DR;
-			#ifdef DEBUG
-			//USART1->DR = c;			
-			#endif
-			if ( '+' == c && !gsmStack.ready)
+#ifdef DEBUG
+			//USART1->DR = c;
+#endif
+			if ( '+' == c )
 			{
 				gsmStack.reset();
-			}
-			else if ( '\r' == c && !gsmStack.ready)
-			{
-				if(strstr(gsmStack.str(), "\r\nOK"))
-				{
-					gsmStack.ready = true;	
-				}
-				else
-				{
-					gsmStack + c;
-				}				
-			}
-			else if ( !gsmStack.ready )
-			{				
 				gsmStack + c;
 			}
+			else
+			{
+				if ( !gsmStack.ready && '\n' == c && strstr ( gsmStack.str(), "\r\nOK" ) )
+				{
+					gsmStack.ready = true;
+					BLINK;
+				}
+				else if ( !gsmStack.ready && '\n' == c && strstr ( gsmStack.str(), ">" ) )
+				{
+					gsmStack.ready = true;
+					BLINK;
+				}
+				else if ( !gsmStack.ready )
+				{
+					gsmStack + c;
+				}
+			}
+			
+			
 			USART2->SR&= ~USART_SR_RXNE;
 		}
 		else if ( USART2->SR & USART_SR_TC ) //transfer
 		{
 			USART2->SR&= ~USART_SR_TC;
-		}		
+		}
 	}
 	
 	/* GPS port */
@@ -80,7 +87,8 @@ extern "C"
 		if ( USART3->SR & USART_SR_RXNE ) //receive
 		{
 			char c = USART3->DR;
-			USART1->DR = c;
+			parseNMEA(c);
+			//USART1->DR = c;
 			USART3->SR&= ~USART_SR_RXNE;
 		}
 		else if ( USART3->SR & USART_SR_TC ) //transfer
@@ -90,8 +98,8 @@ extern "C"
 		
 	}
 	
-
-	//TO USE: addr2len /path/to/elf 0x800186d [GDB: p/x pc when it hit for(;;)]
+	
+	//TO USE: addr2line -e ./bin/program.elf -a 0x8002327 [GDB: p/x pc when it hit for(;;)]
 	void unwindCPUstack ( uint32_t* stackAddress )
 	{
 		/*
@@ -122,15 +130,20 @@ extern "C"
 		/* When the following line is hit, the variables contain the register values. */
 		for ( ;; )
 		{
-		#ifdef DEBUG
-			PIN_HI(LED);		
-		#else
+#ifdef DEBUG
+			PIN_HI ( LED );
+#else
 			NVIC_SystemReset();
-		#endif	
+#endif
 		}
 	}
 	
-	
+	/* DTR */
+	void EXTI0_IRQHandler ( void )
+	{
+		BLINK;
+		//EXTI->PR = EXTI_PR_PR0;
+	}
 	
 	void HardFault_Handler ( void )
 	{

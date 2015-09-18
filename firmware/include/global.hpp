@@ -49,8 +49,8 @@ extern "C"
 
 /* GSM */
 #define GSMDCD A,11,SPEED_50MHz
-#define GSMCTS A,12,SPEED_50MHz
-#define GSMDTR A,13,SPEED_50MHz
+#define GSMCTS A,0,SPEED_50MHz
+#define GSMDTR A,1,SPEED_50MHz
 
 /* UART */
 #define RX1 A,10,SPEED_50MHz

@@ -79,14 +79,14 @@ extern "C"
 		
 		return d;
 	}
-
+	
 	size_t
-	strlen(const char *str)	
+	strlen ( const char* str )
 	{
-		register const char *s;
-
-		for (s = str; *s; ++s);
-		return(s - str);
+		register const char* s;
+		
+		for ( s = str; *s; ++s );
+		return ( s - str );
 	}
 	
 	char*

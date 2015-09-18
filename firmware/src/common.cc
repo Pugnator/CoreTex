@@ -25,10 +25,9 @@ uint32_t str10_to_uint ( char const* str )
 		{
 			res = ( res * 10 ) + ( ( *str ) - '0' );
 		}
-		else
+		else if ( ',' == *str || '.' == *str )
 		{
-			//error here!
-			return 0;
+			break;
 		}
 		str++;
 	}

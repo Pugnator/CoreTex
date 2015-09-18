@@ -31,8 +31,8 @@ public:
 	void reset ( void )
 	{
 		stackp = -1;
-		ready = false;
 		memset ( stack, 0, sizeof stack );
+		ready = false;
 	};
 	void operator>> ( Uart port );
 	char* str ( void );
@@ -41,6 +41,7 @@ public:
 		return stack[stackp];
 	}
 	bool ready;
+	bool go;
 private:
 	char stack[STACK_DEPTH + 1];
 	int stackp;
@@ -93,7 +94,7 @@ public:
 	}
 	Stack data;
 private:
-	void isr (void);
+	void isr ( void );
 	void send ( char c );
 	char get ( void );
 	void print ( char ch );

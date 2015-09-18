@@ -1,6 +1,7 @@
 #include <global.hpp>
 
 using namespace uart;
+nmeactx nmea;		
 
 #define SCK A,5,SPEED_10MHz
 #define MOSI A,7,SPEED_10MHz
@@ -35,7 +36,7 @@ void check_last_reset_state ( void )
 
 int main ( void )
 {
-__ASM volatile ( "cpsie i" : : : "memory" );
+__ASM volatile ( "cpsie i" : : : "memory" );	
 	PIN_LOW ( LED );
 	PIN_LOW ( SWEEP );
 	Uart dbgout ( 1, 115200, true );
@@ -67,16 +68,20 @@ __ASM volatile ( "cpsie i" : : : "memory" );
 				 
 	SPI1->CR2 |= SPI_CR2_RXNEIE;
 	NVIC_EnableIRQ ( ( IRQn_Type ) SPI1_IRQn );
-	NVIC_SetPriority ( ( IRQn_Type ) SPI1_IRQn, 2 );	
+	NVIC_SetPriority ( ( IRQn_Type ) SPI1_IRQn, 2 );
 	
-	//sendSMS (gsm, "+79670769685", "This is the text message");
-	Modem m ( gsm, &dbgout);
+	Modem m ( gsm, &dbgout );
 	dbgout < "Modem inited";
 	//m.smsw ( "+79670769685", "Class Modem" );
-	//m.sigstr();
-	m.rawcmd("AT+GSV", NULL);
-	dbgout < gsmStack.str();
-	//sendSMS(gsm, "+79670769685", "test");
+	if ( m.ready() )
+	{
+		dbgout < "Ready";
+	}
+	else
+	{
+		dbgout < "Not ready";
+		dbgout < gsmStack.str();
+	}
 	for ( ;; )
 	{
 		BLINK;

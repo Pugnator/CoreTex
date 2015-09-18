@@ -5,23 +5,26 @@ STRIP:=arm-none-eabi-strip
 DEL:=rm
 
 STARTUP:=startup_stm32f10x_md.s
+CORE:=src/core
+DRIVERS:=src/drivers
+AUX:=src/aux
 
 SRC:=\
-	main.cc \
-	usart.cc \
-	config.cc \
-	isr.cc \
-	compat.cc \
-	log.cc \
-	spi.cc \
-	i2c.cc \
-	timers.cc \
-	rtc.cc \
-	gsm.cc \
-	sdcard.cc \
-	common.cc \
-	morse.cc \
-	$(STARTUP)
+	src/main.cc \
+	$(CORE)/usart.cc \
+	$(CORE)/config.cc \
+	$(CORE)/isr.cc \
+	$(AUX)/compat.cc \
+	$(AUX)/log.cc \
+	$(CORE)/spi.cc \
+	$(CORE)/i2c.cc \
+	$(CORE)/timers.cc \
+	$(CORE)/rtc.cc \
+	$(DRIVERS)/gsm.cc \
+	$(DRIVERS)/sdcard.cc \
+	$(AUX)/common.cc \
+	$(AUX)/morse.cc \
+	$(CORE)/$(STARTUP)
 
 CFLAGS+=\
 -O0 -g3 --std=c++11 -Wall \
@@ -33,7 +36,8 @@ CFLAGS+=\
 
 LDFLAGS+=-Tstm32_link.ld -nostartfiles src/fat32/lib/libfat32.a -lm nmea_parser/libnmea.a
 
-OBJ=$(join $(addsuffix src/, $(dir $(SRC))), $(notdir $(SRC:.cc=.o)))
+#OBJ=$(join $(addsuffix src/, $(dir $(SRC))), $(notdir $(SRC:.cc=.o)))
+OBJ=$(SRC:%.cc=%.o)
 
 EXEC:=bin/program
 

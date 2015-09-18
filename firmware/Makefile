@@ -1,7 +1,18 @@
-CC:=arm-none-eabi-gcc
-GPP:=arm-none-eabi-g++
-OCOPY:=arm-none-eabi-objcopy
-STRIP:=arm-none-eabi-strip
+TARGET?=STM32
+ifeq ($(TARGET), STM32)
+	CC:=arm-none-eabi-gcc
+	GPP:=arm-none-eabi-g++
+	OCOPY:=arm-none-eabi-objcopy
+	STRIP:=arm-none-eabi-strip
+	EXEC:=bin/program
+else ifeq ($(TARGET), Linux)
+   	CC:=gcc
+	GPP:=g++
+	OCOPY:=objcopy
+	STRIP:=strip
+	EXEC:=bin/test_program
+endif
+
 DEL:=rm
 
 STARTUP:=startup_stm32f10x_md.s
@@ -9,7 +20,8 @@ CORE:=src/core
 DRIVERS:=src/drivers
 AUX:=src/aux
 
-SRC:=\
+ifeq ($(TARGET), STM32)
+	SRC:=\
 	src/main.cc \
 	$(CORE)/usart.cc \
 	$(CORE)/config.cc \
@@ -25,21 +37,32 @@ SRC:=\
 	$(AUX)/common.cc \
 	$(AUX)/morse.cc \
 	$(CORE)/$(STARTUP)
+	
+else ifeq ($(TARGET), Linux)
+	SRC:=\
+	src/linux/main.cc \
+	$(CORE)/usart.cc	
+	
+endif
 
-CFLAGS+=\
--O0 -g3 --std=c++11 -Wall \
--Iinclude -Isrc/fat32/src -Inmea_parser \
--DSTM32F10X_MD -D_GNU_SOURCE -DDEBUG \
--Wno-write-strings \
--fno-exceptions -ffunction-sections -fdata-sections -fno-builtin \
--mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
+ifeq ($(TARGET), STM32)
+	CFLAGS+=\
+	-O0 -g3 --std=c++11 -Wall \
+	-Iinclude -Isrc/fat32/src -Inmea_parser \
+	-DSTM32F10X_MD -D_GNU_SOURCE -DDEBUG -D__STM32__ \
+	-Wno-write-strings \
+	-fno-exceptions -ffunction-sections -fdata-sections -fno-builtin \
+	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 
-LDFLAGS+=-Tstm32_link.ld -nostartfiles src/fat32/lib/libfat32.a -lm nmea_parser/libnmea.a
+	LDFLAGS+=-Tstm32_link.ld -nostartfiles src/fat32/lib/libfat32.a -lm nmea_parser/libnmea.a	
+
+else ifeq ($(TARGET), Linux)
+	CFLAGS+=-O0 -g3 --std=c++11 -Wall -Iinclude -Inmea_parser -D_GNU_SOURCE -DDEBUG
+	LDFLAGS+=-lm
+endif
 
 #OBJ=$(join $(addsuffix src/, $(dir $(SRC))), $(notdir $(SRC:.cc=.o)))
 OBJ=$(SRC:%.cc=%.o)
-
-EXEC:=bin/program
 
 all: $(EXEC).elf
 

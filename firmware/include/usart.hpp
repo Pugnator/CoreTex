@@ -3,6 +3,26 @@
 #define STACK_DEPTH 190
 #define NMEA_SIZE 82
 
+#ifndef __STM32__
+typedef struct
+{
+	uint16_t SR;
+	uint16_t  RESERVED0;
+	uint16_t DR;
+	uint16_t  RESERVED1;
+	uint16_t BRR;
+	uint16_t  RESERVED2;
+	uint16_t CR1;
+	uint16_t  RESERVED3;
+	uint16_t CR2;
+	uint16_t  RESERVED4;
+	uint16_t CR3;
+	uint16_t  RESERVED5;
+	uint16_t GTPR;
+	uint16_t  RESERVED6;
+} USART_TypeDef;
+#endif
+
 namespace uart
 {
 

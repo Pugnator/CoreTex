@@ -5,8 +5,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <limits.h>
+#ifdef __STM32__
 #include "io_macro.hpp"
-
+#endif
 #include "version.hpp"
 #include "usart.hpp"
 #include "log.hpp"
@@ -21,10 +22,11 @@
 #include "text.hpp"
 #include "morse.hpp"
 
-
 /* FAT32 */
+#ifdef __STM32__
 #include "ff.h"
 #include "diskio.h"
+#endif
 
 /* NMEA */
 extern "C"
@@ -60,8 +62,10 @@ extern "C"
 #define RX3 B,11,SPEED_50MHz
 #define TX3 B,10,SPEED_50MHz
 
+#ifdef __STM32__
 void assert ( int value );
 void freopen ( uart::Uart what, uart::Uart where );
+#endif
 
 extern uint32_t tickcounter;
 extern uint32_t uarttimeout;

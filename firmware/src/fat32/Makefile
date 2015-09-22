@@ -2,7 +2,7 @@ SRC:=ff.c
 CC:=arm-none-eabi-g++
 OBJ=$(SRC:%.c=%.o)
 
-LIBFAT32:=../lib/libfat32.a
+LIBFAT32:=libfat32.a
 
 CFLAGS+=-O2 -std=c++98 -I.
 

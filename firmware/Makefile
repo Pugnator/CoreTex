@@ -6,7 +6,7 @@ DEL:=rm
 
 STARTUP:=startup_stm32f10x_md.s
 
-SUBDIRS=src/fat32
+SUBDIRS=src/fat32 nmea_parser
 
 SRC:=\
 	main.cc \

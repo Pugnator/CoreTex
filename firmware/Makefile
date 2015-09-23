@@ -59,7 +59,7 @@ ifeq ($(TARGET), STM32)
 	LDFLAGS+=-Tstm32_link.ld -nostartfiles src/fat32/libfat32.a -lm nmea_parser/libnmea.a
 
 else ifeq ($(TARGET), Linux)
-	CFLAGS+=-O0 -g3 --std=gnu++11 -Wall -Iinclude -Inmea_parser -D_GNU_SOURCE -DDEBUG
+	CFLAGS+=-O0 -g3 -std=gnu++11 -Wall -Iinclude -Inmea_parser -D_GNU_SOURCE -DDEBUG
 	LDFLAGS+=-lm
 endif
 

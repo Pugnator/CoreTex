@@ -12,5 +12,3 @@ install:
 
 script:
  - make TARGET=STM32
- - make clean
- - make TARGET=Linux

@@ -50,7 +50,7 @@ endif
 
 ifeq ($(TARGET), STM32)
 	CFLAGS+=\
-	-O0 -g3 --std=c++11 -Wall \
+	-O0 -g3 --std=gnu++11 -Wall \
 	-Iinclude -Isrc/fat32 -Inmea_parser \
 	-DSTM32F10X_MD -D_GNU_SOURCE -DDEBUG -D__STM32__\
 	-Wno-write-strings \
@@ -59,7 +59,7 @@ ifeq ($(TARGET), STM32)
 	LDFLAGS+=-Tstm32_link.ld -nostartfiles src/fat32/libfat32.a -lm nmea_parser/libnmea.a
 
 else ifeq ($(TARGET), Linux)
-	CFLAGS+=-O0 -g3 --std=c++11 -Wall -Iinclude -Inmea_parser -D_GNU_SOURCE -DDEBUG
+	CFLAGS+=-O0 -g3 --std=gnu++11 -Wall -Iinclude -Inmea_parser -D_GNU_SOURCE -DDEBUG
 	LDFLAGS+=-lm
 endif
 

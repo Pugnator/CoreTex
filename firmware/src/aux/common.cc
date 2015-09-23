@@ -1,6 +1,5 @@
 #include <global.hpp>
-
-uint32_t tickcounter;
+#include <stdint.h>
 
 uint32_t str16_to_uint ( char const* str )
 {

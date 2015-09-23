@@ -6,7 +6,7 @@
 \*********************************************************************/
 
 #pragma once
-#include <stm32f10x.hpp>
+#include <hal/stm32f10x.hpp>
 
 /* allow more flexible IO initializing */
 

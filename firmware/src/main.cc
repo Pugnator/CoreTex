@@ -1,7 +1,9 @@
 #include <global.hpp>
+#include <common.hpp>
+#include <hal/io_macro.hpp>
+#include <hal/usart.hpp>
 
 using namespace uart;
-nmeactx nmea;		
 
 #define SCK A,5,SPEED_10MHz
 #define MOSI A,7,SPEED_10MHz
@@ -36,7 +38,12 @@ void check_last_reset_state ( void )
 
 int main ( void )
 {
-__ASM volatile ( "cpsie i" : : : "memory" );	
+__ASM volatile ( "cpsie i" : : : "memory" );
+      PIN_OUT_PP ( LED );
+      PIN_OUT_PP ( SWEEP );
+      PIN_INPUT_FLOATING ( GSMDCD );
+      PIN_INPUT_FLOATING ( GSMCTS );
+      PIN_OUT_PP ( GSMDTR );
 	PIN_LOW ( LED );
 	PIN_LOW ( SWEEP );
 	Uart dbgout ( 1, 115200, true );
@@ -45,7 +52,7 @@ __ASM volatile ( "cpsie i" : : : "memory" );
 	
 	dbgout.cls();
 	dbgout.cursor ( OFF );
-	dbgout < WELCOME_TEXT;
+	dbgout < "WELCOME_TEXT";
 	dbgout < "===========";
 	//FATFS FatFs;
 	//f_mount(&FatFs, "", 0);
@@ -68,20 +75,11 @@ __ASM volatile ( "cpsie i" : : : "memory" );
 				 
 	SPI1->CR2 |= SPI_CR2_RXNEIE;
 	NVIC_EnableIRQ ( ( IRQn_Type ) SPI1_IRQn );
-	NVIC_SetPriority ( ( IRQn_Type ) SPI1_IRQn, 2 );
+	NVIC_SetPriority ( ( IRQn_Type ) SPI1_IRQn, 2 );	
 	
-	Modem m ( gsm, &dbgout );
 	dbgout < "Modem inited";
 	//m.smsw ( "+79670769685", "Class Modem" );
-	if ( m.ready() )
-	{
-		dbgout < "Ready";
-	}
-	else
-	{
-		dbgout < "Not ready";
-		dbgout < gsmStack.str();
-	}
+	
 	for ( ;; )
 	{
 		BLINK;

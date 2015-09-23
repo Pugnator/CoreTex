@@ -1,4 +1,5 @@
-#include <global.hpp>
+#include "hal/io_macro.hpp"
+#include "hal/config.hpp"
 
 extern "C" void SystemInit ( void )
 {
@@ -8,15 +9,9 @@ extern "C" void SystemInit ( void )
 	/* System timer config */
 	SysTick->LOAD=TIMERTICK;
 	SysTick->VAL=TIMERTICK;
-	
+
 	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
 					SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
-	PIN_OUT_PP ( LED );
-	PIN_OUT_PP ( SWEEP );
-	PIN_INPUT_FLOATING ( GSMDCD );
-	PIN_INPUT_FLOATING ( GSMCTS );
-	PIN_OUT_PP ( GSMDTR );
-	
 	/*  AFIO->EXTICR[0] &= ~AFIO_EXTICR1_EXTI0_PA;
 	    AFIO->EXTICR[0] |= AFIO_EXTICR1_EXTI0_PA;
 	    EXTI->RTSR |= EXTI_RTSR_TR0;

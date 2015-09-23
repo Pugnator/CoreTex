@@ -1,4 +1,10 @@
 #include <global.hpp>
+#include <common.hpp>
+#include <stdint.h>
+#include <hal/usart.hpp>
+#include <gsm.hpp>
+#include <hal/io_macro.hpp>
+
 using namespace uart;
 uart::Stack gsmStack;
 uint32_t gsmtimeout = 0;

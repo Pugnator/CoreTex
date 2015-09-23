@@ -1,3 +1,3 @@
 #!/bin/bash
 sudo st-flash erase
-sudo st-flash --reset write ./bin/program.bin 0x08000000
+sudo st-flash --reset write ./program.bin 0x08000000

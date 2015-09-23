@@ -1,15 +1,17 @@
 #include <global.hpp>
+#include <limits.h>
+#include <hal/config.hpp>
+#include <hal/io_macro.hpp>
+#include <hal/usart.hpp>
 
 /* UART handling class */
 
 #define UARTirq (USART1_IRQn - 1)
-uint32_t uarttimeout = 0;
 
 using namespace uart;
 Uart::Uart ( int ch, int bd, bool doinit )
 {
 	channel = ch;
-	#ifdef __STM32__
 	switch ( ch )
 	{
 		case 1:
@@ -22,20 +24,18 @@ Uart::Uart ( int ch, int bd, bool doinit )
 			Reg = ( USART_TypeDef* ) USART3_BASE;
 			break;
 		default:
-			assert ( 0 );
+			//ERROR
 			;
 	}
 	if ( doinit )
 	{
 		init ( ch, bd );
 	}
-	#endif
 }
 
 void
 Uart::disable ( void )
 {
-	#ifdef __STM32__
 	switch ( channel )
 	{
 		case 1:
@@ -48,32 +48,26 @@ Uart::disable ( void )
 			NVIC_DisableIRQ ( USART3_IRQn );
 			break;
 	}
-	#endif
 }
 
 void
 Uart::send ( char ch )
 {
-	#ifdef __STM32__
 	while ( ! ( Reg->SR & USART_SR_TC ) );
-	#endif
 	Reg->DR=ch;
 }
 
 char
 Uart::get ( void )
 {
-	#ifdef __STM32__
 	tickcounter = 1000;
 	while ( ! ( Reg->SR & USART_SR_RXNE ) && tickcounter );
-	#endif
 	return Reg->DR;	
 }
 
 void
 Uart::init ( int channel, int baud )
 {
-	#ifdef __STM32__
 	switch ( channel )
 	{
 		case 1:
@@ -99,7 +93,6 @@ Uart::init ( int channel, int baud )
 	Reg->CR1 &= ~USART_CR1_M;
 	Reg->CR2 &= ~USART_CR2_STOP;
 	Reg->CR1 |= USART_CR1_UE | USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE;
-	#endif
 }
 
 void

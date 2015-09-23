@@ -1,34 +1,5 @@
 #pragma once
-
 #include <stdint.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <limits.h>
-#ifdef __STM32__
-#include "io_macro.hpp"
-#endif
-#include "version.hpp"
-#include "usart.hpp"
-#include "log.hpp"
-#include "spi.hpp"
-#include "gsm.hpp"
-#include "i2c.hpp"
-#include "rtc.hpp"
-#include "common.hpp"
-#include "timers.hpp"
-#include "sdcard.hpp"
-#include "config.hpp"
-#include "text.hpp"
-#include "morse.hpp"
-
-/* FAT32 */
-#ifdef __STM32__
-#include "ff.h"
-#include "diskio.h"
-#endif
-
 /* NMEA */
 extern "C"
 {
@@ -40,8 +11,9 @@ extern "C"
 	5 - RX (in)
 	6 - GND
 	*/
-#include "parser.h"
+//#include "parser.h"
 }
+
 
 #define OFF false
 #define ON true
@@ -63,12 +35,4 @@ extern "C"
 #define RX3 B,11,SPEED_50MHz
 #define TX3 B,10,SPEED_50MHz
 
-#ifdef __STM32__
-void assert ( int value );
-void freopen ( uart::Uart what, uart::Uart where );
-#endif
-
 extern uint32_t tickcounter;
-extern uint32_t uarttimeout;
-extern uint32_t gsmtimeout;
-extern uart::Stack gsmStack;

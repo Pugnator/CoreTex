@@ -1,4 +1,7 @@
 #include <global.hpp>
+#include <stdint.h>
+#include <strings.h>
+#include <string.h>
 
 extern "C"
 {

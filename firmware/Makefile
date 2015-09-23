@@ -1,4 +1,6 @@
+MCU?=STM32F10X_MD
 TARGET?=STM32
+
 ifeq ($(TARGET), STM32)
 	CC:=arm-none-eabi-gcc
 	GPP:=arm-none-eabi-g++
@@ -14,52 +16,36 @@ else ifeq ($(TARGET), Linux)
 endif
 
 DEL:=rm
-
 MAKE:=make
-STARTUP:=startup_stm32f10x_md.s
-CORE:=src/core
-DRIVERS:=src/drivers
-AUX:=src/aux
 
-SUBDIRS=src/fat32 nmea_parser
+SUBDIRS=src/fat32 nmea_parser src/hal
 
 ifeq ($(TARGET), STM32)
 	SRC:=\
 	src/main.cc \
-	$(CORE)/usart.cc \
-	$(CORE)/config.cc \
-	$(CORE)/isr.cc \
-	$(AUX)/compat.cc \
-	$(AUX)/log.cc \
-	$(CORE)/spi.cc \
-	$(CORE)/i2c.cc \
-	$(CORE)/timers.cc \
-	$(CORE)/rtc.cc \
-	$(DRIVERS)/gsm.cc \
-	$(DRIVERS)/sdcard.cc \
-	$(AUX)/common.cc \
-	$(AUX)/morse.cc \
-	$(CORE)/$(STARTUP)
-	
+	src/aux/compat.cc \
+	src/aux/log.cc \
+	src/drivers/gsm.cc \
+	src/drivers/sdcard.cc \
+	src/aux/common.cc \
+	src/aux/morse.cc
 else ifeq ($(TARGET), Linux)
 	SRC:=\
-	src/linux/main.cc \
-	$(CORE)/usart.cc	
-	
+	src/linux/main.cc
 endif
 
 ifeq ($(TARGET), STM32)
 	CFLAGS+=\
 	-O0 -g3 --std=gnu++11 -Wall \
 	-Iinclude -Isrc/fat32 -Inmea_parser \
-	-DSTM32F10X_MD -D_GNU_SOURCE -DDEBUG -D__STM32__\
+	-D$(MCU) -D_GNU_SOURCE -DDEBUG -D__STM32__\
 	-Wno-write-strings \
 	-fno-exceptions -ffunction-sections -fdata-sections -fno-builtin \
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
-	LDFLAGS+=-Tstm32_link.ld -nostartfiles src/fat32/libfat32.a -lm nmea_parser/libnmea.a
+	LDFLAGS+=-Tstm32_link.ld -nostartfiles -lm src/hal/libhal.a #nmea_parser/libnmea.a
 
 else ifeq ($(TARGET), Linux)
-	CFLAGS+=-O0 -g3 --std=c++0x -Wall -Iinclude -Inmea_parser -D_GNU_SOURCE -DDEBUG
+	CFLAGS+=-O0 -g3 --std=c++0x -Wall -Iinclude -Inmea_parser -Iinclude/hal -D_GNU_SOURCE -DDEBUG
 	LDFLAGS+=-lm
 endif
 
@@ -75,12 +61,13 @@ all: subdirs $(EXEC).elf
 $(EXEC).elf: $(OBJ)
 	$(GPP) -o $@ $^ $(LDFLAGS)
 	$(OCOPY) -O binary $(EXEC).elf $(EXEC).bin
-
+	readelf -s program.elf | tail -n +2 | sort -nk3 > stats.txt
 
 subdirs:
 	for dir in $(SUBDIRS); do \
 		$(MAKE) TARGET=$(TARGET) -C $$dir; \
 	done
+
 
 clean:
 	$(DEL) -f $(EXEC).*
@@ -90,9 +77,8 @@ clean:
 	done
 
 install:
-
-debug:
-
+	st-flash erase
+	st-flash --reset write $(EXEC) 0x08000000
 
 .PHONY: subdirs
 

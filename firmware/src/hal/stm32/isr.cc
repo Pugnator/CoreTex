@@ -1,8 +1,10 @@
 #include <global.hpp>
+#include <hal/io_macro.hpp>
+#include <hal/usart.hpp>
+
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
-
-static bool gsmgo = false;
+uint32_t tickcounter;
 
 extern "C"
 {
@@ -13,7 +15,7 @@ extern "C"
 			--tickcounter;
 		}
 	}
-	
+
 	void SPI1_IRQHandler ( void )
 	{
 		if ( SET == ( SPI1->SR & SPI_SR_RXNE ) )
@@ -22,9 +24,9 @@ extern "C"
 			//spresponse = SPI1->DR;
 		}
 	}
-	
+
 	/* Camera/debug port */
-	
+
 	void USART1_IRQHandler ( void )
 	{
 		if ( USART1->SR & USART_SR_RXNE ) //receive
@@ -38,41 +40,14 @@ extern "C"
 			USART1->SR&= ~USART_SR_TC;
 		}
 	}
-	
+
 	/* GSM port */
-	
+
 	void USART2_IRQHandler ( void )
 	{
 		if ( USART2->SR & USART_SR_RXNE ) //receive
 		{
 			char c = USART2->DR;
-#ifdef DEBUG
-			//USART1->DR = c;
-#endif
-			if ( '+' == c )
-			{
-				gsmStack.reset();
-				gsmStack + c;
-			}
-			else
-			{
-				if ( !gsmStack.ready && '\n' == c && strstr ( gsmStack.str(), "\r\nOK" ) )
-				{
-					gsmStack.ready = true;
-					BLINK;
-				}
-				else if ( !gsmStack.ready && '\n' == c && strstr ( gsmStack.str(), ">" ) )
-				{
-					gsmStack.ready = true;
-					BLINK;
-				}
-				else if ( !gsmStack.ready )
-				{
-					gsmStack + c;
-				}
-			}
-			
-			
 			USART2->SR&= ~USART_SR_RXNE;
 		}
 		else if ( USART2->SR & USART_SR_TC ) //transfer
@@ -80,14 +55,14 @@ extern "C"
 			USART2->SR&= ~USART_SR_TC;
 		}
 	}
-	
+
 	/* GPS port */
 	void USART3_IRQHandler ( void )
 	{
 		if ( USART3->SR & USART_SR_RXNE ) //receive
 		{
 			char c = USART3->DR;
-			parseNMEA(c);
+			//parseNMEA(c);
 			//USART1->DR = c;
 			USART3->SR&= ~USART_SR_RXNE;
 		}
@@ -95,10 +70,10 @@ extern "C"
 		{
 			USART3->SR&= ~USART_SR_TC;
 		}
-		
+
 	}
-	
-	
+
+
 	//TO USE: addr2line -e ./bin/program.elf -a 0x8002327 [GDB: p/x pc when it hit for(;;)]
 	void unwindCPUstack ( uint32_t* stackAddress )
 	{
@@ -116,17 +91,17 @@ extern "C"
 		volatile uint32_t lr; /* Link register. */
 		volatile uint32_t pc; /* Program counter. */
 		volatile uint32_t psr;/* Program status register. */
-		
+
 		r0 = stackAddress[0];
 		r1 = stackAddress[1];
 		r2 = stackAddress[2];
 		r3 = stackAddress[3];
-		
+
 		r12 = stackAddress[4];
 		lr = stackAddress[5];
 		pc = stackAddress[6];
 		psr = stackAddress[7];
-		
+
 		/* When the following line is hit, the variables contain the register values. */
 		for ( ;; )
 		{
@@ -137,14 +112,13 @@ extern "C"
 #endif
 		}
 	}
-	
+
 	/* DTR */
 	void EXTI0_IRQHandler ( void )
-	{
-		BLINK;
+	{		
 		//EXTI->PR = EXTI_PR_PR0;
 	}
-	
+
 	void HardFault_Handler ( void )
 	{
 		__asm volatile
@@ -159,7 +133,7 @@ extern "C"
 			" handler_address_const: .word unwindCPUstack    \n"
 		);
 	}
-	
+
 	void MemManage_Handler ( void )
 	{
 		__asm volatile
@@ -174,7 +148,7 @@ extern "C"
 			" handler2_address_const: .word unwindCPUstack    \n"
 		);
 	}
-	
+
 	void BusFault_Handler ( void )
 	{
 		__asm volatile
@@ -189,7 +163,7 @@ extern "C"
 			" handler3_address_const: .word unwindCPUstack    \n"
 		);
 	}
-	
+
 	void UsageFault_Handler ( void )
 	{
 		__asm volatile

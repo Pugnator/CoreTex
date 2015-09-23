@@ -1,0 +1,15 @@
+language: c
+
+compiler:
+  - gcc
+
+install:
+ - sudo apt-get update -qq
+ - sudo apt-get install gcc-arm-none-eabi -y -qq 
+ - pushd firmware
+ - mkdir -p bin
+
+script:
+ - make TARGET=STM32
+ - make clean
+ - make TARGET=Linux

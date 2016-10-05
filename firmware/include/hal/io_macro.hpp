@@ -3,7 +3,7 @@
  *                                                                   *
  * This file is part of OpenXHC project                              *
  *                             WTFPL LICENSE v2                      *
-\*********************************************************************/
+ \*********************************************************************/
 
 #pragma once
 #include <hal/stm32f10x.hpp>
@@ -19,7 +19,6 @@
 ((uint32_t*)GPIO##PORT##_BASE)[PIN>>3u] &= ~(0x0Fu<<((PIN%8u)<<2u));\
 ((uint32_t*)GPIO##PORT##_BASE)[PIN>>3u] |= (MODE|SPEED)<<((PIN%8u)<<2u);\
 }while(0)
-
 
 #define EX_GPIO_INPUT_PD( PORT, PIN, ... )              do{ EX_GPIO_PIN_MODE( PORT, PIN, 0x08u, 0 );  GPIO##PORT->BRR = (1u<<PIN); }while(0)
 #define EX_GPIO_INPUT_PU( PORT, PIN, ... )              do{ EX_GPIO_PIN_MODE( PORT, PIN, 0x08u, 0 );  GPIO##PORT->BSRR = (1u<<PIN); }while(0)

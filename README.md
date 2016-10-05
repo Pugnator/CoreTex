@@ -1,3 +1,3 @@
-[![Build Status](https://travis-ci.org/Pugnator/atrs.svg?branch=master)](https://travis-ci.org/Pugnator/atrs)
+[![Build Status](https://travis-ci.org/Pugnator/CoreTex.svg?branch=master)](https://travis-ci.org/Pugnator/CoreTex)
 
-GSM-GPS tracker for weather balooning, cars etc.
+Yet another HAL macrosystem for Cortex-M3 based MCUs

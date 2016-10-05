@@ -1,20 +1,38 @@
-CC:=arm-none-eabi-gcc
+CC:=arm-none-eabi-g++
 OCOPY:=arm-none-eabi-objcopy
 STRIP:=arm-none-eabi-strip
 DEL:=rm
 
-SRC:=config.cc  i2c.cc  isr.cc  rtc.cc  spi.cc  startup_stm32f10x_md.s  timers.cc  usart.cc startup_stm32f10x_md.s
+BLD?=DBG
+ifeq ($(BLD), DBG)	
+	CFLAGS:=-Og -g3
+else ifeq ($(BLD), REL)
+    CFLAGS:=-Os -ffunction-sections -fdata-sections
+    LDFLAGS+=-Wl,--gc-sections 
+endif
+
+SRC:=	\
+		core.cc \
+		adc.cc \
+		i2c.cc \
+		isr.cc \
+		rtc.cc \
+		spi.cc \
+		vmmu.cc \
+		timers.cc \
+		usart.cc \
+		isr_helper.cc
 
 CFLAGS+=\
-	-O0 -g3 --std=gnu++11 -Wall \
+	--std=gnu++11 -Wall \
 	-I../../include -DSTM32F10X_MD \
 	-D_GNU_SOURCE -DDEBUG -D__STM32__\
 	-Wno-write-strings \
-	-fno-exceptions -ffunction-sections -fdata-sections -fno-builtin \
+	-fno-exceptions -fno-builtin \
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 
 EXEC:=libhal.a
-OBJ=$(join $(addsuffix stm32/, $(dir $(SRC))), $(notdir $(SRC:.cc=.o)))
+OBJ=$(SRC:.cc=.o)
 
 all: $(EXEC)
 
@@ -25,8 +43,8 @@ $(EXEC): $(OBJ)
 	arm-none-eabi-ar rcs $@ $^
 
 clean:
-	$(DEL) -f $(EXEC)
-	find -type f -regex ".*/.*\.\(o\|d\\)" -delete
+	/bin/rm -f $(EXEC)
+	/usr/bin/find . -name "*.o" -type f -print0 | xargs -0 /bin/rm -f
 
 install:
 

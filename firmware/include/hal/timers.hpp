@@ -7,14 +7,17 @@
  */
 namespace Timer
 {
-class timer
-{
-public:
-	timer ( void );
-	void on ( void );
-	void off ( void );
-	void reset ( void );
-private:
-	int channel;
-};
+  class timer
+  {
+  public:
+    timer (void);
+    void
+    on (void);
+    void
+    off (void);
+    void
+    reset (void);
+  private:
+    int channel;
+  };
 }

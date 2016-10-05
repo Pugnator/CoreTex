@@ -12,8 +12,8 @@ _Min_Stack_Size = 0x100; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-  FLASH (rx)      : ORIGIN = 0x08000000, LENGTH = 64K
-  RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 20K
+  FLASH (rx)      : ORIGIN = 0x08000000, LENGTH = 64K  
+  RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 20K  
   MEMORY_B1 (rx)  : ORIGIN = 0x60000000, LENGTH = 0K
 }
 
@@ -91,6 +91,11 @@ SECTIONS
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
   } >RAM
+  
+  .vectorsSection 0x20001000 :
+  {    
+    KEEP(*(.vectorsSection))       
+  } >RAM
 
   /* Uninitialized data section */
   . = ALIGN(4);
@@ -110,6 +115,7 @@ SECTIONS
 
   PROVIDE ( end = _ebss );
   PROVIDE ( _end = _ebss );
+  PROVIDE ( __end__ = _ebss );
 
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :

@@ -1,89 +1,88 @@
+/*******************************************************************************
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 2015, 2016
+ *******************************************************************************/
 #include <global.hpp>
 #include <common.hpp>
-#include <hal/io_macro.hpp>
+#include <log.hpp>
+#include <drivers/storage/mmc/fat32/ff.h>
+#include <hal/adc.hpp>
+#include <hal/spi.hpp>
 #include <hal/usart.hpp>
+#include <hal/vmmu.hpp>
+#include <drivers/gps.hpp>
+#include <drivers/gsm.hpp>
+#include <drivers/mmc.hpp>
+#include <drivers/ov528.hpp>
+#include <drivers/console.hpp>
+#include <drivers/nrf24.hpp>
+#include <drivers/bc470.hpp>
+#include <drivers/xmodem.hpp>
 
-using namespace uart;
+using namespace HAL;
+using namespace NRF24;
+using namespace ADC;
+using namespace SPI;
+using namespace OV528;
+using namespace MMC;
+using namespace XMODEM;
+using namespace BC470;
 
-#define SCK A,5,SPEED_10MHz
-#define MOSI A,7,SPEED_10MHz
-#define MISO A,6,SPEED_10MHz
-#define CS A,4,SPEED_10MHz
+DSTATUS disk_initialize (BYTE drv = 0)
+  {
+    return 0;
+  }
+DSTATUS disk_status (BYTE drv = 0)
+  {
+    return 0;
+  }
+DRESULT disk_read (BYTE drv,BYTE* buff,DWORD sector,UINT count)
+  {
+    return RES_NOTRDY;
+  }
+DRESULT disk_write (BYTE drv, const BYTE* buff, DWORD sector, UINT count)
+  {
+    return RES_NOTRDY;
+  }
+DWORD get_fattime (void)
+  {
+    return RES_NOTRDY;
+  }
+DRESULT disk_ioctl (BYTE drv,BYTE cmd,void* buff)
+  {
+    return RES_NOTRDY;
+  }
 
-void assert ( int value )
-{
-	if ( !value )
-		NVIC_SystemReset();
-}
+void inline infinite_loop(void)
+  {
+    for (;;)
+      ;
+  }
 
-void check_last_reset_state ( void )
-{
-	if ( RCC->CSR & RCC_CSR_SFTRSTF )
-	{
-	
-	}
-	else if ( RCC->CSR & RCC_CSR_PINRSTF )
-	{
-		NVIC_SystemReset();
-	}
-	else if ( RCC->CSR & RCC_CSR_LPWRRSTF )
-	{
-		NVIC_SystemReset();
-	}
-	else if ( RCC->CSR & RCC_CSR_PORRSTF )
-	{
-		NVIC_SystemReset();
-	}
-}
+int main(void)
+  {
+    Console dbgout(Uart(1, CONSOLE_SPEED));
+    dbgout.cls();
+    dbg_print("Hello world\n");
+    dbgout.print("!!!");
+    //dbgout.xprintf("System started\n");
+    //GPS::Gps g(2, 115200);
+    //MODEM::Modem mdm(3, 19200, &dbgout);
+    //dbgout.xprintf("SIM900 %s\n", mdm.ok ? "ON" : "OFF");
+    //dbgout.xprintf("SIM900 setup: %s\n", mdm.setup() ? "OK" : "FAIL");
+    //dbgout.xprintf("SMS number: %lu\n", mdm.get_sms_amount());
 
-int main ( void )
-{
-__ASM volatile ( "cpsie i" : : : "memory" );
-      PIN_OUT_PP ( LED );
-      PIN_OUT_PP ( SWEEP );
-      PIN_INPUT_FLOATING ( GSMDCD );
-      PIN_INPUT_FLOATING ( GSMCTS );
-      PIN_OUT_PP ( GSMDTR );
-	PIN_LOW ( LED );
-	PIN_LOW ( SWEEP );
-	Uart dbgout ( 1, 115200, true );
-	Uart gsm ( 2, 19200, true );
-	Uart gps ( 3, 115200, true );
-	
-	dbgout.cls();
-	dbgout.cursor ( OFF );
-	dbgout < "WELCOME_TEXT";
-	dbgout < "===========";
-	//FATFS FatFs;
-	//f_mount(&FatFs, "", 0);
-	
-	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
-	
-	
-	//SCK and MOSI with default alternate function (not re-mapped) push-pull
-	//PIN_OUT_ALT_PP ( SCK );
-	PIN_OUT_ALT_PP ( MOSI );
-	// Configure MISO as Input with internal pull-up
-	PIN_INPUT_PU ( MISO );
-	PIN_OUT_PP ( CS );
-	SPI1 -> CR1 = 0;
-	SPI1->CR1 |= SPI_CR1_BR
-				 | SPI_CR1_SSM
-				 | SPI_CR1_SSI
-				 | SPI_CR1_MSTR
-				 | SPI_CR1_SPE;
-				 
-	SPI1->CR2 |= SPI_CR2_RXNEIE;
-	NVIC_EnableIRQ ( ( IRQn_Type ) SPI1_IRQn );
-	NVIC_SetPriority ( ( IRQn_Type ) SPI1_IRQn, 2 );	
-	
-	dbgout < "Modem inited";
-	//m.smsw ( "+79670769685", "Class Modem" );
-	
-	for ( ;; )
-	{
-		BLINK;
-		delay_ms ( 1500 );
-		//morse_print("StratoProbe-1, Alt 32599, Spd 12, VSI -2");
-	}
-}
+    infinite_loop();
+  }

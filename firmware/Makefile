@@ -1,6 +1,9 @@
 MCU?=STM32F10X_MD
 TARGET?=STM32
 
+
+PROJECTNAME:=CoreText
+AR:=arm-none-eabi-ar
 GPP:=arm-none-eabi-g++
 OCOPY:=arm-none-eabi-objcopy
 STRIP:=arm-none-eabi-strip
@@ -53,6 +56,10 @@ SRC+=\
 	src/hal/startup.s
 
 
+CORELIBS +=\
+	src/hal/libhal.a \
+	src/drivers/storage/mmc/fat32/libfat32.a
+
 
 	CFLAGS+=\
 	--std=gnu++11 -Wall \
@@ -67,14 +74,14 @@ SRC+=\
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 	LDFLAGS+=-Tstm32_link.ld \
 	-lm \
-	src/hal/libhal.a \
-	src/drivers/storage/mmc/fat32/libfat32.a
+	$(CORELIBS)
 	
 OBJ=$(SRC:%.cc=%.o)
 
-EXEC:=program.elf
+EXEC:=$(PROJECTNAME).elf
+LIBEXEC:=$(PROJECTNAME).a
 
-all: subdirs $(EXEC)
+all: subdirs $(EXEC) $(LIBEXEC)
 
 %.o: %.cc
 	$(GPP) -c -o $@ $< $(CFLAGS)
@@ -82,9 +89,14 @@ all: subdirs $(EXEC)
 $(EXEC): $(OBJ)
 	$(GPP) -o $@ $^ $(LDFLAGS)
 	$(OCOPY) -O binary $(EXEC) $(EXEC).bin
-	@#readelf -s $(EXEC) | tail -n +2 | sort -nk3 > stats.txt
 	@stat -c "Output size of <%n> is %s" $(EXEC).bin
 	@$(SIZE) --format=berkeley $(EXEC)
+
+NOMAINOBJ := $(filter-out src/main.o,$(OBJ))
+
+$(LIBEXEC): $(NOMAINOBJ) $(CORELIBS)
+	$(AR) rcs $@ $^
+	@stat -c "Output size of <%n> is %s" $(LIBEXEC)
 
 subdirs:
 	for dir in $(SUBDIRS); do \

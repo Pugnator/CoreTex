@@ -52,7 +52,7 @@ static char *arg1 = nullptr;
 static char *arg2 = nullptr;
 void (*cmdptr)(Console *self);
 
-static command cmd_list[] =
+static const command cmd_list[] =
   {
     {
     "ver", &ver_func

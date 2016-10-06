@@ -16,14 +16,14 @@ MAKE:=make --always-make
 
 SUBDIRS=\
 src/drivers/storage/mmc/fat32 \
-src/hal
+src/core
 
 BLD?=DBG
 ifeq ($(BLD), DBG)	
 	CFLAGS:=-Og -g3 -DDEBUG	-ffunction-sections -fdata-sections
 	LDFLAGS+=external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/libstd.a -Wl,--gc-sections 
-else ifeq ($(BLD), REL)
-   CFLAGS:=-Os -ffunction-sections -fdata-sections
+else
+   CFLAGS:=-Os -s -ffunction-sections -fdata-sections
    LDFLAGS+=-Wl,--gc-sections 
 endif
 
@@ -51,7 +51,7 @@ MAINSRC:=\
 	src/main.cc
 
 CORELIBS +=\
-	src/hal/libhal.a \
+	src/core/libcore.a \
 	src/drivers/storage/mmc/fat32/libfat32.a
 
 
@@ -68,7 +68,7 @@ CFLAGS+=\
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 
 LDFLAGS+=\
-	-Tstm32_link.ld \
+  -Tstm32_link.ld \
 	-lm \
 	$(CORELIBS) \
 	$(LIBEXEC)

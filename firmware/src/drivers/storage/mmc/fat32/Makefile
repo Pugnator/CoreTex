@@ -4,7 +4,7 @@ OBJ=$(SRC:%.c=%.o)
 
 LIBFAT32:=libfat32.a
 
-CFLAGS+=-O2 -std=c++98 -I.
+CFLAGS+=-Os -s -ffunction-sections -fdata-sections -std=c++98 -I.
 
 .PHONY: all
 all: $(LIBFAT32)

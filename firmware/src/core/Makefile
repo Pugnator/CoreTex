@@ -11,8 +11,8 @@ DEL:=rm
 BLD?=DBG
 ifeq ($(BLD), DBG)	
 	CFLAGS:=-Og -g3
-else ifeq ($(BLD), REL)
-    CFLAGS:=-Os -ffunction-sections -fdata-sections
+else
+    CFLAGS:=-Os -s -ffunction-sections -fdata-sections
     LDFLAGS+=-Wl,--gc-sections 
 endif
 
@@ -36,7 +36,7 @@ CFLAGS+=\
 	-fno-exceptions -fno-builtin \
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 
-EXEC:=libhal.a
+EXEC:=libcore.a
 OBJ=$(SRC:.cc=.o)
 
 all: $(EXEC)
@@ -54,6 +54,3 @@ clean:
 	/bin/rm -f $(EXEC)
 	/usr/bin/find . -name "*.o" -type f -print0 | xargs -0 /bin/rm -f
 
-install:
-
-debug:

@@ -41,10 +41,10 @@ void inline infinite_loop(void)
 
 int main(void)
   {
-    Console dbgout(Uart(1, CONSOLE_SPEED));
-    dbgout.cls();
-    dbg_print("Hello world\n");
-    dbgout.print("!!!");
+    Uart test(1, CONSOLE_SPEED);
+    test.writestr("HI THERE!");
+    //dbg_print("Hello world\n");
+    //dbgout.print("!!!");
     //dbgout.xprintf("System started\n");
     //GPS::Gps g(2, 115200);
     //MODEM::Modem mdm(3, 19200, &dbgout);

@@ -32,13 +32,6 @@
 #include <drivers/xmodem.hpp>
 
 using namespace HAL;
-using namespace NRF24;
-using namespace ADC;
-using namespace SPI;
-using namespace OV528;
-using namespace MMC;
-using namespace XMODEM;
-using namespace BC470;
 
 void inline infinite_loop(void)
   {

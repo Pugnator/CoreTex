@@ -1,6 +1,11 @@
-CC:=arm-none-eabi-g++
-OCOPY:=arm-none-eabi-objcopy
-STRIP:=arm-none-eabi-strip
+GCCPRFX:=arm-none-eabi
+
+AR:=$(GCCPRFX)-ar
+GPP:=$(GCCPRFX)-g++
+ASM:=$(GCCPRFX)-as
+OCOPY:=$(GCCPRFX)-objcopy
+STRIP:=$(GCCPRFX)-strip
+SIZE:=$(GCCPRFX)-size
 DEL:=rm
 
 BLD?=DBG
@@ -11,17 +16,17 @@ else ifeq ($(BLD), REL)
     LDFLAGS+=-Wl,--gc-sections 
 endif
 
-SRC:=	\
-		core.cc \
-		adc.cc \
-		i2c.cc \
-		isr.cc \
-		rtc.cc \
-		spi.cc \
-		vmmu.cc \
-		timers.cc \
-		usart.cc \
-		isr_helper.cc
+SRC:=\
+	core.cc \
+	adc.cc \
+	i2c.cc \
+	isr.cc \
+	rtc.cc \
+	spi.cc \
+	vmmu.cc \
+	timers.cc \
+	usart.cc \
+	isr_helper.cc
 
 CFLAGS+=\
 	--std=gnu++11 -Wall \
@@ -37,10 +42,13 @@ OBJ=$(SRC:.cc=.o)
 all: $(EXEC)
 
 %.o: %.cc
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(GPP) -c -o $@ $< $(CFLAGS)
 
-$(EXEC): $(OBJ)
-	arm-none-eabi-ar rcs $@ $^
+startup.o: startup.s
+	$(ASM) startup.s -o startup.o	
+
+$(EXEC): $(OBJ) startup.o
+	$(AR) rcs $@ $^
 
 clean:
 	/bin/rm -f $(EXEC)

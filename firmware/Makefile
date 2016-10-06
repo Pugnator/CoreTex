@@ -2,13 +2,15 @@ MCU?=STM32F10X_MD
 TARGET?=STM32
 
 
-PROJECTNAME:=CoreText
-AR:=arm-none-eabi-ar
-GPP:=arm-none-eabi-g++
-OCOPY:=arm-none-eabi-objcopy
-STRIP:=arm-none-eabi-strip
-SIZE:=arm-none-eabi-size
+PROJECTNAME:=CoreTex
+GCCPRFX:=arm-none-eabi
 
+AR:=$(GCCPRFX)-ar
+GPP:=$(GCCPRFX)-g++
+ASM:=$(GCCPRFX)-as
+OCOPY:=$(GCCPRFX)-objcopy
+STRIP:=$(GCCPRFX)-strip
+SIZE:=$(GCCPRFX)-size
 
 MAKE:=make --always-make 
 
@@ -24,15 +26,6 @@ else ifeq ($(BLD), REL)
    CFLAGS:=-Os -ffunction-sections -fdata-sections
    LDFLAGS+=-Wl,--gc-sections 
 endif
-
-TEST_RUN_MODE?=NO
-ifeq ($(TEST_RUN_MODE), YES)	
-	SRC:=src/tests/main.cc \
-		src/tests/memtest.cc
-else ifeq ($(TEST_RUN_MODE), NO)
-   SRC:=src/main.cc
-endif
-
 
 SRC+=\
 	src/other/compat.cc \
@@ -52,16 +45,17 @@ SRC+=\
 	src/drivers/positioning/gps/rmc.cc \
 	src/drivers/file_transfer/xmodem/xmodem.cc \
 	src/drivers/wireless/nrf24l01/nrf24.cc \
-	src/drivers/wireless/bc470/bc470.cc \
-	src/hal/startup.s
+	src/drivers/wireless/bc470/bc470.cc	
 
+MAINSRC:=\
+	src/main.cc
 
 CORELIBS +=\
 	src/hal/libhal.a \
 	src/drivers/storage/mmc/fat32/libfat32.a
 
 
-	CFLAGS+=\
+CFLAGS+=\
 	--std=gnu++11 -Wall \
 	-Iinclude -Isrc \
 	-Iexternal/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc \
@@ -72,29 +66,33 @@ CORELIBS +=\
 	-fno-exceptions \
 	-fno-builtin -nostdlib \
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
-	LDFLAGS+=-Tstm32_link.ld \
+
+LDFLAGS+=\
+	-Tstm32_link.ld \
 	-lm \
-	$(CORELIBS)
+	$(CORELIBS) \
+	$(LIBEXEC)
 	
-OBJ=$(SRC:%.cc=%.o)
+OBJ:=$(SRC:%.cc=%.o)
 
 EXEC:=$(PROJECTNAME).elf
 LIBEXEC:=$(PROJECTNAME).a
 
-all: subdirs $(EXEC) $(LIBEXEC)
+all: subdirs $(LIBEXEC)
+
+bin: $(EXEC)
 
 %.o: %.cc
 	$(GPP) -c -o $@ $< $(CFLAGS)
 
-$(EXEC): $(OBJ)
+$(EXEC): src/main.o
 	$(GPP) -o $@ $^ $(LDFLAGS)
 	$(OCOPY) -O binary $(EXEC) $(EXEC).bin
 	@stat -c "Output size of <%n> is %s" $(EXEC).bin
 	@$(SIZE) --format=berkeley $(EXEC)
 
-NOMAINOBJ := $(filter-out src/main.o,$(OBJ))
 
-$(LIBEXEC): $(NOMAINOBJ) $(CORELIBS)
+$(LIBEXEC): $(OBJ) $(CORELIBS)
 	$(AR) rcs $@ $^
 	@stat -c "Output size of <%n> is %s" $(LIBEXEC)
 

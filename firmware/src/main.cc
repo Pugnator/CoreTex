@@ -40,31 +40,6 @@ using namespace MMC;
 using namespace XMODEM;
 using namespace BC470;
 
-DSTATUS disk_initialize (BYTE drv = 0)
-  {
-    return 0;
-  }
-DSTATUS disk_status (BYTE drv = 0)
-  {
-    return 0;
-  }
-DRESULT disk_read (BYTE drv,BYTE* buff,DWORD sector,UINT count)
-  {
-    return RES_NOTRDY;
-  }
-DRESULT disk_write (BYTE drv, const BYTE* buff, DWORD sector, UINT count)
-  {
-    return RES_NOTRDY;
-  }
-DWORD get_fattime (void)
-  {
-    return RES_NOTRDY;
-  }
-DRESULT disk_ioctl (BYTE drv,BYTE cmd,void* buff)
-  {
-    return RES_NOTRDY;
-  }
-
 void inline infinite_loop(void)
   {
     for (;;)

@@ -9,16 +9,19 @@ ASM:=$(GCCPRFX)-as
 OCOPY:=$(GCCPRFX)-objcopy
 STRIP:=$(GCCPRFX)-strip
 SIZE:=$(GCCPRFX)-size
-RM:=rm -f
 MKDIR_P:=mkdir -p
 
-PROJECTROOT:=../..
-LIBSDIR:=../../libs
-OBJSDIR:=../../obj
+PROJECTROOT:=../../../..
+LIBSDIR:=../../../../libs
+OBJSDIR:=../../../../obj
+SRC:=$(wildcard *.cc)
+
+MAKE:=make
+
 
 CFLAGS+=\
 	--std=gnu++11 -Wall \
-	-I$(PROJECTROOT)/include -I$(PROJECTROOT)/src \
+	-I$(PROJECTROOT)/include -I$(PROJECTROOT)/src -I. \
 	-Iexternal/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc \
 	-Iexternal/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x \
 	-D$(MCU) -D_GNU_SOURCE -D__STM32__\
@@ -28,19 +31,8 @@ CFLAGS+=\
 	-fno-builtin -nostdlib \
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 
-SRC:=$(wildcard *.cc)
-
-CFLAGS+=\
-	--std=gnu++11 -Wall \
-	-I../../include -DSTM32F10X_MD \
-	-D_GNU_SOURCE -DDEBUG -D__STM32__\
-	-Wno-write-strings \
-	-fno-exceptions -fno-builtin \
-	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
-
-LIBEXEC:=$(LIBSDIR)/$(LIBNAME).a
 OBJ:=$(SRC:%.cc=$(OBJSDIR)/%.o)
-STARTUP:=$(OBJSDIR)/startup.o
+LIBEXEC:=$(LIBSDIR)/$(LIBNAME).a
 
 all: directories $(LIBEXEC)
 
@@ -55,12 +47,9 @@ $(OBJSDIR):
 $(OBJSDIR)/%.o: %.cc
 	$(GPP) -c -o $@ $< $(CFLAGS)
 
-$(STARTUP): startup.s
-	$(ASM) startup.s -o $(STARTUP)
-
-$(LIBEXEC): $(OBJ) $(STARTUP)
+$(LIBEXEC): $(OBJ)
 	$(AR) rcs $@ $^
+	@stat -c "Output size of <%n> is %s" $(LIBEXEC)	
 
 clean:
-	$(RM) $(LIBEXEC) $(OBJ) $(STARTUP)
-
+	rm -f $(LIBEXEC) $(OBJ)

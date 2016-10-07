@@ -14,7 +14,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * 2015
  *******************************************************************************/
-#include <drivers/storage/mmc/fat32/diskio.h>
+#include <drivers/storage/fat32/diskio.h>
 #include <global.hpp>
 #include <hal/stm32f10x.hpp>
 #include <hal/io_macro.hpp>

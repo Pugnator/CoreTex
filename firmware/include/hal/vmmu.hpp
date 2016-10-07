@@ -72,7 +72,7 @@
 //#define MEMORY_ALLOC_DEBUG
 
 
-#define POOL_SIZE 4 * 1024
+#define POOL_SIZE 1 * 1024
 #define MIN_POOL_ALLOC_QUANTAS 16
 
 

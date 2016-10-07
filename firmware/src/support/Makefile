@@ -12,6 +12,7 @@ SIZE:=$(GCCPRFX)-size
 RM:=rm -f
 MKDIR_P:=mkdir -p
 
+
 PROJECTROOT:=../..
 LIBSDIR:=../../libs
 OBJSDIR:=../../obj
@@ -40,7 +41,6 @@ CFLAGS+=\
 
 LIBEXEC:=$(LIBSDIR)/$(LIBNAME).a
 OBJ:=$(SRC:%.cc=$(OBJSDIR)/%.o)
-STARTUP:=$(OBJSDIR)/startup.o
 
 all: directories $(LIBEXEC)
 
@@ -55,12 +55,9 @@ $(OBJSDIR):
 $(OBJSDIR)/%.o: %.cc
 	$(GPP) -c -o $@ $< $(CFLAGS)
 
-$(STARTUP): startup.s
-	$(ASM) startup.s -o $(STARTUP)
-
 $(LIBEXEC): $(OBJ) $(STARTUP)
 	$(AR) rcs $@ $^
 
 clean:
-	$(RM) $(LIBEXEC) $(OBJ) $(STARTUP)
+	$(RM) $(LIBEXEC) $(OBJ)
 

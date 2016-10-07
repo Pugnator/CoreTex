@@ -1,5 +1,5 @@
 #pragma once
-#include <drivers/storage/mmc/fat32/diskio.h>
+#include <drivers/storage/fat32/diskio.h>
 #include <hal/stm32f10x.hpp>
 #include <global.hpp>
 #include <common.hpp>

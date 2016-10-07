@@ -11,49 +11,36 @@ ASM:=$(GCCPRFX)-as
 OCOPY:=$(GCCPRFX)-objcopy
 STRIP:=$(GCCPRFX)-strip
 SIZE:=$(GCCPRFX)-size
+MKDIR_P = mkdir -p
+MAKE:=make --always-make
 
-MAKE:=make --always-make 
+LIBSDIR:=libs
+OBJSDIR:=obj
+MRI:=usedlibs.mri
 
-SUBDIRS=\
-src/drivers/storage/mmc/fat32 \
-src/core
+CORELIB:=\
+	src/core
+
+SUPPORT:=\
+	src/support	
+
+DRIVERS:=src/drivers
 
 BLD?=DBG
+export $(BLD)
 ifeq ($(BLD), DBG)	
 	CFLAGS:=-Og -g3 -DDEBUG	-ffunction-sections -fdata-sections
-	LDFLAGS+=external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/libstd.a -Wl,--gc-sections 
+	LDFLAGS:=external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/libstd.a -Wl,--gc-sections 
 else
-   CFLAGS:=-Os -s -ffunction-sections -fdata-sections
-   LDFLAGS+=-Wl,--gc-sections 
+   CFLAGS:=-Os -ffunction-sections -fdata-sections
+   LDFLAGS:=-Wl,--gc-sections 
 endif
 
+export CFLAGS
+export LDFLAGS
+
 SRC+=\
-	src/other/compat.cc \
-	src/other/log.cc \
-	src/other/common.cc \
-	src/other/morse.cc \
-	src/drivers/generic/driver.cc \
-	src/drivers/storage/mmc/mmc.cc \
-	src/drivers/wireless/gsm/gsm.cc \
-	src/drivers/wireless/gsm/atcmd.cc \
-	src/drivers/userio/console/xprintf.cc \
-	src/drivers/userio/console/console.cc \
-	src/drivers/imaging/ov528/ov528.cc \
-	src/drivers/positioning/gps/gps.cc \
-	src/drivers/positioning/gps/gga.cc \
-	src/drivers/positioning/gps/vtg.cc \
-	src/drivers/positioning/gps/rmc.cc \
-	src/drivers/file_transfer/xmodem/xmodem.cc \
-	src/drivers/wireless/nrf24l01/nrf24.cc \
-	src/drivers/wireless/bc470/bc470.cc	
-
-MAINSRC:=\
-	src/main.cc
-
-CORELIBS +=\
-	src/core/libcore.a \
-	src/drivers/storage/mmc/fat32/libfat32.a
-
+	src/main.cc	
 
 CFLAGS+=\
 	--std=gnu++11 -Wall \
@@ -69,47 +56,62 @@ CFLAGS+=\
 
 LDFLAGS+=\
   -Tstm32_link.ld \
-	-lm \
-	$(CORELIBS) \
-	$(LIBEXEC)
+	-lm	
 	
 OBJ:=$(SRC:%.cc=%.o)
 
 EXEC:=$(PROJECTNAME).elf
-LIBEXEC:=$(PROJECTNAME).a
+LIBEXEC:=$(LIBSDIR)/$(PROJECTNAME).a
 
-all: subdirs $(LIBEXEC)
+all: coretex $(EXEC)
 
-bin: $(EXEC)
+coretex:	corelib drivers support $(LIBEXEC)
 
 %.o: %.cc
 	$(GPP) -c -o $@ $< $(CFLAGS)
 
-$(EXEC): src/main.o
-	$(GPP) -o $@ $^ $(LDFLAGS)
+$(EXEC): $(OBJ)
+	$(GPP) -o $@ $^ $(LDFLAGS) $(LIBEXEC)
 	$(OCOPY) -O binary $(EXEC) $(EXEC).bin
 	@stat -c "Output size of <%n> is %s" $(EXEC).bin
 	@$(SIZE) --format=berkeley $(EXEC)
 
 
-$(LIBEXEC): $(OBJ) $(CORELIBS)
-	$(AR) rcs $@ $^
+$(LIBEXEC): $(MRI)
+	$(AR) M <$^
 	@stat -c "Output size of <%n> is %s" $(LIBEXEC)
 
-subdirs:
-	for dir in $(SUBDIRS); do \
+corelib:
+	for dir in $(CORELIB); do \
+		$(MAKE) TARGET=$(TARGET) -C $$dir; \
+	done
+
+support:
+	for dir in $(SUPPORT); do \
+		$(MAKE) TARGET=$(TARGET) -C $$dir; \
+	done
+
+drivers:
+	for dir in $(DRIVERS); do \
 		$(MAKE) TARGET=$(TARGET) -C $$dir; \
 	done
 
 
 clean:
-	rm -f $(EXEC).* $(EXEC)
-	/usr/bin/find . -name "*.o" -type f -print0 | xargs -0 /bin/rm -f
+	rm -f $(EXEC) $(EXEC).bin $(LIBEXEC)
+	rm -rf $(LIBSDIR)	$(OBJSDIR)
 
-	for dir in $(SUBDIRS); do \
+	for dir in $(CORELIB); do \
 		$(MAKE) TARGET=$(TARGET) -C $$dir clean; \
 	done
 
-.PHONY: subdirs
+	for dir in $(DRIVERS); do \
+		$(MAKE) TARGET=$(TARGET) -C $$dir clean; \
+	done
 
+	for dir in $(SUPPORT); do \
+		$(MAKE) TARGET=$(TARGET) -C $$dir clean; \
+	done
 
+.PHONY: corelib
+.PHONY: drivers

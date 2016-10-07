@@ -150,7 +150,6 @@ void Uart::isr(void)
   {
     if (self->Reg->SR & USART_SR_RXNE) //receive
       {
-        BLINK;
         self->Reg->SR &= ~USART_SR_RXNE;
       }
     else if (self->Reg->SR & USART_SR_TC) //transfer

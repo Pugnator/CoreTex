@@ -41,6 +41,7 @@ void inline infinite_loop(void)
 
 int main(void)
   {
+	infinite_loop();
     Uart test(1, CONSOLE_SPEED);
     test.writestr("HI THERE!");
     //dbg_print("Hello world\n");
@@ -52,5 +53,5 @@ int main(void)
     //dbgout.xprintf("SIM900 setup: %s\n", mdm.setup() ? "OK" : "FAIL");
     //dbgout.xprintf("SMS number: %lu\n", mdm.get_sms_amount());
 
-    infinite_loop();
+
   }

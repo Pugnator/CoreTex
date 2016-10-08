@@ -1,0 +1,6 @@
+device STM32F103C8
+erase
+loadbin ../bin/CoreTex.elf.bin, 0x08000000
+r
+g
+q

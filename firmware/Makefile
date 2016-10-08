@@ -16,6 +16,7 @@ MAKE:=make --always-make
 
 LIBSDIR:=libs
 OBJSDIR:=obj
+OUTPUTDIR:=bin
 MRI:=usedlibs.mri
 
 CORELIB:=\
@@ -60,10 +61,10 @@ LDFLAGS+=\
 	
 OBJ:=$(SRC:%.cc=%.o)
 
-EXEC:=$(PROJECTNAME).elf
+EXEC:=$(OUTPUTDIR)/$(PROJECTNAME).elf
 LIBEXEC:=$(LIBSDIR)/$(PROJECTNAME).a
 
-all: coretex $(EXEC)
+all: directories coretex $(EXEC)
 
 coretex:	corelib drivers support $(LIBEXEC)
 
@@ -80,6 +81,11 @@ $(EXEC): $(OBJ)
 $(LIBEXEC): $(MRI)
 	$(AR) M <$^
 	@stat -c "Output size of <%n> is %s" $(LIBEXEC)
+
+directories:	$(OUTPUTDIR)
+
+$(OUTPUTDIR):
+	$(MKDIR_P) $(OUTPUTDIR)
 
 corelib:
 	for dir in $(CORELIB); do \
@@ -99,7 +105,7 @@ drivers:
 
 clean:
 	rm -f $(EXEC) $(EXEC).bin $(LIBEXEC)
-	rm -rf $(LIBSDIR)	$(OBJSDIR)
+	rm -rf $(OUTPUTDIR) $(LIBSDIR)	$(OBJSDIR)
 
 	for dir in $(CORELIB); do \
 		$(MAKE) TARGET=$(TARGET) -C $$dir clean; \

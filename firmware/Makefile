@@ -1,7 +1,6 @@
 MCU?=STM32F10X_MD
 TARGET?=STM32
 
-
 PROJECTNAME:=CoreTex
 GCCPRFX:=arm-none-eabi
 
@@ -22,10 +21,14 @@ MRI:=usedlibs.mri
 CORELIB:=\
 	src/core
 
-SUPPORT:=\
+AUXSRC:=\
 	src/support	
 
-DRIVERS:=src/drivers
+DRIVERS:=\
+	src/drivers
+
+SUPPORT:=\
+	src/support
 
 BLD?=DBG
 export $(BLD)
@@ -33,15 +36,58 @@ ifeq ($(BLD), DBG)
 	CFLAGS:=-Og -g3 -DDEBUG	-ffunction-sections -fdata-sections
 	LDFLAGS:=external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/libstd.a -Wl,--gc-sections 
 else
-   CFLAGS:=-Os -ffunction-sections -fdata-sections
-   LDFLAGS:=-Wl,--gc-sections 
+	CFLAGS:=-Os -ffunction-sections -fdata-sections
+	LDFLAGS:=-Wl,--gc-sections 
 endif
 
 export CFLAGS
 export LDFLAGS
 
+######################## SOURCES ###############################
+
 SRC+=\
-	src/main.cc	
+	src/main.cc
+
+DRIVERSSRC:=\
+	$(DRIVERS)/file_transfer/xmodem/xmodem.cc \
+	$(DRIVERS)/generic/driver.cc \
+	$(DRIVERS)/imaging/ov528/ov528.cc \
+	$(DRIVERS)/positioning/gps/gga.cc \
+	$(DRIVERS)/positioning/gps/gps.cc \
+	$(DRIVERS)/positioning/gps/rmc.cc \
+	$(DRIVERS)/positioning/gps/vtg.cc \
+	$(DRIVERS)/storage/mmc/mmc.cc \
+	$(DRIVERS)/userio/console/console.cc \
+	$(DRIVERS)/userio/console/xprintf.cc \
+	$(DRIVERS)/wireless/bc470/bc470.cc \
+	$(DRIVERS)/wireless/gsm/atcmd.cc \
+	$(DRIVERS)/wireless/gsm/gsm.cc \
+	$(DRIVERS)/wireless/nrf24l01/nrf24.cc
+
+CORESRC:=\
+	$(CORELIB)/adc.cc \
+	$(CORELIB)/core.cc \
+	$(CORELIB)/gpio.cc \
+	$(CORELIB)/i2c.cc \
+	$(CORELIB)/isr.cc \
+	$(CORELIB)/isr_helper.cc \
+	$(CORELIB)/rtc.cc \
+	$(CORELIB)/spi.cc \
+	$(CORELIB)/timers.cc \
+	$(CORELIB)/usart.cc \
+	$(CORELIB)/vmmu.cc
+
+STARTUP:=\
+	$(CORELIB)/startup.s
+
+SUPPORTSRC:=\
+	$(SUPPORT)/common.cc \
+	$(SUPPORT)/compat.cc \
+	$(SUPPORT)/log.cc \
+	$(SUPPORT)/queue.cc \
+	$(SUPPORT)/morse.cc
+
+####################################################
 
 CFLAGS+=\
 	--std=gnu++11 -Wall \
@@ -56,43 +102,70 @@ CFLAGS+=\
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 
 LDFLAGS+=\
-  -Tstm32_link.ld \
+	-Tstm32_link.ld \
 	-lm	
 	
-OBJ:=$(SRC:%.cc=%.o)
+OBJ:=$(DRIVERSSRC:%.cc=$(OBJSDIR)/%.o)
+OBJ+=$(STARTUP:%.s=$(OBJSDIR)/%.o)
+OBJ+=$(CORESRC:%.cc=$(OBJSDIR)/%.o)
+OBJ+=$(SUPPORTSRC:%.cc=$(OBJSDIR)/%.o)
+
+PROGOBJ:=$(SRC:%.cc=$(OBJSDIR)/%.o)
 
 EXEC:=$(OUTPUTDIR)/$(PROJECTNAME).elf
+FIRMWARE:=$(OUTPUTDIR)/$(PROJECTNAME)_linked.elf
 LIBEXEC:=$(LIBSDIR)/$(PROJECTNAME).a
 
-all: directories coretex $(EXEC)
+all: clean library firmware linked_firmware
 
-coretex:	corelib drivers support $(LIBEXEC)
+linked_firmware: directories library $(FIRMWARE)
 
-%.o: %.cc
+firmware: directories $(EXEC)
+
+library: corelib drivers supportlib $(LIBEXEC)
+
+$(OBJSDIR)/%.o: %.cc
+	$(MKDIR_P) `dirname $@`
 	$(GPP) -c -o $@ $< $(CFLAGS)
 
-$(EXEC): $(OBJ)
-	$(GPP) -o $@ $^ $(LDFLAGS) $(LIBEXEC)
+$(OBJSDIR)/%.o: %.s
+	$(MKDIR_P) `dirname $@`
+	$(ASM) $< -o $@
+
+$(EXEC): $(OBJ)	$(PROGOBJ)
+	$(GPP) -o $@ $^ $(LDFLAGS)
 	$(OCOPY) -O binary $(EXEC) $(EXEC).bin
 	@stat -c "Output size of <%n> is %s" $(EXEC).bin
 	@$(SIZE) --format=berkeley $(EXEC)
+
+$(FIRMWARE): $(PROGOBJ)
+	$(GPP) -o $@ $^ $(LDFLAGS) $(LIBEXEC)
+	$(OCOPY) -O binary $(FIRMWARE) $(FIRMWARE).bin
+	@stat -c "Output size of <%n> is %s" $(FIRMWARE).bin
+	@$(SIZE) --format=berkeley $(FIRMWARE)
 
 
 $(LIBEXEC): $(MRI)
 	$(AR) M <$^
 	@stat -c "Output size of <%n> is %s" $(LIBEXEC)
 
-directories:	$(OUTPUTDIR)
+directories:	$(OUTPUTDIR) $(OBJSDIR) $(LIBSDIR)
 
 $(OUTPUTDIR):
 	$(MKDIR_P) $(OUTPUTDIR)
+
+$(OBJSDIR):
+	$(MKDIR_P) $(OBJSDIR)
+
+$(LIBSDIR):
+	$(MKDIR_P) $(LIBSDIR)
 
 corelib:
 	for dir in $(CORELIB); do \
 		$(MAKE) TARGET=$(TARGET) -C $$dir; \
 	done
 
-support:
+supportlib:
 	for dir in $(SUPPORT); do \
 		$(MAKE) TARGET=$(TARGET) -C $$dir; \
 	done
@@ -107,17 +180,6 @@ clean:
 	rm -f $(EXEC) $(EXEC).bin $(LIBEXEC)
 	rm -rf $(OUTPUTDIR) $(LIBSDIR)	$(OBJSDIR)
 
-	for dir in $(CORELIB); do \
-		$(MAKE) TARGET=$(TARGET) -C $$dir clean; \
-	done
-
-	for dir in $(DRIVERS); do \
-		$(MAKE) TARGET=$(TARGET) -C $$dir clean; \
-	done
-
-	for dir in $(SUPPORT); do \
-		$(MAKE) TARGET=$(TARGET) -C $$dir clean; \
-	done
-
 .PHONY: corelib
 .PHONY: drivers
+.PHONY: support

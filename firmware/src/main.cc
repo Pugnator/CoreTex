@@ -41,17 +41,14 @@ void inline infinite_loop(void)
 
 int main(void)
   {
-	infinite_loop();
-    Uart test(1, CONSOLE_SPEED);
-    test.writestr("HI THERE!");
-    //dbg_print("Hello world\n");
-    //dbgout.print("!!!");
-    //dbgout.xprintf("System started\n");
-    //GPS::Gps g(2, 115200);
-    //MODEM::Modem mdm(3, 19200, &dbgout);
-    //dbgout.xprintf("SIM900 %s\n", mdm.ok ? "ON" : "OFF");
-    //dbgout.xprintf("SIM900 setup: %s\n", mdm.setup() ? "OK" : "FAIL");
-    //dbgout.xprintf("SMS number: %lu\n", mdm.get_sms_amount());
-
-
+			Uart out(1, CONSOLE_SPEED);
+			Console con(&out);
+   con.print("Started\r\n");
+   infinite_loop();
+   //dbgout.xprintf("System started\n");
+   //GPS::Gps g(2, 115200);
+   //MODEM::Modem mdm(3, 19200, &dbgout);
+   //dbgout.xprintf("SIM900 %s\n", mdm.ok ? "ON" : "OFF");
+   //dbgout.xprintf("SIM900 setup: %s\n", mdm.setup() ? "OK" : "FAIL");
+   //dbgout.xprintf("SMS number: %lu\n", mdm.get_sms_amount());
   }

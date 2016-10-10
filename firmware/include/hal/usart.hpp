@@ -22,9 +22,10 @@ namespace UART
     Uart (word ch, word bd, void (*isrptr)(void));
     ~Uart(void);
 
-    virtual void write (char c);
-    virtual void writestr(const char* str);
-    virtual const char* name();
+    void write (char c);
+    void writestr(const char* str);
+    char read(void);
+    const char* name();
     void disable (void);
     static class Uart *self;
     static void isr (void);

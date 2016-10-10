@@ -30,187 +30,187 @@ using namespace CONSOLE;
 extern "C"
 {
 void SysTick_Handler(void)
-  {
-    if (tickcounter)
-      {
-        --tickcounter;
-      }
-  }
+{
+ if (tickcounter)
+ {
+  --tickcounter;
+ }
+}
 
 void SPI1_IRQHandler(void)
-  {
-    if ( SPI1->SR & SPI_SR_RXNE) //receive
-      {
-        short c = SPI1->DR;
-        SPI1->SR &= ~SPI_SR_RXNE;
-      }
-    else if ( SPI1->SR & SPI_SR_TXE) //transfer
-      {
-        SPI1->SR &= ~SPI_SR_TXE;
-      }
-  }
+{
+ if ( SPI1->SR & SPI_SR_RXNE) //receive
+ {
+  short c = SPI1->DR;
+  SPI1->SR &= ~SPI_SR_RXNE;
+ }
+ else if ( SPI1->SR & SPI_SR_TXE) //transfer
+ {
+  SPI1->SR &= ~SPI_SR_TXE;
+ }
+}
 
 void SPI2_IRQHandler(void)
-  {
-    if ( SPI1->SR & SPI_SR_RXNE) //receive
-      {
-        short c = SPI1->DR;
-        SPI1->SR &= ~SPI_SR_RXNE;
-      }
-    else if ( SPI1->SR & SPI_SR_TXE) //transfer
-      {
-        SPI1->SR &= ~SPI_SR_TXE;
-      }
-  }
+{
+ if ( SPI1->SR & SPI_SR_RXNE) //receive
+ {
+  short c = SPI1->DR;
+  SPI1->SR &= ~SPI_SR_RXNE;
+ }
+ else if ( SPI1->SR & SPI_SR_TXE) //transfer
+ {
+  SPI1->SR &= ~SPI_SR_TXE;
+ }
+}
 
 void USART1_IRQHandler(void)
-  {
-    if ( USART1->SR & USART_SR_RXNE) //receive
-      {
-        short c = USART1->DR;
-        USART1->SR &= ~USART_SR_RXNE;
-        ;
-      }
-    else if ( USART1->SR & USART_SR_TC) //transfer
-      {
-        USART1->SR &= ~USART_SR_TC;
-      }
-  }
+{
+ if ( USART1->SR & USART_SR_RXNE) //receive
+ {
+  short c = USART1->DR;
+  USART1->SR &= ~USART_SR_RXNE;
+  ;
+ }
+ else if ( USART1->SR & USART_SR_TC) //transfer
+ {
+  USART1->SR &= ~USART_SR_TC;
+ }
+}
 
 /* GSM port */
 
 void USART2_IRQHandler(void)
-  {
-    if ( USART2->SR & USART_SR_RXNE) //receive
-      {
-        char c = USART2->DR;
-        USART2->SR &= ~USART_SR_RXNE;
-      }
-    else if ( USART2->SR & USART_SR_TC) //transfer
-      {
-        USART2->SR &= ~USART_SR_TC;
-      }
-  }
+{
+ if ( USART2->SR & USART_SR_RXNE) //receive
+ {
+  char c = USART2->DR;
+  USART2->SR &= ~USART_SR_RXNE;
+ }
+ else if ( USART2->SR & USART_SR_TC) //transfer
+ {
+  USART2->SR &= ~USART_SR_TC;
+ }
+}
 
 /* GPS port */
 void USART3_IRQHandler(void)
-  {
-    if ( USART3->SR & USART_SR_RXNE) //receive
-      {
-        char c = USART3->DR;
-        USART3->SR &= ~USART_SR_RXNE;
-      }
-    else if ( USART3->SR & USART_SR_TC) //transfer
-      {
-        USART3->SR &= ~USART_SR_TC;
-      }
+{
+ if ( USART3->SR & USART_SR_RXNE) //receive
+ {
+  char c = USART3->DR;
+  USART3->SR &= ~USART_SR_RXNE;
+ }
+ else if ( USART3->SR & USART_SR_TC) //transfer
+ {
+  USART3->SR &= ~USART_SR_TC;
+ }
 
-  }
+}
 
 //TO USE: addr2line -e ./bin/program.elf -a 0x8002327 [GDB: p/x pc when it hit for(;;)]
 void unwindCPUstack(word* stackAddress)
-  {
-    /*
-     These are volatile to try and prevent the compiler/linker optimising them
-     away as the variables never actually get used.  If the debugger won't show the
-     values of the variables, make them global my moving their declaration outside
-     of this function.
-     */
-    volatile word r0 = stackAddress[0];
-    volatile word r1 = stackAddress[1];
-    volatile word r2 = stackAddress[2];
-    volatile word r3 = stackAddress[3];
-    volatile word r12 = stackAddress[4];
-    /* Link register. */
-    volatile word lr = stackAddress[5];
-    /* Program counter. */
-    volatile word pc = stackAddress[6];
-    /* Program status register. */
-    volatile word psr = stackAddress[7];
+{
+ /*
+  These are volatile to try and prevent the compiler/linker optimising them
+  away as the variables never actually get used.  If the debugger won't show the
+  values of the variables, make them global my moving their declaration outside
+  of this function.
+  */
+ volatile word r0 = stackAddress[0];
+ volatile word r1 = stackAddress[1];
+ volatile word r2 = stackAddress[2];
+ volatile word r3 = stackAddress[3];
+ volatile word r12 = stackAddress[4];
+ /* Link register. */
+ volatile word lr = stackAddress[5];
+ /* Program counter. */
+ volatile word pc = stackAddress[6];
+ /* Program status register. */
+ volatile word psr = stackAddress[7];
 
-    PIN_HI(LED);
+ PIN_HI(LED);
+ Uart out(1, 9600);
+ Console coredump(&out);
+ coredump.foreground(COLOR_RED);
+ coredump < "Core fatal error trapped\r\nSystem halted";
+ coredump.foreground(COLOR_CYAN);
+ coredump < "*** CPU registers ***";
+ coredump.foreground(COLOR_MAGENTA);
+ coredump.xprintf(
+   "R0:  0x%08X\nR1:  0x%08X\nR2:  0x%08X\nR3:  0x%08X\nR12: 0x%08X\n", r0, r1,
+   r2, r3, r12);
+ coredump.xprintf("LR:  0x%08X\nPC:  0x%08X\nPSR: 0x%08X\n", lr, pc, psr);
+ coredump.foreground(COLOR_WHITE);
 
-    Console coredump(Uart(1, 9600));
-    coredump.foreground(COLOR_RED);
-    coredump < "Core fatal error trapped\r\nSystem halted";
-    coredump.foreground(COLOR_CYAN);
-    coredump < "*** CPU registers ***";
-    coredump.foreground(COLOR_MAGENTA);
-    coredump.xprintf(
-        "R0:  0x%08X\nR1:  0x%08X\nR2:  0x%08X\nR3:  0x%08X\nR12: 0x%08X\n", r0,
-        r1, r2, r3, r12);
-    coredump.xprintf("LR:  0x%08X\nPC:  0x%08X\nPSR: 0x%08X\n", lr, pc, psr);
-    coredump.foreground(COLOR_WHITE);
-
-    /* When the following line is hit, the variables contain the register values. */
-    for (;;)
-      {
-      }
-  }
+ /* When the following line is hit, the variables contain the register values. */
+ for (;;)
+ {
+ }
+}
 
 /* DTR */
 void EXTI0_IRQHandler(void)
-  {
-    //EXTI->PR = EXTI_PR_PR0;
-  }
+{
+ //EXTI->PR = EXTI_PR_PR0;
+}
 
 void HardFault_Handler(void)
-  {
-    __asm volatile
-    (
-        " tst lr, #4                                                \n"
-        " ite eq                                                    \n"
-        " mrseq r0, msp                                             \n"
-        " mrsne r0, psp                                             \n"
-        " ldr r1, [r0, #24]                                         \n"
-        " ldr r2, handler_address_const                            \n"
-        " bx r2                                                     \n"
-        " handler_address_const: .word unwindCPUstack    \n"
-    );
-  }
+{
+ __asm volatile
+ (
+   " tst lr, #4                                                \n"
+   " ite eq                                                    \n"
+   " mrseq r0, msp                                             \n"
+   " mrsne r0, psp                                             \n"
+   " ldr r1, [r0, #24]                                         \n"
+   " ldr r2, handler_address_const                            \n"
+   " bx r2                                                     \n"
+   " handler_address_const: .word unwindCPUstack    \n"
+ );
+}
 
 void MemManage_Handler(void)
-  {
-    __asm volatile
-    (
-        " tst lr, #4                                                \n"
-        " ite eq                                                    \n"
-        " mrseq r0, msp                                             \n"
-        " mrsne r0, psp                                             \n"
-        " ldr r1, [r0, #24]                                         \n"
-        " ldr r2, handler2_address_const                            \n"
-        " bx r2                                                     \n"
-        " handler2_address_const: .word unwindCPUstack    \n"
-    );
-  }
+{
+ __asm volatile
+ (
+   " tst lr, #4                                                \n"
+   " ite eq                                                    \n"
+   " mrseq r0, msp                                             \n"
+   " mrsne r0, psp                                             \n"
+   " ldr r1, [r0, #24]                                         \n"
+   " ldr r2, handler2_address_const                            \n"
+   " bx r2                                                     \n"
+   " handler2_address_const: .word unwindCPUstack    \n"
+ );
+}
 
 void BusFault_Handler(void)
-  {
-    __asm volatile
-    (
-        " tst lr, #4                                                \n"
-        " ite eq                                                    \n"
-        " mrseq r0, msp                                             \n"
-        " mrsne r0, psp                                             \n"
-        " ldr r1, [r0, #24]                                         \n"
-        " ldr r2, handler3_address_const                            \n"
-        " bx r2                                                     \n"
-        " handler3_address_const: .word unwindCPUstack    \n"
-    );
-  }
+{
+ __asm volatile
+ (
+   " tst lr, #4                                                \n"
+   " ite eq                                                    \n"
+   " mrseq r0, msp                                             \n"
+   " mrsne r0, psp                                             \n"
+   " ldr r1, [r0, #24]                                         \n"
+   " ldr r2, handler3_address_const                            \n"
+   " bx r2                                                     \n"
+   " handler3_address_const: .word unwindCPUstack    \n"
+ );
+}
 
 void UsageFault_Handler(void)
-  {
-    __asm volatile
-    (
-        " tst lr, #4                                                \n"
-        " ite eq                                                    \n"
-        " mrseq r0, msp                                             \n"
-        " mrsne r0, psp                                             \n"
-        " ldr r1, [r0, #24]                                         \n"
-        " ldr r2, handler4_address_const                            \n"
-        " bx r2                                                     \n"
-        " handler4_address_const: .word unwindCPUstack    \n"
-    );
-  }
+{
+ __asm volatile
+ (
+   " tst lr, #4                                                \n"
+   " ite eq                                                    \n"
+   " mrseq r0, msp                                             \n"
+   " mrsne r0, psp                                             \n"
+   " ldr r1, [r0, #24]                                         \n"
+   " ldr r2, handler4_address_const                            \n"
+   " bx r2                                                     \n"
+   " handler4_address_const: .word unwindCPUstack    \n"
+ );
+}
 }

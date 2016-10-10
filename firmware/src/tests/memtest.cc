@@ -22,15 +22,15 @@
 #include <drivers/console.hpp>
 
 bool memtest(word times)
-  {
-    bool ok = false;
-    CONSOLE::Console out(1, CONSOLE_SPEED);
-    out < "Memory allocation test";
-    for(word i = 0; i < times; ++i)
-      {
-        void *tmp = ALLOC(900);
-        FREE(tmp);
-      }
-    print_memstat(&out);
-    return ok;
-  }
+{
+ bool ok = false;
+ CONSOLE::Console out(1, CONSOLE_SPEED);
+ out < "Memory allocation test";
+ for (word i = 0; i < times; ++i)
+ {
+  void *tmp = ALLOC(900);
+  FREE(tmp);
+ }
+ print_memstat(&out);
+ return ok;
+}

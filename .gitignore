@@ -36,4 +36,7 @@
 # Directories
 firmware/.settings
 firmware/external/
+firmware/libs/
+firmware/obj/
+firmware/bin/
 pics/

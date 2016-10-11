@@ -60,6 +60,8 @@ DRIVERSSRC:=\
 	$(DRIVERS)/positioning/gps/rmc.cc \
 	$(DRIVERS)/positioning/gps/vtg.cc \
 	$(DRIVERS)/storage/mmc/mmc.cc \
+	$(DRIVERS)/storage/mmc/disk.cc \
+	$(DRIVERS)/storage/flash.cc \
 	$(DRIVERS)/userio/console/console.cc \
 	$(DRIVERS)/userio/console/xprintf.cc \
 	$(DRIVERS)/wireless/bc470/bc470.cc \

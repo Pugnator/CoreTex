@@ -32,6 +32,7 @@
 
 # Debug files
 *.dSYM/
+*.launch
 
 # Directories
 firmware/.settings

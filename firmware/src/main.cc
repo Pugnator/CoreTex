@@ -30,6 +30,7 @@
 #include <drivers/nrf24.hpp>
 #include <drivers/bc470.hpp>
 #include <drivers/xmodem.hpp>
+#include <drivers/storage/disk.hpp>
 
 using namespace HAL;
 
@@ -44,12 +45,7 @@ int main(void)
 			Uart out(1, CONSOLE_SPEED);
 			Console con(&out);
    con.print("Started\r\n");
-   HAL::MMC::Mmc disk(1);
-   DSTATUS stat = STA_NOINIT;
-   stat = disk.disk_initialize(0);
-   FATFS fs;
-   char path[4];
-   //f_mount(&fs, path, 0);
+   disk_test(&con);
    infinite_loop();
    //dbgout.xprintf("System started\n");
    //GPS::Gps g(2, 115200);

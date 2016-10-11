@@ -44,6 +44,12 @@ int main(void)
 			Uart out(1, CONSOLE_SPEED);
 			Console con(&out);
    con.print("Started\r\n");
+   HAL::MMC::Mmc disk(1);
+   DSTATUS stat = STA_NOINIT;
+   stat = disk.disk_initialize(0);
+   FATFS fs;
+   char path[4];
+   //f_mount(&fs, path, 0);
    infinite_loop();
    //dbgout.xprintf("System started\n");
    //GPS::Gps g(2, 115200);

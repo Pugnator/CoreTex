@@ -1,5 +1,6 @@
 #pragma once
 #include <drivers/storage/fat32/diskio.h>
+#include <drivers/generic/driver.hpp>
 #include <hal/stm32f10x.hpp>
 #include <global.hpp>
 #include <common.hpp>
@@ -66,20 +67,20 @@ public:
     MMCstat = STA_NOINIT;
     CardType = 0;
   }
-  ~Mmc(void);
+  ~Mmc(void){};
   DSTATUS disk_initialize (BYTE drv = 0);
   DSTATUS disk_status (BYTE drv = 0);
   DRESULT disk_read (BYTE drv,BYTE* buff,DWORD sector,UINT count);
   DRESULT disk_write (BYTE drv, const BYTE* buff, DWORD sector, UINT count);
   DWORD get_fattime (void);
   DRESULT disk_ioctl (BYTE drv,BYTE cmd,void* buff);
+  uint16_t mmccmd(uint8_t cmd, word arg = 0);
+  const char *get_status();
 protected:
   bool rcvr_datablock (BYTE *buff, UINT btr);
   bool xmit_datablock (const BYTE *buff, BYTE token);
   void mmcmultiread (BYTE *buff, UINT btr);
   void mmcmultiwrite (const BYTE *buff, UINT btx);
-  uint16_t mmccmd(uint8_t cmd, word arg = 0);
-  uint16_t mmcread(uint16_t data);
   void deselect();
   bool select();
   bool wait4ready(word how_long);

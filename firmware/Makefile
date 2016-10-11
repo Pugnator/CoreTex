@@ -29,6 +29,9 @@ DRIVERS:=\
 
 SUPPORT:=\
 	src/support
+	
+FATFSDIR:=\
+	src/drivers/storage/fat32
 
 BLD?=DBG
 export $(BLD)
@@ -104,7 +107,9 @@ CFLAGS+=\
 LDFLAGS+=\
 	-Tstm32_link.ld \
 	-lm	
-	
+
+FATFSLIB:=$(LIBSDIR)/fat32.a
+
 OBJ:=$(DRIVERSSRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(STARTUP:%.s=$(OBJSDIR)/%.o)
 OBJ+=$(CORESRC:%.cc=$(OBJSDIR)/%.o)
@@ -120,7 +125,7 @@ all: clean library firmware linked_firmware
 
 linked_firmware: directories library $(FIRMWARE)
 
-firmware: directories $(EXEC)
+firmware: directories fatfs $(EXEC)
 
 library: corelib drivers supportlib $(LIBEXEC)
 
@@ -133,7 +138,7 @@ $(OBJSDIR)/%.o: %.s
 	$(ASM) $< -o $@
 
 $(EXEC): $(OBJ)	$(PROGOBJ)
-	$(GPP) -o $@ $^ $(LDFLAGS)
+	$(GPP) -o $@ $^ $(LDFLAGS) $(FATFSLIB)
 	$(OCOPY) -O binary $(EXEC) $(EXEC).bin
 	@stat -c "Output size of <%n> is %s" $(EXEC).bin
 	@$(SIZE) --format=berkeley $(EXEC)
@@ -159,6 +164,9 @@ $(OBJSDIR):
 
 $(LIBSDIR):
 	$(MKDIR_P) $(LIBSDIR)
+
+fatfs:
+	$(MAKE) TARGET=$(TARGET) -C $(FATFSDIR);
 
 corelib:
 	for dir in $(CORELIB); do \

@@ -28,7 +28,7 @@ bool Mmc::select(void)
   {
     PIN_LOW(SPI1NSS_PIN);
     /* Dummy clock (force DO enabled) */
-    mmcread(0xff);
+    read(0xff);
     //if (wait4ready(500)) return true;      /* Wait for card ready */
     //deselect();
     return true;
@@ -38,7 +38,7 @@ void Mmc::deselect(void)
   {
     PIN_HI(SPI1NSS_PIN);
     /* Dummy clock (force DO hi-z for multiple slave SPI) */
-    mmcread(0xff);
+    read(0xff);
   }
 
 //FIXME: should work, but don't at the moment
@@ -48,7 +48,7 @@ bool Mmc::wait4ready(word how_long)
     WAIT_FOR(how_long);
     do
       {
-        d = mmcread(0xFF);
+        d = read(0xFF);
       }
     while (d != 0xFF && STILL_WAIT); /* Wait for card goes ready or timeout */
 
@@ -97,15 +97,15 @@ bool Mmc::rcvr_datablock(BYTE *buff, UINT btr)
     WAIT_FOR(200);
     do
       { /* Wait for DataStart token in timeout of 200ms */
-        token = mmcread(0xFF);
+        token = read(0xFF);
         /* This loop will take a time. Insert rot_rdq() here for multitask envilonment. */
       }
     while ((token == 0xFF) && STILL_WAIT);
     if (token != 0xFE) return false; /* Function fails if invalid DataStart token or timeout */
 
     mmcmultiread(buff, btr); /* Store trailing data to the buffer */
-    mmcread(0xFF);
-    mmcread(0xFF);
+    read(0xFF);
+    read(0xFF);
     return true; /* Function succeeded */
   }
 
@@ -118,15 +118,15 @@ bool Mmc::xmit_datablock(const BYTE *buff, BYTE token)
         return false; /* Wait for card ready */
       }
 
-    mmcread(token); /* Send token */
+    read(token); /* Send token */
     if (token != 0xFD)
       { /* Send data if token is other than StopTran */
         mmcmultiwrite(buff, 512); /* Data */
         /* Dummy CRC */
-        mmcread(0xFF);
-        mmcread(0xFF);
+        read(0xFF);
+        read(0xFF);
 
-        resp = mmcread(0xFF); /* Receive data resp */
+        resp = read(0xFF); /* Receive data resp */
         if ((resp & 0x1F) != 0x05) /* Function fails if the data packet was not accepted */
         return false;
       }
@@ -283,7 +283,7 @@ DRESULT Mmc::disk_ioctl(BYTE drv, BYTE cmd, void* buff)
                 if (rcvr_datablock(csd, 16))
                   { /* Read partial block */
                     for (n = 64 - 16; n; n--)
-                      mmcread(0xFF); /* Purge trailing data */
+                    	read(0xFF); /* Purge trailing data */
                     *(DWORD*) buff = 16UL << (csd[10] >> 4);
                     res = RES_OK;
                   }
@@ -353,35 +353,45 @@ uint16_t Mmc::mmccmd(uint8_t command, word arg)
       }
 
     /* Send command packet */
-    mmcread(0x40 | command); /* Start + command index */
-    mmcread((BYTE) (arg >> 24)); /* Argument[31..24] */
-    mmcread((BYTE) (arg >> 16)); /* Argument[23..16] */
-    mmcread((BYTE) (arg >> 8)); /* Argument[15..8] */
-    mmcread((BYTE) arg); /* Argument[7..0] */
+    read(0x40 | command); /* Start + command index */
+    read((BYTE) (arg >> 24)); /* Argument[31..24] */
+    read((BYTE) (arg >> 16)); /* Argument[23..16] */
+    read((BYTE) (arg >> 8)); /* Argument[15..8] */
+    read((BYTE) arg); /* Argument[7..0] */
     n = 0x01; /* Dummy CRC + Stop */
     if (command == CMD0) n = 0x95; /* Valid CRC for CMD0(0) */
     if (command == CMD8) n = 0x87; /* Valid CRC for CMD8(0x1AA) */
-    mmcread(n);
+    read(n);
 
     /* Receive command resp */
-    if (command == CMD12) mmcread(0xFF); /* Diacard following one byte when CMD12 */
+    if (command == CMD12) read(0xFF); /* Diacard following one byte when CMD12 */
     n = 10; /* Wait for response (10 bytes max) */
     do
-      res = mmcread(0xFF);
+      res = read(0xFF);
     while ((res & 0x80) && --n);
 
     return res;
   }
 
-uint16_t Mmc::mmcread(uint16_t data)
-  {
-    PIN_LOW(SPI1NSS_PIN);
-    Reg->DR = data;
-    while (Reg->SR & SPI_SR_BSY);
-    uint16_t tmp = Reg->DR;
-    PIN_HI(SPI1NSS_PIN);
-    return tmp;
-  }
+const char *Mmc::get_status()
+{
+	disk_initialize(0);
+	switch (MMCstat)
+	{
+		case RES_OK:
+			return "Successful\r\n";
+		case RES_NOTRDY:
+			return "Not Ready\r\n";
+		case RES_ERROR:
+			return "R/W Error\r\n";
+		case RES_PARERR:
+			return "Invalid Parameter\r\n";
+		case RES_WRPRT:
+			return "Write Protected\r\n";
+		default:
+			return "Unknown error\r\n";
+	}
+}
 
 DSTATUS Mmc::disk_initialize(BYTE drv)
   {
@@ -391,7 +401,7 @@ DSTATUS Mmc::disk_initialize(BYTE drv)
     if (MMCstat & STA_NODISK) return MMCstat; /* Is card existing in the soket? */
 
     for (word n = 20; n; n--)
-      mmcread(0xFF); /* Send 80 dummy clocks */
+      read(0xFF); /* Send 80 dummy clocks */
 
     ty = 0;
     if (mmccmd(CMD0) == 1)
@@ -400,7 +410,7 @@ DSTATUS Mmc::disk_initialize(BYTE drv)
         if (mmccmd(CMD8, 0x1AA) == 1)
           { /* SDv2? */
             for (word n = 0; n < 4; n++)
-              ocr[n] = mmcread(0xFF); /* Get 32 bit return value of R7 resp */
+              ocr[n] = read(0xFF); /* Get 32 bit return value of R7 resp */
             if (ocr[2] == 0x01 && ocr[3] == 0xAA)
               { /* Is the card supports vcc of 2.7-3.6V? */
                 while (STILL_WAIT && mmccmd(ACMD41, 1UL << 30))

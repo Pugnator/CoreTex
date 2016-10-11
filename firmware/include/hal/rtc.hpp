@@ -1,8 +1,6 @@
 #pragma once
 #include <drivers/console.hpp>
 
-using namespace HAL;
-
 namespace PIT
 {
 

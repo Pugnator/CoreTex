@@ -3,8 +3,6 @@
 #include <hal/stm32f10x.hpp>
 #include <drivers/generic/driver.hpp>
 
-namespace HAL
-{
 namespace UART
 {
 
@@ -34,5 +32,4 @@ namespace UART
     word channel;
     USART_TypeDef* Reg;
   };
-}
 }

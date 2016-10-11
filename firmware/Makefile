@@ -1,8 +1,8 @@
-MCU?=STM32F10X_MD
-TARGET?=STM32
+DESCRIPTION:=mcu.ini
 
-PROJECTNAME:=CoreTex
-GCCPRFX:=arm-none-eabi
+MCU:=$(shell sed -n '/^family=/ {s///p;q;}' $(DESCRIPTION))
+PROJECTNAME:=$(shell sed -n '/^name=/ {s///p;q;}' $(DESCRIPTION))
+GCCPRFX:=$(shell sed -n '/^arch=/ {s///p;q;}' $(DESCRIPTION))
 
 AR:=$(GCCPRFX)-ar
 GPP:=$(GCCPRFX)-g++
@@ -34,7 +34,6 @@ FATFSDIR:=\
 	src/drivers/storage/fat32
 
 BLD?=DBG
-export $(BLD)
 ifeq ($(BLD), DBG)	
 	CFLAGS:=-Og -g3 -DDEBUG	-ffunction-sections -fdata-sections
 	LDFLAGS:=external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/libstd.a -Wl,--gc-sections 
@@ -42,9 +41,6 @@ else
 	CFLAGS:=-Os -ffunction-sections -fdata-sections
 	LDFLAGS:=-Wl,--gc-sections 
 endif
-
-export CFLAGS
-export LDFLAGS
 
 ######################## SOURCES ###############################
 
@@ -168,21 +164,21 @@ $(LIBSDIR):
 	$(MKDIR_P) $(LIBSDIR)
 
 fatfs:
-	$(MAKE) TARGET=$(TARGET) -C $(FATFSDIR);
+	$(MAKE) -C $(FATFSDIR);
 
 corelib:
 	for dir in $(CORELIB); do \
-		$(MAKE) TARGET=$(TARGET) -C $$dir; \
+		$(MAKE) BLD=$(BLD) -C $$dir; \
 	done
 
 supportlib:
 	for dir in $(SUPPORT); do \
-		$(MAKE) TARGET=$(TARGET) -C $$dir; \
+		$(MAKE) BLD=$(BLD) -C $$dir; \
 	done
 
 drivers:
 	for dir in $(DRIVERS); do \
-		$(MAKE) TARGET=$(TARGET) -C $$dir; \
+		$(MAKE) BLD=$(BLD) -C $$dir; \
 	done
 
 

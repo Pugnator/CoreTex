@@ -3,12 +3,9 @@
 #include <drivers/console.hpp>
 #include <hal/usart.hpp>
 
-using namespace HAL;
 using namespace UART;
 using namespace CONSOLE;
 
-namespace HAL
-{
 namespace BC470
 {
 
@@ -54,5 +51,4 @@ protected:
   bool wait4reply(word timeout = 100);
   bool go;
   };
-}
 }

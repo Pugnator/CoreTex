@@ -3,7 +3,6 @@
 #include <hal/spi.hpp>
 #include <drivers/console.hpp>
 
-using namespace HAL;
 using namespace SPI;
 
 namespace NRF24

@@ -1,6 +1,4 @@
-#include <global.hpp>
-#include <common.hpp>
-#include <hal/stm32f10x.hpp>
+#include <drivers/storage/flash.hpp>
 
 #define FLASH_KEY1      ((uint32_t)0x45670123)
 #define FLASH_KEY2      ((uint32_t)0xCDEF89AB)

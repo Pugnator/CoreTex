@@ -3,7 +3,6 @@
 #include <hal/usart.hpp>
 #include <stdarg.h>
 
-using namespace HAL;
 using namespace UART;
 
 namespace CONSOLE

@@ -20,7 +20,6 @@
 #include <hal/rtc.hpp>
 #include <stdlib.h>
 
-using namespace HAL;
 using namespace PIT;
 
 Rtc::Rtc(word epoch)

@@ -25,7 +25,6 @@
 
 #define UARTirq (USART1_IRQn - 1)
 
-using namespace HAL;
 using namespace UART;
 
 /* Pointer to the USART object itself in order to be accessible from within a static method */

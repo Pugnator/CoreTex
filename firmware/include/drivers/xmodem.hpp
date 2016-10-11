@@ -1,7 +1,6 @@
 #pragma once
 #include <hal/usart.hpp>
 
-using namespace HAL;
 using namespace UART;
 
 namespace XMODEM

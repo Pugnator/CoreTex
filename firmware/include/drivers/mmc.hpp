@@ -6,8 +6,6 @@
 #include <common.hpp>
 #include <hal/spi.hpp>
 
-namespace HAL
-{
 using namespace SPI;
 namespace MMC
 {
@@ -89,4 +87,4 @@ protected:
   BYTE CardType;
   };
 }
-}
+

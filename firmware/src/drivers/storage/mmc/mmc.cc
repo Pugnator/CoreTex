@@ -20,8 +20,6 @@
 #include <hal/io_macro.hpp>
 #include <drivers/mmc.hpp>
 
-namespace HAL
-{
 namespace MMC
 {
 bool Mmc::select(void)
@@ -456,6 +454,5 @@ DSTATUS Mmc::disk_initialize(BYTE drv)
       }
     return MMCstat;
   }
-}
 }
 

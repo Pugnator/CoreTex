@@ -1,8 +1,7 @@
 #pragma once
 #include <hal/stm32f10x.hpp>
 #include <drivers/generic/driver.hpp>
-namespace HAL
-{
+
 namespace SPI
 {
 #define SPI1NSS_PIN A,4,SPEED_50MHz
@@ -33,4 +32,4 @@ protected:
   SPI_TypeDef* Reg;
   };
 }
-}
+

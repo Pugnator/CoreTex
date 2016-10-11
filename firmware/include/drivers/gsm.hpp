@@ -4,7 +4,6 @@
 #include <hal/usart.hpp>
 #include <drivers/console.hpp>
 
-using namespace HAL;
 using namespace UART;
 using namespace CONSOLE;
 

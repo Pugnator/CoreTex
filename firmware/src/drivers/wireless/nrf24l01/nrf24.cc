@@ -20,8 +20,6 @@
 #include <drivers/nrf24.hpp>
 #include <drivers/console.hpp>
 
-using namespace HAL;
-
 namespace NRF24
 {
 uint8_t Nrf24::status(void)

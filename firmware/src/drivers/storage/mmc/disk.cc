@@ -2,7 +2,7 @@
 #include <drivers/mmc.hpp>
 #include <drivers/console.hpp>
 
-HAL::MMC::Mmc disk(1);
+MMC::Mmc disk(1);
 
 DSTATUS disk_initialize (BYTE pdrv)
 {

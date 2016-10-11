@@ -18,7 +18,6 @@
 #include <drivers/console.hpp>
 #include <stdarg.h>
 
-using namespace HAL;
 using namespace CONSOLE;
 
 #define DW_CHAR		sizeof(char)

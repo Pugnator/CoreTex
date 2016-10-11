@@ -24,7 +24,6 @@
 
 volatile word tickcounter = 0;
 
-using namespace HAL;
 using namespace CONSOLE;
 
 extern "C"

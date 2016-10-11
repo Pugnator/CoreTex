@@ -5,7 +5,6 @@
 #include <hal/vmmu.hpp>
 #include <stdarg.h>
 
-using namespace HAL;
 namespace MODEM
 {
 

@@ -14,7 +14,6 @@
 
 #pragma GCC diagnostic ignored "-Wswitch"
 
-using namespace HAL;
 using namespace CONSOLE;
 
 namespace GPS

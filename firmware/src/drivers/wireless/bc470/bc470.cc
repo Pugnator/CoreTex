@@ -20,8 +20,6 @@
 #include <hal/vmmu.hpp>
 #include <string.h>
 
-namespace HAL
-{
 namespace BC470
 {
 
@@ -107,5 +105,4 @@ void bc470::bc470isr(void)
       }
   }
 
-}
 }

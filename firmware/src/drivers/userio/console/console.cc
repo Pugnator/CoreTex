@@ -26,7 +26,6 @@
 #include <queue.hpp>
 #include <limits.h>
 
-using namespace HAL;
 using namespace CONSOLE;
 
 class Console *Console::self = nullptr;

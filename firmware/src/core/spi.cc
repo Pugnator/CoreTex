@@ -22,8 +22,6 @@
 #include <hal/spi.hpp>
 #include <hal/isr_helper.hpp>
 
-namespace HAL
-{
 namespace SPI
 {
 class Spi *Spi::self = nullptr;
@@ -182,5 +180,4 @@ void Spi::high_speed(void)
   {
     Reg->CR1 |= SPI_CR1_BR;
   }
-}
 }

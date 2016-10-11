@@ -5,8 +5,6 @@
 #include <drivers/ov528.hpp>
 #include <drivers/xmodem.hpp>
 
-using namespace HAL;
-
 namespace OV528
 {
 class ov528 *ov528::self = nullptr;

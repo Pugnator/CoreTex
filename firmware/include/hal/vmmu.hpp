@@ -92,7 +92,7 @@ void stfree(void* ap);
 // Prints statistics about the current state of the memory
 // manager
 //
-void print_memstat(CONSOLE::Console *out);
+void print_memstat(Console *out);
 
 //How much memory left
 word get_free_memory(void);

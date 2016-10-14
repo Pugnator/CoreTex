@@ -1,1 +1,1 @@
-void disk_test(CONSOLE::Console *con);
+void disk_test(void);

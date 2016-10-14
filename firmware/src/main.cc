@@ -32,8 +32,6 @@
 #include <drivers/xmodem.hpp>
 #include <drivers/storage/disk.hpp>
 
-using namespace HAL;
-
 void inline infinite_loop(void)
   {
     for (;;)
@@ -42,10 +40,7 @@ void inline infinite_loop(void)
 
 int main(void)
   {
-			Uart out(1, CONSOLE_SPEED);
-			Console con(&out);
-   con.print("Started\r\n");
-   disk_test(&con);
+   disk_test();
    infinite_loop();
    //dbgout.xprintf("System started\n");
    //GPS::Gps g(2, 115200);

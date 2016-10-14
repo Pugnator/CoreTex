@@ -103,7 +103,7 @@ void Nrf24::flushrx(void)
     (void) read(FLUSH_RX);
   }
 
-void Nrf24::debug(CONSOLE::Console *conout)
+void Nrf24::debug(Console *conout)
   {
     conout->xprintf("Address: %X\n", W_REGISTER | (REGISTER_MASK & STATUS));
   }

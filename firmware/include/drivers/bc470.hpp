@@ -4,7 +4,6 @@
 #include <hal/usart.hpp>
 
 using namespace UART;
-using namespace CONSOLE;
 
 namespace BC470
 {

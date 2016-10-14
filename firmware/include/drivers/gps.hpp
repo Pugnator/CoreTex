@@ -14,8 +14,6 @@
 
 #pragma GCC diagnostic ignored "-Wswitch"
 
-using namespace CONSOLE;
-
 namespace GPS
 {
 #define NMEA_MAX_LEN 82

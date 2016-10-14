@@ -1,8 +1,6 @@
 #pragma once
 #include <global.hpp>
 #include <hal/stm32f10x.hpp>
-namespace HAL
-{
 namespace ADC
 {
 class Adc
@@ -18,5 +16,4 @@ protected:
   int channel;
   ADC_TypeDef* Reg;
   };
-}
 }

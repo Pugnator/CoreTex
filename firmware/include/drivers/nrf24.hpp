@@ -80,7 +80,7 @@ public:
   void regr(REGISTER reg, uint8_t *out, word size);
   //chip init
   void nrfinit();
-  void debug(CONSOLE::Console *conout);
+  void debug(Console *conout);
   void flushtx(void);
   void flushrx(void);
 

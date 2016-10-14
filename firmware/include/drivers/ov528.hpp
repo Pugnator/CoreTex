@@ -12,7 +12,7 @@ namespace OV528
 class ov528: public Uart
   {
 public:
-  ov528(short ch, CONSOLE::Console *debug = nullptr)
+  ov528(short ch, Console *debug = nullptr)
       : Uart::Uart(ch, 115200, &ov528isr), conout(debug)
     {
       self = this;
@@ -46,6 +46,6 @@ private:
   void wait_reply(void);
   void docmd(uint8_t *cmd);
   void ack(void);
-  CONSOLE::Console *conout;
+  Console *conout;
   };
 }

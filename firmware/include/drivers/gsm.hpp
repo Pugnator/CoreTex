@@ -5,7 +5,6 @@
 #include <drivers/console.hpp>
 
 using namespace UART;
-using namespace CONSOLE;
 
 #define MODEM_IN_BUFFER_SIZE 512
 #define SMS_MAX_SIZE 140

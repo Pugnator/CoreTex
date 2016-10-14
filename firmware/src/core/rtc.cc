@@ -20,8 +20,6 @@
 #include <hal/rtc.hpp>
 #include <stdlib.h>
 
-using namespace PIT;
-
 Rtc::Rtc(word epoch)
 {
 	State = 0;
@@ -146,9 +144,9 @@ char Rtc::gets()
 	epoch_to_date(&curdate, get());
 	return curdate.second;
 }
-void Rtc::print(CONSOLE::Console& output)
+void Rtc::print(Console *output)
 {
-	output.xprintf("%04u/%02u/%02u %02u:%02u:%02u\n", \
+	output->xprintf("%04u/%02u/%02u %02u:%02u:%02u\n", \
 			gety(), getmn(), getd(), geth(), getm(), gets());
 }
 

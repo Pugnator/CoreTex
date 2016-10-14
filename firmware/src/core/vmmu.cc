@@ -60,7 +60,7 @@ void vmmu_init()
     pool_free_pos = 0;
   }
 
-void print_memstat(CONSOLE::Console *out)
+void print_memstat(Console *out)
   {
 #ifdef DEBUG_MEMMGR_SUPPORT_STATS
     mem_header_t* p;

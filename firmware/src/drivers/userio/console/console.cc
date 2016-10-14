@@ -26,8 +26,6 @@
 #include <queue.hpp>
 #include <limits.h>
 
-using namespace CONSOLE;
-
 class Console *Console::self = nullptr;
 
 namespace
@@ -206,13 +204,13 @@ namespace
   static void
   date_func (Console *self)
   {
-    PIT::Rtc rtc;
+    Rtc rtc;
     if (arg1)
       {
 	rtc.set (str10_to_word (arg1));
 	FREE(arg1);
       }
-    rtc.print (*self);
+    rtc.print (self);
   }
 }
 /*******************************************************************/

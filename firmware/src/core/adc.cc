@@ -19,8 +19,6 @@
 #include <hal/io_macro.hpp>
 #include <common.hpp>
 
-namespace HAL
-{
 namespace ADC
 {
 #define TEMP A,0,SPEED_10MHz
@@ -57,5 +55,4 @@ short Adc::voltage(void)
   {
     return sample() / 4096 * 3;
   }
-}
 }

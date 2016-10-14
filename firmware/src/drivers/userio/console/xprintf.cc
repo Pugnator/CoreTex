@@ -18,8 +18,6 @@
 #include <drivers/console.hpp>
 #include <stdarg.h>
 
-using namespace CONSOLE;
-
 #define DW_CHAR		sizeof(char)
 #define DW_SHORT	sizeof(short)
 #define DW_LONG		sizeof(long)

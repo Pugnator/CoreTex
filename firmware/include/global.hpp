@@ -21,9 +21,20 @@ extern volatile word tickcounter;
 #define WAIT_FOR(ms) tickcounter=ms
 #define STILL_WAIT tickcounter
 
+#define delayus_asm(us) do {\
+	asm volatile (	"MOV R0,%[loops]\n\t"\
+			"1: \n\t"\
+			"SUB R0, #1\n\t"\
+			"CMP R0, #0\n\t"\
+			"BNE 1b \n\t" : : [loops] "r" (us) : "memory"\
+		      );\
+} while(0)
+
+#define delayms_asm(us) do {\
+		delayus_asm(1000);\
+} while(0)
+
 extern volatile word __attribute__((section (".vectorsSection"))) IRQ_VECTOR_TABLE[76];
-
-
 
 /* Interrupt vector table enumerators */
 typedef enum ISR_VECTOR

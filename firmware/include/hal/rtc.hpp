@@ -1,9 +1,6 @@
 #pragma once
 #include <drivers/console.hpp>
 
-namespace PIT
-{
-
 typedef enum RTC_UTC_OFFSET
 {
 	ZONE_YANKEE = -12,
@@ -66,7 +63,7 @@ public:
 	char geth();
 	char getm();
 	char gets();
-	void print(CONSOLE::Console& output);
+	void print(Console *output);
 	void set(word epoch);
 	void clear(void);
 	word state(void);
@@ -78,4 +75,3 @@ private:
 	void
 	epoch_to_date(datetime_t* date_time, word epoch = 0);
 };
-}

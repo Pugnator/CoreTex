@@ -24,8 +24,6 @@
 
 volatile word tickcounter = 0;
 
-using namespace CONSOLE;
-
 extern "C"
 {
 void SysTick_Handler(void)
@@ -127,11 +125,10 @@ void unwindCPUstack(word* stackAddress)
  /* Program status register. */
  volatile word psr = stackAddress[7];
 
- PIN_HI(LED);
  Uart out(1, 9600);
  Console coredump(&out);
  coredump.foreground(COLOR_RED);
- coredump < "Core fatal error trapped\r\nSystem halted";
+ coredump < "CPU fatal error trapped\r\nSystem halted";
  coredump.foreground(COLOR_CYAN);
  coredump < "*** CPU registers ***";
  coredump.foreground(COLOR_MAGENTA);
@@ -144,6 +141,8 @@ void unwindCPUstack(word* stackAddress)
  /* When the following line is hit, the variables contain the register values. */
  for (;;)
  {
+		 delayus_asm(1000000L);
+		 BLINK;
  }
 }
 

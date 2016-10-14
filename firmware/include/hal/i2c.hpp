@@ -1,7 +1,5 @@
 #pragma once
 #include <hal/stm32f10x.hpp>
-namespace HAL
-{
 namespace I2C
 {
 class I2c
@@ -18,5 +16,4 @@ protected:
   int channel;
   I2C_TypeDef* Reg;
   };
-}
 }

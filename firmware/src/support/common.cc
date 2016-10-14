@@ -62,6 +62,11 @@ void delay(word s)
 	delay_ms(s * 1000);
 }
 
+void _delay_us(word us)
+{
+
+}
+
 char *strclone(const char *msg)
 {
         char *str = (char *)ALLOC(strlen(msg)+1);

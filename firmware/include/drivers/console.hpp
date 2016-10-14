@@ -5,9 +5,6 @@
 
 using namespace UART;
 
-namespace CONSOLE
-{
-
 #define	_CR_CRLF 1	/* 1: Convert \n ==> \r\n in the output char */
 
   enum
@@ -96,4 +93,3 @@ namespace CONSOLE
     static class Console *self;
     class Driver *io;
   };
-}

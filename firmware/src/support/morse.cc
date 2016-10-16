@@ -16,7 +16,7 @@
  *******************************************************************************/
 #include <global.hpp>
 #include <common.hpp>
-#include <hal/io_macro.hpp>
+#include <core/io_macro.hpp>
 
 #define MORSESPEED 20
 #define DOTLEN (1200/MORSESPEED)

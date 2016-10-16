@@ -16,32 +16,13 @@
  *******************************************************************************/
 #include <global.hpp>
 #include <common.hpp>
-#include <log.hpp>
-#include <drivers/storage/fat32/ff.h>
-#include <hal/adc.hpp>
-#include <hal/spi.hpp>
-#include <hal/usart.hpp>
-#include <hal/vmmu.hpp>
-#include <drivers/gps.hpp>
-#include <drivers/gsm.hpp>
-#include <drivers/mmc.hpp>
-#include <drivers/ov528.hpp>
 #include <drivers/console.hpp>
-#include <drivers/nrf24.hpp>
-#include <drivers/bc470.hpp>
-#include <drivers/xmodem.hpp>
 #include <drivers/storage/disk.hpp>
-
-void inline infinite_loop(void)
-  {
-    for (;;)
-      ;
-  }
 
 int main(void)
   {
-   disk_test();
-   infinite_loop();
+	disk_test();
+   MAIN_END;
    //dbgout.xprintf("System started\n");
    //GPS::Gps g(2, 115200);
    //MODEM::Modem mdm(3, 19200, &dbgout);

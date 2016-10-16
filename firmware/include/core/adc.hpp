@@ -1,6 +1,6 @@
 #pragma once
+#include <core/stm32f10x.hpp>
 #include <global.hpp>
-#include <hal/stm32f10x.hpp>
 namespace ADC
 {
 class Adc

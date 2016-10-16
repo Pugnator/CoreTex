@@ -475,7 +475,7 @@ extern "C"
  * @}
  */
 
-#include "core_cm3.hpp"
+#include <core/core_cm3.hpp>
 #include <stdint.h>
 
 /** @addtogroup Exported_types

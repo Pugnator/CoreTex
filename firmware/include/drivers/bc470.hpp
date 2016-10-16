@@ -1,7 +1,7 @@
 #pragma once
 #include <global.hpp>
 #include <drivers/console.hpp>
-#include <hal/usart.hpp>
+#include <core/usart.hpp>
 
 using namespace UART;
 

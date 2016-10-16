@@ -1,6 +1,6 @@
 #pragma once
+#include <core/io_macro.hpp>
 #include <stdint.h>
-#include <hal/io_macro.hpp>
 
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
@@ -20,6 +20,8 @@ extern volatile word tickcounter;
 
 #define WAIT_FOR(ms) tickcounter=ms
 #define STILL_WAIT tickcounter
+
+#define MAIN_END for(;;)
 
 #define delayus_asm(us) do {\
 	asm volatile (	"MOV R0,%[loops]\n\t"\

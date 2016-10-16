@@ -1,6 +1,6 @@
 #pragma once
+#include <core/stm32f10x.hpp>
 #include <string.h>
-#include <hal/stm32f10x.hpp>
 #include <drivers/generic/driver.hpp>
 
 namespace UART

@@ -17,12 +17,12 @@
 
 #include <global.hpp>
 #include <common.hpp>
-#include <hal/usart.hpp>
-#include <hal/isr_helper.hpp>
+#include <core/io_macro.hpp>
+#include <core/isr_helper.hpp>
+#include <core/rtc.hpp>
+#include <core/usart.hpp>
+#include <core/vmmu.hpp>
 #include <drivers/console.hpp>
-#include <hal/io_macro.hpp>
-#include <hal/vmmu.hpp>
-#include <hal/rtc.hpp>
 #include <queue.hpp>
 #include <limits.h>
 

@@ -14,11 +14,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * 2015, 2016
  *******************************************************************************/
+#include <core/vmmu.hpp>
 #include <global.hpp>
 #include <stdint.h>
 #include <strings.h>
 #include <string.h>
-#include <hal/vmmu.hpp>
 
 extern "C"
 {

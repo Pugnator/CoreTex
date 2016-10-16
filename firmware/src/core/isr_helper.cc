@@ -14,7 +14,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * 2015, 2016
  *******************************************************************************/
-#include <hal/stm32f10x.hpp>
+#include <core/stm32f10x.hpp>
+#include <core/core_cm3.hpp>
 #include <global.hpp>
 #include <string.h>
 

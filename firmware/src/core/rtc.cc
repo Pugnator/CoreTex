@@ -15,9 +15,9 @@
  * 2015, 2016
  *******************************************************************************/
 
-#include <hal/stm32f10x.hpp>
+#include <core/rtc.hpp>
+#include <core/stm32f10x.hpp>
 #include <global.hpp>
-#include <hal/rtc.hpp>
 #include <stdlib.h>
 
 Rtc::Rtc(word epoch)

@@ -32,6 +32,9 @@ SUPPORT:=\
 	
 FATFSDIR:=\
 	src/drivers/storage/fat32
+	
+TESTSSDIR:=\
+	src/tests
 
 BLD?=DBG
 ifeq ($(BLD), DBG)	
@@ -57,6 +60,7 @@ DRIVERSSRC:=\
 	$(DRIVERS)/positioning/gps/vtg.cc \
 	$(DRIVERS)/storage/mmc/mmc.cc \
 	$(DRIVERS)/storage/mmc/disk.cc \
+	$(DRIVERS)/storage/ramdisk.cc \
 	$(DRIVERS)/storage/flash.cc \
 	$(DRIVERS)/userio/console/console.cc \
 	$(DRIVERS)/userio/console/xprintf.cc \
@@ -87,6 +91,12 @@ SUPPORTSRC:=\
 	$(SUPPORT)/log.cc \
 	$(SUPPORT)/queue.cc \
 	$(SUPPORT)/morse.cc
+	
+FATFSSRC:=\
+	$(FATFSDIR)/ff.c
+
+TESTSSRC:=\
+	$(TESTSDIR)/core.cc
 
 ####################################################
 
@@ -112,6 +122,7 @@ OBJ:=$(DRIVERSSRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(STARTUP:%.s=$(OBJSDIR)/%.o)
 OBJ+=$(CORESRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(SUPPORTSRC:%.cc=$(OBJSDIR)/%.o)
+OBJ+=$(FATFSSRC:%.c=$(OBJSDIR)/%.o)
 
 PROGOBJ:=$(SRC:%.cc=$(OBJSDIR)/%.o)
 
@@ -123,11 +134,15 @@ all: clean library firmware linked_firmware
 
 linked_firmware: directories library $(FIRMWARE)
 
-firmware: directories fatfs $(EXEC)
+firmware: directories $(EXEC)
 
 library: corelib drivers supportlib $(LIBEXEC)
 
 $(OBJSDIR)/%.o: %.cc
+	$(MKDIR_P) `dirname $@`
+	$(GPP) -c -o $@ $< $(CFLAGS)
+	
+$(OBJSDIR)/%.o: %.c
 	$(MKDIR_P) `dirname $@`
 	$(GPP) -c -o $@ $< $(CFLAGS)
 
@@ -136,7 +151,7 @@ $(OBJSDIR)/%.o: %.s
 	$(ASM) $< -o $@
 
 $(EXEC): $(OBJ)	$(PROGOBJ)
-	$(GPP) -o $@ $^ $(LDFLAGS) $(FATFSLIB)
+	$(GPP) -o $@ $^ $(LDFLAGS)
 	$(OCOPY) -O binary $(EXEC) $(EXEC).bin
 	@stat -c "Output size of <%n> is %s" $(EXEC).bin
 	@$(SIZE) --format=berkeley $(EXEC)

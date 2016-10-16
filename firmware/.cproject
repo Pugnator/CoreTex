@@ -96,6 +96,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/include/hal}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\arm-none-eabi\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\lib\gcc\arm-none-eabi\4.9.3\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/cmsis/cm3/CoreSupport}&quot;"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.1743755535" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -107,6 +110,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreText/include/hal}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreText/external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\arm-none-eabi\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\lib\gcc\arm-none-eabi\4.9.3\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/cmsis/cm3/CoreSupport}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1796404894" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32F10X_MD=1"/>
@@ -124,6 +130,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreText/include/hal}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreText/external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\arm-none-eabi\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\lib\gcc\arm-none-eabi\4.9.3\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/cmsis/cm3/CoreSupport}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.defs.776939462" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32F10X_MD=1"/>
@@ -253,7 +262,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/include/hal}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\arm-none-eabi\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\lib\gcc\arm-none-eabi\4.9.3\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/cmsis/cm3/CoreSupport}&quot;"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.1570664163" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -263,6 +274,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreText/include/hal}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreText/external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\arm-none-eabi\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\lib\gcc\arm-none-eabi\4.9.3\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/cmsis/cm3/CoreSupport}&quot;"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1076413812" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -272,6 +286,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreText/include/hal}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreText/external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\arm-none-eabi\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\lib\gcc\arm-none-eabi\4.9.3\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/cmsis/cm3/CoreSupport}&quot;"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.1440645114" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
 							</tool>

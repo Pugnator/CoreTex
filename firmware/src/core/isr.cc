@@ -16,11 +16,11 @@
  *******************************************************************************/
 
 #include <global.hpp>
-#include <hal/io_macro.hpp>
-#include <hal/isr_helper.hpp>
-#include <hal/usart.hpp>
 #include <drivers/console.hpp>
 #include <common.hpp>
+#include <core/io_macro.hpp>
+#include <core/isr_helper.hpp>
+#include <core/usart.hpp>
 
 volatile word tickcounter = 0;
 

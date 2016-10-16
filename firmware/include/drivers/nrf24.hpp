@@ -1,6 +1,6 @@
 #pragma once
+#include <core/spi.hpp>
 #include <global.hpp>
-#include <hal/spi.hpp>
 #include <drivers/console.hpp>
 
 using namespace SPI;

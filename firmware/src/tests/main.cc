@@ -1,7 +1,7 @@
 #include <global.hpp>
 #include <common.hpp>
+#include <core/vmmu.hpp>
 #include <stdlib.h>
-#include <hal/vmmu.hpp>
 #include <drivers/console.hpp>
 
 bool memtest(word times);

@@ -1,5 +1,5 @@
 #pragma once
-#include <hal/usart.hpp>
+#include <core/usart.hpp>
 
 using namespace UART;
 

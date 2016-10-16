@@ -15,11 +15,11 @@
  * 2015
  *******************************************************************************/
 
-#include <hal/i2c.hpp>
-#include <hal/io_macro.hpp>
 #include <global.hpp>
 #include <common.hpp>
-#include <hal/stm32f10x.hpp>
+#include <core/i2c.hpp>
+#include <core/io_macro.hpp>
+#include <core/stm32f10x.hpp>
 
 namespace I2C
 {

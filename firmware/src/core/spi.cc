@@ -16,11 +16,11 @@
  *******************************************************************************/
 #include <stdint.h>
 #include <common.hpp>
+#include <core/io_macro.hpp>
+#include <core/isr_helper.hpp>
+#include <core/spi.hpp>
+#include <core/stm32f10x.hpp>
 #include <global.hpp>
-#include <hal/io_macro.hpp>
-#include <hal/stm32f10x.hpp>
-#include <hal/spi.hpp>
-#include <hal/isr_helper.hpp>
 
 namespace SPI
 {
@@ -135,6 +135,63 @@ uint16_t Spi::read(uint16_t data)
     uint16_t tmp = Reg->DR;
     PIN_HI(SPI1NSS_PIN);
     return tmp;
+  }
+
+void Spi::multiread(uint8_t *buff, uint32_t btr)
+  {
+    while (Reg->SR & SPI_SR_BSY)
+      ;
+    uint16_t d;
+    /* Set SPI to 16-bit mode */
+    go16bit();
+
+    Reg->DR = 0xFFFF;
+    btr -= 2;
+    do
+      { /* Receive the data block into buffer */
+        while (Reg->SR & SPI_SR_BSY)
+          ;
+        d = Reg->DR;
+        Reg->DR = 0xFFFF;
+        buff[1] = d;
+        buff[0] = d >> 8;
+        buff += 2;
+      }
+    while (btr -= 2);
+
+    while (Reg->SR & SPI_SR_BSY)
+      ;
+    d = Reg->DR;
+    buff[1] = d;
+    buff[0] = d >> 8;
+
+    /* Set SPI to 8-bit mode */
+    go8bit();
+  }
+
+void Spi::multiwrite(const uint8_t *buff, uint32_t btx)
+  {
+    uint16_t d;
+    go16bit();
+
+    d = buff[0] << 8 | buff[1];
+    Reg->DR = d;
+    buff += 2;
+    btx -= 2;
+    do
+      { /* Receive the data block into buffer */
+        d = buff[0] << 8 | buff[1];
+        while (Reg->SR & SPI_SR_BSY)
+          ;
+        Reg->DR;
+        Reg->DR = d;
+        buff += 2;
+      }
+    while (btx -= 2);
+    while (Reg->SR & SPI_SR_BSY)
+      ;
+    Reg->DR;
+    go8bit();
   }
 
 uint16_t Spi::lazyread(uint16_t data)

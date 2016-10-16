@@ -15,9 +15,9 @@
  * 2015
  *******************************************************************************/
 
+#include <core/vmmu.hpp>
 #include <global.hpp>
 #include <drivers/bc470.hpp>
-#include <hal/vmmu.hpp>
 #include <string.h>
 
 namespace BC470

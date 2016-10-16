@@ -15,11 +15,11 @@
  * 2015, 2016
  *******************************************************************************/
 
-#include <hal/core.hpp>
-#include "hal/io_macro.hpp"
-#include <hal/isr_helper.hpp>
-#include <hal/io_macro.hpp>
-#include <hal/vmmu.hpp>
+#include <core/core.hpp>
+#include <core/io_macro.hpp>
+#include <core/io_macro.hpp>
+#include <core/isr_helper.hpp>
+#include <core/vmmu.hpp>
 #include <global.hpp>
 
 extern "C" void SystemInit(void)

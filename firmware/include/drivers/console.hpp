@@ -1,6 +1,6 @@
 #pragma once
 #include <global.hpp>
-#include <hal/usart.hpp>
+#include <core/usart.hpp>
 #include <stdarg.h>
 
 using namespace UART;

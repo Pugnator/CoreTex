@@ -1,5 +1,5 @@
 #pragma once
-#include <hal/stm32f10x.hpp>
+#include <core/stm32f10x.hpp>
 namespace I2C
 {
 class I2c

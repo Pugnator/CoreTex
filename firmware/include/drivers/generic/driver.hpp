@@ -39,6 +39,14 @@ public:
 	{
 		return 0;
 	}
+  void multiread(uint8_t *buff, uint32_t btr)
+  {
+
+  }
+  void multiwrite(const uint8_t *buff, uint32_t btx)
+  {
+
+  }
 	virtual const char*
 	name (void)
 	{

@@ -15,9 +15,9 @@
  * 2015
  *******************************************************************************/
 
-#include <hal/adc.hpp>
-#include <hal/io_macro.hpp>
 #include <common.hpp>
+#include <core/adc.hpp>
+#include <core/io_macro.hpp>
 
 namespace ADC
 {

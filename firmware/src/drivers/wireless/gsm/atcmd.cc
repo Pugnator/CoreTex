@@ -1,8 +1,8 @@
 #include <global.hpp>
 #include <common.hpp>
+#include <core/isr_helper.hpp>
+#include <core/vmmu.hpp>
 #include <drivers/gsm.hpp>
-#include <hal/isr_helper.hpp>
-#include <hal/vmmu.hpp>
 #include <stdarg.h>
 
 namespace MODEM

@@ -14,11 +14,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * 2015, 2016
  *******************************************************************************/
-#include <hal/core.hpp>
-#include <hal/isr_helper.hpp>
+#include <core/core.hpp>
+#include <core/io_macro.hpp>
+#include <core/isr_helper.hpp>
+#include <core/usart.hpp>
 #include <global.hpp>
-#include <hal/io_macro.hpp>
-#include <hal/usart.hpp>
 #include <queue.hpp>
 
 /* UART class */

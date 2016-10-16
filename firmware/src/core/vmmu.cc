@@ -8,9 +8,9 @@
 
 //Modified to complain with this platform and C++11 compiler
 
+#include <core/vmmu.hpp>
 #include <stdio.h>
 #include <global.hpp>
-#include <hal/vmmu.hpp>
 #include <drivers/console.hpp>
 
 typedef word Align;

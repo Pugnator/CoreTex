@@ -2250,7 +2250,7 @@ DWORD sect /* Sector# (lba) to check if it is an FAT boot record or not */
 )
 {
 	fs->wflag = 0;
-	fs->winsect = 0xFFFFFFFF; /* Invaidate window */
+	fs->winsect = 0xFFFFFFFF; /* Invalidate window */
 	if (move_window(fs, sect) != FR_OK) /* Load boot record */
 		return 3;
 

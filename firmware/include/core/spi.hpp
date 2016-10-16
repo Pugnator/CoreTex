@@ -1,5 +1,5 @@
 #pragma once
-#include <hal/stm32f10x.hpp>
+#include <core/stm32f10x.hpp>
 #include <drivers/generic/driver.hpp>
 
 namespace SPI
@@ -16,18 +16,19 @@ public:
   ~Spi(void);
 
   uint16_t read(uint16_t data);
+  void multiread(uint8_t *buff, uint32_t btr);
+  void multiwrite(const uint8_t *buff, uint32_t btx);
   uint16_t lazyread(uint16_t data);
   static class Spi *self;
   static void isr(void);
-protected:
   void low_speed(void);
   void high_speed(void);
   void go8bit(void) ;
   void go16bit(void) ;
   void disable(void);
   void enable(void);
+protected:
   void init(void);
-  word error;
   int channel;
   SPI_TypeDef* Reg;
   };

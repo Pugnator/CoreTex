@@ -16,13 +16,14 @@
  *******************************************************************************/
 #include <global.hpp>
 #include <common.hpp>
+#include <tests/tests.hpp>
 #include <drivers/console.hpp>
 #include <drivers/storage/disk.hpp>
 
 int main(void)
   {
-	disk_test();
-   MAIN_END;
+		tests_exec();
+		MAIN_END;
    //dbgout.xprintf("System started\n");
    //GPS::Gps g(2, 115200);
    //MODEM::Modem mdm(3, 19200, &dbgout);

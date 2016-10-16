@@ -15,10 +15,9 @@ public:
   Spi(char ch);
   ~Spi(void);
 
-  uint16_t read(uint16_t data);
-  void multiread(uint8_t *buff, uint32_t btr);
-  void multiwrite(const uint8_t *buff, uint32_t btx);
-  uint16_t lazyread(uint16_t data);
+  virtual uint16_t read(uint16_t data = 0xFFFF);
+  virtual void multiread(uint8_t *buff, uint32_t size);
+  virtual void multiwrite(const uint8_t *buff, uint32_t size);
   static class Spi *self;
   static void isr(void);
   void low_speed(void);

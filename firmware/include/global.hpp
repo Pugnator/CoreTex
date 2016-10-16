@@ -17,6 +17,7 @@ typedef uint32_t word;
 #define CONSOLE_SPEED 9600
 
 extern volatile word tickcounter;
+extern volatile word timerms;
 
 #define WAIT_FOR(ms) tickcounter=ms
 #define STILL_WAIT tickcounter

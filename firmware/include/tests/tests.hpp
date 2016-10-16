@@ -1,1 +1,2 @@
-bool run_tests(void);
+#pragma once
+bool tests_exec(void);

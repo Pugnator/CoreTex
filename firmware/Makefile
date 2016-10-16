@@ -33,7 +33,7 @@ SUPPORT:=\
 FATFSDIR:=\
 	src/drivers/storage/fat32
 	
-TESTSSDIR:=\
+TESTSDIR:=\
 	src/tests
 
 BLD?=DBG
@@ -123,6 +123,7 @@ OBJ+=$(STARTUP:%.s=$(OBJSDIR)/%.o)
 OBJ+=$(CORESRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(SUPPORTSRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(FATFSSRC:%.c=$(OBJSDIR)/%.o)
+OBJ+=$(TESTSSRC:%.cc=$(OBJSDIR)/%.o)
 
 PROGOBJ:=$(SRC:%.cc=$(OBJSDIR)/%.o)
 

@@ -39,11 +39,11 @@ public:
 	{
 		return 0;
 	}
-  void multiread(uint8_t *buff, uint32_t btr)
+  virtual void multiread(uint8_t *buff, uint32_t size)
   {
 
   }
-  void multiwrite(const uint8_t *buff, uint32_t btx)
+  virtual void multiwrite(const uint8_t *buff, uint32_t size)
   {
 
   }

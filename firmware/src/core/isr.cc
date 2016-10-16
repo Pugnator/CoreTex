@@ -23,6 +23,7 @@
 #include <core/usart.hpp>
 
 volatile word tickcounter = 0;
+volatile word timerms = 0;
 
 extern "C"
 {
@@ -32,6 +33,10 @@ void SysTick_Handler(void)
  {
   --tickcounter;
  }
+ if (timerms)
+	 {
+		 ++timerms;
+	 }
 }
 
 void SPI1_IRQHandler(void)

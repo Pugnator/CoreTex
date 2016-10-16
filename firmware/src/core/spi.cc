@@ -137,68 +137,32 @@ uint16_t Spi::read(uint16_t data)
     return tmp;
   }
 
-void Spi::multiread(uint8_t *buff, uint32_t btr)
+void Spi::multiread(uint8_t *buff, uint32_t size)
   {
-    while (Reg->SR & SPI_SR_BSY)
-      ;
-    uint16_t d;
-    /* Set SPI to 16-bit mode */
-    go16bit();
+			if(1 >= size || size % 2)
+				return;
 
-    Reg->DR = 0xFFFF;
-    btr -= 2;
-    do
-      { /* Receive the data block into buffer */
-        while (Reg->SR & SPI_SR_BSY)
-          ;
-        d = Reg->DR;
-        Reg->DR = 0xFFFF;
-        buff[1] = d;
-        buff[0] = d >> 8;
-        buff += 2;
-      }
-    while (btr -= 2);
-
-    while (Reg->SR & SPI_SR_BSY)
-      ;
-    d = Reg->DR;
-    buff[1] = d;
-    buff[0] = d >> 8;
-
-    /* Set SPI to 8-bit mode */
-    go8bit();
+	    go16bit();
+	    uint16_t dr = 0;
+	    for(uint32_t i = 0; i < size / 2; ++i)
+	    	{
+	    		dr = read();
+	    		buff[1] = dr & 0xFF;
+	    		buff[0] = dr >> 8;
+	    		buff += 2;
+	    	}
   }
 
-void Spi::multiwrite(const uint8_t *buff, uint32_t btx)
+void Spi::multiwrite(const uint8_t *buff, uint32_t size)
   {
-    uint16_t d;
+		if(1 >= size || size % 2)
+			return;
     go16bit();
-
-    d = buff[0] << 8 | buff[1];
-    Reg->DR = d;
-    buff += 2;
-    btx -= 2;
-    do
-      { /* Receive the data block into buffer */
-        d = buff[0] << 8 | buff[1];
-        while (Reg->SR & SPI_SR_BSY)
-          ;
-        Reg->DR;
-        Reg->DR = d;
-        buff += 2;
-      }
-    while (btx -= 2);
-    while (Reg->SR & SPI_SR_BSY)
-      ;
-    Reg->DR;
-    go8bit();
-  }
-
-uint16_t Spi::lazyread(uint16_t data)
-  {
-    Reg->DR = data;
-    while (Reg->SR & SPI_SR_BSY);
-    return Reg->DR;
+    for(uint32_t i = 0; i < size / 2; ++i)
+    	{
+    		read(buff[0] << 8 | buff[1]);
+    		buff += 2;
+    	}
   }
 
 void Spi::go8bit(void)
@@ -230,11 +194,11 @@ void Spi::enable(void)
 void Spi::low_speed(void)
   {
     Reg->CR1 &= ~SPI_CR1_BR;
-    Reg->CR1 |= SPI_CR1_BR_2;
+    Reg->CR1 |= SPI_CR1_BR | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2; // \256
   }
 
 void Spi::high_speed(void)
   {
-    Reg->CR1 |= SPI_CR1_BR;
+		Reg->CR1 &= ~SPI_CR1_BR;
   }
 }

@@ -135,7 +135,7 @@ EXEC:=$(OUTPUTDIR)/$(PROJECTNAME).elf
 FIRMWARE:=$(OUTPUTDIR)/$(PROJECTNAME)_linked.elf
 LIBEXEC:=$(LIBSDIR)/$(PROJECTNAME).a
 
-all: clean stm_stdlib library firmware linked_firmware
+all: clean directories stm_stdlib library firmware linked_firmware
 
 linked_firmware: directories stm_stdlib library $(FIRMWARE)
 

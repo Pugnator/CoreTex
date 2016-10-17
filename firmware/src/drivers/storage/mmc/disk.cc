@@ -18,6 +18,8 @@ bool
 wait4ready (word how_long)
 {
 	uint16_t d;
+	disk.go8bit();
+	disk.low_speed();
 	WAIT_FOR (how_long);
 	do
 		{
@@ -25,18 +27,7 @@ wait4ready (word how_long)
 		}
 	while (d != 0xFF && STILL_WAIT); /* Wait for card goes ready or timeout */
 
-	return (d == 0xFF) ? true : false;
-}
-
-bool
-select (void)
-{
-	PIN_LOW (SPI1NSS_PIN);
-	/* Dummy clock (force DO enabled) */
-	disk.read (0xff);
-	//if (wait4ready(500)) return true;      /* Wait for card ready */
-	//deselect();
-	return true;
+	return d == 0xFF;
 }
 
 void
@@ -47,12 +38,22 @@ deselect (void)
 	disk.read (0xff);
 }
 
+bool
+select (void)
+{
+	PIN_LOW (SPI1NSS_PIN);
+	/* Dummy clock (force DO enabled) */
+	disk.read (0xff);
+	if (wait4ready(500)) return true;      /* Wait for card ready */
+	deselect();
+	return false;
+}
+
 uint16_t
 mmccmd (uint8_t command, word arg)
 {
-	while(0xFF != disk.read(0xFF));
 	uint8_t n, res;
-
+	wait4ready(200);
 	if (command & 0x80)
 		{ /* Send a CMD55 prior to ACMD<n> */
 			command &= 0x7F;
@@ -96,6 +97,8 @@ mmccmd (uint8_t command, word arg)
 DSTATUS
 disk_initialize (BYTE drv)
 {
+	disk.low_speed();
+	disk.go8bit();
 	BYTE cmd, ty, ocr[4];
 	if (drv)
 		return STA_NOINIT; /* Supports only drive 0 */
@@ -477,7 +480,8 @@ disk_test (void)
 	Console con (&out);
 	con.print ("FatFs test started\r\n");
 	disk = SPI::Spi (1);
-	//disk.go16bit();
-	word res = disk.read(0xAABB);
-	con.xprintf("Result: 0x%X\r\n", res);
+	disk.low_speed();
+	FATFS fs;
+	FRESULT res = f_mount(&fs, "0:", 1);
+	con.print(get_fresult(res));
 }

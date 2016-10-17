@@ -137,31 +137,36 @@ uint16_t Spi::read(uint16_t data)
     return tmp;
   }
 
-void Spi::multiread(uint8_t *buff, uint32_t size)
+void Spi::multiread(uint8_t *buf, uint32_t size)
   {
-			if(1 >= size || size % 2)
-				return;
+			if(1 == size)
+				{
+					go8bit();
+					*buf = read();
+					return;
+				}
 
 	    go16bit();
 	    uint16_t dr = 0;
 	    for(uint32_t i = 0; i < size / 2; ++i)
 	    	{
 	    		dr = read();
-	    		buff[1] = dr & 0xFF;
-	    		buff[0] = dr >> 8;
-	    		buff += 2;
+	    		buf[1] = dr & 0xFF;
+	    		buf[0] = dr >> 8;
+	    		buf += 2;
 	    	}
   }
 
-void Spi::multiwrite(const uint8_t *buff, uint32_t size)
+void Spi::multiwrite(const uint8_t *buf, uint32_t size)
   {
 		if(1 >= size || size % 2)
 			return;
+
     go16bit();
     for(uint32_t i = 0; i < size / 2; ++i)
     	{
-    		read(buff[0] << 8 | buff[1]);
-    		buff += 2;
+    		read(buf[0] << 8 | buf[1]);
+    		buf += 2;
     	}
   }
 

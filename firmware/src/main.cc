@@ -22,7 +22,7 @@
 
 int main(void)
   {
-		tests_exec();
+		disk_test();
 		MAIN_END;
    //dbgout.xprintf("System started\n");
    //GPS::Gps g(2, 115200);

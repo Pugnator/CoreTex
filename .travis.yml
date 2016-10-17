@@ -10,4 +10,4 @@ install:
  - pushd firmware 
 
 script:
- - make
+ - make firmware

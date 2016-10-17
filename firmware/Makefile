@@ -17,6 +17,10 @@ LIBSDIR:=libs
 OBJSDIR:=obj
 OUTPUTDIR:=bin
 MRI:=usedlibs.mri
+STDLIB:=external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/libstd.a
+
+STDLIBSRC:=\
+	external/stdlib/Libraries/STM32F10x_StdPeriph_Driver
 
 CORELIB:=\
 	src/core
@@ -39,7 +43,7 @@ TESTSDIR:=\
 BLD?=DBG
 ifeq ($(BLD), DBG)	
 	CFLAGS:=-Og -g3 -DDEBUG	-ffunction-sections -fdata-sections
-	LDFLAGS:=external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/libstd.a -Wl,--gc-sections 
+	LDFLAGS:=$(STDLIB) -Wl,--gc-sections 
 else
 	CFLAGS:=-Os -ffunction-sections -fdata-sections
 	LDFLAGS:=-Wl,--gc-sections 
@@ -131,13 +135,13 @@ EXEC:=$(OUTPUTDIR)/$(PROJECTNAME).elf
 FIRMWARE:=$(OUTPUTDIR)/$(PROJECTNAME)_linked.elf
 LIBEXEC:=$(LIBSDIR)/$(PROJECTNAME).a
 
-all: clean library firmware linked_firmware
+all: clean stm_stdlib library firmware linked_firmware
 
-linked_firmware: directories library $(FIRMWARE)
+linked_firmware: directories stm_stdlib library $(FIRMWARE)
 
-firmware: directories $(EXEC)
+firmware: directories stm_stdlib $(EXEC)
 
-library: corelib drivers supportlib $(LIBEXEC)
+library: stm_stdlib corelib drivers supportlib $(LIBEXEC)
 
 $(OBJSDIR)/%.o: %.cc
 	$(MKDIR_P) `dirname $@`
@@ -162,7 +166,6 @@ $(FIRMWARE): $(PROGOBJ)
 	$(OCOPY) -O binary $(FIRMWARE) $(FIRMWARE).bin
 	@stat -c "Output size of <%n> is %s" $(FIRMWARE).bin
 	@$(SIZE) --format=berkeley $(FIRMWARE)
-
 
 $(LIBEXEC): $(MRI)
 	$(AR) M <$^
@@ -197,9 +200,13 @@ drivers:
 		$(MAKE) BLD=$(BLD) -C $$dir; \
 	done
 
+stm_stdlib:
+	for dir in $(STDLIBSRC); do \
+		$(MAKE) -C $$dir; \
+	done
 
 clean:
-	rm -f $(EXEC) $(EXEC).bin $(LIBEXEC)
+	rm -f $(EXEC) $(EXEC).bin $(LIBEXEC) $(STDLIB)
 	rm -rf $(OUTPUTDIR) $(LIBSDIR)	$(OBJSDIR)
 
 .PHONY: corelib

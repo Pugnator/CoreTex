@@ -218,6 +218,7 @@ namespace
 void
 Console::worker ()
 {
+#if __USE_CONSOLE
   char res = 0;
   while(!isdone)
     {
@@ -226,10 +227,12 @@ Console::worker ()
 	  log (res);
 	}
     }
+#endif
 }
 void
 Console::log (char c)
 {
+#if __USE_CONSOLE
   switch (c)
     {
     case '\r':
@@ -260,12 +263,14 @@ Console::log (char c)
 	print (c);
       }
     }
+#endif
 }
 
 bool
 Console::parse ()
 {
   bool result = false;
+#if __USE_CONSOLE
   const char delim[2] = " ";
   char *token;
   token = strtok (conbuf, delim);
@@ -301,53 +306,65 @@ Console::parse ()
     {
       cmdptr (self);
     }
+#endif
   return result;
 }
 
 void
 Console::error (char * message)
 {
+#if __USE_CONSOLE
   //FIXME: make it work :)
   //print("\x1b[31");
   print (message);
   //print("\x1b[0m");
+#endif
 }
 
 void
 Console::foreground (char color)
 {
+#if __USE_CONSOLE
   //skip the warning about narrowing in a clean way
   char fattr = '0' + color;
   char forecolor[6] = "\x1b[30m";
   forecolor[3] = fattr;
   print (forecolor);
+#endif
 }
 
 void
 Console::background (char color)
 {
+#if __USE_CONSOLE
   //skip the warning about narrowing in a clean way
   char fattr = '0' + color;
   char forecolor[6] = "\x1b[40m";
   forecolor[3] = fattr;
   print (forecolor);
+#endif
 }
 
 void
 Console::print (char ch)
 {
+#if __USE_CONSOLE
   io->write (ch);
+#endif
 }
 
 void
 Console::print (char const* str)
 {
+#if __USE_CONSOLE
   io->writestr (str);
+#endif
 }
 
 void
 Console::print (int num)
 {
+#if __USE_CONSOLE
   int sign;
   memset (strbuf, 0, sizeof strbuf);
   if ((sign = num) < 0)
@@ -376,11 +393,13 @@ Console::print (int num)
       --right;
     }
   print (strbuf);
+#endif
 }
 
 void
 Console::print (word num)
 {
+#if __USE_CONSOLE
   memset (strbuf, 0, sizeof strbuf);
   word i = 0;
   do
@@ -400,10 +419,13 @@ Console::print (word num)
       --right;
     }
   print (strbuf);
+#endif
 }
 
 void
 Console::crlf (void)
 {
+#if __USE_CONSOLE
   print ("\r\n");
+#endif
 }

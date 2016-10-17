@@ -14,20 +14,5 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * 2015, 2016
  *******************************************************************************/
-#include <global.hpp>
-#include <common.hpp>
-#include <tests/tests.hpp>
-#include <drivers/console.hpp>
-#include <drivers/storage/disk.hpp>
 
-int main(void)
-  {
-		disk_test();
-		MAIN_END;
-   //dbgout.xprintf("System started\n");
-   //GPS::Gps g(2, 115200);
-   //MODEM::Modem mdm(3, 19200, &dbgout);
-   //dbgout.xprintf("SIM900 %s\n", mdm.ok ? "ON" : "OFF");
-   //dbgout.xprintf("SIM900 setup: %s\n", mdm.setup() ? "OK" : "FAIL");
-   //dbgout.xprintf("SMS number: %lu\n", mdm.get_sms_amount());
-  }
+#define __USE_CONSOLE 0

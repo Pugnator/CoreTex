@@ -1,6 +1,7 @@
 #pragma once
 #include <core/io_macro.hpp>
 #include <stdint.h>
+#include <config.hpp>
 
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"

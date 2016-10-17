@@ -36,7 +36,7 @@
 
 # Directories
 firmware/.settings
-firmware/external/
+firmware/external/openocd/
 firmware/libs/
 firmware/obj/
 firmware/bin/

@@ -483,5 +483,7 @@ disk_test (void)
 	disk.low_speed();
 	FATFS fs;
 	FRESULT res = f_mount(&fs, "0:", 1);
+	//res = f_mkfs("0:", 0, 0);
+
 	con.print(get_fresult(res));
 }

@@ -23,6 +23,8 @@ extern volatile word timerms;
 #define WAIT_FOR(ms) tickcounter=ms
 #define STILL_WAIT tickcounter
 
+#define USED __attribute__((used))
+
 #define MAIN_END for(;;)
 
 #define delayus_asm(us) do {\

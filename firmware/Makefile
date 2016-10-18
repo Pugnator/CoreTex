@@ -42,11 +42,9 @@ TESTSDIR:=\
 
 BLD?=DBG
 ifeq ($(BLD), DBG)	
-	CFLAGS:=-Og -g3 -DDEBUG	-ffunction-sections -fdata-sections
-	LDFLAGS:=$(STDLIB) -Wl,--gc-sections 
+	CFLAGS:=-Og -g3
 else
-	CFLAGS:=-Os -ffunction-sections -fdata-sections
-	LDFLAGS:=-Wl,--gc-sections 
+	CFLAGS:=-Os -s
 endif
 
 ######################## SOURCES ###############################
@@ -114,11 +112,12 @@ CFLAGS+=\
 	-Wno-write-strings \
 	-fno-exceptions \
 	-fno-builtin -nostdlib \
+	-ffunction-sections -fdata-sections \
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 
 LDFLAGS+=\
 	-Tstm32_link.ld \
-	-lm	
+	-lm	-Wl,--gc-sections
 
 FATFSLIB:=$(LIBSDIR)/fat32.a
 
@@ -137,9 +136,9 @@ LIBEXEC:=$(LIBSDIR)/$(PROJECTNAME).a
 
 all: clean directories stm_stdlib library firmware linked_firmware
 
-linked_firmware: directories stm_stdlib library $(FIRMWARE)
+linked_firmware: directories library $(FIRMWARE)
 
-firmware: directories stm_stdlib $(EXEC)
+firmware: directories $(EXEC)
 
 library: stm_stdlib corelib drivers supportlib $(LIBEXEC)
 

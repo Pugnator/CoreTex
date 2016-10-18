@@ -110,7 +110,7 @@ void USART3_IRQHandler(void)
 }
 
 //TO USE: addr2line -e ./bin/program.elf -a 0x8002327 [GDB: p/x pc when it hit for(;;)]
-void unwindCPUstack(word* stackAddress)
+USED void unwindCPUstack(word* stackAddress)
 {
  /*
   These are volatile to try and prevent the compiler/linker optimising them

@@ -15,7 +15,7 @@ public:
   Spi(char ch);
   ~Spi(void);
 
-  virtual uint16_t read(uint16_t data = 0xFFFF);
+  virtual uint16_t read(uint16_t data);
   virtual void multiread(uint8_t *buff, uint32_t size);
   virtual void multiwrite(const uint8_t *buff, uint32_t size);
   static class Spi *self;

@@ -129,12 +129,17 @@ void Spi::init(void)
 
 uint16_t Spi::read(uint16_t data)
   {
+		bool mode16 = false;
+		if(0xFF < data)
+			{
+				mode16 = true;
+			}
     PIN_LOW(SPI1NSS_PIN);
     Reg->DR = data;
     while (Reg->SR & SPI_SR_BSY);
     uint16_t tmp = Reg->DR;
     PIN_HI(SPI1NSS_PIN);
-    return tmp;
+    return mode16 ? tmp : tmp & 0xFF;
   }
 
 void Spi::multiread(uint8_t *buf, uint32_t size)
@@ -142,15 +147,23 @@ void Spi::multiread(uint8_t *buf, uint32_t size)
 			if(1 == size)
 				{
 					go8bit();
-					*buf = read();
+					PIN_LOW(SPI1NSS_PIN);
+					Reg->DR = 0xFF;
+					while (Reg->SR & SPI_SR_BSY);
+					buf[0] = Reg->DR;
+					PIN_HI(SPI1NSS_PIN);
 					return;
 				}
 
 	    go16bit();
-	    uint16_t dr = 0;
+	    volatile uint16_t dr = 0;
 	    for(uint32_t i = 0; i < size / 2; ++i)
 	    	{
-	    		dr = read();
+	    		PIN_LOW(SPI1NSS_PIN);
+	    		Reg->DR = 0xFFFF;
+	    		while (Reg->SR & SPI_SR_BSY);
+	    		dr = Reg->DR;
+	    		PIN_HI(SPI1NSS_PIN);
 	    		buf[1] = dr & 0xFF;
 	    		buf[0] = dr >> 8;
 	    		buf += 2;
@@ -165,7 +178,11 @@ void Spi::multiwrite(const uint8_t *buf, uint32_t size)
     go16bit();
     for(uint32_t i = 0; i < size / 2; ++i)
     	{
-    		read(buf[0] << 8 | buf[1]);
+    		PIN_LOW(SPI1NSS_PIN);
+    		Reg->DR = buf[0] << 8 | buf[1];
+    		while (Reg->SR & SPI_SR_BSY);
+    		volatile uint16_t dr = Reg->DR;
+    		PIN_HI(SPI1NSS_PIN);
     		buf += 2;
     	}
   }

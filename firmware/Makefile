@@ -36,7 +36,7 @@ SUPPORT:=\
 	src/support
 	
 FATFSDIR:=\
-	src/drivers/storage/fat32
+	src/drivers/storage/fatfs
 	
 TESTSDIR:=\
 	src/tests

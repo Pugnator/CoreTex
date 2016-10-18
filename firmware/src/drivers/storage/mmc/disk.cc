@@ -1,7 +1,7 @@
 #include <core/spi.hpp>
 #include <global.hpp>
-#include <drivers/storage/fat32/ff.h>
-#include <drivers/storage/fat32/diskio.h>
+#include <drivers/storage/fatfs/ff.h>
+#include <drivers/storage/fatfs/diskio.h>
 #include <drivers/storage/disk.hpp>
 #include <drivers/console.hpp>
 
@@ -482,7 +482,17 @@ disk_test (void)
 	disk = SPI::Spi (1);
 	disk.low_speed();
 	FATFS fs;
-	FRESULT res = f_mount(&fs, "0:", 1);
+	FATFS *fstmp;
+	FRESULT res = f_mount(&fs, "0:", 0);
+	DWORD fre_clust, fre_sect, tot_sect;
+	FRESULT rc = f_getfree("0:", &fre_clust, &fstmp);
+	tot_sect = (fs.n_fatent - 2) * fs.csize;
+  fre_sect = fre_clust * fs.csize;
+
+    /* Print free space in unit of KB (assuming 512 bytes/sector) */
+   con.xprintf("%u KB total drive space.\n"
+           "%u KB available.\n",
+		fre_sect / 2, tot_sect / 2);
 	//res = f_mkfs("0:", 0, 0);
 
 	con.print(get_fresult(res));

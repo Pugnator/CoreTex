@@ -16,7 +16,7 @@
  *******************************************************************************/
 #include <core/io_macro.hpp>
 #include <core/stm32f10x.hpp>
-#include <drivers/storage/fat32/diskio.h>
+#include <drivers/storage/fatfs/diskio.h>
 #include <global.hpp>
 
 

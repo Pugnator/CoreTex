@@ -12,6 +12,7 @@ STRIP:=$(GCCPRFX)-strip
 SIZE:=$(GCCPRFX)-size
 MKDIR_P = mkdir -p
 MAKE:=make --always-make
+JLINK:=jlink.exe
 
 LIBSDIR:=libs
 OBJSDIR:=obj
@@ -139,6 +140,12 @@ all: clean directories stm_stdlib library firmware linked_firmware
 linked_firmware: directories library $(FIRMWARE)
 
 firmware: directories $(EXEC)
+
+flash: 
+	$(JLINK)	-if SWD -speed 4000 -CommanderScript configs/jlink_flash.txt
+	
+reset: 
+	$(JLINK)	-if SWD -speed 4000 -CommanderScript configs/jlink_reset.txt
 
 library: stm_stdlib corelib drivers supportlib $(LIBEXEC)
 

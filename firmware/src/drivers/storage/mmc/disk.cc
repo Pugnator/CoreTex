@@ -485,7 +485,7 @@ disk_test (void)
 	FATFS *fstmp;
 	FRESULT res = f_mount(&fs, "0:", 0);
 	DWORD fre_clust, fre_sect, tot_sect;
-	FRESULT rc = f_getfree("0:", &fre_clust, &fstmp);
+	//FRESULT rc = f_getfree("0:", &fre_clust, &fstmp);
 	tot_sect = (fs.n_fatent - 2) * fs.csize;
   fre_sect = fre_clust * fs.csize;
 

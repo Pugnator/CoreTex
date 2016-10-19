@@ -17,9 +17,9 @@ DWORD get_fattime (void)
 bool
 wait4ready (word how_long)
 {
-	uint16_t d;
+	uint16_t d = 0;
 	disk.go8bit();
-	disk.low_speed();
+	disk.lowspeed();
 	WAIT_FOR (how_long);
 	do
 		{
@@ -35,7 +35,7 @@ deselect (void)
 {
 	PIN_HI (SPI1NSS_PIN);
 	/* Dummy clock (force DO hi-z for multiple slave SPI) */
-	disk.read (0xff);
+	//disk.read (0xff);
 }
 
 bool
@@ -43,17 +43,17 @@ select (void)
 {
 	PIN_LOW (SPI1NSS_PIN);
 	/* Dummy clock (force DO enabled) */
-	disk.read (0xff);
+	//disk.read (0xff);
 	if (wait4ready(500)) return true;      /* Wait for card ready */
 	deselect();
 	return false;
 }
 
 uint16_t
-mmccmd (uint8_t command, word arg)
+mmccmd (uint8_t command, word arg = 0)
 {
 	uint8_t n, res;
-	wait4ready(200);
+	//wait4ready(200);
 	if (command & 0x80)
 		{ /* Send a CMD55 prior to ACMD<n> */
 			command &= 0x7F;
@@ -97,7 +97,7 @@ mmccmd (uint8_t command, word arg)
 DSTATUS
 disk_initialize (BYTE drv)
 {
-	disk.low_speed();
+	disk.lowspeed();
 	disk.go8bit();
 	BYTE cmd, ty, ocr[4];
 	if (drv)
@@ -153,7 +153,7 @@ disk_initialize (BYTE drv)
 	if (ty)
 		{
 			/* Set fast clock */
-			disk.high_speed ();
+			disk.highspeed ();
 			MMCstat &= ~STA_NOINIT; /* Clear STA_NOINIT flag */
 		}
 	else
@@ -480,20 +480,24 @@ disk_test (void)
 	Console con (&out);
 	con.print ("FatFs test started\r\n");
 	disk = SPI::Spi (1);
-	disk.low_speed();
+	disk.go8bit();
+	disk.lowspeed();
 	FATFS fs;
-	FATFS *fstmp;
-	FRESULT res = f_mount(&fs, "0:", 0);
-	DWORD fre_clust, fre_sect, tot_sect;
-	//FRESULT rc = f_getfree("0:", &fre_clust, &fstmp);
-	tot_sect = (fs.n_fatent - 2) * fs.csize;
-  fre_sect = fre_clust * fs.csize;
+	while ( FR_OK != disk_initialize(0));
+	con.print("Init!");
+	BYTE buf[512];
+	for(int i=0; i<512; ++i)
+		{
+			buf[i] = 0;
+		}
 
-    /* Print free space in unit of KB (assuming 512 bytes/sector) */
-   con.xprintf("%u KB total drive space.\n"
-           "%u KB available.\n",
-		fre_sect / 2, tot_sect / 2);
-	//res = f_mkfs("0:", 0, 0);
+	DRESULT r = disk_write(0, buf, 10, 1);
+	con.print(get_dresult(r));
+	r = disk_read(0, buf, 1, 1);
 
-	con.print(get_fresult(res));
+	con.print(get_dresult(r));
+	//r = disk_read(0, buf, 0, 1);
+	//con.print(get_dresult(r));
+	//con.put_dump(buf, 0, 512, 1);
+
 }

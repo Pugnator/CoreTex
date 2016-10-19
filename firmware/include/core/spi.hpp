@@ -15,13 +15,13 @@ public:
   Spi(char ch);
   ~Spi(void);
 
-  virtual uint16_t read(uint16_t data);
+  virtual uint16_t read(uint16_t data = 0xFF);
   virtual void multiread(uint8_t *buff, uint32_t size);
   virtual void multiwrite(const uint8_t *buff, uint32_t size);
   static class Spi *self;
   static void isr(void);
-  void low_speed(void);
-  void high_speed(void);
+  void lowspeed(void);
+  void highspeed(void);
   void go8bit(void) ;
   void go16bit(void) ;
   void disable(void);

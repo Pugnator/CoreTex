@@ -213,13 +213,13 @@ void Spi::enable(void)
     Reg->CR1 |= SPI_CR1_SPE;
   }
 
-void Spi::low_speed(void)
+void Spi::lowspeed(void)
   {
     Reg->CR1 &= ~SPI_CR1_BR;
     Reg->CR1 |= SPI_CR1_BR | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2; // \256
   }
 
-void Spi::high_speed(void)
+void Spi::highspeed(void)
   {
 		Reg->CR1 &= ~SPI_CR1_BR;
   }

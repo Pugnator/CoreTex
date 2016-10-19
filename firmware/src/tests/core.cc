@@ -17,7 +17,7 @@ bool spi_test(Console *con)
 	SPI::Spi s(1);
 	word retval = 0;
 	s.go8bit();
-	s.low_speed();
+	s.lowspeed();
 	con->print ("Entered low speed mode\r\n");
 	con->print ("*Testing 8bit mode\r\n");
 	retval = 0;
@@ -37,7 +37,7 @@ bool spi_test(Console *con)
 			return false;
 		}
 	con->print("*Throughput test\r\n");
-	s.high_speed();
+	s.highspeed();
 	con->print ("Entered high speed mode\r\n");
 	int bytes2send = 1024*1024;
 	timerms = 1;

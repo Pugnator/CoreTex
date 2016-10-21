@@ -1,5 +1,7 @@
 #include <core/spi.hpp>
 #include <global.hpp>
+#include <common.hpp>
+#include <log.hpp>
 #include <drivers/storage/fatfs/ff.h>
 #include <drivers/storage/fatfs/diskio.h>
 #include <drivers/storage/disk.hpp>
@@ -17,9 +19,8 @@ DWORD get_fattime (void)
 bool
 wait4ready (word how_long)
 {
-	uint16_t d = 0;
-	disk.go8bit();
-	disk.lowspeed();
+	DBGPRINT("wait4ready %ums\r\n", how_long);
+	uint16_t d = 0;	
 	WAIT_FOR (how_long);
 	do
 		{
@@ -33,6 +34,7 @@ wait4ready (word how_long)
 void
 deselect (void)
 {
+	DBGPRINT("SD deselect\r\n");
 	PIN_HI (SPI1NSS_PIN);
 	/* Dummy clock (force DO hi-z for multiple slave SPI) */
 	//disk.read (0xff);
@@ -40,35 +42,93 @@ deselect (void)
 
 bool
 select (void)
-{
+{	
+	DBGPRINT("SD select\r\n");
 	PIN_LOW (SPI1NSS_PIN);
 	/* Dummy clock (force DO enabled) */
 	//disk.read (0xff);
-	if (wait4ready(500)) return true;      /* Wait for card ready */
+	if (wait4ready(500))
+	{
+		DBGPRINT("SD selected\r\n");
+		return true;      /* Wait for card ready */
+	}
+	DBGPRINT("SD selection failed\r\n");
 	deselect();
 	return false;
 }
 
-uint16_t
-mmccmd (uint8_t command, word arg = 0)
+static const char *cmd2str (uint8_t command)
 {
+	switch (command)
+	{
+		case 0:
+			return "CMD0";
+		case 1:
+			return "CMD1";
+		case 0x80+41:
+			return "ACMD41";
+		case 8:
+			return "CMD8";
+		case 9:
+			return "CMD9";
+		case 10:
+			return "CMD10";
+		case 12:
+			return "CMD12";
+		case 0x80+13:
+			return "ACMD13";
+		case 16:   
+			return "CMD16";
+		case 17:    
+			return "CMD17";
+		case 18:
+			return "CMD18";
+		case 0x80+23:
+			return "CMD23";
+		case 24:   
+			return "ACMD23";
+		case 25:   
+			return "CMD24";
+		case 32:   
+			return "CMD25";
+		case 33:   
+			return "CMD33";
+		case 38:   
+			return "CMD38";
+		case 55:   
+			return "CMD55";
+		case 58:   
+			return "CMD58";
+		default:
+			return "Unknown command";
+	}
+} 
+
+uint16_t
+mmccmd (uint8_t command, word arg)
+{
+	DBGPRINT("mmccmd = %s, arg = %u\r\n", cmd2str(command), arg);
 	uint8_t n, res;
 	//wait4ready(200);
 	if (command & 0x80)
-		{ /* Send a CMD55 prior to ACMD<n> */
-			command &= 0x7F;
-			res = mmccmd (CMD55, 0);
-			if (res > 1)
-				return res;
+	{ /* Send a CMD55 prior to ACMD<n> */
+		command &= 0x7F;
+		res = mmccmd (CMD55, 0);
+		if (res > 1)
+		{
+			return res;
 		}
+	}
 
 	/* Select the card and wait for ready except to stop multiple block read */
 	if (command != CMD12)
+	{
+		deselect ();
+		if (!select ())
 		{
-			deselect ();
-			if (!select ())
-				return 0xFF;
+			return 0xFF;
 		}
+	}
 
 	/* Send command packet */
 	disk.read (0x40 | command); /* Start + command index */
@@ -77,18 +137,26 @@ mmccmd (uint8_t command, word arg = 0)
 	disk.read ((BYTE) (arg >> 8)); /* Argument[15..8] */
 	disk.read ((BYTE) arg); /* Argument[7..0] */
 	n = 0x01; /* Dummy CRC + Stop */
-	if (command == CMD0)
+	if (CMD0 == command)
+	{
 		n = 0x95; /* Valid CRC for CMD0(0) */
-	if (command == CMD8)
+	}
+	else if (CMD8 == command)
+	{
 		n = 0x87; /* Valid CRC for CMD8(0x1AA) */
+	}
 	disk.read (n);
 
 	/* Receive command resp */
-	if (command == CMD12)
+	if (CMD12 == command)
+	{
 		disk.read (0xFF); /* Diacard following one byte when CMD12 */
+	}
 	n = 10; /* Wait for response (10 bytes max) */
 	do
+	{
 		res = disk.read (0xFF);
+	}
 	while ((res & 0x80) && --n);
 
 	return res;
@@ -97,28 +165,42 @@ mmccmd (uint8_t command, word arg = 0)
 DSTATUS
 disk_initialize (BYTE drv)
 {
+	DBGPRINT("disk_initialize: Drive=%u\r\n", drv);
 	disk.lowspeed();
 	disk.go8bit();
 	BYTE cmd, ty, ocr[4];
 	if (drv)
+	{
+		DBGPRINT("disk_initialize: STA_NOINIT\r\n");
 		return STA_NOINIT; /* Supports only drive 0 */
+	}
 
 	if (MMCstat & STA_NODISK)
+	{
+		DBGPRINT("disk_initialize: MMCstat=%u\r\n", MMCstat);
 		return MMCstat; /* Is card existing in the soket? */
+	}
 
 	for (word n = 20; n; n--)
+	{		
 		disk.read (0xFF); /* Send 80 dummy clocks */
+	}
 
-	ty = 0;
+	ty = 0;	
 	if (mmccmd (CMD0, 0) == 1)
 		{ /* Put the card SPI/Idle state */
-			WAIT_FOR (1000); /* Initialization timeout = 1 sec */
+			WAIT_FOR (5000); /* Initialization timeout = 1 sec */
 			if (mmccmd (CMD8, 0x1AA) == 1)
 				{ /* SDv2? */
 					for (word n = 0; n < 4; n++)
+					{						
 						ocr[n] = disk.read (0xFF); /* Get 32 bit return value of R7 resp */
+						DBGPRINT("disk_initialize: Get 32 bit return value of R7 resp, %u [%u]\r\n", ocr[n], n);
+					}
 					if (ocr[2] == 0x01 && ocr[3] == 0xAA)
-						{ /* Is the card supports vcc of 2.7-3.6V? */
+						{ 
+							DBGPRINT("disk_initialize: ocr[2] == 0x01 && ocr[3] == 0xAA\r\n");
+							/* Is the card supports vcc of 2.7-3.6V? */
 							while (STILL_WAIT && mmccmd (ACMD41, 1UL << 30))
 								; /* Wait for end of initialization with ACMD41(HCS) */
 							if (STILL_WAIT && mmccmd (CMD58, 0) == 0)
@@ -167,6 +249,7 @@ disk_initialize (BYTE drv)
 bool
 rcvr_datablock (BYTE *buff, UINT btr)
 {
+	DBGPRINT("xmit_datablock: Blocks=%u\r\n", btr);
 	BYTE token;
 
 	WAIT_FOR (200);
@@ -188,6 +271,7 @@ rcvr_datablock (BYTE *buff, UINT btr)
 bool
 xmit_datablock (const BYTE *buff, BYTE token)
 {
+	DBGPRINT("xmit_datablock: token=%u\r\n", token);
 	BYTE resp;
 
 	if (!wait4ready (500))
@@ -219,6 +303,7 @@ disk_status (BYTE drv)
 DRESULT
 disk_read (BYTE drv, BYTE* buff, DWORD sector, UINT count)
 {
+	DBGPRINT("disk_read: Drive=%u, sector=%u, count=%u\r\n", drv, sector, count);
 	if (drv || !count)
 		return RES_PARERR; /* Check parameter */
 	if (MMCstat & STA_NOINIT)
@@ -255,6 +340,7 @@ disk_read (BYTE drv, BYTE* buff, DWORD sector, UINT count)
 DRESULT
 disk_write (BYTE drv, const BYTE* buff, DWORD sector, UINT count)
 {
+	DBGPRINT("disk_write: Drive=%u, sector=%u, count=%u\r\n", drv, sector, count);
 	if (drv || !count)
 		return RES_PARERR; /* Check parameter */
 	if (MMCstat & STA_NOINIT)
@@ -475,29 +561,38 @@ get_dresult (DRESULT r)
 
 void
 disk_test (void)
-{
-	Uart out (1, CONSOLE_SPEED);
-	Console con (&out);
-	con.print ("FatFs test started\r\n");
+{	
+	__dbg_out->cls();
+	LOGPRINT("FatFs test started\r\n");
 	disk = SPI::Spi (1);
 	disk.go8bit();
 	disk.lowspeed();
 	FATFS fs;
-	while ( FR_OK != disk_initialize(0));
-	con.print("Init!");
+	if(FR_OK == disk_initialize(0))
+	{
+		LOGPRINT("Init OK\r\n");
+	}
+	else
+	{
+		LOGPRINT("Init not OK\r\n");
+		return;
+	}
+	
 	BYTE buf[512];
+	uint8_t b = 0xBB;
 	for(int i=0; i<512; ++i)
 		{
-			buf[i] = 0;
+			buf[i] = b;
 		}
 
-	DRESULT r = disk_write(0, buf, 10, 1);
-	con.print(get_dresult(r));
-	r = disk_read(0, buf, 1, 1);
-
-	con.print(get_dresult(r));
+	LOGPRINT("Array inited with %u\r\n", b);
+	/*DRESULT r = disk_write(0, buf, 0, 1);
+	DBGPRINT("%s\r\n",get_dresult(r));
+	memset(buf, 0, sizeof buf);
+	r = disk_read(0, buf, 0, 1);
+	DBGPRINT("%s\r\n", get_dresult(r));	*/
 	//r = disk_read(0, buf, 0, 1);
-	//con.print(get_dresult(r));
-	//con.put_dump(buf, 0, 512, 1);
+	//__dbg_out->print(get_dresult(r));
+	//__dbg_out->put_dump(buf, 0, 512, 1);
 
 }

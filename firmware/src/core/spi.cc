@@ -16,6 +16,7 @@
  *******************************************************************************/
 #include <stdint.h>
 #include <common.hpp>
+#include <log.hpp>
 #include <core/io_macro.hpp>
 #include <core/isr_helper.hpp>
 #include <core/spi.hpp>
@@ -99,36 +100,40 @@ void Spi::init(void)
   {
     RCC->APB2RSTR |= RCC_APB2ENR_SPI1EN;
     RCC->APB2RSTR &= ~RCC_APB2ENR_SPI1EN;
+
     disable();
+
     uint16_t tmp_cr1 = Reg->CR1;
 
-      /* clear config bits */
-      tmp_cr1 &= (~0x3040);
+    /* clear config bits */
+    tmp_cr1 &= (~0x3040);
 
-      /* 2 lines, full duplex, by default */
-      tmp_cr1 |= 0;
+    /* 2 lines, full duplex, by default */
+    tmp_cr1 |= 0;
 
-      /* slave select to master */
-      tmp_cr1 |= SPI_CR1_SSI | SPI_CR1_MSTR;
+    /* slave select to master */
+    tmp_cr1 |= SPI_CR1_SSI | SPI_CR1_MSTR;
 
-      /* 8bit mode by default */
-      tmp_cr1 &= ~SPI_CR1_DFF;
+    /* 8bit mode by default */
+    tmp_cr1 &= ~SPI_CR1_DFF;
 
-      /* SPI MODE by default */
-      /* SPI_CR1_CPHA | SPI_CR1_CPOL*/
+    /* SPI MODE by default */
+    /* SPI_CR1_CPHA | SPI_CR1_CPOL*/
 
-      /* NSS control by software ( only used in slave mode ? ) */
-      tmp_cr1 |= SPI_CR1_SSM;
+    /* NSS control by software ( only used in slave mode ? ) */
+    tmp_cr1 |= SPI_CR1_SSM;
 
-      /* /32 */
-      tmp_cr1 |= SPI_CR1_BR_2;
+    /* /32 */
+    tmp_cr1 |= SPI_CR1_BR_2;
 
-      Reg->CR1 = tmp_cr1;
-      enable();
+    Reg->CR1 = tmp_cr1;
+    
+    enable();
   }
 
 uint16_t Spi::read(uint16_t data)
   {
+    DBGPRINT("Spi::read data=%u\r\n", data);
 		bool mode16 = false;
 		if(0xFF < data)
 			{
@@ -144,16 +149,17 @@ uint16_t Spi::read(uint16_t data)
 
 void Spi::multiread(uint8_t *buf, uint32_t size)
   {
-			if(1 == size)
-				{
-					go8bit();
-					PIN_LOW(SPI1NSS_PIN);
-					Reg->DR = 0xFF;
-					while (Reg->SR & SPI_SR_BSY);
-					buf[0] = Reg->DR;
-					PIN_HI(SPI1NSS_PIN);
-					return;
-				}
+    DBGPRINT("Spi::multiread size=%u\r\n", size);
+		if(1 == size)
+			{
+				go8bit();
+				PIN_LOW(SPI1NSS_PIN);
+				Reg->DR = 0xFF;
+				while (Reg->SR & SPI_SR_BSY);
+				buf[0] = Reg->DR;
+				PIN_HI(SPI1NSS_PIN);
+				return;
+			}
 
 	    go16bit();
 	    volatile uint16_t dr = 0;
@@ -172,6 +178,7 @@ void Spi::multiread(uint8_t *buf, uint32_t size)
 
 void Spi::multiwrite(const uint8_t *buf, uint32_t size)
   {
+    DBGPRINT("Spi::multiwrite size=%u\r\n", size);
 		if(1 >= size || size % 2)
 			return;
 
@@ -189,6 +196,7 @@ void Spi::multiwrite(const uint8_t *buf, uint32_t size)
 
 void Spi::go8bit(void)
   {
+    DBGPRINT("Spi::go8bit\r\n");
     //SPI module must be disabled
     disable();
     Reg->CR1 &= ~SPI_CR1_DFF;
@@ -197,6 +205,7 @@ void Spi::go8bit(void)
 
 void Spi::go16bit(void)
   {
+    DBGPRINT("Spi::go16bit\r\n");
     //SPI module must be disabled
     disable();
     Reg->CR1 |= SPI_CR1_DFF;
@@ -205,22 +214,26 @@ void Spi::go16bit(void)
 
 void Spi::disable(void)
   {
+    DBGPRINT("Spi::disable\r\n");
     Reg->CR1 &= ~SPI_CR1_SPE;
   }
 
 void Spi::enable(void)
   {
+    DBGPRINT("Spi::enable\r\n");
     Reg->CR1 |= SPI_CR1_SPE;
   }
 
 void Spi::lowspeed(void)
   {
+    DBGPRINT("Spi::lowspeed\r\n");
     Reg->CR1 &= ~SPI_CR1_BR;
     Reg->CR1 |= SPI_CR1_BR | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2; // \256
   }
 
 void Spi::highspeed(void)
   {
+    DBGPRINT("Spi::highspeed\r\n");
 		Reg->CR1 &= ~SPI_CR1_BR;
   }
 }

@@ -19,10 +19,14 @@
 #include <tests/tests.hpp>
 #include <drivers/console.hpp>
 #include <drivers/storage/disk.hpp>
+class Console *__dbg_out;
 
 int main(void)
   {
-		disk_test();
+    Uart u(1, CONSOLE_SPEED);
+    Console out(&u);
+    __dbg_out = &out; 
+cle		disk_test();
 		MAIN_END;
    //dbgout.xprintf("System started\n");
    //GPS::Gps g(2, 115200);

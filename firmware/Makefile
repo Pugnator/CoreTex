@@ -142,10 +142,10 @@ linked_firmware: directories library $(FIRMWARE)
 firmware: directories $(EXEC)
 
 flash: 
-	$(JLINK)	-if SWD -speed 4000 -CommanderScript configs/jlink_flash.txt
+	$(JLINK) -if SWD -speed 4000 -CommanderScript configs/jlink_flash2.txt
 	
 reset: 
-	$(JLINK)	-if SWD -speed 4000 -CommanderScript configs/jlink_reset.txt
+	$(JLINK) -if SWD -speed 4000 -CommanderScript configs/jlink_reset.txt
 
 library: stm_stdlib corelib drivers supportlib $(LIBEXEC)
 

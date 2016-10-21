@@ -19,6 +19,8 @@
 #include <stdint.h>
 #include <string.h>
 
+static uint32_t seed=2463534242;
+
 word str16_to_word(const char* str)
 {
 	word res = 0;
@@ -105,4 +107,12 @@ void ascii2ucs2( const char *ascii )
     else modem2u16( (*ptr-192+1040) );*/
     ++ptr;
   }
+}
+
+uint32_t xorshift()
+{
+  seed ^= (seed << 13);
+  seed ^= (seed >> 17);
+  seed ^= (seed << 5);
+  return seed;
 }

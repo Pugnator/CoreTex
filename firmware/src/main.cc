@@ -25,8 +25,8 @@ int main(void)
   {
     Uart u(1, CONSOLE_SPEED);
     Console out(&u);
-    __dbg_out = &out; 
-cle		disk_test();
+    __dbg_out = &out;
+		disk_test();
 		MAIN_END;
    //dbgout.xprintf("System started\n");
    //GPS::Gps g(2, 115200);

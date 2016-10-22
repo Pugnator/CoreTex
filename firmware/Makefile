@@ -13,6 +13,7 @@ SIZE:=$(GCCPRFX)-size
 MKDIR_P = mkdir -p
 MAKE:=make --always-make
 JLINK:=jlink.exe
+RM:=rm
 
 LIBSDIR:=libs
 OBJSDIR:=obj
@@ -142,10 +143,19 @@ linked_firmware: directories library $(FIRMWARE)
 firmware: directories $(EXEC)
 
 flash: 
-	$(JLINK) -if SWD -speed 4000 -CommanderScript configs/jlink_flash2.txt
+	@echo -e "device STM32F103C8\r\nerase\r\nloadbin ../bin/CoreTex.elf.bin, 0x08000000\r\nr\r\ng\r\nq" > __temp.jlink
+	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
+	$(RM) -f __temp.jlink
 	
-reset: 
-	$(JLINK) -if SWD -speed 4000 -CommanderScript configs/jlink_reset.txt
+reset:
+	@echo -e "device STM32F103C8\r\nr\r\ng\r\nq" > __temp.jlink
+	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
+	$(RM) -f __temp.jlink
+
+erase:
+	@echo -e "device STM32F103C8\r\nerase\r\nq" > __temp.jlink
+	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
+	$(RM) -f __temp.jlink
 
 library: stm_stdlib corelib drivers supportlib $(LIBEXEC)
 
@@ -212,9 +222,12 @@ stm_stdlib:
 	done
 
 clean:
-	rm -f $(EXEC) $(EXEC).bin $(LIBEXEC) $(STDLIB)
-	rm -rf $(OUTPUTDIR) $(LIBSDIR)	$(OBJSDIR)
+	$(RM) -f $(EXEC) $(EXEC).bin $(LIBEXEC) $(STDLIB)
+	$(RM) -rf $(OUTPUTDIR) $(LIBSDIR)	$(OBJSDIR)
 
 .PHONY: corelib
 .PHONY: drivers
 .PHONY: support
+.PHONY: flash
+.PHONY: erase
+.PHONY: reset

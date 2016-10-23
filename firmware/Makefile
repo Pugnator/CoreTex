@@ -20,9 +20,10 @@ OBJSDIR:=obj
 OUTPUTDIR:=bin
 MRI:=usedlibs.mri
 STDLIB:=external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/libstd.a
-
-STDLIBSRC:=\
+STMSTDLIBDIR:=\
 	external/stdlib/Libraries/STM32F10x_StdPeriph_Driver
+STDLIBSRC:=\
+	external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/src
 
 CORELIB:=\
 	src/core
@@ -101,18 +102,45 @@ FATFSSRC:=\
 
 TESTSSRC:=\
 	$(TESTSDIR)/core.cc
+	
+STMLIBSRC:=\
+	$(STDLIBSRC)/misc.c           \
+	$(STDLIBSRC)/stm32f10x_adc.c  \
+	$(STDLIBSRC)/stm32f10x_bkp.c  \
+	$(STDLIBSRC)/stm32f10x_can.c  \
+	$(STDLIBSRC)/stm32f10x_cec.c  \
+	$(STDLIBSRC)/stm32f10x_crc.c  \
+	$(STDLIBSRC)/stm32f10x_dac.c  \
+	$(STDLIBSRC)/stm32f10x_dbgmcu.c \
+	$(STDLIBSRC)/stm32f10x_dma.c  \
+	$(STDLIBSRC)/stm32f10x_exti.c \
+	$(STDLIBSRC)/stm32f10x_flash.c \
+	$(STDLIBSRC)/stm32f10x_fsmc.c \
+	$(STDLIBSRC)/stm32f10x_gpio.c \
+	$(STDLIBSRC)/stm32f10x_i2c.c  \
+	$(STDLIBSRC)/stm32f10x_iwdg.c \
+	$(STDLIBSRC)/stm32f10x_pwr.c  \
+	$(STDLIBSRC)/stm32f10x_rcc.c  \
+	$(STDLIBSRC)/stm32f10x_rtc.c  \
+	$(STDLIBSRC)/stm32f10x_sdio.c \
+	$(STDLIBSRC)/stm32f10x_spi.c  \
+	$(STDLIBSRC)/stm32f10x_tim.c  \
+	$(STDLIBSRC)/stm32f10x_usart.c \
+	$(STDLIBSRC)/stm32f10x_wwdg.c 
 
 ####################################################
 
-CFLAGS+=\
+CXXFLAGS+=\
 	--std=gnu++11 -Wall \
 	-Iinclude -Isrc \
 	-Iexternal/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc \
 	-Iexternal/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x \
+	-Iexternal/stdlib/Libraries/CMSIS/CM3/CoreSupport \
 	-D$(MCU) -D_GNU_SOURCE -D__STM32__\
 	-D_REENT_SMALL -D_REENT_GLOBAL_ATEXIT \
 	-Wno-write-strings \
 	-fno-exceptions \
+	-Dassert_param="" \
 	-fno-builtin -nostdlib \
 	-ffunction-sections -fdata-sections \
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
@@ -121,14 +149,17 @@ LDFLAGS+=\
 	-Tstm32_link.ld \
 	-lm	-Wl,--gc-sections
 
-FATFSLIB:=$(LIBSDIR)/fat32.a
-
 OBJ:=$(DRIVERSSRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(STARTUP:%.s=$(OBJSDIR)/%.o)
 OBJ+=$(CORESRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(SUPPORTSRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(FATFSSRC:%.c=$(OBJSDIR)/%.o)
 OBJ+=$(TESTSSRC:%.cc=$(OBJSDIR)/%.o)
+OBJ+=$(STMLIBSRC:%.c=$(OBJSDIR)/%.o)
+
+DEPS := $(OBJ:.o=.d)
+
+-include $(DEPS)
 
 PROGOBJ:=$(SRC:%.cc=$(OBJSDIR)/%.o)
 
@@ -157,15 +188,15 @@ erase:
 	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
 	$(RM) -f __temp.jlink
 
-library: stm_stdlib corelib drivers supportlib $(LIBEXEC)
+library: corelib drivers supportlib $(LIBEXEC)
 
 $(OBJSDIR)/%.o: %.cc
-	$(MKDIR_P) `dirname $@`
-	$(GPP) -c -o $@ $< $(CFLAGS)
+	$(MKDIR_P) `dirname $@`	
+	$(GPP) -c $(CXXFLAGS) -MMD -o $@ $< 
 	
 $(OBJSDIR)/%.o: %.c
-	$(MKDIR_P) `dirname $@`
-	$(GPP) -c -o $@ $< $(CFLAGS)
+	$(MKDIR_P) `dirname $@`	
+	$(GPP) -c $(CXXFLAGS) -MMD -o $@ $< 
 
 $(OBJSDIR)/%.o: %.s
 	$(MKDIR_P) `dirname $@`
@@ -200,6 +231,11 @@ $(LIBSDIR):
 
 fatfs:
 	$(MAKE) -C $(FATFSDIR);
+	
+stm_stdlib:
+	for dir in $(STMSTDLIBDIR); do \
+		$(MAKE) BLD=$(BLD) -C $$dir; \
+	done
 
 corelib:
 	for dir in $(CORELIB); do \
@@ -216,15 +252,11 @@ drivers:
 		$(MAKE) BLD=$(BLD) -C $$dir; \
 	done
 
-stm_stdlib:
-	for dir in $(STDLIBSRC); do \
-		$(MAKE) -C $$dir; \
-	done
-
 clean:
-	$(RM) -f $(EXEC) $(EXEC).bin $(LIBEXEC) $(STDLIB)
+	$(RM) -f $(STDLIB)
 	$(RM) -rf $(OUTPUTDIR) $(LIBSDIR)	$(OBJSDIR)
 
+.PHONY: stm_stdlib
 .PHONY: corelib
 .PHONY: drivers
 .PHONY: support

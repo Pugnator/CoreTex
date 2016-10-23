@@ -137,6 +137,7 @@ uint16_t Spi::read(uint16_t data)
 		bool mode16 = false;
 		if(0xFF < data)
 			{
+				DBGPRINT("Spi::read auto 16bit mode ON\r\n");
 				mode16 = true;
 			}
     PIN_LOW(SPI1NSS_PIN);
@@ -144,6 +145,7 @@ uint16_t Spi::read(uint16_t data)
     while (Reg->SR & SPI_SR_BSY);
     uint16_t tmp = Reg->DR;
     PIN_HI(SPI1NSS_PIN);
+    DBGPRINT("Spi::read return [%u]\r\n", mode16 ? tmp : tmp & 0xFF);
     return mode16 ? tmp : tmp & 0xFF;
   }
 

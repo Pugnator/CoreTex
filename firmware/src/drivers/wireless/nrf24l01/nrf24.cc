@@ -16,6 +16,7 @@
  *******************************************************************************/
 #include <stdint.h>
 #include <common.hpp>
+#include <log.hpp>
 #include <global.hpp>
 #include <drivers/nrf24.hpp>
 #include <drivers/console.hpp>
@@ -103,8 +104,8 @@ void Nrf24::flushrx(void)
     (void) read(FLUSH_RX);
   }
 
-void Nrf24::debug(Console *conout)
+void Nrf24::debug(void)
   {
-    conout->xprintf("Address: %X\n", W_REGISTER | (REGISTER_MASK & STATUS));
+		DBGPRINT("Address: %X\n", W_REGISTER | (REGISTER_MASK & STATUS));
   }
 }

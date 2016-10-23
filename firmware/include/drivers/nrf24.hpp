@@ -5,6 +5,17 @@
 
 using namespace SPI;
 
+/*
+*********
+**      *
+*       *
+*********
+GND-VCC
+CE-CSN
+CLK-MOSI
+MISO-IRQ
+*/
+
 namespace NRF24
 {
 
@@ -80,7 +91,7 @@ public:
   void regr(REGISTER reg, uint8_t *out, word size);
   //chip init
   void nrfinit();
-  void debug(Console *conout);
+  void debug(void);
   void flushtx(void);
   void flushrx(void);
 

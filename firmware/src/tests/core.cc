@@ -1,6 +1,7 @@
 #include <global.hpp>
 #include <core/spi.hpp>
 #include <drivers/console.hpp>
+#include <stm32f10x_sdio.h>
 
 #define RUN_TEST(x, y) do\
 {\

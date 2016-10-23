@@ -16,8 +16,10 @@
  *******************************************************************************/
 #include <global.hpp>
 #include <common.hpp>
+#include <log.hpp>
 #include <tests/tests.hpp>
 #include <drivers/console.hpp>
+#include <drivers/nrf24.hpp>
 #include <drivers/storage/disk.hpp>
 class Console *__dbg_out;
 
@@ -25,8 +27,13 @@ int main(void)
   {
     Uart u(1, CONSOLE_SPEED);
     Console out(&u);
+    out.cls();
     __dbg_out = &out;
-		disk_test();
+    NRF24::Nrf24 n(1);
+    uint8_t status = n.status();
+    LOGPRINT("CONFIG = 0x%x\r\n", n.regr(NRF24::CONFIG));
+
+		//disk_test();
 		MAIN_END;
    //dbgout.xprintf("System started\n");
    //GPS::Gps g(2, 115200);

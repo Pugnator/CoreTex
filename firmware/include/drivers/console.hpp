@@ -55,19 +55,20 @@ using namespace UART;
 
     void cls(void)
     {
-      print("\x1B[2J\x1B[H");
+      print("\x1B[2J\x1B[H"); //clear terminal
+      print("\033[3J"); //PuTTY 0.59+, clears the real scroll back ;)
     }
 
     void cursor(bool state = true)
     {
       if (false == state)
-	{
-	  print("\e[?25l");
-	}
+      	{
+      		print("\e[?25l");
+      	}
       else
-	{
-	  print("\e[?25h");
-	}
+      	{
+      		print("\e[?25h");
+      	}
     }
 
     void foreground(char color = COLOR_WHITE);

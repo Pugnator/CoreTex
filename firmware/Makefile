@@ -1,8 +1,17 @@
+#Setting file
 DESCRIPTION:=mcu.ini
 
+##########################
 MCU:=$(shell sed -n '/^family=/ {s///p;q;}' $(DESCRIPTION))
 PROJECTNAME:=$(shell sed -n '/^name=/ {s///p;q;}' $(DESCRIPTION))
 GCCPRFX:=$(shell sed -n '/^arch=/ {s///p;q;}' $(DESCRIPTION))
+
+__USE_FATFS:=$(shell sed -n '/^__USE_FATFS=/ {s///p;q;}' $(DESCRIPTION))
+__USE_TESTS:=$(shell sed -n '/^__USE_TESTS=/ {s///p;q;}' $(DESCRIPTION))
+__USE_STDLIB:=$(shell sed -n '/^__USE_STDLIB=/ {s///p;q;}' $(DESCRIPTION))
+__BUILDTYPE:=$(shell sed -n '/^__BUILDTYPE=/ {s///p;q;}' $(DESCRIPTION))
+__VMMU_POOL_SUZE:=$(shell sed -n '/^__VMMU_POOL_SUZE=/ {s///p;q;}' $(DESCRIPTION))
+##########################
 
 AR:=$(GCCPRFX)-ar
 GPP:=$(GCCPRFX)-g++
@@ -10,6 +19,10 @@ ASM:=$(GCCPRFX)-as
 OCOPY:=$(GCCPRFX)-objcopy
 STRIP:=$(GCCPRFX)-strip
 SIZE:=$(GCCPRFX)-size
+READELF:=$(GCCPRFX)-readelf
+CXXFILT:=$(GCCPRFX)-c++filt
+SORT:=sort
+AWK:=gawk
 MKDIR_P = mkdir -p
 MAKE:=make --always-make
 JLINK:=jlink.exe
@@ -20,6 +33,7 @@ OBJSDIR:=obj
 OUTPUTDIR:=bin
 MRI:=usedlibs.mri
 STDLIB:=external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/libstd.a
+
 STMSTDLIBDIR:=\
 	external/stdlib/Libraries/STM32F10x_StdPeriph_Driver
 STDLIBSRC:=\
@@ -42,13 +56,6 @@ FATFSDIR:=\
 	
 TESTSDIR:=\
 	src/tests
-
-BLD?=DBG
-ifeq ($(BLD), DBG)	
-	CFLAGS:=-Og -g3
-else
-	CFLAGS:=-Os -s
-endif
 
 ######################## SOURCES ###############################
 
@@ -130,6 +137,16 @@ STMLIBSRC:=\
 
 ####################################################
 
+ifeq ($(__BUILDTYPE), DEBUG)	
+	CXXFLAGS:=-flto -Og -g3 -D__DEBUG=1
+else
+	CXXFLAGS:=-flto -Os -s -D__DEBUG=0
+endif
+
+ifneq ($(__VMMU_POOL_SUZE), "0")	
+	CXXFLAGS+=-D__VMMU_POOL_SUZE=$(__VMMU_POOL_SUZE)
+endif
+
 CXXFLAGS+=\
 	--std=gnu++11 -Wall \
 	-Iinclude -Isrc \
@@ -139,39 +156,63 @@ CXXFLAGS+=\
 	-D$(MCU) -D_GNU_SOURCE -D__STM32__\
 	-D_REENT_SMALL -D_REENT_GLOBAL_ATEXIT \
 	-Wno-write-strings \
+	-fno-rtti \
 	-fno-exceptions \
 	-Dassert_param="" \
-	-fno-builtin -nostdlib \
-	-ffunction-sections -fdata-sections \
+	-fno-builtin \
+	-fdata-sections \
+	-ffunction-sections \
+	-fno-hosted \
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 
+#-Wl,--wrap,__aeabi_unwind_cpp_pr0
 LDFLAGS+=\
+	-flto \
+	-fno-exceptions \
+	-fdata-sections \
+	-ffunction-sections \
 	-Tstm32_link.ld \
-	-lm	-Wl,--gc-sections
+	-lm	-Wl,--gc-sections \
+	-Wl,--cref \
+	-Wl,-Map,$(EXEC).map
+
+##################OBJECT FILES###################
+
 
 OBJ:=$(DRIVERSSRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(STARTUP:%.s=$(OBJSDIR)/%.o)
 OBJ+=$(CORESRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(SUPPORTSRC:%.cc=$(OBJSDIR)/%.o)
+
+ifeq ($(__USE_FATFS),1)
 OBJ+=$(FATFSSRC:%.c=$(OBJSDIR)/%.o)
+endif
+
+ifeq ($(__USE_TESTS),1)
 OBJ+=$(TESTSSRC:%.cc=$(OBJSDIR)/%.o)
+endif
+
+ifeq ($(__USE_STDLIB),1)
 OBJ+=$(STMLIBSRC:%.c=$(OBJSDIR)/%.o)
+endif
 
 DEPS := $(OBJ:.o=.d)
-
 -include $(DEPS)
 
 PROGOBJ:=$(SRC:%.cc=$(OBJSDIR)/%.o)
+
+######################OUTPUT###########################
 
 EXEC:=$(OUTPUTDIR)/$(PROJECTNAME).elf
 FIRMWARE:=$(OUTPUTDIR)/$(PROJECTNAME)_linked.elf
 LIBEXEC:=$(LIBSDIR)/$(PROJECTNAME).a
 
+######################TARGETS###########################
 all: clean directories stm_stdlib library firmware linked_firmware
 
 linked_firmware: directories library $(FIRMWARE)
 
-firmware: directories $(EXEC)
+firmware: settings directories $(EXEC)
 
 flash: 
 	@echo -e "device STM32F103C8\r\nerase\r\nloadbin ../bin/CoreTex.elf.bin, 0x08000000\r\nr\r\ng\r\nq" > __temp.jlink
@@ -192,27 +233,32 @@ library: corelib drivers supportlib $(LIBEXEC)
 
 $(OBJSDIR)/%.o: %.cc
 	$(MKDIR_P) `dirname $@`	
-	$(GPP) -c $(CXXFLAGS) -MMD -o $@ $< 
+	$(GPP) -c $(CXXFLAGS) -MMD -o $@ $<
+	$(SIZE) -d --format=berkeley $@
 	
 $(OBJSDIR)/%.o: %.c
 	$(MKDIR_P) `dirname $@`	
-	$(GPP) -c $(CXXFLAGS) -MMD -o $@ $< 
+	$(GPP) -c $(CXXFLAGS) -MMD -o $@ $<
+	$(SIZE) -d --format=berkeley $@
 
 $(OBJSDIR)/%.o: %.s
 	$(MKDIR_P) `dirname $@`
 	$(ASM) $< -o $@
+	$(SIZE) -d --format=berkeley $@
 
 $(EXEC): $(OBJ)	$(PROGOBJ)
-	$(GPP) -o $@ $^ $(LDFLAGS)
+	$(GPP) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 	$(OCOPY) -O binary $(EXEC) $(EXEC).bin
 	@stat -c "Output size of <%n> is %s" $(EXEC).bin
 	@$(SIZE) --format=berkeley $(EXEC)
+	@-$(READELF) -s $@ | $(AWK) '$$3 != "0"' | $(AWK) '$$4 == "OBJECT"' | $(SORT) -k 3 -n -r | head -n 3 | $(CXXFILT)
+	
 
 $(FIRMWARE): $(PROGOBJ)
 	$(GPP) -o $@ $^ $(LDFLAGS) $(LIBEXEC)
 	$(OCOPY) -O binary $(FIRMWARE) $(FIRMWARE).bin
 	@stat -c "Output size of <%n> is %s" $(FIRMWARE).bin
-	@$(SIZE) --format=berkeley $(FIRMWARE)
+	@$(SIZE) -d --format=berkeley $(FIRMWARE)
 
 $(LIBEXEC): $(MRI)
 	$(AR) M <$^
@@ -256,6 +302,12 @@ clean:
 	$(RM) -f $(STDLIB)
 	$(RM) -rf $(OUTPUTDIR) $(LIBSDIR)	$(OBJSDIR)
 
+settings:
+	@echo -e "Project settings [$(PROJECTNAME)/$(MCU)]:"
+ifneq ($(__VMMU_POOL_SUZE), 0)
+	@echo -e "Memory pool size is $(__VMMU_POOL_SUZE)b"
+endif
+
 .PHONY: stm_stdlib
 .PHONY: corelib
 .PHONY: drivers
@@ -263,3 +315,4 @@ clean:
 .PHONY: flash
 .PHONY: erase
 .PHONY: reset
+.PHONY: settings

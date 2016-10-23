@@ -118,6 +118,7 @@ USED void unwindCPUstack(word* stackAddress)
   values of the variables, make them global my moving their declaration outside
   of this function.
   */
+#if __DEBUG
  volatile word r0 = stackAddress[0];
  volatile word r1 = stackAddress[1];
  volatile word r2 = stackAddress[2];
@@ -129,6 +130,7 @@ USED void unwindCPUstack(word* stackAddress)
  volatile word pc = stackAddress[6];
  /* Program status register. */
  volatile word psr = stackAddress[7];
+
 
  Uart out(1, 9600);
  Console coredump(&out);
@@ -149,6 +151,7 @@ USED void unwindCPUstack(word* stackAddress)
 		 delayus_asm(1000000L);
 		 BLINK;
  }
+#endif
 }
 
 /* DTR */

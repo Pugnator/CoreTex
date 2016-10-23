@@ -17,4 +17,6 @@
 
 #define __USE_CONSOLE 1
 
+#ifndef __DEBUG
 #define __DEBUG 1
+#endif

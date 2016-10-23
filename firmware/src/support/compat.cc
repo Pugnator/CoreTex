@@ -300,3 +300,20 @@ char *num2str(int i)
       }
     return p;
   }
+
+void __wrap___aeabi_unwind_cpp_pr0()
+{
+	for(;;);
+}
+
+void* operator new(size_t n)
+{
+  void * const p = stalloc(n);
+  // handle p == 0
+  return p;
+}
+
+void operator delete(void * p) // or delete(void *, std::size_t)
+{
+	stfree(p);
+}

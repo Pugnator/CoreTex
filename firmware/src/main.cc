@@ -29,8 +29,8 @@ int main(void)
     Console out(&u);
     out.cls();
     __dbg_out = &out;
+    LOGPRINT("Core started\r\n");
     NRF24::Nrf24 n(1);
-    uint8_t status = n.status();
     LOGPRINT("CONFIG = 0x%x\r\n", n.regr(NRF24::CONFIG));
 
 		//disk_test();

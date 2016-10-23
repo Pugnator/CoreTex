@@ -31,8 +31,7 @@ int main(void)
     __dbg_out = &out;
     LOGPRINT("Core started\r\n");
     NRF24::Nrf24 n(1);
-    LOGPRINT("CONFIG = 0x%x\r\n", n.regr(NRF24::CONFIG));
-
+    LOGPRINT("SETUP_RETR = 0x%x\r\n", n.regr(NRF24::EN_AA));
 		//disk_test();
 		MAIN_END;
    //dbgout.xprintf("System started\n");

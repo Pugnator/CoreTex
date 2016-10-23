@@ -162,7 +162,6 @@ CXXFLAGS+=\
 	-fno-builtin \
 	-fdata-sections \
 	-ffunction-sections \
-	-fno-hosted \
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 
 #-Wl,--wrap,__aeabi_unwind_cpp_pr0

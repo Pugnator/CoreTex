@@ -71,10 +71,10 @@ Spi::~Spi(void)
     switch (channel)
       {
       case 1:
-        IRQ_VECTOR_TABLE[SPI1_IRQn + IRQ0_EX] = (word) &SPI1_IRQHandler;
+        IRQ_VECTOR_TABLE[SPI1_IRQn + IRQ0_EX] = (word) &isr;
         break;
       case 2:
-        IRQ_VECTOR_TABLE[SPI2_IRQn + IRQ0_EX] = (word) &SPI2_IRQHandler;
+        IRQ_VECTOR_TABLE[SPI2_IRQn + IRQ0_EX] = (word) &isr;
         break;
       default:
         //ERROR
@@ -85,16 +85,20 @@ Spi::~Spi(void)
   }
 
 void Spi::isr(void)
-  {
-    if (self->Reg->SR & SPI_SR_RXNE)
-      {
-        self->Reg->SR &= ~SPI_SR_RXNE;
-      }
-    else if ( SPI1->SR & SPI_SR_TXE)
-      {
-        self->Reg->SR &= ~SPI_SR_TXE;
-      }
-  }
+{
+	if (self->Reg->SR & SPI_SR_RXNE)
+		{
+			self->Reg->SR &= ~SPI_SR_RXNE;
+		}
+	else if ( SPI1->SR & SPI_SR_TXE)
+		{
+			self->Reg->SR &= ~SPI_SR_TXE;
+		}
+	else if ( SPI1->SR & SPI_SR_UDR)
+		{
+			self->Reg->SR &= ~SPI_SR_UDR;
+		}
+}
 
 void Spi::init(void)
   {
@@ -128,6 +132,13 @@ void Spi::init(void)
 
     Reg->CR1 = tmp_cr1;
     
+    uint16_t tmp_cr2 = 0;
+    tmp_cr2 |= SPI_CR2_RXNEIE | SPI_CR2_TXEIE | SPI_CR2_ERRIE;
+    Reg->CR2 = tmp_cr2;
+
+    //NVIC_EnableIRQ(SPI1_IRQn);
+    //NVIC_SetPriority(SPI1_IRQn, 3);
+
     enable();
   }
 

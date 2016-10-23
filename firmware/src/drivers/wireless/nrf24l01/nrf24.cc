@@ -106,6 +106,6 @@ void Nrf24::flushrx(void)
 
 void Nrf24::debug(void)
   {
-		DBGPRINT("Address: %X\n", W_REGISTER | (REGISTER_MASK & STATUS));
+		uint8_t status = read(STATUS);
   }
 }

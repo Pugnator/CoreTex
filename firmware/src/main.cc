@@ -18,6 +18,7 @@
 #include <common.hpp>
 #include <log.hpp>
 #include <tests/tests.hpp>
+#include <core/spi.hpp>
 #include <drivers/console.hpp>
 #include <drivers/nrf24.hpp>
 #include <drivers/storage/disk.hpp>
@@ -30,10 +31,12 @@ int main(void)
     out.cls();
     __dbg_out = &out;
     LOGPRINT("Core started\r\n");
-    NRF24::Nrf24 n(1);
-    LOGPRINT("SETUP_RETR = 0x%x\r\n", n.regr(NRF24::EN_AA));
-		//disk_test();
-		MAIN_END;
+    Spi e(1);
+    e.read(0x8);
+    uint8_t resp = e.read();
+    LOGPRINT("SETUP_RETR = 0x%x\r\n", resp);
+	//disk_test();
+    MAIN_END;
    //dbgout.xprintf("System started\n");
    //GPS::Gps g(2, 115200);
    //MODEM::Modem mdm(3, 19200, &dbgout);

@@ -15,7 +15,9 @@
  * 2015, 2016
  *******************************************************************************/
 
+#ifndef __USE_CONSOLE
 #define __USE_CONSOLE 1
+#endif
 
 #ifndef __DEBUG
 #define __DEBUG 1

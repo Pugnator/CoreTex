@@ -10,6 +10,7 @@ __USE_FATFS:=$(shell sed -n '/^__USE_FATFS=/ {s///p;q;}' $(DESCRIPTION))
 __USE_TESTS:=$(shell sed -n '/^__USE_TESTS=/ {s///p;q;}' $(DESCRIPTION))
 __USE_STDLIB:=$(shell sed -n '/^__USE_STDLIB=/ {s///p;q;}' $(DESCRIPTION))
 __BUILDTYPE:=$(shell sed -n '/^__BUILDTYPE=/ {s///p;q;}' $(DESCRIPTION))
+__USE_CONSOLE:=$(shell sed -n '/^__USE_CONSOLE=/ {s///p;q;}' $(DESCRIPTION))
 __VMMU_POOL_SUZE:=$(shell sed -n '/^__VMMU_POOL_SUZE=/ {s///p;q;}' $(DESCRIPTION))
 ##########################
 
@@ -32,12 +33,12 @@ LIBSDIR:=libs
 OBJSDIR:=obj
 OUTPUTDIR:=bin
 MRI:=usedlibs.mri
-STDLIB:=external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/libstd.a
+STDLIB:=external/stdlib/F1X/Libraries/STM32F10x_StdPeriph_Driver/libstd.a
 
 STMSTDLIBDIR:=\
-	external/stdlib/Libraries/STM32F10x_StdPeriph_Driver
+	external/stdlib/F1X/Libraries/STM32F10x_StdPeriph_Driver
 STDLIBSRC:=\
-	external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/src
+	external/stdlib/F1X/Libraries/STM32F10x_StdPeriph_Driver/src
 
 CORELIB:=\
 	src/core
@@ -145,6 +146,10 @@ endif
 
 ifneq ($(__VMMU_POOL_SUZE), "0")	
 	CXXFLAGS+=-D__VMMU_POOL_SUZE=$(__VMMU_POOL_SUZE)
+endif
+
+ifneq ($(__USE_CONSOLE), "0")	
+	CXXFLAGS+=-D__USE_CONSOLE=$(__USE_CONSOLE)
 endif
 
 CXXFLAGS+=\

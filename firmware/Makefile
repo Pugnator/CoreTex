@@ -44,17 +44,17 @@ CORELIB:=\
 	src/core
 
 AUXSRC:=\
-	src/support	
+	src/support
 
 DRIVERS:=\
 	src/drivers
 
 SUPPORT:=\
 	src/support
-	
+
 FATFSDIR:=\
 	src/drivers/storage/fatfs
-	
+
 TESTSDIR:=\
 	src/tests
 
@@ -104,13 +104,13 @@ SUPPORTSRC:=\
 	$(SUPPORT)/log.cc \
 	$(SUPPORT)/queue.cc \
 	$(SUPPORT)/morse.cc
-	
+
 FATFSSRC:=\
 	$(FATFSDIR)/ff.c
 
 TESTSSRC:=\
 	$(TESTSDIR)/core.cc
-	
+
 STMLIBSRC:=\
 	$(STDLIBSRC)/misc.c           \
 	$(STDLIBSRC)/stm32f10x_adc.c  \
@@ -134,21 +134,21 @@ STMLIBSRC:=\
 	$(STDLIBSRC)/stm32f10x_spi.c  \
 	$(STDLIBSRC)/stm32f10x_tim.c  \
 	$(STDLIBSRC)/stm32f10x_usart.c \
-	$(STDLIBSRC)/stm32f10x_wwdg.c 
+	$(STDLIBSRC)/stm32f10x_wwdg.c
 
 ####################################################
 
-ifeq ($(__BUILDTYPE), DEBUG)	
+ifeq ($(__BUILDTYPE), DEBUG)
 	CXXFLAGS:=-flto -Og -g3 -D__DEBUG=1
 else
 	CXXFLAGS:=-flto -Os -s -D__DEBUG=0
 endif
 
-ifneq ($(__VMMU_POOL_SUZE), "0")	
+ifneq ($(__VMMU_POOL_SUZE), "0")
 	CXXFLAGS+=-D__VMMU_POOL_SUZE=$(__VMMU_POOL_SUZE)
 endif
 
-ifneq ($(__USE_CONSOLE), "0")	
+ifneq ($(__USE_CONSOLE), "0")
 	CXXFLAGS+=-D__USE_CONSOLE=$(__USE_CONSOLE)
 endif
 
@@ -218,11 +218,11 @@ linked_firmware: directories library $(FIRMWARE)
 
 firmware: settings directories $(EXEC)
 
-flash: 
+flash:
 	@echo -e "device STM32F103C8\r\nerase\r\nloadbin ../bin/CoreTex.elf.bin, 0x08000000\r\nr\r\ng\r\nq" > __temp.jlink
 	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
 	$(RM) -f __temp.jlink
-	
+
 reset:
 	@echo -e "device STM32F103C8\r\nr\r\ng\r\nq" > __temp.jlink
 	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
@@ -236,12 +236,12 @@ erase:
 library: corelib drivers supportlib $(LIBEXEC)
 
 $(OBJSDIR)/%.o: %.cc
-	$(MKDIR_P) `dirname $@`	
+	$(MKDIR_P) `dirname $@`
 	$(GPP) -c $(CXXFLAGS) -MMD -o $@ $<
 	$(SIZE) -d --format=berkeley $@
-	
+
 $(OBJSDIR)/%.o: %.c
-	$(MKDIR_P) `dirname $@`	
+	$(MKDIR_P) `dirname $@`
 	$(GPP) -c $(CXXFLAGS) -MMD -o $@ $<
 	$(SIZE) -d --format=berkeley $@
 
@@ -256,7 +256,7 @@ $(EXEC): $(OBJ)	$(PROGOBJ)
 	@stat -c "Output size of <%n> is %s" $(EXEC).bin
 	@$(SIZE) --format=berkeley $(EXEC)
 	@-$(READELF) -s $@ | $(AWK) '$$3 != "0"' | $(AWK) '$$4 == "OBJECT"' | $(SORT) -k 3 -n -r | head -n 3 | $(CXXFILT)
-	
+
 
 $(FIRMWARE): $(PROGOBJ)
 	$(GPP) -o $@ $^ $(LDFLAGS) $(LIBEXEC)
@@ -281,7 +281,7 @@ $(LIBSDIR):
 
 fatfs:
 	$(MAKE) -C $(FATFSDIR);
-	
+
 stm_stdlib:
 	for dir in $(STMSTDLIBDIR); do \
 		$(MAKE) BLD=$(BLD) -C $$dir; \

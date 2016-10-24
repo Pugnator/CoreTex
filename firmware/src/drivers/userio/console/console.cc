@@ -133,7 +133,7 @@ namespace
   static void
   free_func (Console *self)
   {
-    print_memstat (self);
+    print_memstat ();
   }
 
 //!!!!!!!!!!!!! WE DO KNOW WHAT WE'RE DOING HERE!!!!!!!!!!!
@@ -210,7 +210,7 @@ namespace
 	rtc.set (str10_to_word (arg1));
 	FREE(arg1);
       }
-    rtc.print (self);
+    rtc.print ();
   }
 }
 /*******************************************************************/

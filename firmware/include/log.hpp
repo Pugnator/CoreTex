@@ -2,7 +2,9 @@
 #include <drivers/console.hpp>
 #include <config.hpp>
 
-extern Console *__dbg_out;
+#ifdef __USE_CONSOLE
+extern class Console *__dbg_out;
+#endif
 
 void dbg_print(const char *msg);
 

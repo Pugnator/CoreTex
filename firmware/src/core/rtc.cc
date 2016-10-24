@@ -17,6 +17,7 @@
 
 #include <core/rtc.hpp>
 #include <core/stm32f10x.hpp>
+#include <log.hpp>
 #include <global.hpp>
 #include <stdlib.h>
 
@@ -144,9 +145,9 @@ char Rtc::gets()
 	epoch_to_date(&curdate, get());
 	return curdate.second;
 }
-void Rtc::print(Console *output)
+void Rtc::print()
 {
-	output->xprintf("%04u/%02u/%02u %02u:%02u:%02u\n", \
+	DBGPRINT("%04u/%02u/%02u %02u:%02u:%02u\n", \
 			gety(), getmn(), getd(), geth(), getm(), gets());
 }
 

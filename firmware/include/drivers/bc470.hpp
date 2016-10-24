@@ -24,12 +24,10 @@ typedef enum ATCMD
 class bc470: public Uart
   {
 public:
-  bc470(short ch, word bd, Console *debug = nullptr)
+  bc470(short ch, word bd)
       : Uart::Uart(ch, bd, &bc470isr)
     {
-      conout = debug;
       self = this;
-      conout = debug;
       buflen = 0;
       go = false;
       ok = false;
@@ -37,7 +35,6 @@ public:
   ;
   ~bc470();
   bool check(void);
-  Console *conout;
   static void bc470isr(void);
   static class bc470 *self;
   bool factory_default(void);

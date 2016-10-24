@@ -1,4 +1,5 @@
 #pragma once
+#ifdef __USE_CONSOLE
 #include <global.hpp>
 #include <core/usart.hpp>
 #include <stdarg.h>
@@ -94,3 +95,4 @@ using namespace UART;
     static class Console *self;
     class Driver *io;
   };
+#endif

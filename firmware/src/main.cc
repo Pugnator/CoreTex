@@ -22,7 +22,10 @@
 #include <drivers/console.hpp>
 #include <drivers/nrf24.hpp>
 #include <drivers/storage/disk.hpp>
+
+#ifdef __USE_CONSOLE
 class Console *__dbg_out;
+#endif
 
 int main(void)
   {
@@ -31,11 +34,7 @@ int main(void)
     out.cls();
     __dbg_out = &out;
     LOGPRINT("Core started\r\n");
-    Spi e(1);
-    e.read(0x8);
-    uint8_t resp = e.read();
-    LOGPRINT("SETUP_RETR = 0x%x\r\n", resp);
-	//disk_test();
+    disk_test();
     MAIN_END;
    //dbgout.xprintf("System started\n");
    //GPS::Gps g(2, 115200);

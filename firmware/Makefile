@@ -75,12 +75,16 @@ DRIVERSSRC:=\
 	$(DRIVERS)/storage/mmc/disk.cc \
 	$(DRIVERS)/storage/ramdisk.cc \
 	$(DRIVERS)/storage/flash.cc \
-	$(DRIVERS)/userio/console/console.cc \
-	$(DRIVERS)/userio/console/xprintf.cc \
 	$(DRIVERS)/wireless/bc470/bc470.cc \
 	$(DRIVERS)/wireless/gsm/atcmd.cc \
 	$(DRIVERS)/wireless/gsm/gsm.cc \
 	$(DRIVERS)/wireless/nrf24l01/nrf24.cc
+
+ifeq ($(__USE_CONSOLE), 1)
+DRIVERSSRC+=\
+	$(DRIVERS)/userio/console/console.cc \
+	$(DRIVERS)/userio/console/xprintf.cc
+endif
 
 CORESRC:=\
 	$(CORELIB)/adc.cc \
@@ -144,12 +148,14 @@ else
 	CXXFLAGS:=-flto -Os -s -D__DEBUG=0
 endif
 
-ifneq ($(__VMMU_POOL_SUZE), "0")
+ifneq ($(__VMMU_POOL_SUZE), 0)
 	CXXFLAGS+=-D__VMMU_POOL_SUZE=$(__VMMU_POOL_SUZE)
 endif
 
-ifneq ($(__USE_CONSOLE), "0")
-	CXXFLAGS+=-D__USE_CONSOLE=$(__USE_CONSOLE)
+ifneq ($(__USE_CONSOLE), 0)
+	CXXFLAGS+=-D__USE_CONSOLE=1
+else
+	CXXFLAGS+=-D__USE_CONSOLE=0
 endif
 
 CXXFLAGS+=\

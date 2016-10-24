@@ -11,7 +11,7 @@
 #include <core/vmmu.hpp>
 #include <stdio.h>
 #include <global.hpp>
-#include <drivers/console.hpp>
+#include <log.hpp>
 
 typedef word Align;
 
@@ -60,27 +60,27 @@ void vmmu_init()
     pool_free_pos = 0;
   }
 
-void print_memstat(Console *out)
+void print_memstat()
   {
 #ifdef DEBUG_MEMMGR_SUPPORT_STATS
     mem_header_t* p;
 
-    out->xprintf("------ Memory manager stats ------\n\n");
-    out->xprintf("Pool: free_pos = %lu (%lu bytes left)\n\n", pool_free_pos,
+    DBGPRINT("------ Memory manager stats ------\n\n");
+    DBGPRINT("Pool: free_pos = %lu (%lu bytes left)\n\n", pool_free_pos,
     POOL_SIZE - pool_free_pos);
 
-    out->xprintf("Allocated %lu times, freed %lu times\n", alloc_counter, free_counter);
+    DBGPRINT("Allocated %lu times, freed %lu times\n", alloc_counter, free_counter);
 
     p = (mem_header_t*) pool;
 
     while (p < (mem_header_t*) (pool + pool_free_pos))
       {
-        out->xprintf("  * Addr: 0x%8X; Size: %8X\n", p, (word) p->s.size);
+    	DBGPRINT("  * Addr: 0x%8X; Size: %8X\n", p, (word) p->s.size);
 
         p += p->s.size;
       }
 
-    out->xprintf("\nFree list:\n\n");
+    DBGPRINT("\nFree list:\n\n");
 
     if (freep)
       {
@@ -88,7 +88,7 @@ void print_memstat(Console *out)
 
         for(;;)
           {
-            out->xprintf("  * Addr: 0x%8X; Size: %8lu; Next: 0x%8X\n", p,
+        	DBGPRINT("  * Addr: 0x%8X; Size: %8lu; Next: 0x%8X\n", p,
                 (word) p->s.size, p->s.next);
 
             p = p->s.next;
@@ -98,10 +98,10 @@ void print_memstat(Console *out)
       }
     else
       {
-        out->xprintf("Empty\n");
+    	DBGPRINT("Empty\n");
       }
 
-    out->xprintf("\n");
+    DBGPRINT("\n");
 #endif // DEBUG_MEMMGR_SUPPORT_STATS
   }
 
@@ -143,8 +143,7 @@ void* stalloc(word nbytes)
     if(!nbytes)
       return nullptr;
 #ifdef MEMORY_ALLOC_DEBUG
-    CONSOLE::Console memdbg(1, 9600);
-    memdbg.xprintf("ALLOC from 0x%X\n", __builtin_return_address(0));
+    DBGPRINT("ALLOC from 0x%X\n", __builtin_return_address(0));
     alloc_counter++;
 #endif
     mem_header_t* p;

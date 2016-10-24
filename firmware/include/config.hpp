@@ -16,7 +16,7 @@
  *******************************************************************************/
 
 #ifndef __USE_CONSOLE
-#define __USE_CONSOLE 1
+#define __USE_CONSOLE 0
 #endif
 
 #ifndef __DEBUG

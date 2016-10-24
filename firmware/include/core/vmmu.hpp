@@ -6,8 +6,7 @@
 // This code is in the public domain.
 //----------------------------------------------------------------
 #pragma once
-#include <drivers/console.hpp>
-
+#include <global.hpp>
 //
 // Memory manager: dynamically allocates memory from
 // a fixed pool that is allocated statically at link-time.
@@ -95,7 +94,7 @@ void stfree(void* ap);
 // Prints statistics about the current state of the memory
 // manager
 //
-void print_memstat(Console *out);
+void print_memstat(void);
 
 //How much memory left
 word get_free_memory(void);

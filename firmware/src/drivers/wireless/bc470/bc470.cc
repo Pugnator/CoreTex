@@ -81,7 +81,6 @@ bool bc470::wait4reply(word timeout)
       }
     while (STILL_WAIT);
     FREE(buf);
-    conout->xprintf("%s\n", modembuf);
     return ok;
   }
 

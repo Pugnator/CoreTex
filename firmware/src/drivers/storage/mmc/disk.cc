@@ -924,7 +924,6 @@ disk_test (void)
 	__dbg_out->cls();
 	LOGPRINT("FatFs test started\r\n");
 	disk = SPI::Spi (1);
-	disk.go16bit();
 	disk.lowspeed();
 	for (int i = 0; i <=100; i++)
 	  {

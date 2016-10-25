@@ -15,3 +15,5 @@ void dbg_print(const char *msg);
 #endif
 
 #define LOGPRINT(format, ...) do{__dbg_out->xprintf(format, ##__VA_ARGS__);}while(0)
+
+#define LOGDUMP(buf, size) do{__dbg_out->put_dump(buf, 0, size, 1);}while(0)

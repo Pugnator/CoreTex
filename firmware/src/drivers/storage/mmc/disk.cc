@@ -9,131 +9,10 @@
 
 static SPI::Spi disk (1);
 static DSTATUS MMCstat; /* Physical drive status */
-static BYTE CardType;
-
-typedef enum
-{
-/**
-  * @brief  SD reponses and error flags
-  */
-  SD_RESPONSE_NO_ERROR      = (0x00),
-  SD_IN_IDLE_STATE          = (0x01),
-  SD_ERASE_RESET            = (0x02),
-  SD_ILLEGAL_COMMAND        = (0x04),
-  SD_COM_CRC_ERROR          = (0x08),
-  SD_ERASE_SEQUENCE_ERROR   = (0x10),
-  SD_ADDRESS_ERROR          = (0x20),
-  SD_PARAMETER_ERROR        = (0x40),
-  SD_RESPONSE_FAILURE       = (0xFF),
-
-/**
-  * @brief  Data response error
-  */
-  SD_DATA_OK                = (0x05),
-  SD_DATA_CRC_ERROR         = (0x0B),
-  SD_DATA_WRITE_ERROR       = (0x0D),
-  SD_DATA_OTHER_ERROR       = (0xFF)
-} SD_Error;
-
-typedef struct
-{
-  __IO uint8_t  CSDStruct;            /*!< CSD structure */
-  __IO uint8_t  SysSpecVersion;       /*!< System specification version */
-  __IO uint8_t  Reserved1;            /*!< Reserved */
-  __IO uint8_t  TAAC;                 /*!< Data read access-time 1 */
-  __IO uint8_t  NSAC;                 /*!< Data read access-time 2 in CLK cycles */
-  __IO uint8_t  MaxBusClkFrec;        /*!< Max. bus clock frequency */
-  __IO uint16_t CardComdClasses;      /*!< Card command classes */
-  __IO uint8_t  RdBlockLen;           /*!< Max. read data block length */
-  __IO uint8_t  PartBlockRead;        /*!< Partial blocks for read allowed */
-  __IO uint8_t  WrBlockMisalign;      /*!< Write block misalignment */
-  __IO uint8_t  RdBlockMisalign;      /*!< Read block misalignment */
-  __IO uint8_t  DSRImpl;              /*!< DSR implemented */
-  __IO uint8_t  Reserved2;            /*!< Reserved */
-  __IO uint32_t DeviceSize;           /*!< Device Size */
-  __IO uint8_t  MaxRdCurrentVDDMin;   /*!< Max. read current @ VDD min */
-  __IO uint8_t  MaxRdCurrentVDDMax;   /*!< Max. read current @ VDD max */
-  __IO uint8_t  MaxWrCurrentVDDMin;   /*!< Max. write current @ VDD min */
-  __IO uint8_t  MaxWrCurrentVDDMax;   /*!< Max. write current @ VDD max */
-  __IO uint8_t  DeviceSizeMul;        /*!< Device size multiplier */
-  __IO uint8_t  EraseGrSize;          /*!< Erase group size */
-  __IO uint8_t  EraseGrMul;           /*!< Erase group size multiplier */
-  __IO uint8_t  WrProtectGrSize;      /*!< Write protect group size */
-  __IO uint8_t  WrProtectGrEnable;    /*!< Write protect group enable */
-  __IO uint8_t  ManDeflECC;           /*!< Manufacturer default ECC */
-  __IO uint8_t  WrSpeedFact;          /*!< Write speed factor */
-  __IO uint8_t  MaxWrBlockLen;        /*!< Max. write data block length */
-  __IO uint8_t  WriteBlockPaPartial;  /*!< Partial blocks for write allowed */
-  __IO uint8_t  Reserved3;            /*!< Reserded */
-  __IO uint8_t  ContentProtectAppli;  /*!< Content protection application */
-  __IO uint8_t  FileFormatGrouop;     /*!< File format group */
-  __IO uint8_t  CopyFlag;             /*!< Copy flag (OTP) */
-  __IO uint8_t  PermWrProtect;        /*!< Permanent write protection */
-  __IO uint8_t  TempWrProtect;        /*!< Temporary write protection */
-  __IO uint8_t  FileFormat;           /*!< File Format */
-  __IO uint8_t  ECC;                  /*!< ECC code */
-  __IO uint8_t  CSD_CRC;              /*!< CSD CRC */
-  __IO uint8_t  Reserved4;            /*!< always 1*/
-} SD_CSD;
-
-typedef struct
-{
-  __IO uint8_t  ManufacturerID;       /*!< ManufacturerID */
-  __IO uint16_t OEM_AppliID;          /*!< OEM/Application ID */
-  __IO uint32_t ProdName1;            /*!< Product Name part1 */
-  __IO uint8_t  ProdName2;            /*!< Product Name part2*/
-  __IO uint8_t  ProdRev;              /*!< Product Revision */
-  __IO uint32_t ProdSN;               /*!< Product Serial Number */
-  __IO uint8_t  Reserved1;            /*!< Reserved1 */
-  __IO uint16_t ManufactDate;         /*!< Manufacturing Date */
-  __IO uint8_t  CID_CRC;              /*!< CID CRC */
-  __IO uint8_t  Reserved2;            /*!< always 1 */
-} SD_CID;
 
 DWORD get_fattime (void)
 {
 	return 0;
-}
-
-bool
-wait4ready (word how_long)
-{
-	DBGPRINT("wait4ready %ums\r\n", how_long);
-	uint16_t d = 0;	
-	WAIT_FOR (how_long);
-	do
-		{
-			d = disk.read (0xFF);
-		}
-	while (d != 0xFF && STILL_WAIT); /* Wait for card goes ready or timeout */
-
-	return d == 0xFF;
-}
-
-void
-deselect (void)
-{
-	DBGPRINT("SD deselect\r\n");
-	PIN_HI (SPI1NSS_PIN);
-	/* Dummy clock (force DO hi-z for multiple slave SPI) */
-	//disk.read (0xff);
-}
-
-bool
-select (void)
-{	
-	DBGPRINT("SD select\r\n");
-	PIN_LOW (SPI1NSS_PIN);
-	/* Dummy clock (force DO enabled) */
-	//disk.read (0xff);
-	if (wait4ready(500))
-	{
-		DBGPRINT("SD selected\r\n");
-		return true;      /* Wait for card ready */
-	}
-	DBGPRINT("SD selection failed\r\n");
-	deselect();
-	return false;
 }
 
 const char *cmd2str (uint8_t command)
@@ -220,7 +99,6 @@ disk_initialize (BYTE drv)
 	DBGPRINT("disk_initialize: Drive=%u\r\n", drv);
 	disk.lowspeed();
 	disk.go8bit();
-	BYTE cmd, ty, ocr[4];
 	if (drv)
 	{
 		DBGPRINT("disk_initialize: STA_NOINIT\r\n");
@@ -233,117 +111,18 @@ disk_initialize (BYTE drv)
 		return MMCstat; /* Is card existing in the soket? */
 	}
 
-	for (word n = 20; n; n--)
-	{		
-		disk.read (0xFF); /* Send 80 dummy clocks */
+	if( SD_RESPONSE_FAILURE == SD_GoIdleState())
+	{
+		LOGPRINT("SD init failed\r\n");
+		MMCstat = STA_NOINIT;
 	}
-
-	ty = 0;	
-	if (SD_SendCmd (CMD0, 0) == 1)
-		{ /* Put the card SPI/Idle state */
-			WAIT_FOR (5000); /* Initialization timeout = 1 sec */
-			if (SD_SendCmd (CMD8, 0x1AA) == 1)
-				{ /* SDv2? */
-					for (word n = 0; n < 4; n++)
-					{						
-						ocr[n] = disk.read (0xFF); /* Get 32 bit return value of R7 resp */
-						DBGPRINT("disk_initialize: Get 32 bit return value of R7 resp, %u [%u]\r\n", ocr[n], n);
-					}
-					if (ocr[2] == 0x01 && ocr[3] == 0xAA)
-						{ 
-							DBGPRINT("disk_initialize: ocr[2] == 0x01 && ocr[3] == 0xAA\r\n");
-							/* Is the card supports vcc of 2.7-3.6V? */
-							while (STILL_WAIT && SD_SendCmd (ACMD41, 1UL << 30))
-								; /* Wait for end of initialization with ACMD41(HCS) */
-							if (STILL_WAIT && SD_SendCmd (CMD58, 0) == 0)
-								{ /* Check CCS bit in the OCR */
-									for (word n = 0; n < 4; n++)
-										ocr[n] = SD_SendCmd (0xFF, 0);
-									ty = (ocr[0] & 0x40) ? CT_SD2 | CT_BLOCK : CT_SD2; /* Card id SDv2 */
-								}
-						}
-				}
-			else
-				{ /* Not SDv2 card */
-					if (SD_SendCmd (ACMD41, 0) <= 1)
-						{ /* SDv1 or MMC? */
-							ty = CT_SD1;
-							cmd = ACMD41; /* SDv1 (ACMD41(0)) */
-						}
-					else
-						{
-							ty = CT_MMC;
-							cmd = CMD1; /* MMCv3 (CMD1(0)) */
-						}
-					while (STILL_WAIT && SD_SendCmd (cmd, 0))
-						; /* Wait for end of initialization */
-					if (!STILL_WAIT || SD_SendCmd (CMD16, 512) != 0) /* Set block length: 512 */
-						ty = 0;
-				}
-		}
-	CardType = ty; /* Card type */
-	deselect ();
-
-	if (ty)
-		{
-			/* Set fast clock */
-			disk.highspeed ();
-			MMCstat &= ~STA_NOINIT; /* Clear STA_NOINIT flag */
-		}
 	else
-		{ /* Failed */
-			MMCstat = STA_NOINIT;
-		}
+	{
+		LOGPRINT("SD init OK\r\n");
+		disk.highspeed();
+		MMCstat &= ~STA_NOINIT;
+	}
 	return MMCstat;
-
-}
-
-bool
-rcvr_datablock (BYTE *buff, UINT btr)
-{
-	DBGPRINT("rcvr_datablock: Blocks=%u\r\n", btr);
-	BYTE token;
-
-	WAIT_FOR (200);
-	do
-		{ /* Wait for DataStart token in timeout of 200ms */
-			token = disk.read (0xFF);
-			/* This loop will take a time. Insert rot_rdq() here for multitask envilonment. */
-		}
-	while ((token == 0xFF) && STILL_WAIT);
-	if (token != 0xFE)
-		return false; /* Function fails if invalid DataStart token or timeout */
-
-	disk.multiread (buff, btr); /* Store trailing data to the buffer */
-	disk.read (0xFF);
-	disk.read (0xFF);
-	return true; /* Function succeeded */
-}
-
-bool
-xmit_datablock (const BYTE *buff, BYTE token)
-{
-	DBGPRINT("xmit_datablock: token=%u\r\n", token);
-	BYTE resp;
-
-	if (!wait4ready (500))
-		{
-			return false; /* Wait for card ready */
-		}
-
-	disk.read (token); /* Send token */
-	if (token != 0xFD)
-		{ /* Send data if token is other than StopTran */
-			disk.multiwrite (buff, 512); /* Data */
-			/* Dummy CRC */
-			disk.read (0xFF);
-			disk.read (0xFF);
-
-			resp = disk.read (0xFF); /* Receive data resp */
-			if ((resp & 0x1F) != 0x05) /* Function fails if the data packet was not accepted */
-				return false;
-		}
-	return true;
 }
 
 DSTATUS
@@ -356,189 +135,64 @@ DRESULT
 disk_read (BYTE drv, BYTE* buff, DWORD sector, UINT count)
 {
 	DBGPRINT("disk_read: Drive=%u, sector=%u, count=%u\r\n", drv, sector, count);
-	if (drv || !count)
-		return RES_PARERR; /* Check parameter */
-	if (MMCstat & STA_NOINIT)
-		return RES_NOTRDY; /* Check if drive is ready */
-
-	if (!(CardType & CT_BLOCK))
-		sector *= 512; /* LBA ot BA conversion (byte addressing cards) */
-
-	if (count == 1)
-		{ /* Single sector read */
-			if ((SD_SendCmd (CMD17, sector) == 0) /* READ_SINGLE_BLOCK */
-			&& rcvr_datablock (buff, 512))
-				count = 0;
-		}
+	if(SD_RESPONSE_NO_ERROR == SD_ReadBlock(buff, sector * _MIN_SS, count * _MIN_SS))
+	{
+		return RES_OK; /* Return result */
+	}
 	else
-		{ /* Multiple sector read */
-			if (SD_SendCmd (CMD18, sector) == 0)
-				{ /* READ_MULTIPLE_BLOCK */
-					do
-						{
-							if (!rcvr_datablock (buff, 512))
-								break;
-							buff += 512;
-						}
-					while (--count);
-					SD_SendCmd (CMD12, 0); /* STOP_TRANSMISSION */
-				}
-		}
-	deselect ();
-
-	return count ? RES_ERROR : RES_OK; /* Return result */
+	{
+		return RES_ERROR; /* Return result */
+	}
 }
 
 DRESULT
 disk_write (BYTE drv, const BYTE* buff, DWORD sector, UINT count)
 {
 	DBGPRINT("disk_write: Drive=%u, sector=%u, count=%u\r\n", drv, sector, count);
-	if (drv || !count)
-		return RES_PARERR; /* Check parameter */
-	if (MMCstat & STA_NOINIT)
-		return RES_NOTRDY; /* Check drive status */
-	if (MMCstat & STA_PROTECT)
-		return RES_WRPRT; /* Check write protect */
-
-	if (!(CardType & CT_BLOCK))
-		sector *= 512; /* LBA ==> BA conversion (byte addressing cards) */
-
-	if (count == 1)
-		{ /* Single sector write */
-			if (0 == SD_SendCmd (CMD24, sector))
-				{
-					/* WRITE_BLOCK */
-					if (xmit_datablock (buff, 0xFE))
-						{
-							count = 0;
-						}
-				}
-		}
+	if(SD_RESPONSE_NO_ERROR == SD_WriteBlock(buff, sector * _MIN_SS, count * _MIN_SS))
+	{
+		return RES_OK; /* Return result */
+	}
 	else
-		{ /* Multiple sector write */
-			if (CardType & CT_SDC)
-				SD_SendCmd (ACMD23, count); /* Predefine number of sectors */
-			if (SD_SendCmd (CMD25, sector) == 0)
-				{ /* WRITE_MULTIPLE_BLOCK */
-					do
-						{
-							if (!xmit_datablock (buff, 0xFC))
-								break;
-							buff += 512;
-						}
-					while (--count);
-					if (!xmit_datablock (0, 0xFD)) /* STOP_TRAN token */
-						count = 1;
-				}
-		}
-	deselect ();
-
-	return count ? RES_ERROR : RES_OK; /* Return result */
+	{
+		return RES_ERROR; /* Return result */
+	}
 }
 
 DRESULT
 disk_ioctl (BYTE drv, BYTE cmd, void* buff)
 {
-	DRESULT res;
-	BYTE n, csd[16];
-	DWORD *dp, st, ed, csize;
-
+	LOGPRINT("disk_ioctl drive=%u, cmd=%u\r\n", drv, cmd);
 	if (drv)
 		return RES_PARERR; /* Check parameter */
 	if (MMCstat & STA_NOINIT)
 		return RES_NOTRDY; /* Check if drive is ready */
 
-	res = RES_ERROR;
+	DWORD sector = 0;
+	DWORD bs = 0;
 
 	switch (cmd)
-		{
-		case CTRL_SYNC: /* Wait for end of internal write process of the drive */
-			if (select ())
-				res = RES_OK;
-			break;
+	{
+	case CTRL_SYNC: /* Wait for end of internal write process of the drive */
+		return RES_OK;
 
-		case GET_SECTOR_COUNT: /* Get drive capacity in unit of sector (DWORD) */
-			if ((SD_SendCmd (CMD9, 0) == 0) && rcvr_datablock (csd, 16))
-				{
-					if ((csd[0] >> 6) == 1)
-						{ /* SDC ver 2.00 */
-							csize = csd[9] + ((WORD) csd[8] << 8)
-							    + ((DWORD) (csd[7] & 63) << 16) + 1;
-							*(DWORD*) buff = csize << 10;
-						}
-					else
-						{ /* SDC ver 1.XX or MMC ver 3 */
-							n = (csd[5] & 15) + ((csd[10] & 128) >> 7) + ((csd[9] & 3) << 1)
-							    + 2;
-							csize = (csd[8] >> 6) + ((WORD) csd[7] << 2)
-							    + ((WORD) (csd[6] & 3) << 10) + 1;
-							*(DWORD*) buff = csize << (n - 9);
-						}
-					res = RES_OK;
-				}
-			break;
+	case GET_SECTOR_COUNT: /* Get drive capacity in unit of sector (DWORD) */
+		sector = get_card_capacity() / get_card_block_size();
+		*(DWORD*) buff = sector;
+		LOGPRINT("sector = %u\r\n", *(DWORD*) buff);
+		return RES_OK;
 
-		case GET_BLOCK_SIZE: /* Get erase block size in unit of sector (DWORD) */
-			if (CardType & CT_SD2)
-				{ /* SDC ver 2.00 */
-					if (SD_SendCmd (ACMD13, 0) == 0)
-						{ /* Read SD status */
-							SD_SendCmd (0xFF, 0);
-							if (rcvr_datablock (csd, 16))
-								{ /* Read partial block */
-									for (n = 64 - 16; n; n--)
-										disk.read (0xFF); /* Purge trailing data */
-									*(DWORD*) buff = 16UL << (csd[10] >> 4);
-									res = RES_OK;
-								}
-						}
-				}
-			else
-				{ /* SDC ver 1.XX or MMC */
-					if ((SD_SendCmd (CMD9, 0) == 0) && rcvr_datablock (csd, 16))
-						{ /* Read CSD */
-							if (CardType & CT_SD1)
-								{ /* SDC ver 1.XX */
-									*(DWORD*) buff = (((csd[10] & 63) << 1)
-									    + ((WORD) (csd[11] & 128) >> 7) + 1)
-									    << ((csd[13] >> 6) - 1);
-								}
-							else
-								{ /* MMC */
-									*(DWORD*) buff = ((WORD) ((csd[10] & 124) >> 2) + 1)
-									    * (((csd[11] & 3) << 3) + ((csd[11] & 224) >> 5) + 1);
-								}
-							res = RES_OK;
-						}
-				}
-			break;
+	case GET_BLOCK_SIZE: /* Get erase block size in unit of sector (DWORD) */
+		bs = get_card_block_size();
+		*(DWORD*) buff = bs;
+		LOGPRINT("bs = %u\r\n", *(DWORD*) buff);
+		return RES_OK;
 
-		case CTRL_TRIM: /* Erase a block of sectors (used when _USE_ERASE == 1) */
-			if (!(CardType & CT_SDC))
-				break; /* Check if the card is SDC */
-			if (disk_ioctl (drv, MMC_GET_CSD, csd))
-				break; /* Get CSD */
-			if (!(csd[0] >> 6) && !(csd[10] & 0x40))
-				break; /* Check if sector erase can be applied to the card */
-			dp = (DWORD*) buff;
-			st = dp[0];
-			ed = dp[1]; /* Load sector block */
-			if (!(CardType & CT_BLOCK))
-				{
-					st *= 512;
-					ed *= 512;
-				}
-			if (SD_SendCmd (CMD32, st) == 0 && SD_SendCmd (CMD33, ed) == 0
-			    && SD_SendCmd (CMD38, 0) == 0 && wait4ready (30000)) /* Erase sector block */
-				res = RES_OK; /* FatFs does not check result of this command */
-			break;
-
-		default:
-			res = RES_PARERR;
-		}
-
-	deselect ();
-	return res;
+	case CTRL_TRIM: /* Erase a block of sectors (used when _USE_ERASE == 1) */
+		return RES_OK;
+	default:
+		return RES_PARERR;
+	}
 }
 
 const char *
@@ -591,6 +245,39 @@ get_fresult (FRESULT r)
 		}
 }
 
+uint32_t get_card_capacity()
+{
+	SD_CSD SD_csd = {};
+	if (SD_RESPONSE_NO_ERROR == SD_GetCSDRegister(&SD_csd))
+	{
+		uint32_t CardCapacity = (SD_csd.DeviceSize + 1) ;
+		CardCapacity *= (1 << (SD_csd.DeviceSizeMul + 2));
+		CardCapacity = (SD_csd.DeviceSize + 1) ;
+		CardCapacity *= (1 << (SD_csd.DeviceSizeMul + 2));
+		uint32_t CardBlockSize = 1 << (SD_csd.RdBlockLen);
+		CardCapacity *= CardBlockSize;
+		LOGPRINT("CardCapacity = %u\r\n", CardCapacity);
+		return CardCapacity;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+uint32_t get_card_block_size()
+{
+	SD_CSD SD_csd = {};
+		if (SD_RESPONSE_NO_ERROR == SD_GetCSDRegister(&SD_csd))
+		{
+			return 1 << (SD_csd.RdBlockLen);
+		}
+		else
+		{
+			return 0;
+		}
+}
+
 const char *
 get_dresult (DRESULT r)
 {
@@ -633,6 +320,13 @@ SD_Error SD_GetResponse(uint8_t Response)
 
 SD_Error SD_GoIdleState(void)
 {
+	disk.go8bit();
+  disk.lowspeed();
+ 	for (int i = 0; i <=100; i++)
+ 	{
+ 	    /*!< Send dummy byte 0xFF */
+ 	 disk.read();
+ 	}
   /*!< Send CMD0 (SD_CMD_GO_IDLE_STATE) to put SD in SPI mode */
   SD_SendCmd(CMD0, 0, 0x95);
 
@@ -749,7 +443,6 @@ SD_Error SD_GetCIDRegister(SD_CID* SD_cid)
 
 SD_Error SD_GetCSDRegister(SD_CSD* SD_csd)
 {
-  uint32_t i = 0;
   SD_Error rvalue = SD_RESPONSE_FAILURE;
   uint8_t CSD_Tab[16];
 
@@ -760,7 +453,7 @@ SD_Error SD_GetCSDRegister(SD_CSD* SD_csd)
   {
     if (!SD_GetResponse(0xFE))
     {
-      for (i = 0; i < 16; i++)
+      for (int i = 0; i < 16; i++)
       {
         /*!< Store CSD register value on CSD_Tab */
         CSD_Tab[i] = disk.read();
@@ -852,15 +545,102 @@ SD_Error SD_GetCSDRegister(SD_CSD* SD_csd)
   /*!< Byte 15 */
   SD_csd->CSD_CRC = (CSD_Tab[15] & 0xFE) >> 1;
   SD_csd->Reserved4 = 1;
-
-  uint32_t CardCapacity = 0;
-  uint32_t CardBlockSize = 0;
-  CardCapacity = (SD_csd->DeviceSize + 1) ;
-  CardCapacity *= (1 << (SD_csd->DeviceSizeMul + 2));
-  CardBlockSize = 1 << (SD_csd->RdBlockLen);
-  CardCapacity *= CardBlockSize;
-  LOGPRINT("CardCapacity = %u, CardBlockSize = %u\r\n", CardCapacity, CardBlockSize);
   /*!< Return the reponse */
+  return rvalue;
+}
+
+uint8_t SD_GetDataResponse(void)
+{
+  uint32_t i = 0;
+  uint8_t response, rvalue;
+
+  while (i <= 64)
+  {
+    /*!< Read resonse */
+    response = disk.read();
+    /*!< Mask unused bits */
+    response &= 0x1F;
+    switch (response)
+    {
+      case SD_DATA_OK:
+      {
+        rvalue = SD_DATA_OK;
+        break;
+      }
+      case SD_DATA_CRC_ERROR:
+        return SD_DATA_CRC_ERROR;
+      case SD_DATA_WRITE_ERROR:
+        return SD_DATA_WRITE_ERROR;
+      default:
+      {
+        rvalue = SD_DATA_OTHER_ERROR;
+        break;
+      }
+    }
+    /*!< Exit loop in case of data ok */
+    if (rvalue == SD_DATA_OK)
+      break;
+    /*!< Increment loop counter */
+    i++;
+  }
+
+  /*!< Wait null data */
+  while (disk.read() == 0);
+
+  /*!< Return response */
+  return response;
+}
+
+SD_Error SD_WriteBlock(const uint8_t* pBuffer, uint32_t WriteAddr, uint16_t BlockSize)
+{
+  uint32_t i = 0;
+  SD_Error rvalue = SD_RESPONSE_FAILURE;
+
+
+  /*!< Send CMD24 (SD_CMD_WRITE_SINGLE_BLOCK) to write multiple block */
+  SD_SendCmd(CMD24, WriteAddr, 0xFF);
+
+  /*!< Check if the SD acknowledged the write block command: R1 response (0x00: no errors) */
+  if (!SD_GetResponse(SD_RESPONSE_NO_ERROR))
+  {
+    /*!< Send a dummy byte */
+  	disk.read();
+
+    /*!< Send the data token to signify the start of the data */
+    disk.read(0xFE);
+
+    /*!< Write the block data to SD : write count data by block */
+    for (i = 0; i < BlockSize; i++)
+    {
+      /*!< Send the pointed byte */
+    	disk.read(*pBuffer);
+      /*!< Point to the next location where the byte read will be saved */
+      pBuffer++;
+    }
+    /*!< Put CRC bytes (not really needed by us, but required by SD) */
+    disk.read();
+    disk.read();
+
+    /*!< Read data response */
+    if (SD_GetDataResponse() == SD_DATA_OK)
+    {
+      rvalue = SD_RESPONSE_NO_ERROR;
+    }
+  }
+  /*!< SD chip select high */
+  /*!< Send dummy byte: 8 Clock pulses of delay */
+  disk.read();
+
+  if(rvalue == SD_RESPONSE_NO_ERROR)
+   {
+    	LOGPRINT("Successfully wrote the block\r\n");
+   }
+   else
+    {
+   	LOGPRINT("Failed to write the block\r\n");
+    }
+
+  /*!< Returns the reponse */
   return rvalue;
 }
 
@@ -898,6 +678,15 @@ SD_Error SD_ReadBlock(uint8_t* pBuffer, uint32_t ReadAddr, uint16_t BlockSize)
   /*!< Send dummy byte: 8 Clock pulses of delay */
   disk.read();
 
+  if(rvalue == SD_RESPONSE_NO_ERROR)
+  {
+   	LOGPRINT("Successfully read the block\r\n");
+  }
+  else
+   {
+  	LOGPRINT("Failed to read the block\r\n");
+   }
+
   /*!< Returns the reponse */
   return rvalue;
 }
@@ -920,42 +709,19 @@ uint16_t SD_GetStatus(void)
 
 void
 disk_test (void)
-{	
-	__dbg_out->cls();
+{
 	LOGPRINT("FatFs test started\r\n");
 	disk = SPI::Spi (1);
-	disk.lowspeed();
-	for (int i = 0; i <=100; i++)
-	  {
-	    /*!< Send dummy byte 0xFF */
-			 disk.read();
-	  }
-	if( SD_RESPONSE_FAILURE == SD_GoIdleState())
-		{
-			LOGPRINT("SD init failed\r\n");
-			return;
-		}
-	LOGPRINT("Inited\r\n");
-	uint8_t buf[512]={};
-	SD_Error err = SD_ReadBlock(buf, 1, 512);
-	if(SD_RESPONSE_NO_ERROR == err)
-		{
-			LOGPRINT("SD_RESPONSE_NO_ERROR\r\n");
-		}
-	else if (SD_RESPONSE_FAILURE == err)
-		{
-			LOGPRINT("SD_RESPONSE_FAILURE\r\n");
-		}
-
-
-
-	/*DRESULT r = disk_write(0, buf, 0, 1);
-	DBGPRINT("%s\r\n",get_dresult(r));
-	memset(buf, 0, sizeof buf);
-	r = disk_read(0, buf, 0, 1);
-	DBGPRINT("%s\r\n", get_dresult(r));	*/
-	//r = disk_read(0, buf, 0, 1);
-	//__dbg_out->print(get_dresult(r));
-	//__dbg_out->put_dump(buf, 0, 512, 1);
-
+	FRESULT r;
+	FATFS fs;
+	r = f_mount(&fs, "0:", 1);
+	LOGPRINT("f_mount? %s\r\n", get_fresult(r));
+	//r = f_mkfs("0:", 0, 0);
+	//LOGPRINT("f_mount? %s\r\n", get_fresult(r));
+	FIL test;
+	r = f_open(&test, "test.txt", FA_OPEN_ALWAYS);
+	LOGPRINT("f_open? %s\r\n", get_fresult(r));
+	f_close(&test);
+	LOGPRINT("f_close? %s\r\n", get_fresult(r));
 }
+

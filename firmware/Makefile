@@ -159,7 +159,7 @@ else
 endif
 
 CXXFLAGS+=\
-	--std=gnu++11 -Wall \
+	--std=gnu++14 -Wall \
 	-Iinclude -Isrc \
 	-Iexternal/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc \
 	-Iexternal/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x \
@@ -225,7 +225,7 @@ linked_firmware: directories library $(FIRMWARE)
 firmware: settings directories $(EXEC)
 
 flash:
-	@echo -e "device STM32F103C8\r\nerase\r\nloadbin ../bin/CoreTex.elf.bin, 0x08000000\r\nr\r\ng\r\nq" > __temp.jlink
+	@echo -e "device STM32F103C8\r\nerase\r\nloadbin bin/CoreTex.elf.bin, 0x08000000\r\nr\r\ng\r\nq" > __temp.jlink
 	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
 	$(RM) -f __temp.jlink
 

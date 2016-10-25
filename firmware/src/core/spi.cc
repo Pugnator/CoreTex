@@ -29,6 +29,7 @@ class Spi *Spi::self = nullptr;
 
 Spi::Spi(char ch)
   {
+		DBGPRINT("SPI%u activated\r\n", ch);
     __disable_irq();
     self = this;
     channel = ch;
@@ -144,25 +145,21 @@ void Spi::init(void)
 
 uint16_t Spi::read(uint16_t data)
   {
-    DBGPRINT("Spi::read data=%u\r\n", data);
 		bool mode16 = false;
 		if(0xFF < data)
 			{
-				DBGPRINT("Spi::read auto 16bit mode ON\r\n");
 				mode16 = true;
 			}
     PIN_LOW(SPI1NSS_PIN);
     Reg->DR = data;
     while (Reg->SR & SPI_SR_BSY);
-    uint16_t tmp = Reg->DR;
+    volatile uint16_t tmp = Reg->DR;
     PIN_HI(SPI1NSS_PIN);
-    DBGPRINT("Spi::read return [%u]\r\n", mode16 ? tmp : tmp & 0xFF);
     return mode16 ? tmp : tmp & 0xFF;
   }
 
 void Spi::multiread(uint8_t *buf, uint32_t size)
   {
-    DBGPRINT("Spi::multiread size=%u\r\n", size);
 		if(1 == size)
 			{
 				go8bit();
@@ -191,7 +188,6 @@ void Spi::multiread(uint8_t *buf, uint32_t size)
 
 void Spi::multiwrite(const uint8_t *buf, uint32_t size)
   {
-    DBGPRINT("Spi::multiwrite size=%u\r\n", size);
 		if(1 >= size || size % 2)
 			return;
 

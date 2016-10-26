@@ -71,8 +71,8 @@ DRIVERSSRC:=\
 	$(DRIVERS)/positioning/gps/gps.cc \
 	$(DRIVERS)/positioning/gps/rmc.cc \
 	$(DRIVERS)/positioning/gps/vtg.cc \
-	$(DRIVERS)/storage/mmc/mmc.cc \
-	$(DRIVERS)/storage/mmc/disk.cc \
+	$(DRIVERS)/storage/mmc/sdc.cc \
+	$(DRIVERS)/storage/mmc/diskio.cc \
 	$(DRIVERS)/storage/ramdisk.cc \
 	$(DRIVERS)/storage/flash.cc \
 	$(DRIVERS)/wireless/bc470/bc470.cc \

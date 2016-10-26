@@ -28,221 +28,221 @@ namespace SPI
 class Spi *Spi::self = nullptr;
 
 Spi::Spi(char ch)
-  {
-		DBGPRINT("SPI%u activated\r\n", ch);
-    __disable_irq();
-    self = this;
-    channel = ch;
-    switch (channel)
-      {
-      case 1:
-        Reg = (SPI_TypeDef*) SPI1_BASE;
-        IRQ_VECTOR_TABLE[SPI1_IRQn + IRQ0_EX] = (word) &isr;
-        RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
-        PORT_ENABLE_CLOCK_START()
-        /* enable all clock */
-        PORT_ENABLE_CLOCK_ENTRY( SPI1SCK_PIN )
-        PORT_ENABLE_CLOCK_ENTRY( SPI1MOSI_PIN )
-        PORT_ENABLE_CLOCK_ENTRY( SPI1MISO_PIN )
-        PORT_ENABLE_CLOCK_ENTRY( SPI1NSS_PIN )
+{
+	DBGPRINT("SPI%u activated\r\n", ch);
+	__disable_irq();
+	self = this;
+	channel = ch;
+	switch (channel)
+	{
+	case 1:
+		Reg = (SPI_TypeDef*) SPI1_BASE;
+		IRQ_VECTOR_TABLE[SPI1_IRQn + IRQ0_EX] = (word) &isr;
+		RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
+		PORT_ENABLE_CLOCK_START()
+		/* enable all clock */
+		PORT_ENABLE_CLOCK_ENTRY( SPI1SCK_PIN )
+		PORT_ENABLE_CLOCK_ENTRY( SPI1MOSI_PIN )
+		PORT_ENABLE_CLOCK_ENTRY( SPI1MISO_PIN )
+		PORT_ENABLE_CLOCK_ENTRY( SPI1NSS_PIN )
 
-        PORT_ENABLE_CLOCK_END()
+		PORT_ENABLE_CLOCK_END()
 
-        PIN_OUT_ALT_PP(SPI1SCK_PIN);
-        PIN_OUT_ALT_PP(SPI1MOSI_PIN);
-        PIN_OUT_PP(SPI1NSS_PIN);
-        PIN_HI(SPI1NSS_PIN);
-        PIN_INPUT_FLOATING(SPI1MISO_PIN);
-        break;
-      case 2:
-        Reg = (SPI_TypeDef*) SPI2_BASE;
-        IRQ_VECTOR_TABLE[SPI2_IRQn + IRQ0_EX] = (word) &isr;
-        break;
-      default:
-        //ERROR
-        ;
-      }
-    init();
-    __enable_irq();
-  }
+		PIN_OUT_ALT_PP(SPI1SCK_PIN);
+		PIN_OUT_ALT_PP(SPI1MOSI_PIN);
+		PIN_OUT_PP(SPI1NSS_PIN);
+		PIN_HI(SPI1NSS_PIN);
+		PIN_INPUT_FLOATING(SPI1MISO_PIN);
+		break;
+	case 2:
+		Reg = (SPI_TypeDef*) SPI2_BASE;
+		IRQ_VECTOR_TABLE[SPI2_IRQn + IRQ0_EX] = (word) &isr;
+		break;
+	default:
+		//ERROR
+		;
+	}
+	init();
+	__enable_irq();
+}
 
 Spi::~Spi(void)
-  {
-    __disable_irq();
-    switch (channel)
-      {
-      case 1:
-        IRQ_VECTOR_TABLE[SPI1_IRQn + IRQ0_EX] = (word) &isr;
-        break;
-      case 2:
-        IRQ_VECTOR_TABLE[SPI2_IRQn + IRQ0_EX] = (word) &isr;
-        break;
-      default:
-        //ERROR
-        ;
-      }
-    __enable_irq();
-    __ISB();
-  }
+{
+	__disable_irq();
+	switch (channel)
+	{
+	case 1:
+		IRQ_VECTOR_TABLE[SPI1_IRQn + IRQ0_EX] = (word) &isr;
+		break;
+	case 2:
+		IRQ_VECTOR_TABLE[SPI2_IRQn + IRQ0_EX] = (word) &isr;
+		break;
+	default:
+		//ERROR
+		;
+	}
+	__enable_irq();
+	__ISB();
+}
 
 void Spi::isr(void)
 {
 	if (self->Reg->SR & SPI_SR_RXNE)
-		{
-			self->Reg->SR &= ~SPI_SR_RXNE;
-		}
+	{
+		self->Reg->SR &= ~SPI_SR_RXNE;
+	}
 	else if ( SPI1->SR & SPI_SR_TXE)
-		{
-			self->Reg->SR &= ~SPI_SR_TXE;
-		}
+	{
+		self->Reg->SR &= ~SPI_SR_TXE;
+	}
 	else if ( SPI1->SR & SPI_SR_UDR)
-		{
-			self->Reg->SR &= ~SPI_SR_UDR;
-		}
+	{
+		self->Reg->SR &= ~SPI_SR_UDR;
+	}
 }
 
 void Spi::init(void)
-  {
-    RCC->APB2RSTR |= RCC_APB2ENR_SPI1EN;
-    RCC->APB2RSTR &= ~RCC_APB2ENR_SPI1EN;
+{
+	RCC->APB2RSTR |= RCC_APB2ENR_SPI1EN;
+	RCC->APB2RSTR &= ~RCC_APB2ENR_SPI1EN;
 
-    disable();
+	disable();
 
-    uint16_t tmp_cr1 = Reg->CR1;
+	uint16_t tmp_cr1 = Reg->CR1;
 
-    /* clear config bits */
-    tmp_cr1 &= (~0x3040);
+	/* clear config bits */
+	tmp_cr1 &= (~0x3040);
 
-    /* 2 lines, full duplex, by default */
-    tmp_cr1 |= 0;
+	/* 2 lines, full duplex, by default */
+	tmp_cr1 |= 0;
 
-    /* slave select to master */
-    tmp_cr1 |= SPI_CR1_SSI | SPI_CR1_MSTR;
+	/* slave select to master */
+	tmp_cr1 |= SPI_CR1_SSI | SPI_CR1_MSTR;
 
-    /* 8bit mode by default */
-    tmp_cr1 &= ~SPI_CR1_DFF;
+	/* 8bit mode by default */
+	tmp_cr1 &= ~SPI_CR1_DFF;
 
-    /* SPI MODE by default */
-    /* SPI_CR1_CPHA | SPI_CR1_CPOL*/
+	/* SPI MODE by default */
+	/* SPI_CR1_CPHA | SPI_CR1_CPOL*/
 
-    /* NSS control by software ( only used in slave mode ? ) */
-    tmp_cr1 |= SPI_CR1_SSM;
+	/* NSS control by software ( only used in slave mode ? ) */
+	tmp_cr1 |= SPI_CR1_SSM;
 
-    /* /32 */
-    tmp_cr1 |= SPI_CR1_BR_2;
+	/* /32 */
+	tmp_cr1 |= SPI_CR1_BR_2;
 
-    Reg->CR1 = tmp_cr1;
-    
-    uint16_t tmp_cr2 = 0;
-    tmp_cr2 |= SPI_CR2_RXNEIE | SPI_CR2_TXEIE | SPI_CR2_ERRIE;
-    Reg->CR2 = tmp_cr2;
+	Reg->CR1 = tmp_cr1;
 
-    //NVIC_EnableIRQ(SPI1_IRQn);
-    //NVIC_SetPriority(SPI1_IRQn, 3);
+	uint16_t tmp_cr2 = 0;
+	tmp_cr2 |= SPI_CR2_RXNEIE | SPI_CR2_TXEIE | SPI_CR2_ERRIE;
+	Reg->CR2 = tmp_cr2;
 
-    enable();
-  }
+	//NVIC_EnableIRQ(SPI1_IRQn);
+	//NVIC_SetPriority(SPI1_IRQn, 3);
+
+	enable();
+}
 
 uint16_t Spi::read(uint16_t data)
-  {
-		bool mode16 = false;
-		if(0xFF < data)
-			{
-				mode16 = true;
-			}
-    PIN_LOW(SPI1NSS_PIN);
-    Reg->DR = data;
-    while (Reg->SR & SPI_SR_BSY);
-    volatile uint16_t tmp = Reg->DR;
-    PIN_HI(SPI1NSS_PIN);
-    return mode16 ? tmp : tmp & 0xFF;
-  }
+{
+	bool mode16 = false;
+	if(0xFF < data)
+	{
+		mode16 = true;
+	}
+	PIN_LOW(SPI1NSS_PIN);
+	Reg->DR = data;
+	while (Reg->SR & SPI_SR_BSY);
+	volatile uint16_t tmp = Reg->DR;
+	PIN_HI(SPI1NSS_PIN);
+	return mode16 ? tmp : tmp & 0xFF;
+}
 
 void Spi::multiread(uint8_t *buf, uint32_t size)
-  {
-		if(1 == size)
-			{
-				go8bit();
-				PIN_LOW(SPI1NSS_PIN);
-				Reg->DR = 0xFF;
-				while (Reg->SR & SPI_SR_BSY);
-				buf[0] = Reg->DR;
-				PIN_HI(SPI1NSS_PIN);
-				return;
-			}
+{
+	if(1 == size)
+	{
+		go8bit();
+		PIN_LOW(SPI1NSS_PIN);
+		Reg->DR = 0xFF;
+		while (Reg->SR & SPI_SR_BSY);
+		buf[0] = Reg->DR;
+		PIN_HI(SPI1NSS_PIN);
+		return;
+	}
 
-	    go16bit();
-	    volatile uint16_t dr = 0;
-	    for(uint32_t i = 0; i < size / 2; ++i)
-	    	{
-	    		PIN_LOW(SPI1NSS_PIN);
-	    		Reg->DR = 0xFFFF;
-	    		while (Reg->SR & SPI_SR_BSY);
-	    		dr = Reg->DR;
-	    		PIN_HI(SPI1NSS_PIN);
-	    		buf[1] = dr & 0xFF;
-	    		buf[0] = dr >> 8;
-	    		buf += 2;
-	    	}
-  }
+	go16bit();
+	volatile uint16_t dr = 0;
+	PIN_LOW(SPI1NSS_PIN);
+	for(uint32_t i = 0; i < size / 2; ++i)
+	{
+		Reg->DR = 0xFFFF;
+		while (Reg->SR & SPI_SR_BSY);
+		dr = Reg->DR;
+		buf[1] = dr & 0xFF;
+		buf[0] = dr >> 8;
+		buf += 2;
+	}
+	PIN_HI(SPI1NSS_PIN);
+}
 
 void Spi::multiwrite(const uint8_t *buf, uint32_t size)
-  {
-		if(1 >= size || size % 2)
-			return;
+{
+	if(1 >= size || size % 2)
+		return;
 
-    go16bit();
-    for(uint32_t i = 0; i < size / 2; ++i)
-    	{
-    		PIN_LOW(SPI1NSS_PIN);
-    		Reg->DR = buf[0] << 8 | buf[1];
-    		while (Reg->SR & SPI_SR_BSY);
-    		volatile uint16_t dr = Reg->DR;
-    		PIN_HI(SPI1NSS_PIN);
-    		buf += 2;
-    	}
-  }
+	go16bit();
+	PIN_LOW(SPI1NSS_PIN);
+	for(uint32_t i = 0; i < size / 2; ++i)
+	{
+		Reg->DR = buf[0] << 8 | buf[1];
+		while (Reg->SR & SPI_SR_BSY);
+		volatile uint16_t dr = Reg->DR;
+		buf += 2;
+	}
+	PIN_HI(SPI1NSS_PIN);
+}
 
 void Spi::go8bit(void)
-  {
-    DBGPRINT("Spi::go8bit\r\n");
-    //SPI module must be disabled
-    disable();
-    Reg->CR1 &= ~SPI_CR1_DFF;
-    enable();
-  }
+{
+	DBGPRINT("Spi::go8bit\r\n");
+	//SPI module must be disabled
+	disable();
+	Reg->CR1 &= ~SPI_CR1_DFF;
+	enable();
+}
 
 void Spi::go16bit(void)
-  {
-    DBGPRINT("Spi::go16bit\r\n");
-    //SPI module must be disabled
-    disable();
-    Reg->CR1 |= SPI_CR1_DFF;
-    enable();
-  }
+{
+	DBGPRINT("Spi::go16bit\r\n");
+	//SPI module must be disabled
+	disable();
+	Reg->CR1 |= SPI_CR1_DFF;
+	enable();
+}
 
 void Spi::disable(void)
-  {
-    DBGPRINT("Spi::disable\r\n");
-    Reg->CR1 &= ~SPI_CR1_SPE;
-  }
+{
+	DBGPRINT("Spi::disable\r\n");
+	Reg->CR1 &= ~SPI_CR1_SPE;
+}
 
 void Spi::enable(void)
-  {
-    DBGPRINT("Spi::enable\r\n");
-    Reg->CR1 |= SPI_CR1_SPE;
-  }
+{
+	DBGPRINT("Spi::enable\r\n");
+	Reg->CR1 |= SPI_CR1_SPE;
+}
 
 void Spi::lowspeed(void)
-  {
-    DBGPRINT("Spi::lowspeed\r\n");
-    Reg->CR1 &= ~SPI_CR1_BR;
-    Reg->CR1 |= SPI_CR1_BR | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2; // \256
-  }
+{
+	DBGPRINT("Spi::lowspeed\r\n");
+	Reg->CR1 &= ~SPI_CR1_BR;
+	Reg->CR1 |= SPI_CR1_BR | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2; // \256
+}
 
 void Spi::highspeed(void)
-  {
-    DBGPRINT("Spi::highspeed\r\n");
-		Reg->CR1 &= ~SPI_CR1_BR;
-  }
+{
+	DBGPRINT("Spi::highspeed\r\n");
+	Reg->CR1 &= ~SPI_CR1_BR;
+}
 }

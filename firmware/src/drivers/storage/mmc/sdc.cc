@@ -100,6 +100,7 @@ const char *Sdc::cmd2str (uint8_t command)
 
 uint16_t Sdc::cmd(uint8_t Cmd, uint32_t Arg, uint8_t Crc = 0)
 {
+	assert();
 	uint32_t i = 0x00;
 	switch (Cmd)
 	{
@@ -109,6 +110,14 @@ uint16_t Sdc::cmd(uint8_t Cmd, uint32_t Arg, uint8_t Crc = 0)
 	case CMD8:
 		Crc = 0x87;
 		break;
+	}
+
+	if(CMD0 != Cmd)
+	{
+		do
+		{
+
+		}while(0xFF != read());
 	}
 
 	uint8_t Frame[6];
@@ -213,17 +222,35 @@ SDC_Error Sdc::initialize(void)
 		return SD_RESPONSE_FAILURE;
 	}
 	/*----------Activates the card initialization process-----------*/
-	do
+	/*do
 	{
-		/*!< SD chip select high */
-		/*!< Send Dummy byte 0xFF */
+		!< SD chip select high
+		!< Send Dummy byte 0xFF
 		read();
 
-		/*!< Send CMD1 (Activates the card process) until response equal to 0x0 */
-		cmd(CMD1, 0, 0xFF);
-		/*!< Wait for no error Response (R1 Format) equal to 0x00 */
+		!< Send CMD1 (Activates the card process) until response equal to 0x0
+		//cmd(CMD1, 0, 0xFF);
+		cmd(CMD8, 0x000001AA, 0x87);
+		!< Wait for no error Response (R1 Format) equal to 0x00
 	}
-	while (get_response(SD_RESPONSE_NO_ERROR));
+	while (get_response(SD_RESPONSE_NO_ERROR));*/
+
+	//LOGPRINT("CMD8 worked!\r\n");
+	do
+	{
+
+	//cmd(CMD55 , 0, 0x65);
+	//cmd(ACMD41 , 0x40000000, 0x65);
+	cmd(CMD8, 0x1AA, 0x87);
+
+	for (int i = 0; i < 6; i++)
+	{
+		LOGPRINT("R: %X\r\n", read());
+	}
+	delay_ms(1000);
+	}while(1);
+
+	LOGPRINT("CMD55 worked!\r\n");
 
 	/*!< SD chip select high */
 

@@ -1,117 +1,325 @@
-MCU?=STM32F10X_MD
-TARGET?=STM32
+#Setting file
+DESCRIPTION:=mcu.ini
 
+##########################
+MCU:=$(shell sed -n '/^family=/ {s///p;q;}' $(DESCRIPTION))
+PROJECTNAME:=$(shell sed -n '/^name=/ {s///p;q;}' $(DESCRIPTION))
+GCCPRFX:=$(shell sed -n '/^arch=/ {s///p;q;}' $(DESCRIPTION))
 
-PROJECTNAME:=CoreText
-AR:=arm-none-eabi-ar
-GPP:=arm-none-eabi-g++
-OCOPY:=arm-none-eabi-objcopy
-STRIP:=arm-none-eabi-strip
-SIZE:=arm-none-eabi-size
+__USE_FATFS:=$(shell sed -n '/^__USE_FATFS=/ {s///p;q;}' $(DESCRIPTION))
+__USE_TESTS:=$(shell sed -n '/^__USE_TESTS=/ {s///p;q;}' $(DESCRIPTION))
+__USE_STDLIB:=$(shell sed -n '/^__USE_STDLIB=/ {s///p;q;}' $(DESCRIPTION))
+__BUILDTYPE:=$(shell sed -n '/^__BUILDTYPE=/ {s///p;q;}' $(DESCRIPTION))
+__USE_CONSOLE:=$(shell sed -n '/^__USE_CONSOLE=/ {s///p;q;}' $(DESCRIPTION))
+__VMMU_POOL_SUZE:=$(shell sed -n '/^__VMMU_POOL_SUZE=/ {s///p;q;}' $(DESCRIPTION))
+##########################
 
+AR:=$(GCCPRFX)-ar
+GPP:=$(GCCPRFX)-g++
+ASM:=$(GCCPRFX)-as
+OCOPY:=$(GCCPRFX)-objcopy
+STRIP:=$(GCCPRFX)-strip
+SIZE:=$(GCCPRFX)-size
+READELF:=$(GCCPRFX)-readelf
+CXXFILT:=$(GCCPRFX)-c++filt
+SORT:=sort
+AWK:=gawk
+MKDIR_P = mkdir -p
+MAKE:=make --always-make
+JLINK:=jlink.exe
+RM:=rm
 
-MAKE:=make --always-make 
+LIBSDIR:=libs
+OBJSDIR:=obj
+OUTPUTDIR:=bin
+MRI:=usedlibs.mri
+STDLIB:=external/stdlib/F1X/Libraries/STM32F10x_StdPeriph_Driver/libstd.a
 
-SUBDIRS=\
-src/drivers/storage/mmc/fat32 \
-src/hal
+STMSTDLIBDIR:=\
+	external/stdlib/F1X/Libraries/STM32F10x_StdPeriph_Driver
+STDLIBSRC:=\
+	external/stdlib/F1X/Libraries/STM32F10x_StdPeriph_Driver/src
 
-BLD?=DBG
-ifeq ($(BLD), DBG)	
-	CFLAGS:=-Og -g3 -DDEBUG	-ffunction-sections -fdata-sections
-	LDFLAGS+=external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/libstd.a -Wl,--gc-sections 
-else ifeq ($(BLD), REL)
-   CFLAGS:=-Os -ffunction-sections -fdata-sections
-   LDFLAGS+=-Wl,--gc-sections 
-endif
+CORELIB:=\
+	src/core
 
-TEST_RUN_MODE?=NO
-ifeq ($(TEST_RUN_MODE), YES)	
-	SRC:=src/tests/main.cc \
-		src/tests/memtest.cc
-else ifeq ($(TEST_RUN_MODE), NO)
-   SRC:=src/main.cc
-endif
+AUXSRC:=\
+	src/support
 
+DRIVERS:=\
+	src/drivers
+
+SUPPORT:=\
+	src/support
+
+TESTSDIR:=\
+	src/tests
+
+######################## SOURCES ###############################
 
 SRC+=\
-	src/other/compat.cc \
-	src/other/log.cc \
-	src/other/common.cc \
-	src/other/morse.cc \
-	src/drivers/generic/driver.cc \
-	src/drivers/storage/mmc/mmc.cc \
-	src/drivers/wireless/gsm/gsm.cc \
-	src/drivers/wireless/gsm/atcmd.cc \
-	src/drivers/userio/console/xprintf.cc \
-	src/drivers/userio/console/console.cc \
-	src/drivers/imaging/ov528/ov528.cc \
-	src/drivers/positioning/gps/gps.cc \
-	src/drivers/positioning/gps/gga.cc \
-	src/drivers/positioning/gps/vtg.cc \
-	src/drivers/positioning/gps/rmc.cc \
-	src/drivers/file_transfer/xmodem/xmodem.cc \
-	src/drivers/wireless/nrf24l01/nrf24.cc \
-	src/drivers/wireless/bc470/bc470.cc \
-	src/hal/startup.s
+	src/main.cc
 
+DRIVERSSRC:=\
+	$(DRIVERS)/file_transfer/xmodem/xmodem.cc \
+	$(DRIVERS)/generic/driver.cc \
+	$(DRIVERS)/imaging/ov528/ov528.cc \
+	$(DRIVERS)/positioning/gps/gga.cc \
+	$(DRIVERS)/positioning/gps/gps.cc \
+	$(DRIVERS)/positioning/gps/rmc.cc \
+	$(DRIVERS)/positioning/gps/vtg.cc \
+	$(DRIVERS)/storage/mmc/sdc.cc \
+	$(DRIVERS)/storage/ramdisk.cc \
+	$(DRIVERS)/storage/flash.cc \
+	$(DRIVERS)/wireless/bc470/bc470.cc \
+	$(DRIVERS)/wireless/gsm/atcmd.cc \
+	$(DRIVERS)/wireless/gsm/gsm.cc \
+	$(DRIVERS)/wireless/nrf24l01/nrf24.cc
 
-CORELIBS +=\
-	src/hal/libhal.a \
-	src/drivers/storage/mmc/fat32/libfat32.a
+ifeq ($(__USE_CONSOLE), 1)
+DRIVERSSRC+=\
+	$(DRIVERS)/userio/console/console.cc \
+	$(DRIVERS)/userio/console/xprintf.cc
+endif
 
+CORESRC:=\
+	$(CORELIB)/adc.cc \
+	$(CORELIB)/core.cc \
+	$(CORELIB)/gpio.cc \
+	$(CORELIB)/i2c.cc \
+	$(CORELIB)/isr.cc \
+	$(CORELIB)/isr_helper.cc \
+	$(CORELIB)/rtc.cc \
+	$(CORELIB)/spi.cc \
+	$(CORELIB)/timers.cc \
+	$(CORELIB)/usart.cc \
+	$(CORELIB)/vmmu.cc
 
-	CFLAGS+=\
-	--std=gnu++11 -Wall \
+STARTUP:=\
+	$(CORELIB)/startup.s
+
+SUPPORTSRC:=\
+	$(SUPPORT)/common.cc \
+	$(SUPPORT)/compat.cc \
+	$(SUPPORT)/log.cc \
+	$(SUPPORT)/queue.cc \
+	$(SUPPORT)/morse.cc
+
+FATFSSRC:=\
+	$(DRIVERS)/storage/mmc/fatdisk.cc \
+	$(DRIVERS)/storage/mmc/fatfs.cc
+
+TESTSSRC:=\
+	$(TESTSDIR)/core.cc
+
+STMLIBSRC:=\
+	$(STDLIBSRC)/misc.c           \
+	$(STDLIBSRC)/stm32f10x_adc.c  \
+	$(STDLIBSRC)/stm32f10x_bkp.c  \
+	$(STDLIBSRC)/stm32f10x_can.c  \
+	$(STDLIBSRC)/stm32f10x_cec.c  \
+	$(STDLIBSRC)/stm32f10x_crc.c  \
+	$(STDLIBSRC)/stm32f10x_dac.c  \
+	$(STDLIBSRC)/stm32f10x_dbgmcu.c \
+	$(STDLIBSRC)/stm32f10x_dma.c  \
+	$(STDLIBSRC)/stm32f10x_exti.c \
+	$(STDLIBSRC)/stm32f10x_flash.c \
+	$(STDLIBSRC)/stm32f10x_fsmc.c \
+	$(STDLIBSRC)/stm32f10x_gpio.c \
+	$(STDLIBSRC)/stm32f10x_i2c.c  \
+	$(STDLIBSRC)/stm32f10x_iwdg.c \
+	$(STDLIBSRC)/stm32f10x_pwr.c  \
+	$(STDLIBSRC)/stm32f10x_rcc.c  \
+	$(STDLIBSRC)/stm32f10x_rtc.c  \
+	$(STDLIBSRC)/stm32f10x_sdio.c \
+	$(STDLIBSRC)/stm32f10x_spi.c  \
+	$(STDLIBSRC)/stm32f10x_tim.c  \
+	$(STDLIBSRC)/stm32f10x_usart.c \
+	$(STDLIBSRC)/stm32f10x_wwdg.c
+
+####################################################
+
+ifeq ($(__BUILDTYPE), DEBUG)
+	CXXFLAGS:=-flto -Og -g3 -D__DEBUG=1
+else
+	CXXFLAGS:=-flto -Os -s -D__DEBUG=0
+endif
+
+ifneq ($(__VMMU_POOL_SUZE), 0)
+	CXXFLAGS+=-D__VMMU_POOL_SUZE=$(__VMMU_POOL_SUZE)
+endif
+
+ifneq ($(__USE_CONSOLE), 0)
+	CXXFLAGS+=-D__USE_CONSOLE=1
+else
+	CXXFLAGS+=-D__USE_CONSOLE=0
+endif
+
+CXXFLAGS+=\
+	--std=gnu++14 -Wall \
 	-Iinclude -Isrc \
 	-Iexternal/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc \
 	-Iexternal/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x \
+	-Iexternal/stdlib/Libraries/CMSIS/CM3/CoreSupport \
 	-D$(MCU) -D_GNU_SOURCE -D__STM32__\
 	-D_REENT_SMALL -D_REENT_GLOBAL_ATEXIT \
 	-Wno-write-strings \
+	-fno-rtti \
 	-fno-exceptions \
-	-fno-builtin -nostdlib \
+	-Dassert_param="" \
+	-fno-builtin \
+	-fdata-sections \
+	-ffunction-sections \
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
-	LDFLAGS+=-Tstm32_link.ld \
-	-lm \
-	$(CORELIBS)
-	
-OBJ=$(SRC:%.cc=%.o)
 
-EXEC:=$(PROJECTNAME).elf
-LIBEXEC:=$(PROJECTNAME).a
+#-Wl,--wrap,__aeabi_unwind_cpp_pr0
+LDFLAGS+=\
+	-flto \
+	-fno-exceptions \
+	-fdata-sections \
+	-ffunction-sections \
+	-Tstm32_link.ld \
+	-lm	-Wl,--gc-sections \
+	-Wl,--cref \
+	-Wl,-Map,$(EXEC).map
 
-all: subdirs $(EXEC) $(LIBEXEC)
+##################OBJECT FILES###################
 
-%.o: %.cc
-	$(GPP) -c -o $@ $< $(CFLAGS)
 
-$(EXEC): $(OBJ)
-	$(GPP) -o $@ $^ $(LDFLAGS)
+OBJ:=$(DRIVERSSRC:%.cc=$(OBJSDIR)/%.o)
+OBJ+=$(STARTUP:%.s=$(OBJSDIR)/%.o)
+OBJ+=$(CORESRC:%.cc=$(OBJSDIR)/%.o)
+OBJ+=$(SUPPORTSRC:%.cc=$(OBJSDIR)/%.o)
+
+ifeq ($(__USE_FATFS),1)
+OBJ+=$(FATFSSRC:%.cc=$(OBJSDIR)/%.o)
+endif
+
+ifeq ($(__USE_TESTS),1)
+OBJ+=$(TESTSSRC:%.cc=$(OBJSDIR)/%.o)
+endif
+
+ifeq ($(__USE_STDLIB),1)
+OBJ+=$(STMLIBSRC:%.c=$(OBJSDIR)/%.o)
+endif
+
+DEPS := $(OBJ:.o=.d)
+-include $(DEPS)
+
+PROGOBJ:=$(SRC:%.cc=$(OBJSDIR)/%.o)
+
+######################OUTPUT###########################
+
+EXEC:=$(OUTPUTDIR)/$(PROJECTNAME).elf
+FIRMWARE:=$(OUTPUTDIR)/$(PROJECTNAME)_linked.elf
+LIBEXEC:=$(LIBSDIR)/$(PROJECTNAME).a
+
+######################TARGETS###########################
+all: clean directories stm_stdlib library firmware linked_firmware
+
+linked_firmware: directories library $(FIRMWARE)
+
+firmware: settings directories $(EXEC)
+
+flash:
+	@echo -e "device STM32F103C8\r\nerase\r\nloadbin bin/CoreTex.elf.bin, 0x08000000\r\nr\r\ng\r\nq" > __temp.jlink
+	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
+	$(RM) -f __temp.jlink
+
+reset:
+	@echo -e "device STM32F103C8\r\nr\r\ng\r\nq" > __temp.jlink
+	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
+	$(RM) -f __temp.jlink
+
+erase:
+	@echo -e "device STM32F103C8\r\nerase\r\nq" > __temp.jlink
+	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
+	$(RM) -f __temp.jlink
+
+library: corelib drivers supportlib $(LIBEXEC)
+
+$(OBJSDIR)/%.o: %.cc
+	$(MKDIR_P) `dirname $@`
+	$(GPP) -c $(CXXFLAGS) -MMD -o $@ $<
+	$(SIZE) -d --format=berkeley $@
+
+$(OBJSDIR)/%.o: %.c
+	$(MKDIR_P) `dirname $@`
+	$(GPP) -c $(CXXFLAGS) -MMD -o $@ $<
+	$(SIZE) -d --format=berkeley $@
+
+$(OBJSDIR)/%.o: %.s
+	$(MKDIR_P) `dirname $@`
+	$(ASM) $< -o $@
+	$(SIZE) -d --format=berkeley $@
+
+$(EXEC): $(OBJ)	$(PROGOBJ)
+	$(GPP) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 	$(OCOPY) -O binary $(EXEC) $(EXEC).bin
 	@stat -c "Output size of <%n> is %s" $(EXEC).bin
 	@$(SIZE) --format=berkeley $(EXEC)
+	@-$(READELF) -s $@ | $(AWK) '$$3 != "0"' | $(AWK) '$$4 == "OBJECT"' | $(SORT) -k 3 -n -r | head -n 3 | $(CXXFILT)
 
-NOMAINOBJ := $(filter-out src/main.o,$(OBJ))
 
-$(LIBEXEC): $(NOMAINOBJ) $(CORELIBS)
-	$(AR) rcs $@ $^
+$(FIRMWARE): $(PROGOBJ)
+	$(GPP) -o $@ $^ $(LDFLAGS) $(LIBEXEC)
+	$(OCOPY) -O binary $(FIRMWARE) $(FIRMWARE).bin
+	@stat -c "Output size of <%n> is %s" $(FIRMWARE).bin
+	@$(SIZE) -d --format=berkeley $(FIRMWARE)
+
+$(LIBEXEC): $(MRI)
+	$(AR) M <$^
 	@stat -c "Output size of <%n> is %s" $(LIBEXEC)
 
-subdirs:
-	for dir in $(SUBDIRS); do \
-		$(MAKE) TARGET=$(TARGET) -C $$dir; \
+directories:	$(OUTPUTDIR) $(OBJSDIR) $(LIBSDIR)
+
+$(OUTPUTDIR):
+	$(MKDIR_P) $(OUTPUTDIR)
+
+$(OBJSDIR):
+	$(MKDIR_P) $(OBJSDIR)
+
+$(LIBSDIR):
+	$(MKDIR_P) $(LIBSDIR)
+
+fatfs:
+	$(MAKE) -C $(FATFSDIR);
+
+stm_stdlib:
+	for dir in $(STMSTDLIBDIR); do \
+		$(MAKE) BLD=$(BLD) -C $$dir; \
 	done
 
+corelib:
+	for dir in $(CORELIB); do \
+		$(MAKE) BLD=$(BLD) -C $$dir; \
+	done
+
+supportlib:
+	for dir in $(SUPPORT); do \
+		$(MAKE) BLD=$(BLD) -C $$dir; \
+	done
+
+drivers:
+	for dir in $(DRIVERS); do \
+		$(MAKE) BLD=$(BLD) -C $$dir; \
+	done
 
 clean:
-	rm -f $(EXEC).* $(EXEC)
-	/usr/bin/find . -name "*.o" -type f -print0 | xargs -0 /bin/rm -f
+	$(RM) -f $(STDLIB)
+	$(RM) -rf $(OUTPUTDIR) $(LIBSDIR)	$(OBJSDIR)
 
-	for dir in $(SUBDIRS); do \
-		$(MAKE) TARGET=$(TARGET) -C $$dir clean; \
-	done
+settings:
+	@echo -e "Project settings [$(PROJECTNAME)/$(MCU)]:"
+ifneq ($(__VMMU_POOL_SUZE), 0)
+	@echo -e "Memory pool size is $(__VMMU_POOL_SUZE)b"
+endif
 
-.PHONY: subdirs
-
-
+.PHONY: stm_stdlib
+.PHONY: corelib
+.PHONY: drivers
+.PHONY: support
+.PHONY: flash
+.PHONY: erase
+.PHONY: reset
+.PHONY: settings

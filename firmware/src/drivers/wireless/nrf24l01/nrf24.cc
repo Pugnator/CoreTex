@@ -16,11 +16,10 @@
  *******************************************************************************/
 #include <stdint.h>
 #include <common.hpp>
+#include <log.hpp>
 #include <global.hpp>
 #include <drivers/nrf24.hpp>
 #include <drivers/console.hpp>
-
-using namespace HAL;
 
 namespace NRF24
 {
@@ -105,8 +104,8 @@ void Nrf24::flushrx(void)
     (void) read(FLUSH_RX);
   }
 
-void Nrf24::debug(CONSOLE::Console *conout)
+void Nrf24::debug(void)
   {
-    conout->xprintf("Address: %X\n", W_REGISTER | (REGISTER_MASK & STATUS));
+		uint8_t status = read(STATUS);
   }
 }

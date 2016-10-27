@@ -1,0 +1,14 @@
+create libs/coretex.a
+addlib libs/bc470.a
+addlib libs/console.a
+addlib libs/driver.a
+addlib libs/gps.a
+addlib libs/gsm.a
+addlib libs/libcore.a
+addlib libs/mmc.a
+addlib libs/nrf24.a 
+addlib libs/ov528.a
+addlib libs/xmodem.a
+addlib libs/support.a
+save
+end

@@ -1,11 +1,9 @@
 #include <global.hpp>
 #include <common.hpp>
-#include <hal/vmmu.hpp>
+#include <core/vmmu.hpp>
 #include <drivers/console.hpp>
 #include <drivers/ov528.hpp>
 #include <drivers/xmodem.hpp>
-
-using namespace HAL;
 
 namespace OV528
 {

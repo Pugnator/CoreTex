@@ -1,6 +1,7 @@
 #pragma once
+#include <core/io_macro.hpp>
 #include <stdint.h>
-#include <hal/io_macro.hpp>
+#include <config.hpp>
 
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
@@ -17,13 +18,29 @@ typedef uint32_t word;
 #define CONSOLE_SPEED 9600
 
 extern volatile word tickcounter;
+extern volatile word timerms;
 
 #define WAIT_FOR(ms) tickcounter=ms
 #define STILL_WAIT tickcounter
 
+#define USED __attribute__((used))
+
+#define MAIN_END for(;;)
+
+#define delayus_asm(us) do {\
+	asm volatile (	"MOV R0,%[loops]\n\t"\
+			"1: \n\t"\
+			"SUB R0, #1\n\t"\
+			"CMP R0, #0\n\t"\
+			"BNE 1b \n\t" : : [loops] "r" (us) : "memory"\
+		      );\
+} while(0)
+
+#define delayms_asm(us) do {\
+		delayus_asm(1000);\
+} while(0)
+
 extern volatile word __attribute__((section (".vectorsSection"))) IRQ_VECTOR_TABLE[76];
-
-
 
 /* Interrupt vector table enumerators */
 typedef enum ISR_VECTOR
@@ -107,4 +124,3 @@ typedef enum ISR_VECTOR
   IRQ66_EX,
   IRQ67_EX
 }ISR_VECTOR;
-

@@ -9,3 +9,4 @@ word str10_to_word (const char* str);
 char *num2str(int i);
 char *strclone(const char *msg);
 char *ucs2ascii (const char *ucs2);
+uint32_t xorshift();

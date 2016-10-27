@@ -1,13 +1,10 @@
 #pragma once
+#ifdef __USE_CONSOLE
 #include <global.hpp>
-#include <hal/usart.hpp>
+#include <core/usart.hpp>
 #include <stdarg.h>
 
-using namespace HAL;
 using namespace UART;
-
-namespace CONSOLE
-{
 
 #define	_CR_CRLF 1	/* 1: Convert \n ==> \r\n in the output char */
 
@@ -26,12 +23,13 @@ namespace CONSOLE
   class Console
   {
   public:
-    Console(class Driver _io)
+    Console(class Driver *_io)
   {
       memset(conbuf, 0, sizeof conbuf);
-      io = &_io;
+      io = _io;
       self = this;
       outptr = nullptr;
+      isdone = false;
   }
 
     template<typename T>
@@ -58,19 +56,20 @@ namespace CONSOLE
 
     void cls(void)
     {
-      print("\x1B[2J\x1B[H");
+      print("\x1B[2J\x1B[H"); //clear terminal
+      print("\033[3J"); //PuTTY 0.59+, clears the real scroll back ;)
     }
 
     void cursor(bool state = true)
     {
       if (false == state)
-	{
-	  print("\e[?25l");
-	}
+      	{
+      		print("\e[?25l");
+      	}
       else
-	{
-	  print("\e[?25h");
-	}
+      	{
+      		print("\e[?25h");
+      	}
     }
 
     void foreground(char color = COLOR_WHITE);
@@ -83,7 +82,9 @@ namespace CONSOLE
     void xprintf(const char* fmt, ...);
     void xsprintf(char* buff, const char* fmt, ...);
     void put_dump(const void* buff, word addr, word len, word width);
+    void worker(void);
 
+    bool isdone;
   private:
     void xvprintf (const char*	fmt,va_list arp	);
     void log(char c);
@@ -91,7 +92,7 @@ namespace CONSOLE
     char *outptr;
     char conbuf[24];
     char strbuf[8];
-    Console *self;
+    static class Console *self;
     class Driver *io;
   };
-}
+#endif

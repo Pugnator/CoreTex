@@ -1,6 +1,6 @@
 #pragma once
 #include <global.hpp>
-#include <hal/usart.hpp>
+#include <core/usart.hpp>
 #include <drivers/console.hpp>
 
 /*
@@ -13,9 +13,6 @@
  */
 
 #pragma GCC diagnostic ignored "-Wswitch"
-
-using namespace HAL;
-using namespace CONSOLE;
 
 namespace GPS
 {

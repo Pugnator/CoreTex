@@ -15,13 +15,11 @@
  * 2015
  *******************************************************************************/
 
+#include <core/vmmu.hpp>
 #include <global.hpp>
 #include <drivers/bc470.hpp>
-#include <hal/vmmu.hpp>
 #include <string.h>
 
-namespace HAL
-{
 namespace BC470
 {
 
@@ -83,7 +81,6 @@ bool bc470::wait4reply(word timeout)
       }
     while (STILL_WAIT);
     FREE(buf);
-    conout->xprintf("%s\n", modembuf);
     return ok;
   }
 
@@ -107,5 +104,4 @@ void bc470::bc470isr(void)
       }
   }
 
-}
 }

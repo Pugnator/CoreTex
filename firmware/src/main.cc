@@ -17,47 +17,41 @@
 #include <global.hpp>
 #include <common.hpp>
 #include <log.hpp>
-#include <drivers/storage/mmc/fat32/ff.h>
-#include <hal/adc.hpp>
-#include <hal/spi.hpp>
-#include <hal/usart.hpp>
-#include <hal/vmmu.hpp>
-#include <drivers/gps.hpp>
-#include <drivers/gsm.hpp>
-#include <drivers/mmc.hpp>
-#include <drivers/ov528.hpp>
+#include <core/spi.hpp>
 #include <drivers/console.hpp>
 #include <drivers/nrf24.hpp>
-#include <drivers/bc470.hpp>
-#include <drivers/xmodem.hpp>
+#include <drivers/storage/fatdisk.hpp>
+#include <drivers/storage/ff.hpp>
 
-using namespace HAL;
-using namespace NRF24;
-using namespace ADC;
-using namespace SPI;
-using namespace OV528;
-using namespace MMC;
-using namespace XMODEM;
-using namespace BC470;
-
-void inline infinite_loop(void)
-  {
-    for (;;)
-      ;
-  }
+#ifdef __USE_CONSOLE
+class Console *__dbg_out;
+#endif
 
 int main(void)
-  {
-    Console dbgout(Uart(1, CONSOLE_SPEED));
-    dbgout.cls();
-    dbg_print("Hello world\n");
-    dbgout.print("!!!");
-    //dbgout.xprintf("System started\n");
-    //GPS::Gps g(2, 115200);
-    //MODEM::Modem mdm(3, 19200, &dbgout);
-    //dbgout.xprintf("SIM900 %s\n", mdm.ok ? "ON" : "OFF");
-    //dbgout.xprintf("SIM900 setup: %s\n", mdm.setup() ? "OK" : "FAIL");
-    //dbgout.xprintf("SMS number: %lu\n", mdm.get_sms_amount());
-
-    infinite_loop();
-  }
+{
+	Uart u(1, CONSOLE_SPEED);
+	Console out(&u);
+	out.cls();
+	__dbg_out = &out;
+	LOGPRINT("Core started\r\n");
+	LOGPRINT("FatFs test started\r\n");
+	DISK::FATdisk a(1);
+	DISK::FRESULT r;
+	DISK::FATFS fs;
+	r = a.mount(&fs, "0:", 1);
+	LOGPRINT("f_mount? %s\r\n", a.FRESULT2str(r));
+	//r = f_mkfs("0:", 0, 0);
+	//LOGPRINT("f_mount? %s\r\n", a.FRESULT2str(r));
+	//FIL test;
+	//r = f_open(&test, "test.txt", FA_OPEN_ALWAYS);
+	//LOGPRINT("f_open? %s\r\n", get_fresult(r));
+	//f_close(&test);
+	//LOGPRINT("f_close? %s\r\n", get_fresult(r));
+	MAIN_END;
+	//dbgout.xprintf("System started\n");
+	//GPS::Gps g(2, 115200);
+	//MODEM::Modem mdm(3, 19200, &dbgout);
+	//dbgout.xprintf("SIM900 %s\n", mdm.ok ? "ON" : "OFF");
+	//dbgout.xprintf("SIM900 setup: %s\n", mdm.setup() ? "OK" : "FAIL");
+	//dbgout.xprintf("SMS number: %lu\n", mdm.get_sms_amount());
+}

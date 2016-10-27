@@ -1,12 +1,10 @@
 #pragma once
 
 #include <global.hpp>
-#include <hal/usart.hpp>
+#include <core/usart.hpp>
 #include <drivers/console.hpp>
 
-using namespace HAL;
 using namespace UART;
-using namespace CONSOLE;
 
 #define MODEM_IN_BUFFER_SIZE 512
 #define SMS_MAX_SIZE 140

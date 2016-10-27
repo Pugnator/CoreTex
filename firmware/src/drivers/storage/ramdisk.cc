@@ -1,5 +1,5 @@
-#include <drivers/storage/fatfs/ff.h>
-#include <drivers/storage/fatfs/diskio.h>
+#include <drivers/storage/ff.hpp>
+#include <drivers/storage/diskio.hpp>
 #include <drivers/console.hpp>
 #include <global.hpp>
 #include <common.hpp>

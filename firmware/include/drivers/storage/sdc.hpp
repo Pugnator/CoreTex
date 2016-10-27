@@ -1,7 +1,6 @@
 #pragma once
 
-#include <drivers/storage/fatfs/diskio.h>
-#include <drivers/storage/fatfs/ff.h>
+#include <drivers/storage/ff.hpp>
 #include <core/spi.hpp>
 
 namespace SDC
@@ -104,15 +103,14 @@ public:
 	SDC_Error get_response(uint8_t Response);
 	SDC_Error get_CID(SD_CID* SD_cid);
 	SDC_Error get_CSD(SD_CSD* SD_csd);
+
 	uint8_t get_data_response(void);
-	uint16_t cmd(uint8_t Cmd, uint32_t Arg, uint8_t Crc);
+	uint16_t sdc_cmd(uint8_t Cmd, uint32_t Arg, uint8_t Crc);
 	uint16_t get_status(void);
 	uint32_t get_card_block_size();
 	uint32_t get_card_capacity();
 
 	const char *cmd2str (uint8_t command);
-	const char *DRESULT2str (DRESULT r);
-	const char *FRESULT2str (FRESULT r);
 	bool ok;
 protected:
 	uint32_t card_capacity;

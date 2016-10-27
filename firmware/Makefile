@@ -52,9 +52,6 @@ DRIVERS:=\
 SUPPORT:=\
 	src/support
 
-FATFSDIR:=\
-	src/drivers/storage/fatfs
-
 TESTSDIR:=\
 	src/tests
 
@@ -72,7 +69,6 @@ DRIVERSSRC:=\
 	$(DRIVERS)/positioning/gps/rmc.cc \
 	$(DRIVERS)/positioning/gps/vtg.cc \
 	$(DRIVERS)/storage/mmc/sdc.cc \
-	$(DRIVERS)/storage/mmc/diskio.cc \
 	$(DRIVERS)/storage/ramdisk.cc \
 	$(DRIVERS)/storage/flash.cc \
 	$(DRIVERS)/wireless/bc470/bc470.cc \
@@ -110,7 +106,8 @@ SUPPORTSRC:=\
 	$(SUPPORT)/morse.cc
 
 FATFSSRC:=\
-	$(FATFSDIR)/ff.c
+	$(DRIVERS)/storage/mmc/fatdisk.cc \
+	$(DRIVERS)/storage/mmc/fatfs.cc
 
 TESTSSRC:=\
 	$(TESTSDIR)/core.cc
@@ -195,7 +192,7 @@ OBJ+=$(CORESRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(SUPPORTSRC:%.cc=$(OBJSDIR)/%.o)
 
 ifeq ($(__USE_FATFS),1)
-OBJ+=$(FATFSSRC:%.c=$(OBJSDIR)/%.o)
+OBJ+=$(FATFSSRC:%.cc=$(OBJSDIR)/%.o)
 endif
 
 ifeq ($(__USE_TESTS),1)

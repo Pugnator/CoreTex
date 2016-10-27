@@ -15,9 +15,15 @@
  * 2015
  *******************************************************************************/
 
-#include "ff.h"			/* Declarations of FatFs API */
-#include "diskio.h"		/* Declarations of disk I/O functions */
+#include <drivers/storage/ff.hpp>			/* Declarations of FatFs API */
+
+#include <drivers/storage/fatdisk.hpp>
+
+#include <drivers/storage/diskio.hpp>		/* Declarations of disk I/O functions */
 #include <log.hpp>
+
+namespace DISK
+{
 
 /*--------------------------------------------------------------------------
 
@@ -634,8 +640,8 @@ void clear_lock ( /* Clear lock entries of the volume */
 /* Move/Flush disk access window in the file system object               */
 /*-----------------------------------------------------------------------*/
 #if !_FS_READONLY
-static FRESULT
-sync_window (FATFS* fs /* File system object */
+FRESULT
+FATdisk::sync_window (FATFS* fs /* File system object */
 )
 {
 	DWORD wsect;
@@ -666,7 +672,7 @@ sync_window (FATFS* fs /* File system object */
 }
 #endif
 
-static FRESULT move_window(FATFS* fs, /* File system object */
+FRESULT FATdisk::move_window(FATFS* fs, /* File system object */
 DWORD sector /* Sector number to make appearance in the fs->win[] */
 )
 {
@@ -694,8 +700,8 @@ DWORD sector /* Sector number to make appearance in the fs->win[] */
 /* Synchronize file system and strage device                             */
 /*-----------------------------------------------------------------------*/
 #if !_FS_READONLY
-static FRESULT
-sync_fs ( /* FR_OK: successful, FR_DISK_ERR: failed */
+FRESULT
+FATdisk::sync_fs ( /* FR_OK: successful, FR_DISK_ERR: failed */
 		FATFS* fs /* File system object */
 )
 {
@@ -733,7 +739,7 @@ sync_fs ( /* FR_OK: successful, FR_DISK_ERR: failed */
 /*-----------------------------------------------------------------------*/
 /* Hidden API for hacks and disk tools */
 
-DWORD clust2sect( /* !=0: Sector number, 0: Failed - invalid cluster# */
+DWORD FATdisk::clust2sect( /* !=0: Sector number, 0: Failed - invalid cluster# */
 FATFS* fs, /* File system object */
 DWORD clst /* Cluster# to be converted */
 )
@@ -749,7 +755,7 @@ DWORD clst /* Cluster# to be converted */
 /*-----------------------------------------------------------------------*/
 /* Hidden API for hacks and disk tools */
 
-DWORD get_fat( /* 0xFFFFFFFF:Disk error, 1:Internal error, 2..0x0FFFFFFF:Cluster status */
+DWORD FATdisk::get_fat( /* 0xFFFFFFFF:Disk error, 1:Internal error, 2..0x0FFFFFFF:Cluster status */
 FATFS* fs, /* File system object */
 DWORD clst /* FAT index number (cluster number) to get the value */
 )
@@ -810,7 +816,7 @@ DWORD clst /* FAT index number (cluster number) to get the value */
 
 #if !_FS_READONLY
 FRESULT
-put_fat (FATFS* fs, /* File system object */
+FATdisk::put_fat (FATFS* fs, /* File system object */
 		DWORD clst, /* FAT index number (cluster number) to be changed */
 		DWORD val /* New value to be set to the entry */
 )
@@ -882,8 +888,8 @@ put_fat (FATFS* fs, /* File system object */
 /* FAT handling - Remove a cluster chain                                 */
 /*-----------------------------------------------------------------------*/
 #if !_FS_READONLY
-static FRESULT
-remove_chain (FATFS* fs, /* File system object */
+FRESULT
+FATdisk::remove_chain (FATFS* fs, /* File system object */
 		DWORD clst /* Cluster# to remove a chain from */
 )
 {
@@ -949,8 +955,8 @@ remove_chain (FATFS* fs, /* File system object */
 /* FAT handling - Stretch or Create a cluster chain                      */
 /*-----------------------------------------------------------------------*/
 #if !_FS_READONLY
-static DWORD
-create_chain ( /* 0:No free cluster, 1:Internal error, 0xFFFFFFFF:Disk error, >=2:New cluster# */
+DWORD
+FATdisk::create_chain ( /* 0:No free cluster, 1:Internal error, 0xFFFFFFFF:Disk error, >=2:New cluster# */
 		FATFS* fs, /* File system object */
 		DWORD clst /* Cluster# to stretch. 0 means create a new chain. */
 )
@@ -1023,8 +1029,7 @@ create_chain ( /* 0:No free cluster, 1:Internal error, 0xFFFFFFFF:Disk error, >=
 /*-----------------------------------------------------------------------*/
 
 #if _USE_FASTSEEK
-static
-DWORD clmt_clust ( /* <2:Error, >=2:Cluster number */
+DWORD FATdisk::clmt_clust ( /* <2:Error, >=2:Cluster number */
 		FIL* fp, /* Pointer to the file object */
 		DWORD ofs /* File offset to be converted to cluster# */
 )
@@ -1048,7 +1053,7 @@ DWORD clmt_clust ( /* <2:Error, >=2:Cluster number */
 /* Directory handling - Set directory index                              */
 /*-----------------------------------------------------------------------*/
 
-static FRESULT dir_sdi(DIR* dp, /* Pointer to directory object */
+FRESULT FATdisk::dir_sdi(DIR* dp, /* Pointer to directory object */
 UINT idx /* Index of directory table */
 )
 {
@@ -1095,7 +1100,7 @@ UINT idx /* Index of directory table */
 /* Directory handling - Move directory table index next                  */
 /*-----------------------------------------------------------------------*/
 
-static FRESULT dir_next( /* FR_OK:Succeeded, FR_NO_FILE:End of table, FR_DENIED:Could not stretch */
+FRESULT FATdisk::dir_next( /* FR_OK:Succeeded, FR_NO_FILE:End of table, FR_DENIED:Could not stretch */
 DIR* dp, /* Pointer to the directory object */
 int stretch /* 0: Do not stretch table, 1: Stretch table if needed */
 )
@@ -1176,8 +1181,8 @@ int stretch /* 0: Do not stretch table, 1: Stretch table if needed */
 /*-----------------------------------------------------------------------*/
 
 #if !_FS_READONLY
-static FRESULT
-dir_alloc (DIR* dp, /* Pointer to the directory object */
+FRESULT
+FATdisk::dir_alloc (DIR* dp, /* Pointer to the directory object */
 		UINT nent /* Number of contiguous entries to allocate (1-21) */
 )
 {
@@ -1216,7 +1221,7 @@ dir_alloc (DIR* dp, /* Pointer to the directory object */
 /* Directory handling - Load/Store start cluster number                  */
 /*-----------------------------------------------------------------------*/
 
-static DWORD ld_clust(FATFS* fs, /* Pointer to the fs object */
+DWORD FATdisk::ld_clust(FATFS* fs, /* Pointer to the fs object */
 BYTE* dir /* Pointer to the directory entry */
 )
 {
@@ -1230,9 +1235,8 @@ BYTE* dir /* Pointer to the directory entry */
 }
 
 #if !_FS_READONLY
-static
 void
-st_clust (BYTE* dir, /* Pointer to the directory entry */
+FATdisk::st_clust (BYTE* dir, /* Pointer to the directory entry */
 		DWORD cl /* Value to be set */
 )
 {
@@ -1431,7 +1435,7 @@ BYTE sum_sfn (
 /* Directory handling - Find an object in the directory                  */
 /*-----------------------------------------------------------------------*/
 
-static FRESULT dir_find(DIR* dp /* Pointer to the directory object linked to the file name */
+FRESULT FATdisk::dir_find(DIR* dp /* Pointer to the directory object linked to the file name */
 )
 {
 	FRESULT res;
@@ -1502,7 +1506,7 @@ static FRESULT dir_find(DIR* dp /* Pointer to the directory object linked to the
 /* Read an object from the directory                                     */
 /*-----------------------------------------------------------------------*/
 #if _FS_MINIMIZE <= 1 || _USE_LABEL || _FS_RPATH >= 2
-static FRESULT dir_read(DIR* dp, /* Pointer to the directory object */
+FRESULT FATdisk::dir_read(DIR* dp, /* Pointer to the directory object */
 int vol /* Filtered by 0:file/directory or 1:volume label */
 )
 {
@@ -1572,8 +1576,8 @@ int vol /* Filtered by 0:file/directory or 1:volume label */
 /* Register an object to the directory                                   */
 /*-----------------------------------------------------------------------*/
 #if !_FS_READONLY
-static FRESULT
-dir_register ( /* FR_OK:Successful, FR_DENIED:No free entry or too many SFN collision, FR_DISK_ERR:Disk error */
+FRESULT
+FATdisk::dir_register ( /* FR_OK:Successful, FR_DENIED:No free entry or too many SFN collision, FR_DISK_ERR:Disk error */
 		DIR* dp /* Target directory with object name to be created */
 )
 {
@@ -1704,8 +1708,7 @@ FRESULT dir_remove ( /* FR_OK: Successful, FR_DISK_ERR: A disk error */
 /* Get file information from directory entry                             */
 /*-----------------------------------------------------------------------*/
 #if _FS_MINIMIZE <= 1 || _FS_RPATH >= 2
-static
-void get_fileinfo( /* No return code */
+void FATdisk::get_fileinfo( /* No return code */
 DIR* dp, /* Pointer to the directory object */
 FILINFO* fno /* Pointer to the file information to be filled */
 )
@@ -1852,7 +1855,7 @@ int pattern_matching ( /* Return value: 0:mismatched, 1:matched */
 /* Pick a segment and create the object name in directory form           */
 /*-----------------------------------------------------------------------*/
 
-static FRESULT create_name(DIR* dp, /* Pointer to the directory object */
+FRESULT FATdisk::create_name(DIR* dp, /* Pointer to the directory object */
 const TCHAR** path /* Pointer to pointer to the segment in the path string */
 )
 {
@@ -2101,7 +2104,7 @@ const TCHAR** path /* Pointer to pointer to the segment in the path string */
 /* Follow a file path                                                    */
 /*-----------------------------------------------------------------------*/
 
-static FRESULT follow_path( /* FR_OK(0): successful, !=0: error code */
+FRESULT FATdisk::follow_path( /* FR_OK(0): successful, !=0: error code */
 DIR* dp, /* Directory object to return last directory and found object */
 const TCHAR* path /* Full-path string to find a file or directory */
 )
@@ -2177,8 +2180,7 @@ const TCHAR* path /* Full-path string to find a file or directory */
 /* Get logical drive number from path name                               */
 /*-----------------------------------------------------------------------*/
 
-static
-int get_ldnumber( /* Returns logical drive number (-1:invalid drive) */
+int FATdisk::get_ldnumber( /* Returns logical drive number (-1:invalid drive) */
 const TCHAR** path /* Pointer to pointer to the path name */
 )
 {
@@ -2245,7 +2247,7 @@ const TCHAR** path /* Pointer to pointer to the path name */
 /* Load a sector and check if it is an FAT boot sector                   */
 /*-----------------------------------------------------------------------*/
 
-static BYTE check_fs( /* 0:FAT boor sector, 1:Valid boor sector but not FAT, 2:Not a boot sector, 3:Disk error */
+BYTE FATdisk::check_fs( /* 0:FAT boor sector, 1:Valid boor sector but not FAT, 2:Not a boot sector, 3:Disk error */
 FATFS* fs, /* File system object */
 DWORD sect /* Sector# (lba) to check if it is an FAT boot record or not */
 )
@@ -2270,7 +2272,7 @@ DWORD sect /* Sector# (lba) to check if it is an FAT boot record or not */
 /* Find logical drive and check if the volume is mounted                 */
 /*-----------------------------------------------------------------------*/
 
-static FRESULT find_volume( /* FR_OK(0): successful, !=0: any error occurred */
+FRESULT FATdisk::find_volume( /* FR_OK(0): successful, !=0: any error occurred */
 FATFS** rfs, /* Pointer to pointer to the found file system object */
 const TCHAR** path, /* Pointer to pointer to the path name (drive number) */
 BYTE wmode /* !=0: Check write protection for write access */
@@ -2455,7 +2457,7 @@ BYTE wmode /* !=0: Check write protection for write access */
 /* Check if the file/directory object is valid or not                    */
 /*-----------------------------------------------------------------------*/
 
-static FRESULT validate( /* FR_OK(0): The object is valid, !=0: Invalid */
+FRESULT FATdisk::validate( /* FR_OK(0): The object is valid, !=0: Invalid */
 void* obj /* Pointer to the object FIL/DIR to check validity */
 )
 {
@@ -2482,7 +2484,7 @@ void* obj /* Pointer to the object FIL/DIR to check validity */
 /* Mount/Unmount a Logical Drive                                         */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_mount(FATFS* fs, /* Pointer to the file system object (NULL:unmount)*/
+FRESULT FATdisk::f_mount(FATFS* fs, /* Pointer to the file system object (NULL:unmount)*/
 const TCHAR* path, /* Logical drive number to be mounted/unmounted */
 BYTE opt /* 0:Do not mount (delayed mount), 1:Mount immediately */
 )
@@ -2528,7 +2530,7 @@ BYTE opt /* 0:Do not mount (delayed mount), 1:Mount immediately */
 /* Open or Create a File                                                 */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_open(FIL* fp, /* Pointer to the blank file object */
+FRESULT FATdisk::f_open(FIL* fp, /* Pointer to the blank file object */
 const TCHAR* path, /* Pointer to the file name */
 BYTE mode /* Access mode and file open mode flags */
 )
@@ -2683,7 +2685,7 @@ BYTE mode /* Access mode and file open mode flags */
 /* Read File                                                             */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_read(FIL* fp, /* Pointer to the file object */
+FRESULT FATdisk::f_read(FIL* fp, /* Pointer to the file object */
 void* buff, /* Pointer to data buffer */
 UINT btr, /* Number of bytes to read */
 UINT* br /* Pointer to number of bytes read */
@@ -2796,7 +2798,7 @@ UINT* br /* Pointer to number of bytes read */
 /*-----------------------------------------------------------------------*/
 
 FRESULT
-f_write (FIL* fp, /* Pointer to the file object */
+FATdisk::f_write (FIL* fp, /* Pointer to the file object */
 		const void *buff, /* Pointer to the data to be written */
 		UINT btw, /* Number of bytes to write */
 		UINT* bw /* Pointer to number of bytes written */
@@ -2938,7 +2940,7 @@ f_write (FIL* fp, /* Pointer to the file object */
 /*-----------------------------------------------------------------------*/
 
 FRESULT
-f_sync (FIL* fp /* Pointer to the file object */
+FATdisk::f_sync (FIL* fp /* Pointer to the file object */
 )
 {
 	FRESULT res;
@@ -2986,7 +2988,7 @@ f_sync (FIL* fp /* Pointer to the file object */
 /* Close File                                                            */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_close(FIL *fp /* Pointer to the file object to be closed */
+FRESULT FATdisk::f_close(FIL *fp /* Pointer to the file object to be closed */
 )
 {
 	FRESULT res;
@@ -3160,7 +3162,7 @@ FRESULT f_getcwd (
 /* Seek File R/W Pointer                                                 */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_lseek(FIL* fp, /* Pointer to the file object */
+FRESULT FATdisk::f_lseek(FIL* fp, /* Pointer to the file object */
 DWORD ofs /* File pointer from top of file */
 )
 {
@@ -3347,7 +3349,7 @@ DWORD ofs /* File pointer from top of file */
 /* Create a Directory Object                                             */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_opendir(DIR* dp, /* Pointer to directory object to create */
+FRESULT FATdisk::f_opendir(DIR* dp, /* Pointer to directory object to create */
 const TCHAR* path /* Pointer to the directory path */
 )
 {
@@ -3410,7 +3412,7 @@ const TCHAR* path /* Pointer to the directory path */
 /* Close Directory                                                       */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_closedir(DIR *dp /* Pointer to the directory object to be closed */
+FRESULT FATdisk::f_closedir(DIR *dp /* Pointer to the directory object to be closed */
 )
 {
 	FRESULT res;
@@ -3438,7 +3440,7 @@ FRESULT f_closedir(DIR *dp /* Pointer to the directory object to be closed */
 /* Read Directory Entries in Sequence                                    */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_readdir(DIR* dp, /* Pointer to the open directory object */
+FRESULT FATdisk::f_readdir(DIR* dp, /* Pointer to the open directory object */
 FILINFO* fno /* Pointer to file information to return */
 )
 {
@@ -4279,7 +4281,7 @@ FRESULT f_forward (
 #define N_ROOTDIR	512		/* Number of root directory entries for FAT12/16 */
 #define N_FATS		1		/* Number of FATs (1 or 2) */
 
-FRESULT f_mkfs (
+FRESULT FATdisk::f_mkfs (
 		const TCHAR* path, /* Logical drive number */
 		BYTE sfd, /* Partitioning rule 0:FDISK, 1:SFD */
 		UINT au /* Size of allocation unit in unit of byte or sector */
@@ -4939,3 +4941,4 @@ int f_printf (
 
 #endif /* !_FS_READONLY */
 #endif /* _USE_STRFUNC */
+}

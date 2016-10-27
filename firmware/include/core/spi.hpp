@@ -26,6 +26,7 @@ public:
   void go16bit(void) ;
   void disable(void);
   void enable(void);
+  void assert(void);
 protected:
   void init(void);
   int channel;

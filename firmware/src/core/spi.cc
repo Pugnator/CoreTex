@@ -233,6 +233,15 @@ void Spi::enable(void)
 	Reg->CR1 |= SPI_CR1_SPE;
 }
 
+void Spi::assert(void)
+{
+	DBGPRINT("Spi::assert\r\n");
+	PIN_HI(SPI1NSS_PIN);
+	delay_ms(100);
+	PIN_LOW(SPI1NSS_PIN);
+	PIN_HI(SPI1NSS_PIN);
+}
+
 void Spi::lowspeed(void)
 {
 	DBGPRINT("Spi::lowspeed\r\n");

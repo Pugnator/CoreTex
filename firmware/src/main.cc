@@ -18,10 +18,10 @@
 #include <common.hpp>
 #include <log.hpp>
 #include <core/spi.hpp>
-#include <drivers/storage/diskio.hpp>
 #include <drivers/console.hpp>
 #include <drivers/nrf24.hpp>
-#include <drivers/storage/diskio.hpp>
+#include <drivers/storage/fatdisk.hpp>
+#include <drivers/storage/ff.hpp>
 
 #ifdef __USE_CONSOLE
 class Console *__dbg_out;
@@ -35,10 +35,10 @@ int main(void)
 	__dbg_out = &out;
 	LOGPRINT("Core started\r\n");
 	LOGPRINT("FatFs test started\r\n");
-	DISK::DiskIO a(1);
-	FRESULT r;
-	FATFS fs;
-	r = f_mount(&fs, "0:", 1);
+	DISK::FATdisk a(1);
+	DISK::FRESULT r;
+	DISK::FATFS fs;
+	r = a.f_mount(&fs, "0:", 1);
 	LOGPRINT("f_mount? %s\r\n", a.FRESULT2str(r));
 	//r = f_mkfs("0:", 0, 0);
 	//LOGPRINT("f_mount? %s\r\n", a.FRESULT2str(r));

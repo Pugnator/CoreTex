@@ -18,15 +18,7 @@
 /* Integer type definitions for FatFs module */
 /*-------------------------------------------*/
 
-#ifndef _FF_INTEGER
-#define _FF_INTEGER
-
-#ifdef _WIN32	/* FatFs development platform */
-
-#include <windows.h>
-#include <tchar.h>
-
-#else			/* Embedded platform */
+#pragma once
 
 /* This type MUST be 8 bit */
 typedef unsigned char BYTE;
@@ -43,7 +35,3 @@ typedef unsigned int UINT;
 /* These types MUST be 32 bit */
 typedef long LONG;
 typedef unsigned long DWORD;
-
-#endif
-
-#endif

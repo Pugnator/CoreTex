@@ -38,7 +38,7 @@ int main(void)
 	DISK::FATdisk a(1);
 	DISK::FRESULT r;
 	DISK::FATFS fs;
-	r = a.f_mount(&fs, "0:", 1);
+	r = a.mount(&fs, "0:", 1);
 	LOGPRINT("f_mount? %s\r\n", a.FRESULT2str(r));
 	//r = f_mkfs("0:", 0, 0);
 	//LOGPRINT("f_mount? %s\r\n", a.FRESULT2str(r));

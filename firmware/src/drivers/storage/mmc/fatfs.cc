@@ -15,12 +15,12 @@
  * 2015
  *******************************************************************************/
 
-#include <drivers/storage/ff.hpp>			/* Declarations of FatFs API */
-
-#include <drivers/storage/fatdisk.hpp>
-
 #include <drivers/storage/diskio.hpp>		/* Declarations of disk I/O functions */
-#include <log.hpp>
+#include <drivers/storage/fatdisk.hpp>
+#include <drivers/storage/ff.hpp>			/* Declarations of FatFs API */
+#include <drivers/storage/ffconf.hpp>
+#include <drivers/storage/integer.hpp>
+#include <cstdarg>
 
 namespace DISK
 {
@@ -2484,7 +2484,7 @@ void* obj /* Pointer to the object FIL/DIR to check validity */
 /* Mount/Unmount a Logical Drive                                         */
 /*-----------------------------------------------------------------------*/
 
-FRESULT FATdisk::f_mount(FATFS* fs, /* Pointer to the file system object (NULL:unmount)*/
+FRESULT FATdisk::mount(FATFS* fs, /* Pointer to the file system object (NULL:unmount)*/
 const TCHAR* path, /* Logical drive number to be mounted/unmounted */
 BYTE opt /* 0:Do not mount (delayed mount), 1:Mount immediately */
 )
@@ -2530,7 +2530,7 @@ BYTE opt /* 0:Do not mount (delayed mount), 1:Mount immediately */
 /* Open or Create a File                                                 */
 /*-----------------------------------------------------------------------*/
 
-FRESULT FATdisk::f_open(FIL* fp, /* Pointer to the blank file object */
+FRESULT FATdisk::open(FIL* fp, /* Pointer to the blank file object */
 const TCHAR* path, /* Pointer to the file name */
 BYTE mode /* Access mode and file open mode flags */
 )
@@ -2940,7 +2940,7 @@ FATdisk::f_write (FIL* fp, /* Pointer to the file object */
 /*-----------------------------------------------------------------------*/
 
 FRESULT
-FATdisk::f_sync (FIL* fp /* Pointer to the file object */
+FATdisk::sync (FIL* fp /* Pointer to the file object */
 )
 {
 	FRESULT res;
@@ -2988,13 +2988,13 @@ FATdisk::f_sync (FIL* fp /* Pointer to the file object */
 /* Close File                                                            */
 /*-----------------------------------------------------------------------*/
 
-FRESULT FATdisk::f_close(FIL *fp /* Pointer to the file object to be closed */
+FRESULT FATdisk::close(FIL *fp /* Pointer to the file object to be closed */
 )
 {
 	FRESULT res;
 
 #if !_FS_READONLY
-	res = f_sync (fp); /* Flush cached data */
+	res = sync (fp); /* Flush cached data */
 	if (res == FR_OK)
 #endif
 	{
@@ -3162,7 +3162,7 @@ FRESULT f_getcwd (
 /* Seek File R/W Pointer                                                 */
 /*-----------------------------------------------------------------------*/
 
-FRESULT FATdisk::f_lseek(FIL* fp, /* Pointer to the file object */
+FRESULT FATdisk::lseek(FIL* fp, /* Pointer to the file object */
 DWORD ofs /* File pointer from top of file */
 )
 {
@@ -3412,7 +3412,7 @@ const TCHAR* path /* Pointer to the directory path */
 /* Close Directory                                                       */
 /*-----------------------------------------------------------------------*/
 
-FRESULT FATdisk::f_closedir(DIR *dp /* Pointer to the directory object to be closed */
+FRESULT FATdisk::closedir(DIR *dp /* Pointer to the directory object to be closed */
 )
 {
 	FRESULT res;
@@ -4281,7 +4281,7 @@ FRESULT f_forward (
 #define N_ROOTDIR	512		/* Number of root directory entries for FAT12/16 */
 #define N_FATS		1		/* Number of FATs (1 or 2) */
 
-FRESULT FATdisk::f_mkfs (
+FRESULT FATdisk::mkfs (
 		const TCHAR* path, /* Logical drive number */
 		BYTE sfd, /* Partitioning rule 0:FDISK, 1:SFD */
 		UINT au /* Size of allocation unit in unit of byte or sector */

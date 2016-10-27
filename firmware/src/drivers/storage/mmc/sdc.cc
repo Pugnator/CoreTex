@@ -100,8 +100,6 @@ const char *Sdc::cmd2str (uint8_t command)
 
 uint16_t Sdc::sdc_cmd(uint8_t cmd, uint32_t arg, uint8_t crc = 0)
 {
-	assert();
-	uint32_t i = 0x00;
 	switch (cmd)
 	{
 	case CMD0:
@@ -110,6 +108,11 @@ uint16_t Sdc::sdc_cmd(uint8_t cmd, uint32_t arg, uint8_t crc = 0)
 	case CMD8:
 		crc = 0x87;
 		break;
+	}
+
+	if(CMD12 != cmd)
+	{
+		assert();
 	}
 
 	if(CMD0 != cmd)
@@ -131,9 +134,14 @@ uint16_t Sdc::sdc_cmd(uint8_t cmd, uint32_t arg, uint8_t crc = 0)
 
 	uint16_t res = 0;
 
-	for (i = 0; i < 6; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		res = read(Frame[i]); /*!< Send the Cmd bytes */
+	}
+
+	if (CMD12 == cmd)
+	{
+		read(0xFF);
 	}
 	return res;
 }
@@ -183,12 +191,15 @@ uint32_t Sdc::get_card_block_size()
 SDC_Error Sdc::get_response(uint8_t Response)
 {
 	ok = false;
-	uint32_t Count = 0xFFF;
+	uint32_t Count = 10;
 	/*!< Check if response is got or a timeout is happen */
-	while ((read() != Response) && Count)
+	uint16_t d = 0;
+	do
 	{
-		Count--;
-	}
+		d = read();
+		LOGPRINT("R: 0x%X\r\n", d);
+	}while (d != Response && --Count);
+
 	if (Count == 0)
 	{
 		/*!< After time out */
@@ -221,7 +232,8 @@ SDC_Error Sdc::initialize(void)
 		/*!< No Idle State Response: return response failue */
 		return SD_RESPONSE_FAILURE;
 	}
-	/*----------Activates the card initialization process-----------*/
+
+
 	do
 	{
 		read();

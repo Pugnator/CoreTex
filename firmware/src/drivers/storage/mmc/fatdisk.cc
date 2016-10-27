@@ -1,12 +1,8 @@
-#include <core/spi.hpp>
-#include <global.hpp>
-#include <common.hpp>
-#include <log.hpp>
-#include <drivers/storage/ff.hpp>
-#include <drivers/storage/diskio.hpp>
-#include <drivers/console.hpp>
 #include <drivers/storage/fatdisk.hpp>
-#include <drivers/storage/sdc.hpp>
+#include <drivers/storage/ffconf.hpp>
+#include <drivers/storage/integer.hpp>
+#include <log.hpp>
+#include <sys/_stdint.h>
 
 using namespace SDC;
 

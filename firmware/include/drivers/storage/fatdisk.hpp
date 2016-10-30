@@ -83,8 +83,8 @@ protected:
 	FRESULT validate(void* obj );
 
 public:
-	const char *DRESULT2str (DRESULT r);
-	const char *FRESULT2str (FRESULT r);
+	const char *dresult_to_str (DRESULT r);
+	const char *fresult_to_str (FRESULT r);
 
 protected:
 	DSTATUS SDCstat;

@@ -38,8 +38,10 @@ int main(void)
 	DISK::FATdisk a(1);
 	DISK::FRESULT r;
 	DISK::FATFS fs;
-	r = a.mount(&fs, "0:", 1);
-	LOGPRINT("f_mount? %s\r\n", a.FRESULT2str(r));
+	a.initialize();
+	//r = a.mount(&fs, "0:", 1);
+	//LOGPRINT("f_mount? %s\r\n", a.fresult_to_str(r));
+	LOGPRINT("Status: 0x%x\r\n", a.get_status());
 	//r = f_mkfs("0:", 0, 0);
 	//LOGPRINT("f_mount? %s\r\n", a.FRESULT2str(r));
 	//FIL test;

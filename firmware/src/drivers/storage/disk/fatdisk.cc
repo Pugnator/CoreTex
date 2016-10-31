@@ -135,7 +135,7 @@ namespace DISK
 	}
 
 	const char *
-	FATdisk::dresult_to_str (DRESULT r)
+	FATdisk::result_to_str (DRESULT r)
 	{
 		switch(r)
 		{
@@ -155,7 +155,7 @@ namespace DISK
 	}
 
 	const char *
-	FATdisk::fresult_to_str (FRESULT r)
+	FATdisk::result_to_str (FRESULT r)
 	{
 		switch (r)
 		{

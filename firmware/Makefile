@@ -2,6 +2,7 @@
 DESCRIPTION:=mcu.ini
 
 ##########################
+CPU:=STM32F103C8
 MCU:=$(shell sed -n '/^family=/ {s///p;q;}' $(DESCRIPTION))
 PROJECTNAME:=$(shell sed -n '/^name=/ {s///p;q;}' $(DESCRIPTION))
 GCCPRFX:=$(shell sed -n '/^arch=/ {s///p;q;}' $(DESCRIPTION))
@@ -97,6 +98,12 @@ CORESRC:=\
 
 STARTUP:=\
 	$(CORELIB)/startup.s
+	
+ifeq ($(MCU), STM32F10X_MD)
+	STARTUP:=$(CORELIB)/STM32F10X_MD.s
+else
+	STARTUP:=$(CORELIB)/STM32F10X_HD.s
+endif
 
 SUPPORTSRC:=\
 	$(SUPPORT)/common.cc \
@@ -149,12 +156,6 @@ ifneq ($(__VMMU_POOL_SUZE), 0)
 	CXXFLAGS+=-D__VMMU_POOL_SUZE=$(__VMMU_POOL_SUZE)
 endif
 
-ifneq ($(__USE_CONSOLE), 0)
-	CXXFLAGS+=-D__USE_CONSOLE=1
-else
-	CXXFLAGS+=-D__USE_CONSOLE=0
-endif
-
 CXXFLAGS+=\
 	--std=gnu++14 -Wall \
 	-Iinclude -Isrc \
@@ -172,13 +173,24 @@ CXXFLAGS+=\
 	-ffunction-sections \
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 
+ifeq ($(__USE_CONSOLE), 0)
+	CXXFLAGS+=-D__USE_CONSOLE=1
+else
+	CXXFLAGS+=-D__USE_CONSOLE=0
+endif
+
+ifeq ($(MCU), STM32F10X_MD)
+	LDFLAGS+=-TSTM32F10X_MD.ld
+else
+	LDFLAGS+=-TSTM32F10X_HD.ld
+endif
+
 #-Wl,--wrap,__aeabi_unwind_cpp_pr0
 LDFLAGS+=\
 	-flto \
 	-fno-exceptions \
 	-fdata-sections \
 	-ffunction-sections \
-	-Tstm32_link.ld \
 	-lm	-Wl,--gc-sections \
 	-Wl,--cref \
 	-Wl,-Map,$(EXEC).map
@@ -227,12 +239,12 @@ flash:
 	$(RM) -f __temp.jlink
 
 reset:
-	@echo -e "device STM32F103C8\r\nr\r\ng\r\nq" > __temp.jlink
+	@echo -e "device $(CPU)\r\nr\r\ng\r\nq" > __temp.jlink
 	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
 	$(RM) -f __temp.jlink
 
 erase:
-	@echo -e "device STM32F103C8\r\nerase\r\nq" > __temp.jlink
+	@echo -e "device $(CPU)\r\nerase\r\nq" > __temp.jlink
 	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
 	$(RM) -f __temp.jlink
 

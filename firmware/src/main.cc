@@ -29,6 +29,7 @@ class Console *__dbg_out;
 
 int main(void)
 {
+	BLINK;
 	Uart u(1, CONSOLE_SPEED);
 	Console out(&u);
 	out.cls();

@@ -1,12 +1,13 @@
 #pragma once
 #include <drivers/console.hpp>
 #include <config.hpp>
+#include <SEGGER_RTT.h>
 
 #ifdef __USE_CONSOLE
 extern class Console *__dbg_out;
 #endif
 
-void dbg_print(const char *msg);
+void swo_print(const char *msg);
 
 #if __DEBUG
 #define DBGPRINT(format, ...) do{__dbg_out->xprintf(format, ##__VA_ARGS__);}while(0)
@@ -16,4 +17,8 @@ void dbg_print(const char *msg);
 
 #define LOGPRINT(format, ...) do{__dbg_out->xprintf(format, ##__VA_ARGS__);}while(0)
 
-#define LOGDUMP(buf, size) do{__dbg_out->put_dump(buf, 0, size, 1);}while(0)
+
+#define RTTPRINT(string) SEGGER_RTT_WriteString(0, string)
+
+#define RTTPRINTF(format, ...) SEGGER_RTT_printf(0, ##__VA_ARGS__)
+

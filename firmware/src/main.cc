@@ -34,8 +34,8 @@ int main(void)
 	Console out(&u);
 	out.cls();
 	__dbg_out = &out;
-	LOGPRINT("Core started\r\n");
-	LOGPRINT("FatFs test started\r\n");
+	RTTPRINT("\r\nCore started\r\n");
+	RTTPRINT("FatFs test started\r\n");
 	DISK::FATdisk a(1);
 	DISK::FRESULT r;
 	DISK::FATFS fs;
@@ -46,7 +46,7 @@ int main(void)
 	//a.read_block(buf, 0, 1);
 	//__dbg_out->put_dump(buf,0,512,1);
 	r = a.mount(&fs, "0:", 1);
-	LOGPRINT("f_mount? %s\r\n", a.result_to_str(r));
+	RTTPRINTF("f_mount? %s\r\n", a.result_to_str(r));
 	//LOGPRINT("Status: 0x%x\r\n", a.get_status());
 	//r = f_mkfs("0:", 0, 0);
 	//LOGPRINT("f_mount? %s\r\n", a.FRESULT2str(r));

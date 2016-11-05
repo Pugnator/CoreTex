@@ -8,15 +8,12 @@
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 				<configuration artifactName="${ProjName}" buildProperties="" description="" errorParsers="org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GCCErrorParser" id="ilg.gnuarmeclipse.managedbuild.cross.toolchain.base.1612919709.634092146" name="Debug" parent="org.eclipse.cdt.build.core.emptycfg">
 					<folderInfo id="ilg.gnuarmeclipse.managedbuild.cross.toolchain.base.1612919709.634092146." name="/" resourcePath="">
-						<toolChain id="ilg.gnuarmeclipse.managedbuild.cross.toolchain.base.258457133" name="Cross ARM GCC" superClass="ilg.gnuarmeclipse.managedbuild.cross.toolchain.base">
+						<toolChain id="ilg.gnuarmeclipse.managedbuild.cross.toolchain.base.258457133" name="Cross ARM GCC">
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.architecture.2626255" name="Architecture" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.architecture"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.prefix.1785681558" name="Prefix" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.prefix" value="arm-none-eabi-" valueType="string"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.suffix.896157968" name="Suffix" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.suffix"/>
@@ -87,74 +84,8 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.prof.921859061" name="Generate prof information (-p)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.prof"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.gprof.227061158" name="Generate gprof information (-pg)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.gprof"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.other.1841601293" name="Other debugging flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.other"/>
-							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform.1726451524" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
-							<builder command="make" id="ilg.gnuarmeclipse.managedbuild.cross.builder.39887793" incrementalBuildTarget="firmware" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder"/>
-							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.1607739694" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler">
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths.439015074" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/include/hal}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\lib\gcc\arm-none-eabi\4.9.3\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/cmsis/cm3/CoreSupport}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/CMSIS/CM3/CoreSupport}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/CMSIS/CM3/DeviceSupport}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/include/core}&quot;"/>
-								</option>
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor.1757356332" name="Use preprocessor" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor" value="true" valueType="boolean"/>
-								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.1241238345" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
-							</tool>
-							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.765560812" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler">
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.1741676034" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\lib\gcc\arm-none-eabi\4.9.3\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/CMSIS/CM3/CoreSupport}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/CMSIS/CM3/DeviceSupport}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/include/core}&quot;"/>
-								</option>
-								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.154382069" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
-							</tool>
-							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.1817411794" name="Cross ARM C++ Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler">
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.include.paths.877036492" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreText/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreText/include/hal}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreText/external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Dev\armnoeabi\lib\gcc\arm-none-eabi\4.9.3\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/cmsis/cm3/CoreSupport}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/CMSIS/CM3/CoreSupport}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/CMSIS/CM3/DeviceSupport}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/external/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CoreTex/include/core}&quot;"/>
-								</option>
-								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.1065101752" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
-							</tool>
-							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.1917048508" name="Cross ARM C Linker" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker">
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.gcsections.1202458985" name="Remove unused sections (-Xlinker --gc-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.gcsections" value="true" valueType="boolean"/>
-							</tool>
-							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.linker.280655885" name="Cross ARM C++ Linker" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.linker">
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.linker.gcsections.104729286" name="Remove unused sections (-Xlinker --gc-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.linker.gcsections" value="true" valueType="boolean"/>
-								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.linker.input.661809874" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.linker.input">
-									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
-									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
-								</inputType>
-							</tool>
-							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.archiver.160049379" name="Cross ARM GNU Archiver" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.archiver"/>
-							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.createflash.452854713" name="Cross ARM GNU Create Flash Image" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.createflash"/>
-							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.createlisting.1135674449" name="Cross ARM GNU Create Listing" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.createlisting">
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.createlisting.source.1379732794" name="Display source (--source|-S)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.createlisting.source" value="true" valueType="boolean"/>
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.createlisting.allheaders.130056024" name="Display all headers (--all-headers|-x)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.createlisting.allheaders" value="true" valueType="boolean"/>
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.createlisting.demangle.1919271169" name="Demangle names (--demangle|-C)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.createlisting.demangle" value="true" valueType="boolean"/>
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.createlisting.linenumbers.581159627" name="Display line numbers (--line-numbers|-l)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.createlisting.linenumbers" value="true" valueType="boolean"/>
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.createlisting.wide.1819480836" name="Wide lines (--wide|-w)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.createlisting.wide" value="true" valueType="boolean"/>
-							</tool>
-							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.95677483" name="Cross ARM GNU Print Size" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize">
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.format.1251598848" name="Size format" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.format"/>
-							</tool>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform.1726451524" isAbstract="false" osList="all"/>
+							<builder arguments="-j" cleanBuildTarget="clean" command="make" id="ilg.gnuarmeclipse.managedbuild.cross.builder.39887793" incrementalBuildTarget="firmware" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>

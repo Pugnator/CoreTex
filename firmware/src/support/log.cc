@@ -15,8 +15,9 @@
  * 2015
  *******************************************************************************/
 
+
 #ifdef DEBUG
-void dbg_print(const char *msg)
+void swo_print(const char *msg)
 {
  // Manual semi-hosting, because the GCC ARM Embedded's semihosting wasn't working.
  for (; *msg; ++msg)
@@ -27,8 +28,10 @@ void dbg_print(const char *msg)
  }
 }
 #else
-void dbg_print(const char *msg)
+void swo_print(const char *msg)
 {
   //TODO: Add something here
 }
 #endif
+
+

@@ -1,0 +1,1689 @@
+Archive member included to satisfy reference by file (symbol)
+
+c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libstdc++.a(del_ops.o)
+                              obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin) (operator delete(void*, unsigned int))
+c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-exit.o)
+                              c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o (exit)
+c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-impure.o)
+                              c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-exit.o) (_global_impure_ptr)
+c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-init.o)
+                              c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o (__libc_init_array)
+c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+                              c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-exit.o) (__call_exitprocs)
+c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-atexit.o)
+                              c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o) (atexit)
+c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-fini.o)
+                              c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o) (__libc_fini_array)
+c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__atexit.o)
+                              c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-atexit.o) (__register_exitproc)
+
+Discarded input sections
+
+ .text          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crti.o
+ .data          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crti.o
+ .bss           0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crti.o
+ .data          0x00000000        0x4 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+ .text          0x00000000       0x74 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+ .data          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+ .bss           0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+ .ARM.extab     0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+ .ARM.exidx     0x00000000        0x8 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+ .ARM.attributes
+                0x00000000       0x1b c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+ .text          0x00000000        0x0 obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+ .text          0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .data          0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .bss           0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN7Console5printEc
+                0x00000000        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN7Console4crlfEv
+                0x00000000        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN7Console5printEPKc
+                0x00000000        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN7Console10foregroundEc
+                0x00000000        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text          0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .data          0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .bss           0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._exit    0x00000000        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text          0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .data          0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .bss           0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .text          0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .data          0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .bss           0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .text          0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+ .data          0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+ .bss           0x00000000        0x0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+ .bss._ZN7Console4selfE
+                0x00000000        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+ .text          0x00000000        0x0 obj/src/drivers/generic/driver.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver6writenEct
+                0x00000000        0x0 obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver4readEt
+                0x00000000        0x0 obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver9multireadEPhm
+                0x00000000        0x0 obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver10multiwriteEPKhm
+                0x00000000        0x0 obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6XMODEM6xmodemD5Ev
+                0x00000000        0x0 obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+ .gnu.linkonce.t._ZTVN6XMODEM6xmodemE
+                0x00000000        0x0 obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/positioning/gps/gga.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/positioning/gps/rmc.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/positioning/gps/vtg.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/storage/sdc.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/storage/ramdisk.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/storage/flash.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/wireless/nrf24l01/nrf24.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/userio/console/console.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/userio/console/xprintf.o (symbol from plugin)
+ .text          0x00000000       0x14 obj/src/core/STM32F10X_MD.o
+ .data          0x00000000        0x0 obj/src/core/STM32F10X_MD.o
+ .bss           0x00000000        0x0 obj/src/core/STM32F10X_MD.o
+ .text          0x00000000        0x0 obj/src/core/adc.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/core/core.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/core/gpio.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/core/i2c.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/core/isr.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/core/isr_helper.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/core/rtc.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/core/spi.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6DriverD5Ev
+                0x00000000        0x0 obj/src/core/spi.o (symbol from plugin)
+ .gnu.linkonce.t._ZTV6Driver
+                0x00000000        0x0 obj/src/core/spi.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver5writeEc
+                0x00000000        0x0 obj/src/core/spi.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver6writenEct
+                0x00000000        0x0 obj/src/core/spi.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver8writestrEPKc
+                0x00000000        0x0 obj/src/core/spi.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver4readEt
+                0x00000000        0x0 obj/src/core/spi.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver4readEv
+                0x00000000        0x0 obj/src/core/spi.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver9multireadEPhm
+                0x00000000        0x0 obj/src/core/spi.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver10multiwriteEPKhm
+                0x00000000        0x0 obj/src/core/spi.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver4nameEv
+                0x00000000        0x0 obj/src/core/spi.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/core/timers.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/core/usart.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6DriverD5Ev
+                0x00000000        0x0 obj/src/core/usart.o (symbol from plugin)
+ .gnu.linkonce.t._ZTV6Driver
+                0x00000000        0x0 obj/src/core/usart.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver5writeEc
+                0x00000000        0x0 obj/src/core/usart.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver6writenEct
+                0x00000000        0x0 obj/src/core/usart.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver8writestrEPKc
+                0x00000000        0x0 obj/src/core/usart.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver4readEt
+                0x00000000        0x0 obj/src/core/usart.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver4readEv
+                0x00000000        0x0 obj/src/core/usart.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver9multireadEPhm
+                0x00000000        0x0 obj/src/core/usart.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver10multiwriteEPKhm
+                0x00000000        0x0 obj/src/core/usart.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver4nameEv
+                0x00000000        0x0 obj/src/core/usart.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/core/vmmu.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/support/common.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/support/compat.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/support/log.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/support/queue.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/support/morse.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/external/SEGGER_RTT_V610d/Syscalls/SEGGER_RTT_Syscalls_GCC.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT_printf.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver5writeEc
+                0x00000000        0x0 obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver6writenEct
+                0x00000000        0x0 obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver8writestrEPKc
+                0x00000000        0x0 obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver4readEv
+                0x00000000        0x0 obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+ .gnu.linkonce.t._ZN6Driver4nameEv
+                0x00000000        0x0 obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+ .gnu.linkonce.t._ZN3SDC3SdcD5Ev
+                0x00000000        0x0 obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+ .gnu.linkonce.t._ZTVN3SDC3SdcE
+                0x00000000        0x0 obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+ .gnu.linkonce.t._ZN4DISK7FATdiskD5Ev
+                0x00000000        0x0 obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+ .text          0x00000000        0x0 obj/src/main.o (symbol from plugin)
+ .text          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libstdc++.a(del_ops.o)
+ .data          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libstdc++.a(del_ops.o)
+ .bss           0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libstdc++.a(del_ops.o)
+ .ARM.extab.text._ZdlPvj
+                0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libstdc++.a(del_ops.o)
+ .text          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-exit.o)
+ .data          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-exit.o)
+ .bss           0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-exit.o)
+ .text.exit     0x00000000       0x20 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-exit.o)
+ .debug_frame   0x00000000       0x28 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-exit.o)
+ .ARM.attributes
+                0x00000000       0x2d c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-exit.o)
+ .text          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-impure.o)
+ .data          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-impure.o)
+ .bss           0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-impure.o)
+ .data._impure_ptr
+                0x00000000        0x4 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-impure.o)
+ .text          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-init.o)
+ .data          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-init.o)
+ .bss           0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-init.o)
+ .text.__libc_init_array
+                0x00000000       0x50 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-init.o)
+ .debug_frame   0x00000000       0x2c c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-init.o)
+ .ARM.attributes
+                0x00000000       0x2d c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-init.o)
+ .text          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+ .data          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+ .bss           0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+ .text.__call_exitprocs
+                0x00000000       0xd8 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+ .text          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-atexit.o)
+ .data          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-atexit.o)
+ .bss           0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-atexit.o)
+ .text          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-fini.o)
+ .data          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-fini.o)
+ .bss           0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-fini.o)
+ .text          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__atexit.o)
+ .data          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__atexit.o)
+ .bss           0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__atexit.o)
+ .text          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtend.o
+ .data          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtend.o
+ .bss           0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtend.o
+ .eh_frame      0x00000000        0x4 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtend.o
+ .jcr           0x00000000        0x4 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtend.o
+ .ARM.attributes
+                0x00000000       0x2d c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtend.o
+ .text          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtn.o
+ .data          0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtn.o
+ .bss           0x00000000        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtn.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x08000000         0x00010000         xr
+RAM              0x20000000         0x00005000         xrw
+MEMORY_B1        0x60000000         0x00000000         xr
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crti.o
+LOAD c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+LOAD c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+LOAD obj/src/drivers/file_transfer/xmodem/xmodem.o
+LOAD C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+LOAD C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+LOAD C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+LOAD C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+LOAD C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+LOAD obj/src/drivers/generic/driver.o
+LOAD obj/src/drivers/imaging/ov528/ov528.o
+LOAD obj/src/drivers/positioning/gps/gga.o
+LOAD obj/src/drivers/positioning/gps/gps.o
+LOAD obj/src/drivers/positioning/gps/rmc.o
+LOAD obj/src/drivers/positioning/gps/vtg.o
+LOAD obj/src/drivers/storage/sdc.o
+LOAD obj/src/drivers/storage/ramdisk.o
+LOAD obj/src/drivers/storage/flash.o
+LOAD obj/src/drivers/wireless/bc470/bc470.o
+LOAD obj/src/drivers/wireless/gsm/atcmd.o
+LOAD obj/src/drivers/wireless/gsm/gsm.o
+LOAD obj/src/drivers/wireless/nrf24l01/nrf24.o
+LOAD obj/src/drivers/userio/console/console.o
+LOAD obj/src/drivers/userio/console/xprintf.o
+LOAD obj/src/core/STM32F10X_MD.o
+LOAD obj/src/core/adc.o
+LOAD obj/src/core/core.o
+LOAD obj/src/core/gpio.o
+LOAD obj/src/core/i2c.o
+LOAD obj/src/core/isr.o
+LOAD obj/src/core/isr_helper.o
+LOAD obj/src/core/rtc.o
+LOAD obj/src/core/spi.o
+LOAD obj/src/core/timers.o
+LOAD obj/src/core/usart.o
+LOAD obj/src/core/vmmu.o
+LOAD obj/src/support/common.o
+LOAD obj/src/support/compat.o
+LOAD obj/src/support/log.o
+LOAD obj/src/support/queue.o
+LOAD obj/src/support/morse.o
+LOAD obj/external/SEGGER_RTT_V610d/Syscalls/SEGGER_RTT_Syscalls_GCC.o
+LOAD obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o
+LOAD obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT_printf.o
+LOAD obj/src/drivers/storage/disk/fatdisk.o
+LOAD obj/src/drivers/storage/disk/fatfs.o
+LOAD obj/src/main.o
+LOAD c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libstdc++.a
+LOAD c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libm.a
+START GROUP
+LOAD c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m\libgcc.a
+LOAD c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a
+LOAD c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libc.a
+END GROUP
+LOAD c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtend.o
+LOAD c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtn.o
+                0x20005000                _estack = 0x20005000
+                0x00000000                _Min_Heap_Size = 0x0
+                0x00000100                _Min_Stack_Size = 0x100
+
+.isr_vector     0x08000000      0x10c
+                0x08000000                . = ALIGN (0x4)
+ *(.isr_vector)
+ .isr_vector    0x08000000      0x10c obj/src/core/STM32F10X_MD.o
+                0x08000000                g_pfnVectors
+                0x0800010c                . = ALIGN (0x4)
+
+.eh_frame       0x0800010c        0x0
+ .eh_frame      0x0800010c        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+
+.text           0x0800010c     0x3ca0
+                0x0800010c                . = ALIGN (0x4)
+ *(.text)
+ .text          0x0800010c       0x5c c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+ *(.text*)
+ .text.USART3_IRQHandler
+                0x08000168       0x40 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x08000168                USART3_IRQHandler
+ .text.USART2_IRQHandler
+                0x080001a8       0x40 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x080001a8                USART2_IRQHandler
+ .text.USART1_IRQHandler
+                0x080001e8       0x40 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x080001e8                USART1_IRQHandler
+ .text._ZN7Console5xputcEc
+                0x08000228       0x1c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN7Console5xputsEPKc
+                0x08000244       0x18 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN7Console8xvprintfEPKcSt9__va_list
+                0x0800025c      0x224 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN3SDC3Sdc17get_data_responseEv
+                0x08000480       0x50 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN3SDC3Sdc14command_to_strEh
+                0x080004d0      0x154 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN6Driver10multiwriteEPKhm
+                0x08000624        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x08000624                Driver::multiwrite(unsigned char const*, unsigned long)
+ .text._ZN6Driver9multireadEPhm
+                0x08000628        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x08000628                Driver::multiread(unsigned char*, unsigned long)
+ .text._ZN6Driver4readEt
+                0x0800062c        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x0800062c                Driver::read(unsigned short)
+ .text._ZN6Driver6writenEct
+                0x08000630        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x08000630                Driver::writen(char, unsigned short)
+ .text._ZN3SDC19print_readable_sizeEm
+                0x08000634       0x54 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN3SDC11print_errorEh
+                0x08000688       0x98 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN3SDC3Sdc12get_responseEh
+                0x08000720       0x60 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN3SDC3Sdc7sdc_cmdEhmh
+                0x08000780       0xc0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN3SDC3Sdc7get_CSDEPNS_6SD_CSDE
+                0x08000840      0x1c0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN3SDC3Sdc7init_sdEv
+                0x08000a00       0x74 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text._ZN3SDC3Sdc9init_sdhcEv
+                0x08000a74      0x14c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .text.SysTick_Handler
+                0x08000bc0       0x28 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x08000bc0                SysTick_Handler
+ .text.SystemInit
+                0x08000be8       0x68 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x08000be8                SystemInit
+ .text._ZN7Console7xprintfEPKcz
+                0x08000c50       0x1c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x08000c50                Console::xprintf(char const*, ...)
+ .text._ZN3SDC3Sdc10read_blockEPhmt
+                0x08000c6c       0x84 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x08000c6c                SDC::Sdc::read_block(unsigned char*, unsigned long, unsigned short)
+ .text._ZN3SDC3Sdc11write_blockEPKhmt
+                0x08000cf0       0x88 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x08000cf0                SDC::Sdc::write_block(unsigned char const*, unsigned long, unsigned short)
+ .text._ZN3SDC3Sdc10initializeEv
+                0x08000d78       0x98 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x08000d78                SDC::Sdc::initialize()
+ .text._ZN3SDC3Sdc19get_card_block_sizeEv
+                0x08000e10       0x34 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x08000e10                SDC::Sdc::get_card_block_size()
+ .text._ZN3SDC3Sdc17get_card_capacityEv
+                0x08000e44       0x5c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                0x08000e44                SDC::Sdc::get_card_capacity()
+ .text._ZL19_GetAvailWriteSpaceP20SEGGER_RTT_BUFFER_UP
+                0x08000ea0       0x18 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._Z8QueuePutc
+                0x08000eb8       0x4c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._Z9QueueInitv
+                0x08000f04       0x14 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text.memcpy   0x08000f18       0x18 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZL13_WriteNoCheckP20SEGGER_RTT_BUFFER_UPPKcj
+                0x08000f30       0x44 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZL14_WriteBlockingP20SEGGER_RTT_BUFFER_UPPKcj
+                0x08000f74       0x5c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text.SEGGER_RTT_WriteNoLock
+                0x08000fd0       0x70 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text.strcpy   0x08001040       0x10 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZL7_DoInitv
+                0x08001050       0x60 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._Z6stfreePv
+                0x080010b0       0x78 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN4UART4Uart4initEcm
+                0x08001128      0x114 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN4UART4Uart3isrEv
+                0x0800123c       0x50 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN4UART4Uart4readEv
+                0x0800128c       0x14 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN4UART4Uart5writeEc
+                0x080012a0       0x14 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN4UART4Uart8writestrEPKc
+                0x080012b4       0x20 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN4UART4Uart4nameEv
+                0x080012d4        0x8 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN4UART4UartD2Ev
+                0x080012dc       0x54 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN3SPI3Spi4readEt
+                0x08001330       0x50 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001330                SPI::Spi::read(unsigned short)
+ .text._ZN3SPI3Spi3isrEv
+                0x08001380       0x58 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN3SPI3SpiD2Ev
+                0x080013d8       0x40 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x080013d8                SPI::Spi::~Spi()
+ .text._ZN6Driver4nameEv
+                0x08001418        0x8 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001418                Driver::name()
+ .text._ZN6Driver4readEv
+                0x08001420        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001420                Driver::read()
+ .text._ZN6Driver8writestrEPKc
+                0x08001424        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001424                Driver::writestr(char const*)
+ .text._ZN6Driver5writeEc
+                0x08001428        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001428                Driver::write(char)
+ .text._ZN6DriverD2Ev
+                0x0800142c        0xc C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN4UART4UartD0Ev
+                0x08001438       0x14 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN3SPI3SpiD0Ev
+                0x0800144c       0x14 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN6DriverD0Ev
+                0x08001460       0x18 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN3SPI3Spi6enableEv
+                0x08001478       0x20 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN3SPI3Spi7disableEv
+                0x08001498       0x20 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN3SPI3Spi4initEv
+                0x080014b8       0x3c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN3SPI3Spi7go16bitEv
+                0x080014f4       0x2c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .text._ZN3SPI3Spi10multiwriteEPKhm
+                0x08001520       0x60 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001520                SPI::Spi::multiwrite(unsigned char const*, unsigned long)
+ .text.SEGGER_RTT_Write
+                0x08001580       0x34 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001580                SEGGER_RTT_Write
+ .text._ZL10_StoreCharP22SEGGER_RTT_PRINTF_DESCc.lto_priv.5
+                0x080015b4       0x40 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x080015b4                _StoreChar(SEGGER_RTT_PRINTF_DESC*, char) [clone .lto_priv.5]
+ .text._ZdlPv   0x080015f4        0x8 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x080015f4                operator delete(void*)
+ .text.memset   0x080015fc       0x10 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x080015fc                memset
+ .text.strlen   0x0800160c       0x10 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x0800160c                strlen
+ .text.SEGGER_RTT_WriteString
+                0x0800161c       0x18 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x0800161c                SEGGER_RTT_WriteString
+ .text._Z8delay_msm
+                0x08001634       0x14 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001634                delay_ms(unsigned long)
+ .text._Z9vmmu_initv
+                0x08001648       0x20 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001648                vmmu_init()
+ .text._ZN4UART4UartC2Emm
+                0x08001668       0x7c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001668                UART::Uart::Uart(unsigned long, unsigned long)
+                0x08001668                UART::Uart::Uart(unsigned long, unsigned long)
+ .text._ZN3SPI3Spi9highspeedEv
+                0x080016e4       0x20 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x080016e4                SPI::Spi::highspeed()
+ .text._ZN3SPI3Spi8lowspeedEv
+                0x08001704       0x2c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001704                SPI::Spi::lowspeed()
+ .text._ZN3SPI3Spi6assertEv
+                0x08001730       0x24 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001730                SPI::Spi::assert()
+ .text._ZN3SPI3Spi6go8bitEv
+                0x08001754       0x2c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001754                SPI::Spi::go8bit()
+ .text._ZN3SPI3Spi9multireadEPhm
+                0x08001780       0x90 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001780                SPI::Spi::multiread(unsigned char*, unsigned long)
+ .text._ZN3SPI3SpiC2Ec
+                0x08001810       0xac C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001810                SPI::Spi::Spi(char)
+ .text._Z18remap_vector_tablev
+                0x080018bc       0x30 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x080018bc                remap_vector_table()
+ .text.UsageFault_Handler
+                0x080018ec       0x1c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x080018ec                UsageFault_Handler
+ .text.BusFault_Handler
+                0x08001908       0x1c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001908                BusFault_Handler
+ .text.MemManage_Handler
+                0x08001924       0x1c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001924                MemManage_Handler
+ .text.HardFault_Handler
+                0x08001940       0x1c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x08001940                HardFault_Handler
+ .text.unwindCPUstack
+                0x0800195c       0xa8 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x0800195c                unwindCPUstack
+ .text._ZN4DISK7FATdisk11disk_statusEh
+                0x08001a04        0xc C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .text._ZN4DISK7FATdisk11get_fattimeEv
+                0x08001a10        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .text._ZN4DISK7FATdiskD0Ev
+                0x08001a14       0x1c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .text._ZN4DISK7FATdiskD2Ev
+                0x08001a30       0x14 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .text._ZN3SDC3SdcD0Ev
+                0x08001a44       0x1c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .text._ZN3SDC3SdcD2Ev
+                0x08001a60       0x14 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .text._ZL14_PrintUnsignedP22SEGGER_RTT_PRINTF_DESCjjjjj
+                0x08001a74       0xdc C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .text._ZL9_PrintIntP22SEGGER_RTT_PRINTF_DESCijjjj
+                0x08001b50       0xdc C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .text._Z18SEGGER_RTT_vprintfjPKcPSt9__va_list
+                0x08001c2c      0x1ac C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .text._ZN4DISK7FATdisk10clust2sectEPNS_5FATFSEm
+                0x08001dd8       0x18 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                0x08001dd8                DISK::FATdisk::clust2sect(DISK::FATFS*, unsigned long)
+ .text._ZN4DISK7FATdisk11sync_windowEPNS_5FATFSE
+                0x08001df0       0x6c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                0x08001df0                DISK::FATdisk::sync_window(DISK::FATFS*)
+ .text._ZN4DISK7FATdisk11move_windowEPNS_5FATFSEm
+                0x08001e5c       0x48 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                0x08001e5c                DISK::FATdisk::move_window(DISK::FATFS*, unsigned long)
+ .text._ZN4DISK7FATdisk7put_fatEPNS_5FATFSEmm
+                0x08001ea4      0x138 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                0x08001ea4                DISK::FATdisk::put_fat(DISK::FATFS*, unsigned long, unsigned long)
+ .text._ZN4DISK7FATdisk7get_fatEPNS_5FATFSEm
+                0x08001fdc      0x10c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                0x08001fdc                DISK::FATdisk::get_fat(DISK::FATFS*, unsigned long)
+ .text._ZN4DISKL7chk_chrEPKci.lto_priv.2
+                0x080020e8       0x10 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                0x080020e8                DISK::chk_chr(char const*, int) [clone .lto_priv.2]
+ .text._ZN4DISKL7mem_cmpEPKvS1_j.lto_priv.4
+                0x080020f8       0x34 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                0x080020f8                DISK::mem_cmp(void const*, void const*, unsigned int) [clone .lto_priv.4]
+ .text._ZN4DISKL7mem_setEPvij.lto_priv.3
+                0x0800212c       0x10 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                0x0800212c                DISK::mem_set(void*, int, unsigned int) [clone .lto_priv.3]
+ .text._ZN4DISK7FATdisk7sync_fsEPNS_5FATFSE
+                0x0800213c       0xcc C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                0x0800213c                DISK::FATdisk::sync_fs(DISK::FATFS*)
+ .text._ZN4DISKL7mem_cpyEPvPKvj.lto_priv.0
+                0x08002208       0x14 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                0x08002208                DISK::mem_cpy(void*, void const*, unsigned int) [clone .lto_priv.0]
+ .text._ZN4DISK7FATdisk13result_to_strENS_7FRESULTE
+                0x0800221c       0xc4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                0x0800221c                DISK::FATdisk::result_to_str(DISK::FRESULT)
+ .text._ZN4DISK7FATdiskC2Eh
+                0x080022e0       0x20 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                0x080022e0                DISK::FATdisk::FATdisk(unsigned char)
+                0x080022e0                DISK::FATdisk::FATdisk(unsigned char)
+ .text.SEGGER_RTT_printf
+                0x08002300       0x20 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                0x08002300                SEGGER_RTT_printf
+ .text._ZN4DISK7FATdisk10disk_ioctlEhhPv
+                0x08002320       0x80 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .text._ZN4DISK7FATdisk10disk_writeEhPKhmj
+                0x080023a0       0x40 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .text._ZN4DISK7FATdisk9disk_readEhPhmj
+                0x080023e0       0x40 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .text._ZN4DISK7FATdisk15disk_initializeEh
+                0x08002420       0x84 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .text._ZN4DISK7FATdisk8check_fsEPNS_5FATFSEm
+                0x080024a4       0x90 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .text._ZN4DISK7FATdisk11create_nameEPNS_3DIREPPKc
+                0x08002534      0x10c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .text._ZN4DISK7FATdisk7dir_sdiEPNS_3DIREj
+                0x08002640       0xac C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .text._ZN4DISK7FATdisk12get_ldnumberEPPKc
+                0x080026ec       0x50 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                0x080026ec                DISK::FATdisk::get_ldnumber(char const**)
+ .text._ZN4DISK7FATdisk11find_volumeEPPNS_5FATFSEPPKch
+                0x0800273c      0x3b0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                0x0800273c                DISK::FATdisk::find_volume(DISK::FATFS**, char const**, unsigned char)
+ .text._ZN4DISK7FATdisk8st_clustEPhm
+                0x08002aec       0x10 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                0x08002aec                DISK::FATdisk::st_clust(unsigned char*, unsigned long)
+ .text._ZN4DISK7FATdisk8ld_clustEPNS_5FATFSEPh
+                0x08002afc       0x1c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                0x08002afc                DISK::FATdisk::ld_clust(DISK::FATFS*, unsigned char*)
+ .text._ZN4DISK7FATdisk12create_chainEPNS_5FATFSEm
+                0x08002b18       0xd8 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                0x08002b18                DISK::FATdisk::create_chain(DISK::FATFS*, unsigned long)
+ .text._ZN4DISK7FATdisk8dir_nextEPNS_3DIREi
+                0x08002bf0      0x12c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .text._ZN4DISK7FATdisk8dir_findEPNS_3DIRE
+                0x08002d1c       0x5c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .text._ZN4DISK7FATdisk11follow_pathEPNS_3DIREPKc
+                0x08002d78       0x88 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                0x08002d78                DISK::FATdisk::follow_path(DISK::DIR*, char const*)
+ .text._ZN4DISK7FATdisk9dir_allocEPNS_3DIREj
+                0x08002e00       0x50 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .text._ZN4DISK7FATdisk12dir_registerEPNS_3DIRE
+                0x08002e50       0x3c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                0x08002e50                DISK::FATdisk::dir_register(DISK::DIR*)
+ .text._ZN4DISK7FATdisk12remove_chainEPNS_5FATFSEm
+                0x08002e8c       0x7c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                0x08002e8c                DISK::FATdisk::remove_chain(DISK::FATFS*, unsigned long)
+ .text._ZN4DISK7FATdisk8validateEPv
+                0x08002f08       0x3c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+ .text._ZN4DISK7FATdisk4syncEPNS_3FILE
+                0x08002f44       0x84 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+ .text._ZN4DISK7FATdisk5closeEPNS_3FILE
+                0x08002fc8       0x24 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+ .text._ZN4DISK7FATdisk7f_writeEPNS_3FILEPKvjPj
+                0x08002fec      0x1b8 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+ .text._ZN4DISK7FATdisk4openEPNS_3FILEPKch
+                0x080031a4      0x198 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+ .text._ZN4DISK7FATdisk5mountEPNS_5FATFSEPKch
+                0x0800333c       0x5c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+ .text.main     0x08003398       0xe8 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                0x08003398                main
+ .text.Reset_Handler
+                0x08003480       0x44 obj/src/core/STM32F10X_MD.o
+                0x08003480                Reset_Handler
+ .text.Default_Handler
+                0x080034c4        0x2 obj/src/core/STM32F10X_MD.o
+                0x080034c4                EXTI2_IRQHandler
+                0x080034c4                DebugMon_Handler
+                0x080034c4                TIM1_CC_IRQHandler
+                0x080034c4                PVD_IRQHandler
+                0x080034c4                PendSV_Handler
+                0x080034c4                NMI_Handler
+                0x080034c4                EXTI3_IRQHandler
+                0x080034c4                I2C2_EV_IRQHandler
+                0x080034c4                ADC1_2_IRQHandler
+                0x080034c4                TAMPER_IRQHandler
+                0x080034c4                DMA1_Channel4_IRQHandler
+                0x080034c4                RTC_IRQHandler
+                0x080034c4                DMA1_Channel7_IRQHandler
+                0x080034c4                CAN1_RX1_IRQHandler
+                0x080034c4                TIM4_IRQHandler
+                0x080034c4                I2C1_EV_IRQHandler
+                0x080034c4                DMA1_Channel6_IRQHandler
+                0x080034c4                TIM3_IRQHandler
+                0x080034c4                RCC_IRQHandler
+                0x080034c4                TIM1_TRG_COM_IRQHandler
+                0x080034c4                DMA1_Channel1_IRQHandler
+                0x080034c4                Default_Handler
+                0x080034c4                EXTI15_10_IRQHandler
+                0x080034c4                EXTI9_5_IRQHandler
+                0x080034c4                SVC_Handler
+                0x080034c4                DMA1_Channel5_IRQHandler
+                0x080034c4                EXTI4_IRQHandler
+                0x080034c4                USB_LP_CAN1_RX0_IRQHandler
+                0x080034c4                USB_HP_CAN1_TX_IRQHandler
+                0x080034c4                DMA1_Channel3_IRQHandler
+                0x080034c4                TIM1_UP_IRQHandler
+                0x080034c4                WWDG_IRQHandler
+                0x080034c4                TIM2_IRQHandler
+                0x080034c4                TIM1_BRK_IRQHandler
+                0x080034c4                EXTI1_IRQHandler
+                0x080034c4                RTCAlarm_IRQHandler
+                0x080034c4                I2C2_ER_IRQHandler
+                0x080034c4                DMA1_Channel2_IRQHandler
+                0x080034c4                CAN1_SCE_IRQHandler
+                0x080034c4                FLASH_IRQHandler
+                0x080034c4                I2C1_ER_IRQHandler
+                0x080034c4                USBWakeUp_IRQHandler
+ *fill*         0x080034c6        0x2 
+ .text._ZdlPvj  0x080034c8        0x4 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libstdc++.a(del_ops.o)
+                0x080034c8                operator delete(void*, unsigned int)
+ .text.startup.register_fini
+                0x080034cc       0x14 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+ .text.atexit   0x080034e0        0xc c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-atexit.o)
+                0x080034e0                atexit
+ .text.__libc_fini_array
+                0x080034ec       0x28 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-fini.o)
+                0x080034ec                __libc_fini_array
+ .text.__register_exitproc
+                0x08003514       0xa4 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__atexit.o)
+                0x08003514                __register_exitproc
+ *(.rodata)
+ *(.rodata*)
+ .rodata.str1.4
+                0x080035b8      0x300 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .rodata._ZTVN3SPI3SpiE
+                0x080038b8       0x30 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .rodata._ZTVN4UART4UartE
+                0x080038e8       0x30 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .rodata._ZTV6Driver
+                0x08003918       0x30 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .rodata.str1.4
+                0x08003948      0x11d C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ *fill*         0x08003a65        0x3 
+ .rodata._ZZL14_PrintUnsignedP22SEGGER_RTT_PRINTF_DESCjjjjjE5_aV2C
+                0x08003a68       0x10 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .rodata._ZTVN4DISK7FATdiskE
+                0x08003a78       0x48 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .rodata.str1.4
+                0x08003ac0      0x209 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                0x219 (size before relaxing)
+ *fill*         0x08003cc9        0x3 
+ .rodata._ZTVN3SDC3SdcE
+                0x08003ccc       0x30 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .rodata.str1.4
+                0x08003cfc        0xf C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ *fill*         0x08003d0b        0x1 
+ .rodata.str1.4
+                0x08003d0c       0x84 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                 0x83 (size before relaxing)
+ .rodata._global_impure_ptr
+                0x08003d90        0x4 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-impure.o)
+                0x08003d90                _global_impure_ptr
+ *(.glue_7)
+ .glue_7        0x08003d94        0x0 linker stubs
+ *(.glue_7t)
+ .glue_7t       0x08003d94        0x0 linker stubs
+ *(.init)
+ .init          0x08003d94        0x4 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crti.o
+                0x08003d94                _init
+ .init          0x08003d98        0x8 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtn.o
+ *(.fini)
+ .fini          0x08003da0        0x4 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crti.o
+                0x08003da0                _fini
+ .fini          0x08003da4        0x8 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtn.o
+                0x08003dac                . = ALIGN (0x4)
+                0x08003dac                _etext = .
+
+.vfp11_veneer   0x08003dac        0x0
+ .vfp11_veneer  0x08003dac        0x0 linker stubs
+
+.v4_bx          0x08003dac        0x0
+ .v4_bx         0x08003dac        0x0 linker stubs
+
+.iplt           0x08003dac        0x0
+ .iplt          0x08003dac        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+
+.ARM.extab
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+
+.ARM            0x08003dac        0x8
+                0x08003dac                __exidx_start = .
+ *(.ARM.exidx*)
+ .ARM.exidx.text._ZdlPvj
+                0x08003dac        0x8 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libstdc++.a(del_ops.o)
+                0x08003db4                __exidx_end = .
+
+.rel.dyn        0x08003db4        0x0
+ .rel.iplt      0x08003db4        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+
+.ARM.attributes
+                0x08003db4       0x29
+ *(.ARM.attributes)
+ .ARM.attributes
+                0x08003db4       0x1d c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crti.o
+ .ARM.attributes
+                0x08003dd1       0x2d c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+ .ARM.attributes
+                0x08003dfe       0x31 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .ARM.attributes
+                0x08003e2f       0x31 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .ARM.attributes
+                0x08003e60       0x31 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .ARM.attributes
+                0x08003e91       0x31 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .ARM.attributes
+                0x08003ec2       0x31 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+ .ARM.attributes
+                0x08003ef3       0x21 obj/src/core/STM32F10X_MD.o
+ .ARM.attributes
+                0x08003f14       0x2d c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libstdc++.a(del_ops.o)
+ .ARM.attributes
+                0x08003f41       0x2d c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-impure.o)
+ .ARM.attributes
+                0x08003f6e       0x2d c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+ .ARM.attributes
+                0x08003f9b       0x2d c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-atexit.o)
+ .ARM.attributes
+                0x08003fc8       0x2d c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-fini.o)
+ .ARM.attributes
+                0x08003ff5       0x2d c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__atexit.o)
+ .ARM.attributes
+                0x08004022       0x1d c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtn.o
+
+.preinit_array  0x08003db4        0x0
+                0x08003db4                PROVIDE (__preinit_array_start, .)
+ *(.preinit_array*)
+                0x08003db4                PROVIDE (__preinit_array_end, .)
+
+.init_array     0x08003db4        0x8
+                0x08003db4                PROVIDE (__init_array_start, .)
+ *(SORT(.init_array.*))
+ .init_array.00000
+                0x08003db4        0x4 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+ *(.init_array*)
+ .init_array    0x08003db8        0x4 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+                0x08003dbc                PROVIDE (__init_array_end, .)
+
+.fini_array     0x08003dbc        0x4
+                0x08003dbc                PROVIDE (__fini_array_start, .)
+ *(.fini_array*)
+ .fini_array    0x08003dbc        0x4 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+ *(SORT(.fini_array.*))
+                0x08003dc0                PROVIDE (__fini_array_end, .)
+                0x08003dc0                _sidata = .
+
+.data           0x20000000      0x428 load address 0x08003dc0
+                0x20000000                . = ALIGN (0x4)
+                0x20000000                _sdata = .
+ *(.data)
+ *(.data*)
+ .data.impure_data
+                0x20000000      0x428 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-impure.o)
+                0x20000428                . = ALIGN (0x4)
+                0x20000428                _edata = .
+
+.jcr            0x20000428        0x0 load address 0x080041e8
+ .jcr           0x20000428        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+
+.igot.plt       0x20000428        0x0 load address 0x080041e8
+ .igot.plt      0x20000428        0x0 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+
+.vectorsSection
+                0x20001000      0x130 load address 0x08004dc0
+ *(.vectorsSection)
+ .vectorsSection
+                0x20001000      0x130 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x20001130                . = ALIGN (0x4)
+
+.bss            0x20001130      0x6f8 load address 0x08004ef0
+                0x20001130                _sbss = .
+                0x20001130                __bss_start__ = _sbss
+ *(.bss)
+ .bss           0x20001130       0x1c c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+ *(.bss*)
+ .bss.timerms   0x2000114c        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .bss._ZL11_acUpBuffer
+                0x20001150      0x400 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .bss._ZL13_acDownBuffer
+                0x20001550       0x10 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .bss._ZL4pool  0x20001560      0x200 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .bss.QueueOut  0x20001760        0x1 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ *fill*         0x20001761        0x3 
+ .bss._ZN4UART4Uart4selfE
+                0x20001764        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .bss.tickcounter
+                0x20001768        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                0x20001768                tickcounter
+ .bss.QueueIn   0x2000176c        0x1 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ *fill*         0x2000176d        0x3 
+ .bss._SEGGER_RTT
+                0x20001770       0xa8 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .bss._ZN3SPI3Spi4selfE
+                0x20001818        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .bss._ZL5freep
+                0x2000181c        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .bss._ZN4DISKL4FsidE
+                0x20001820        0x2 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ *fill*         0x20001822        0x2 
+ .bss._ZN4DISKL5FatFsE.lto_priv.1
+                0x20001824        0x4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                0x20001824                _ZN4DISKL5FatFsE.lto_priv.1
+ *(COMMON)
+                0x20001828                . = ALIGN (0x4)
+                0x20001828                _ebss = .
+                0x20001828                __bss_end__ = _ebss
+                [!provide]                PROVIDE (end, _ebss)
+                [!provide]                PROVIDE (_end, _ebss)
+                [!provide]                PROVIDE (__end__, _ebss)
+
+._user_heap_stack
+                0x20001828      0x100 load address 0x080055e8
+                0x20001828                . = ALIGN (0x4)
+                0x20001828                . = (. + _Min_Heap_Size)
+                0x20001928                . = (. + _Min_Stack_Size)
+ *fill*         0x20001828      0x100 
+                0x20001928                . = ALIGN (0x4)
+
+.memory_b1_text
+ *(.mb1text)
+ *(.mb1text*)
+ *(.mb1rodata)
+ *(.mb1rodata*)
+
+/DISCARD/
+ libc.a(*)
+ libm.a(*)
+ libgcc.a(*)
+OUTPUT(bin/CoreTex.elf elf32-littlearm)
+
+.debug_info     0x00000000     0x68da
+ .debug_info    0x00000000     0x1817 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .debug_info    0x00001817     0x1e41 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .debug_info    0x00003658     0x16c8 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .debug_info    0x00004d20      0xec4 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .debug_info    0x00005be4      0xcf6 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+
+.debug_abbrev   0x00000000     0x140f
+ .debug_abbrev  0x00000000      0x441 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .debug_abbrev  0x00000441      0x628 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .debug_abbrev  0x00000a69      0x499 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .debug_abbrev  0x00000f02      0x20e C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .debug_abbrev  0x00001110      0x2ff C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+
+.debug_loc      0x00000000     0x4cd5
+ .debug_loc     0x00000000      0xd43 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .debug_loc     0x00000d43      0xe50 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .debug_loc     0x00001b93     0x1588 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .debug_loc     0x0000311b     0x1452 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .debug_loc     0x0000456d      0x768 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+
+.debug_aranges  0x00000000      0x4a0
+ .debug_aranges
+                0x00000000      0x110 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .debug_aranges
+                0x00000110      0x1d0 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .debug_aranges
+                0x000002e0       0xe8 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .debug_aranges
+                0x000003c8       0x88 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .debug_aranges
+                0x00000450       0x50 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+
+.debug_ranges   0x00000000      0x468
+ .debug_ranges  0x00000000      0x100 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .debug_ranges  0x00000100      0x1d8 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .debug_ranges  0x000002d8       0xd8 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .debug_ranges  0x000003b0       0x78 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .debug_ranges  0x00000428       0x40 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+
+.debug_line     0x00000000     0x1838
+ .debug_line    0x00000000      0x570 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .debug_line    0x00000570      0x820 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .debug_line    0x00000d90      0x532 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .debug_line    0x000012c2      0x31b C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .debug_line    0x000015dd      0x25b C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+
+.debug_str      0x00000000     0x1786
+ .debug_str     0x00000000      0x69c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                0x720 (size before relaxing)
+ .debug_str     0x0000069c      0x92c C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                0xc95 (size before relaxing)
+ .debug_str     0x00000fc8      0x4ea C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                0x908 (size before relaxing)
+ .debug_str     0x000014b2      0x240 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                                0x739 (size before relaxing)
+ .debug_str     0x000016f2       0x94 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                0x705 (size before relaxing)
+
+.comment        0x00000000       0x6e
+ .comment       0x00000000       0x6e C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                 0x6f (size before relaxing)
+ .comment       0x0000006e       0x6f C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .comment       0x0000006e       0x6f C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .comment       0x0000006e       0x6f C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .comment       0x0000006e       0x6f C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+
+.debug_frame    0x00000000      0xef0
+ .debug_frame   0x00000000      0x324 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+ .debug_frame   0x00000324      0x4ec C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+ .debug_frame   0x00000810      0x330 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+ .debug_frame   0x00000b40      0x1b8 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+ .debug_frame   0x00000cf8      0x100 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+ .debug_frame   0x00000df8       0x20 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libstdc++.a(del_ops.o)
+ .debug_frame   0x00000e18       0x50 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+ .debug_frame   0x00000e68       0x20 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-atexit.o)
+ .debug_frame   0x00000e88       0x34 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-fini.o)
+ .debug_frame   0x00000ebc       0x34 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__atexit.o)
+
+Cross Reference Table
+
+Symbol                                            File
+ADC1_2_IRQHandler                                 obj/src/core/STM32F10X_MD.o
+ADC::Adc::init()                                  obj/src/core/adc.o (symbol from plugin)
+ADC::Adc::sample()                                obj/src/core/adc.o (symbol from plugin)
+ADC::Adc::voltage()                               obj/src/core/adc.o (symbol from plugin)
+BC470::BC470CMD                                   obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+BC470::RESPONSE_TEXT                              obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+BC470::bc470::bc470isr()                          obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+BC470::bc470::factory_default()                   obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+BC470::bc470::rawcmd(BC470::ATCMD, char const*)   obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+BC470::bc470::reset()                             obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+BC470::bc470::self                                obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+BC470::bc470::wait4reply(unsigned long)           obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+BusFault_Handler                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/isr.o (symbol from plugin)
+                                                  obj/src/core/STM32F10X_MD.o
+CAN1_RX1_IRQHandler                               obj/src/core/STM32F10X_MD.o
+CAN1_SCE_IRQHandler                               obj/src/core/STM32F10X_MD.o
+Console::background(char)                         obj/src/drivers/userio/console/console.o (symbol from plugin)
+Console::crlf()                                   C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/userio/console/console.o (symbol from plugin)
+                                                  obj/src/core/isr.o (symbol from plugin)
+Console::error(char*)                             obj/src/drivers/userio/console/console.o (symbol from plugin)
+Console::foreground(char)                         C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/userio/console/console.o (symbol from plugin)
+                                                  obj/src/core/isr.o (symbol from plugin)
+Console::log(char)                                obj/src/drivers/userio/console/console.o (symbol from plugin)
+Console::parse()                                  obj/src/drivers/userio/console/console.o (symbol from plugin)
+Console::print(char const*)                       C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/userio/console/console.o (symbol from plugin)
+                                                  obj/src/main.o (symbol from plugin)
+                                                  obj/src/core/isr.o (symbol from plugin)
+Console::print(char)                              obj/src/drivers/userio/console/console.o (symbol from plugin)
+                                                  obj/src/drivers/userio/console/xprintf.o (symbol from plugin)
+Console::print(int)                               obj/src/drivers/userio/console/console.o (symbol from plugin)
+Console::print(unsigned long)                     obj/src/drivers/userio/console/console.o (symbol from plugin)
+Console::put_dump(void const*, unsigned long, unsigned long, unsigned long) obj/src/drivers/userio/console/xprintf.o (symbol from plugin)
+Console::self                                     C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                                  obj/src/drivers/userio/console/console.o (symbol from plugin)
+                                                  obj/src/main.o (symbol from plugin)
+                                                  obj/src/core/isr.o (symbol from plugin)
+Console::worker()                                 obj/src/drivers/userio/console/console.o (symbol from plugin)
+Console::xprintf(char const*, ...)                C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/userio/console/xprintf.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/isr.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+Console::xputc(char)                              obj/src/drivers/userio/console/xprintf.o (symbol from plugin)
+Console::xputs(char const*)                       obj/src/drivers/userio/console/xprintf.o (symbol from plugin)
+Console::xsprintf(char*, char const*, ...)        obj/src/drivers/userio/console/xprintf.o (symbol from plugin)
+Console::xvprintf(char const*, std::__va_list)    obj/src/drivers/userio/console/xprintf.o (symbol from plugin)
+DISK::FATdisk::FATdisk(unsigned char)             C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                                  obj/src/main.o (symbol from plugin)
+DISK::FATdisk::FATdisk(unsigned char)             C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+DISK::FATdisk::check_fs(DISK::FATFS*, unsigned long) obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::close(DISK::FIL*)                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  obj/src/main.o (symbol from plugin)
+DISK::FATdisk::closedir(DISK::DIR*)               obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::clust2sect(DISK::FATFS*, unsigned long) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+DISK::FATdisk::create_chain(DISK::FATFS*, unsigned long) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+DISK::FATdisk::create_name(DISK::DIR*, char const**) obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::dir_alloc(DISK::DIR*, unsigned int) obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::dir_find(DISK::DIR*)               obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::dir_next(DISK::DIR*, int)          obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::dir_read(DISK::DIR*, int)          obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::dir_register(DISK::DIR*)           C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+DISK::FATdisk::dir_sdi(DISK::DIR*, unsigned int)  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::disk_initialize(unsigned char)     obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+DISK::FATdisk::disk_ioctl(unsigned char, unsigned char, void*) obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+DISK::FATdisk::disk_read(unsigned char, unsigned char*, unsigned long, unsigned int) obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+DISK::FATdisk::disk_status(unsigned char)         obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+DISK::FATdisk::disk_write(unsigned char, unsigned char const*, unsigned long, unsigned int) obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+DISK::FATdisk::f_opendir(DISK::DIR*, char const*) obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::f_read(DISK::FIL*, void*, unsigned int, unsigned int*) obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::f_readdir(DISK::DIR*, DISK::FILINFO*) obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::f_write(DISK::FIL*, void const*, unsigned int, unsigned int*) obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  obj/src/main.o (symbol from plugin)
+DISK::FATdisk::find_volume(DISK::FATFS**, char const**, unsigned char) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+DISK::FATdisk::follow_path(DISK::DIR*, char const*) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+DISK::FATdisk::get_fat(DISK::FATFS*, unsigned long) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+DISK::FATdisk::get_fattime()                      obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+DISK::FATdisk::get_fileinfo(DISK::DIR*, DISK::FILINFO*) obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::get_ldnumber(char const**)         C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+DISK::FATdisk::ld_clust(DISK::FATFS*, unsigned char*) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+DISK::FATdisk::lseek(DISK::FIL*, unsigned long)   obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::mkfs(char const*, unsigned char, unsigned int) obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::mount(DISK::FATFS*, char const*, unsigned char) obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  obj/src/main.o (symbol from plugin)
+DISK::FATdisk::move_window(DISK::FATFS*, unsigned long) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+DISK::FATdisk::open(DISK::FIL*, char const*, unsigned char) obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  obj/src/main.o (symbol from plugin)
+DISK::FATdisk::put_fat(DISK::FATFS*, unsigned long, unsigned long) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+DISK::FATdisk::remove_chain(DISK::FATFS*, unsigned long) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+DISK::FATdisk::result_to_str(DISK::FRESULT)       C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                                  obj/src/main.o (symbol from plugin)
+DISK::FATdisk::result_to_str(DRESULT)             obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+DISK::FATdisk::st_clust(unsigned char*, unsigned long) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+DISK::FATdisk::sync(DISK::FIL*)                   obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::sync_fs(DISK::FATFS*)              C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+DISK::FATdisk::sync_window(DISK::FATFS*)          C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+DISK::FATdisk::validate(void*)                    obj/src/drivers/storage/disk/fatfs.o (symbol from plugin)
+DISK::FATdisk::~FATdisk()                         obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+DISK::FATdisk::~FATdisk()                         obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+DISK::FATdisk::~FATdisk()                         obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+DISK::chk_chr(char const*, int) [clone .lto_priv.2] C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+DISK::mem_cmp(void const*, void const*, unsigned int) [clone .lto_priv.4] C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+DISK::mem_cpy(void*, void const*, unsigned int) [clone .lto_priv.0] C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+DISK::mem_set(void*, int, unsigned int) [clone .lto_priv.3] C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+DMA1_Channel1_IRQHandler                          obj/src/core/STM32F10X_MD.o
+DMA1_Channel2_IRQHandler                          obj/src/core/STM32F10X_MD.o
+DMA1_Channel3_IRQHandler                          obj/src/core/STM32F10X_MD.o
+DMA1_Channel4_IRQHandler                          obj/src/core/STM32F10X_MD.o
+DMA1_Channel5_IRQHandler                          obj/src/core/STM32F10X_MD.o
+DMA1_Channel6_IRQHandler                          obj/src/core/STM32F10X_MD.o
+DMA1_Channel7_IRQHandler                          obj/src/core/STM32F10X_MD.o
+DebugMon_Handler                                  obj/src/core/STM32F10X_MD.o
+Default_Handler                                   obj/src/core/STM32F10X_MD.o
+Driver::multiread(unsigned char*, unsigned long)  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/usart.o (symbol from plugin)
+                                                  obj/src/core/spi.o (symbol from plugin)
+Driver::multiwrite(unsigned char const*, unsigned long) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/usart.o (symbol from plugin)
+                                                  obj/src/core/spi.o (symbol from plugin)
+Driver::name()                                    C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+                                                  obj/src/core/usart.o (symbol from plugin)
+Driver::read()                                    C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+                                                  obj/src/core/usart.o (symbol from plugin)
+Driver::read(unsigned short)                      C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/usart.o (symbol from plugin)
+                                                  obj/src/core/spi.o (symbol from plugin)
+Driver::write(char)                               C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+                                                  obj/src/core/usart.o (symbol from plugin)
+Driver::writen(char, unsigned short)              C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+                                                  obj/src/core/usart.o (symbol from plugin)
+                                                  obj/src/core/spi.o (symbol from plugin)
+Driver::writestr(char const*)                     C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+                                                  obj/src/core/usart.o (symbol from plugin)
+Driver::~Driver()                                 obj/src/core/spi.o (symbol from plugin)
+                                                  obj/src/core/usart.o (symbol from plugin)
+Driver::~Driver()                                 obj/src/core/spi.o (symbol from plugin)
+                                                  obj/src/core/usart.o (symbol from plugin)
+Driver::~Driver()                                 obj/src/core/spi.o (symbol from plugin)
+                                                  obj/src/core/usart.o (symbol from plugin)
+EXTI0_IRQHandler                                  obj/src/core/isr.o (symbol from plugin)
+                                                  obj/src/core/STM32F10X_MD.o
+EXTI15_10_IRQHandler                              obj/src/core/STM32F10X_MD.o
+EXTI1_IRQHandler                                  obj/src/core/STM32F10X_MD.o
+EXTI2_IRQHandler                                  obj/src/core/STM32F10X_MD.o
+EXTI3_IRQHandler                                  obj/src/core/STM32F10X_MD.o
+EXTI4_IRQHandler                                  obj/src/core/STM32F10X_MD.o
+EXTI9_5_IRQHandler                                obj/src/core/STM32F10X_MD.o
+FLASH_IRQHandler                                  obj/src/core/STM32F10X_MD.o
+GPS::Gps::ckecknmea(unsigned char, char*)         obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+GPS::Gps::fillGGActx(int, char const*)            obj/src/drivers/positioning/gps/gga.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+GPS::Gps::fillRMCctx(int, char const*)            obj/src/drivers/positioning/gps/rmc.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+GPS::Gps::fillVTGctx(int, char const*)            obj/src/drivers/positioning/gps/vtg.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+GPS::Gps::get_nmea_sent_type(char const*)         obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+GPS::Gps::get_nmea_talker(char const*)            obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+GPS::Gps::gpsisr()                                obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+GPS::Gps::latlon2crd(char const*, GPS::coord*)    obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/rmc.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/gga.o (symbol from plugin)
+GPS::Gps::parseNMEA(char)                         obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+GPS::Gps::prepare()                               obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+GPS::Gps::print(Console&)                         obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+GPS::Gps::reset()                                 obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+GPS::Gps::self                                    obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+HardFault_Handler                                 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/isr.o (symbol from plugin)
+                                                  obj/src/core/STM32F10X_MD.o
+I2C1_ER_IRQHandler                                obj/src/core/STM32F10X_MD.o
+I2C1_EV_IRQHandler                                obj/src/core/STM32F10X_MD.o
+I2C2_ER_IRQHandler                                obj/src/core/STM32F10X_MD.o
+I2C2_EV_IRQHandler                                obj/src/core/STM32F10X_MD.o
+I2C::I2c::I2c(char)                               obj/src/core/i2c.o (symbol from plugin)
+I2C::I2c::I2c(char)                               obj/src/core/i2c.o (symbol from plugin)
+IRQ_VECTOR_TABLE                                  obj/src/core/isr_helper.o (symbol from plugin)
+                                                  obj/src/core/usart.o (symbol from plugin)
+                                                  obj/src/core/spi.o (symbol from plugin)
+MODEM::Modem::delete_all_sms()                    obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MODEM::Modem::extract_sms_body(char*)             obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MODEM::Modem::get(MODEM::CMD::SIM900ATCMD)        obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+MODEM::Modem::get_sms_amount()                    obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MODEM::Modem::get_sms_by_index(unsigned long)     obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MODEM::Modem::is_supported(MODEM::CMD::SIM900ATCMD) obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+MODEM::Modem::modemisr()                          obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MODEM::Modem::rawcmd(MODEM::CMD::SIM900ATCMD, MODEM::CMDMODE::MODE, char const*) obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MODEM::Modem::rawcmd(MODEM::CMD::SIM900ATCMD, MODEM::CMDMODE::MODE, unsigned long) obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MODEM::Modem::reset()                             obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+MODEM::Modem::restart()                           obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MODEM::Modem::self                                obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MODEM::Modem::send_sms(char const*, char const*)  obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MODEM::Modem::set(MODEM::CMD::SIM900ATCMD, char const*) obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MODEM::Modem::setup()                             obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MODEM::Modem::sync_speed()                        obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MODEM::Modem::turn_off()                          obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MODEM::Modem::wait_for_reply(MODEM::CMD::SIM900ATCMD, MODEM::ATRESPONSE, unsigned long) obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+MemManage_Handler                                 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/isr.o (symbol from plugin)
+                                                  obj/src/core/STM32F10X_MD.o
+NMI_Handler                                       obj/src/core/STM32F10X_MD.o
+NRF24::Nrf24::debug()                             obj/src/drivers/wireless/nrf24l01/nrf24.o (symbol from plugin)
+NRF24::Nrf24::flushrx()                           obj/src/drivers/wireless/nrf24l01/nrf24.o (symbol from plugin)
+NRF24::Nrf24::flushtx()                           obj/src/drivers/wireless/nrf24l01/nrf24.o (symbol from plugin)
+NRF24::Nrf24::nrfinit()                           obj/src/drivers/wireless/nrf24l01/nrf24.o (symbol from plugin)
+NRF24::Nrf24::regr(NRF24::REGISTER)               obj/src/drivers/wireless/nrf24l01/nrf24.o (symbol from plugin)
+NRF24::Nrf24::regr(NRF24::REGISTER, unsigned char*, unsigned long) obj/src/drivers/wireless/nrf24l01/nrf24.o (symbol from plugin)
+NRF24::Nrf24::regw(NRF24::REGISTER, unsigned char) obj/src/drivers/wireless/nrf24l01/nrf24.o (symbol from plugin)
+NRF24::Nrf24::regw(NRF24::REGISTER, unsigned char*, unsigned long) obj/src/drivers/wireless/nrf24l01/nrf24.o (symbol from plugin)
+NRF24::Nrf24::status()                            obj/src/drivers/wireless/nrf24l01/nrf24.o (symbol from plugin)
+OV528::ov528::default_setup()                     obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+OV528::ov528::docmd(unsigned char*)               obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+OV528::ov528::hard_reset()                        obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+OV528::ov528::ov528isr()                          obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+OV528::ov528::request_picture()                   obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+OV528::ov528::self                                obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+OV528::ov528::set_packet_size()                   obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+OV528::ov528::setup()                             obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+OV528::ov528::sleep()                             obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+OV528::ov528::snapshot()                          obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+OV528::ov528::soft_reset()                        obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+OV528::ov528::transfer()                          obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+OV528::ov528::wait_reply()                        obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+OV528::ov528::wakeup()                            obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+PVD_IRQHandler                                    obj/src/core/STM32F10X_MD.o
+PendSV_Handler                                    obj/src/core/STM32F10X_MD.o
+Queue                                             obj/src/support/queue.o (symbol from plugin)
+QueueGet(char*)                                   obj/src/support/queue.o (symbol from plugin)
+QueueIn                                           obj/src/support/queue.o (symbol from plugin)
+QueueInit()                                       obj/src/support/queue.o (symbol from plugin)
+                                                  obj/src/core/usart.o (symbol from plugin)
+QueueOut                                          obj/src/support/queue.o (symbol from plugin)
+QueuePut(char)                                    obj/src/support/queue.o (symbol from plugin)
+                                                  obj/src/core/usart.o (symbol from plugin)
+RCC_IRQHandler                                    obj/src/core/STM32F10X_MD.o
+RTCAlarm_IRQHandler                               obj/src/core/STM32F10X_MD.o
+RTC_IRQHandler                                    obj/src/core/STM32F10X_MD.o
+Reset_Handler                                     obj/src/core/STM32F10X_MD.o
+SDC::Sdc::command_to_str(unsigned char)           obj/src/drivers/storage/sdc.o (symbol from plugin)
+SDC::Sdc::get_CID(SDC::SD_CID*)                   obj/src/drivers/storage/sdc.o (symbol from plugin)
+SDC::Sdc::get_CSD(SDC::SD_CSD*)                   obj/src/drivers/storage/sdc.o (symbol from plugin)
+SDC::Sdc::get_card_block_size()                   C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/storage/sdc.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+SDC::Sdc::get_card_capacity()                     C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/storage/sdc.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+SDC::Sdc::get_data_response()                     obj/src/drivers/storage/sdc.o (symbol from plugin)
+SDC::Sdc::get_response(unsigned char)             obj/src/drivers/storage/sdc.o (symbol from plugin)
+SDC::Sdc::get_status()                            obj/src/drivers/storage/sdc.o (symbol from plugin)
+SDC::Sdc::init_sd()                               obj/src/drivers/storage/sdc.o (symbol from plugin)
+SDC::Sdc::init_sdhc()                             obj/src/drivers/storage/sdc.o (symbol from plugin)
+SDC::Sdc::initialize()                            C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/storage/sdc.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+SDC::Sdc::read_block(unsigned char*, unsigned long, unsigned short) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/storage/sdc.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+SDC::Sdc::sdc_cmd(unsigned char, unsigned long, unsigned char) obj/src/drivers/storage/sdc.o (symbol from plugin)
+SDC::Sdc::write_block(unsigned char const*, unsigned long, unsigned short) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/storage/sdc.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+SDC::Sdc::~Sdc()                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+SDC::Sdc::~Sdc()                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+SDC::Sdc::~Sdc()                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+SDC::print_error(unsigned char)                   obj/src/drivers/storage/sdc.o (symbol from plugin)
+SDC::print_readable_size(unsigned long)           obj/src/drivers/storage/sdc.o (symbol from plugin)
+SEGGER_RTT_AllocDownBuffer                        obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_AllocUpBuffer                          obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_ConfigDownBuffer                       obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_ConfigUpBuffer                         obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_GetKey                                 obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_HasData                                obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_HasKey                                 obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_Init                                   obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_Read                                   obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_ReadNoLock                             obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_SetFlagsDownBuffer                     obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_SetFlagsUpBuffer                       obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_SetNameDownBuffer                      obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_SetNameUpBuffer                        obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_SetTerminal                            obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_TerminalOut                            obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_WaitKey                                obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_Write                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT_printf.o (symbol from plugin)
+                                                  obj/external/SEGGER_RTT_V610d/Syscalls/SEGGER_RTT_Syscalls_GCC.o (symbol from plugin)
+SEGGER_RTT_WriteNoLock                            obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_WriteSkipNoLock                        obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_WriteString                            C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/main.o (symbol from plugin)
+                                                  obj/src/core/vmmu.o (symbol from plugin)
+                                                  obj/src/drivers/storage/sdc.o (symbol from plugin)
+SEGGER_RTT_WriteWithOverwriteNoLock               obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+SEGGER_RTT_printf                                 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT_printf.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/main.o (symbol from plugin)
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+                                                  obj/src/core/vmmu.o (symbol from plugin)
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  obj/src/drivers/storage/sdc.o (symbol from plugin)
+SEGGER_RTT_vprintf(unsigned int, char const*, std::__va_list*) obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT_printf.o (symbol from plugin)
+SPI1_IRQHandler                                   obj/src/core/isr.o (symbol from plugin)
+                                                  obj/src/core/STM32F10X_MD.o
+SPI2_IRQHandler                                   obj/src/core/isr.o (symbol from plugin)
+                                                  obj/src/core/STM32F10X_MD.o
+SPI::Spi::Spi(char)                               C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+SPI::Spi::Spi(char)                               obj/src/core/spi.o (symbol from plugin)
+SPI::Spi::assert()                                C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/storage/sdc.o (symbol from plugin)
+SPI::Spi::disable()                               obj/src/core/spi.o (symbol from plugin)
+SPI::Spi::enable()                                obj/src/core/spi.o (symbol from plugin)
+SPI::Spi::go16bit()                               obj/src/core/spi.o (symbol from plugin)
+SPI::Spi::go8bit()                                C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+                                                  obj/src/drivers/storage/sdc.o (symbol from plugin)
+SPI::Spi::highspeed()                             C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+SPI::Spi::init()                                  obj/src/core/spi.o (symbol from plugin)
+SPI::Spi::isr()                                   obj/src/core/spi.o (symbol from plugin)
+SPI::Spi::lowspeed()                              C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+                                                  obj/src/drivers/storage/sdc.o (symbol from plugin)
+SPI::Spi::multiread(unsigned char*, unsigned long) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+SPI::Spi::multiwrite(unsigned char const*, unsigned long) C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+SPI::Spi::read(unsigned short)                    C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+SPI::Spi::self                                    obj/src/core/spi.o (symbol from plugin)
+SPI::Spi::~Spi()                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+SPI::Spi::~Spi()                                  obj/src/core/spi.o (symbol from plugin)
+SPI::Spi::~Spi()                                  obj/src/core/spi.o (symbol from plugin)
+SVC_Handler                                       obj/src/core/STM32F10X_MD.o
+SysTick_Handler                                   C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/core/isr.o (symbol from plugin)
+                                                  obj/src/core/STM32F10X_MD.o
+SystemInit                                        C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/core/core.o (symbol from plugin)
+                                                  obj/src/core/STM32F10X_MD.o
+TAMPER_IRQHandler                                 obj/src/core/STM32F10X_MD.o
+TIM1_BRK_IRQHandler                               obj/src/core/STM32F10X_MD.o
+TIM1_CC_IRQHandler                                obj/src/core/STM32F10X_MD.o
+TIM1_TRG_COM_IRQHandler                           obj/src/core/STM32F10X_MD.o
+TIM1_UP_IRQHandler                                obj/src/core/STM32F10X_MD.o
+TIM2_IRQHandler                                   obj/src/core/STM32F10X_MD.o
+TIM3_IRQHandler                                   obj/src/core/STM32F10X_MD.o
+TIM4_IRQHandler                                   obj/src/core/STM32F10X_MD.o
+UART::Uart::Uart(unsigned long, unsigned long)    C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/usart.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                                  obj/src/main.o (symbol from plugin)
+                                                  obj/src/core/isr.o (symbol from plugin)
+UART::Uart::Uart(unsigned long, unsigned long)    C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/usart.o (symbol from plugin)
+UART::Uart::Uart(unsigned long, unsigned long, void (*)()) obj/src/core/usart.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+UART::Uart::Uart(unsigned long, unsigned long, void (*)()) obj/src/core/usart.o (symbol from plugin)
+UART::Uart::disable()                             obj/src/core/usart.o (symbol from plugin)
+UART::Uart::init(char, unsigned long)             obj/src/core/usart.o (symbol from plugin)
+UART::Uart::isr()                                 obj/src/core/usart.o (symbol from plugin)
+UART::Uart::name()                                obj/src/core/usart.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+UART::Uart::read()                                obj/src/core/usart.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+UART::Uart::self                                  obj/src/core/usart.o (symbol from plugin)
+UART::Uart::write(char)                           obj/src/core/usart.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+UART::Uart::writestr(char const*)                 obj/src/core/usart.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+UART::Uart::~Uart()                               obj/src/core/usart.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+UART::Uart::~Uart()                               obj/src/core/usart.o (symbol from plugin)
+UART::Uart::~Uart()                               obj/src/core/usart.o (symbol from plugin)
+USART1_IRQHandler                                 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/core/isr.o (symbol from plugin)
+                                                  obj/src/core/STM32F10X_MD.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/usart.o (symbol from plugin)
+USART2_IRQHandler                                 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/core/isr.o (symbol from plugin)
+                                                  obj/src/core/STM32F10X_MD.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/usart.o (symbol from plugin)
+USART3_IRQHandler                                 C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/core/isr.o (symbol from plugin)
+                                                  obj/src/core/STM32F10X_MD.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/usart.o (symbol from plugin)
+USBWakeUp_IRQHandler                              obj/src/core/STM32F10X_MD.o
+USB_HP_CAN1_TX_IRQHandler                         obj/src/core/STM32F10X_MD.o
+USB_LP_CAN1_RX0_IRQHandler                        obj/src/core/STM32F10X_MD.o
+UsageFault_Handler                                C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/isr.o (symbol from plugin)
+                                                  obj/src/core/STM32F10X_MD.o
+WWDG_IRQHandler                                   obj/src/core/STM32F10X_MD.o
+XMODEM::write_word(unsigned long, unsigned char*) obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+XMODEM::xmodem::block_tx(unsigned char*, unsigned long) obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+XMODEM::xmodem::crc16(unsigned char*, unsigned long) obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+XMODEM::xmodem::end()                             obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+XMODEM::xmodem::self                              obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+XMODEM::xmodem::send_data(unsigned char*, unsigned long) obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+XMODEM::xmodem::send_header(char*, unsigned long, unsigned long) obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+XMODEM::xmodem::wait()                            obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+XMODEM::xmodem::xmodemisr()                       obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+XMODEM::xmodem::~xmodem()                         obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+XMODEM::xmodem::~xmodem()                         obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+XMODEM::xmodem::~xmodem()                         obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+_Jv_RegisterClasses                               c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+_SEGGER_RTT                                       obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+_StoreChar(SEGGER_RTT_PRINTF_DESC*, char) [clone .lto_priv.5] C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+_ZN4DISKL5FatFsE.lto_priv.1                       C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans3.ltrans.o
+__bss_end__                                       c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+__bss_start__                                     c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+__call_exitprocs                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-exit.o)
+__deregister_frame_info                           c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+__dso_handle                                      c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+__fini_array_end                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-fini.o)
+__fini_array_start                                c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-fini.o)
+__init_array_end                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-init.o)
+__init_array_start                                c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-init.o)
+__libc_fini                                       c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+__libc_fini_array                                 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-fini.o)
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+__libc_init_array                                 c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-init.o)
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+__preinit_array_end                               c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-init.o)
+__preinit_array_start                             c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-init.o)
+__register_exitproc                               c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__atexit.o)
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-atexit.o)
+__register_frame_info                             c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crtbegin.o
+__stack                                           c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+__wrap___aeabi_unwind_cpp_pr0()                   obj/src/support/compat.o (symbol from plugin)
+_close                                            obj/src/support/compat.o (symbol from plugin)
+_delay_us(unsigned long)                          obj/src/support/common.o (symbol from plugin)
+_ebss                                             obj/src/core/STM32F10X_MD.o
+_edata                                            obj/src/core/STM32F10X_MD.o
+_estack                                           obj/src/core/STM32F10X_MD.o
+_exit                                             C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/support/compat.o (symbol from plugin)
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-exit.o)
+_fini                                             c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crti.o
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-fini.o)
+_getpid                                           obj/src/support/compat.o (symbol from plugin)
+_global_impure_ptr                                c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-impure.o)
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__atexit.o)
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-exit.o)
+_impure_ptr                                       c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-impure.o)
+_init                                             c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-m/crti.o
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-init.o)
+_kill                                             obj/src/support/compat.o (symbol from plugin)
+_mainCRTStartup                                   c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+_sbrk                                             obj/src/support/compat.o (symbol from plugin)
+_sbss                                             obj/src/core/STM32F10X_MD.o
+_sdata                                            obj/src/core/STM32F10X_MD.o
+_sidata                                           obj/src/core/STM32F10X_MD.o
+_start                                            c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+_write(int, char*, int)                           obj/external/SEGGER_RTT_V610d/Syscalls/SEGGER_RTT_Syscalls_GCC.o (symbol from plugin)
+_write_r(_reent*, int, void const*, int)          obj/external/SEGGER_RTT_V610d/Syscalls/SEGGER_RTT_Syscalls_GCC.o (symbol from plugin)
+alloc_counter                                     obj/src/core/vmmu.o (symbol from plugin)
+ascii2ucs2(char const*)                           obj/src/support/common.o (symbol from plugin)
+atexit                                            c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-atexit.o)
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+atof(char*)                                       obj/src/support/compat.o (symbol from plugin)
+delay(unsigned long)                              obj/src/support/common.o (symbol from plugin)
+delay_ms(unsigned long)                           C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/support/common.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/support/morse.o (symbol from plugin)
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  obj/src/core/adc.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/nrf24l01/nrf24.o (symbol from plugin)
+                                                  obj/src/drivers/storage/sdc.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+exit                                              c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-exit.o)
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+free                                              c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__call_atexit.o)
+free_counter                                      obj/src/core/vmmu.o (symbol from plugin)
+g_pfnVectors                                      obj/src/core/STM32F10X_MD.o
+get_free_memory()                                 obj/src/core/vmmu.o (symbol from plugin)
+hardware_init_hook                                c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+isdigit(int)                                      obj/src/support/compat.o (symbol from plugin)
+main                                              C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                                  obj/src/main.o (symbol from plugin)
+                                                  obj/src/core/STM32F10X_MD.o
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+malloc                                            c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-__atexit.o)
+mass_erase()                                      obj/src/drivers/storage/flash.o (symbol from plugin)
+memcmp                                            obj/src/support/compat.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+memcpy                                            obj/src/support/compat.o (symbol from plugin)
+                                                  obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+                                                  obj/src/core/isr_helper.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+memset                                            C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/support/compat.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/main.o (symbol from plugin)
+                                                  obj/src/support/common.o (symbol from plugin)
+                                                  obj/src/core/vmmu.o (symbol from plugin)
+                                                  obj/src/core/isr.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+                                                  obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+morse_dash()                                      obj/src/support/morse.o (symbol from plugin)
+morse_dit()                                       obj/src/support/morse.o (symbol from plugin)
+morse_print(char*)                                obj/src/support/morse.o (symbol from plugin)
+morse_sendc(char)                                 obj/src/support/morse.o (symbol from plugin)
+num2str(int)                                      obj/src/support/compat.o (symbol from plugin)
+operator delete(void*)                            C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/support/compat.o (symbol from plugin)
+                                                  c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libstdc++.a(del_ops.o)
+operator delete(void*, unsigned int)              c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libstdc++.a(del_ops.o)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans2.ltrans.o
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+                                                  obj/src/core/usart.o (symbol from plugin)
+                                                  obj/src/core/spi.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+operator new(unsigned int)                        obj/src/support/compat.o (symbol from plugin)
+print_memstat()                                   obj/src/core/vmmu.o (symbol from plugin)
+remap_vector_table()                              C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/isr_helper.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/core/core.o (symbol from plugin)
+software_init_hook                                c:/dev/gcc/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m/crt0.o
+stalloc(unsigned long)                            obj/src/core/vmmu.o (symbol from plugin)
+                                                  obj/src/support/compat.o (symbol from plugin)
+                                                  obj/src/support/common.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+stfree(void*)                                     obj/src/core/vmmu.o (symbol from plugin)
+                                                  obj/src/support/compat.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+str10_to_word(char const*)                        obj/src/support/common.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/rmc.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/gga.o (symbol from plugin)
+str16_to_word(char const*)                        obj/src/support/common.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+strcat                                            obj/src/support/compat.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+                                                  obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+strclone(char const*)                             obj/src/support/common.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+strcmp                                            obj/src/support/compat.o (symbol from plugin)
+strcpy                                            obj/src/support/compat.o (symbol from plugin)
+                                                  obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+                                                  obj/src/support/common.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+                                                  obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+strlen                                            C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/support/compat.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans4.ltrans.o
+                                                  obj/src/main.o (symbol from plugin)
+                                                  obj/external/SEGGER_RTT_V610d/RTT/SEGGER_RTT.o (symbol from plugin)
+                                                  obj/src/support/common.o (symbol from plugin)
+                                                  obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+strncmp                                           obj/src/support/compat.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/gps.o (symbol from plugin)
+strstr                                            obj/src/support/compat.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/rmc.o (symbol from plugin)
+                                                  obj/src/drivers/positioning/gps/gga.o (symbol from plugin)
+strtok                                            obj/src/support/compat.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+swo_print(char const*)                            obj/src/support/log.o (symbol from plugin)
+tickcounter                                       C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/isr.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/support/common.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/atcmd.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/bc470/bc470.o (symbol from plugin)
+                                                  obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+                                                  obj/src/drivers/file_transfer/xmodem/xmodem.o (symbol from plugin)
+timerms                                           obj/src/core/isr.o (symbol from plugin)
+ucs2ascii(char const*)                            obj/src/support/common.o (symbol from plugin)
+                                                  obj/src/drivers/wireless/gsm/gsm.o (symbol from plugin)
+unwindCPUstack                                    C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/isr.o (symbol from plugin)
+vmmu_init()                                       C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans1.ltrans.o
+                                                  obj/src/core/vmmu.o (symbol from plugin)
+                                                  C:\Users\F3A1~1\AppData\Local\Temp\ccZKDenF.ltrans0.ltrans.o
+                                                  obj/src/core/core.o (symbol from plugin)
+vtable for DISK::FATdisk                          obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+vtable for Driver                                 obj/src/core/spi.o (symbol from plugin)
+                                                  obj/src/core/usart.o (symbol from plugin)
+vtable for SDC::Sdc                               obj/src/drivers/storage/disk/fatdisk.o (symbol from plugin)
+vtable for SPI::Spi                               obj/src/core/spi.o (symbol from plugin)
+vtable for UART::Uart                             obj/src/core/usart.o (symbol from plugin)
+vtable for XMODEM::xmodem                         obj/src/drivers/imaging/ov528/ov528.o (symbol from plugin)
+xorshift()                                        obj/src/support/common.o (symbol from plugin)

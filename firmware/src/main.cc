@@ -19,7 +19,7 @@
 #include <log.hpp>
 #include <core/spi.hpp>
 #include <drivers/console.hpp>
-#include <drivers/nrf24.hpp>
+#include <drivers/ov528.hpp>
 #include <drivers/storage/fatdisk.hpp>
 #include <drivers/storage/ff.hpp>
 

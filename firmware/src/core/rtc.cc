@@ -147,7 +147,7 @@ char Rtc::gets()
 }
 void Rtc::print()
 {
-	DBGPRINT("%04u/%02u/%02u %02u:%02u:%02u\n", \
+	SEGGER_RTT_printf(0,"%04u/%02u/%02u %02u:%02u:%02u\n", \
 			gety(), getmn(), getd(), geth(), getm(), gets());
 }
 

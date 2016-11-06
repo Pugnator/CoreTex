@@ -29,7 +29,7 @@ class Spi *Spi::self = nullptr;
 
 Spi::Spi(char ch)
 {
-	DBGPRINT("SPI%u activated\r\n", ch);
+	SEGGER_RTT_printf(0,"SPI%u activated\r\n", ch);
 	__disable_irq();
 	self = this;
 	channel = ch;
@@ -205,7 +205,7 @@ void Spi::multiwrite(const uint8_t *buf, uint32_t size)
 
 void Spi::go8bit(void)
 {
-	DBGPRINT("Spi::go8bit\r\n");
+	SEGGER_RTT_printf(0,"Spi::go8bit\r\n");
 	//SPI module must be disabled
 	disable();
 	Reg->CR1 &= ~SPI_CR1_DFF;
@@ -214,7 +214,7 @@ void Spi::go8bit(void)
 
 void Spi::go16bit(void)
 {
-	DBGPRINT("Spi::go16bit\r\n");
+	SEGGER_RTT_printf(0,"Spi::go16bit\r\n");
 	//SPI module must be disabled
 	disable();
 	Reg->CR1 |= SPI_CR1_DFF;
@@ -223,19 +223,19 @@ void Spi::go16bit(void)
 
 void Spi::disable(void)
 {
-	DBGPRINT("Spi::disable\r\n");
+	SEGGER_RTT_printf(0,"Spi::disable\r\n");
 	Reg->CR1 &= ~SPI_CR1_SPE;
 }
 
 void Spi::enable(void)
 {
-	DBGPRINT("Spi::enable\r\n");
+	SEGGER_RTT_printf(0,"Spi::enable\r\n");
 	Reg->CR1 |= SPI_CR1_SPE;
 }
 
 void Spi::assert(void)
 {
-	DBGPRINT("Spi::assert\r\n");
+	SEGGER_RTT_printf(0,"Spi::assert\r\n");
 	PIN_HI(SPI1NSS_PIN);
 	delay_ms(100);
 	PIN_LOW(SPI1NSS_PIN);
@@ -244,14 +244,14 @@ void Spi::assert(void)
 
 void Spi::lowspeed(void)
 {
-	DBGPRINT("Spi::lowspeed\r\n");
+	SEGGER_RTT_printf(0,"Spi::lowspeed\r\n");
 	Reg->CR1 &= ~SPI_CR1_BR;
 	Reg->CR1 |= SPI_CR1_BR | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2; // \256
 }
 
 void Spi::highspeed(void)
 {
-	DBGPRINT("Spi::highspeed\r\n");
+	SEGGER_RTT_printf(0,"Spi::highspeed\r\n");
 	Reg->CR1 &= ~SPI_CR1_BR;
 }
 }

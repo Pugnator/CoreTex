@@ -19,27 +19,33 @@
 #include <log.hpp>
 #include <core/spi.hpp>
 #include <drivers/console.hpp>
-#include <drivers/nrf24.hpp>
+#include <drivers/ov528.hpp>
 #include <drivers/storage/fatdisk.hpp>
 #include <drivers/storage/ff.hpp>
-
-#ifdef __USE_CONSOLE
-class Console *__dbg_out;
-#endif
 
 int main(void)
 {
 	Uart u(1, CONSOLE_SPEED);
 	Console out(&u);
 	out.cls();
-	__dbg_out = &out;
-	LOGPRINT("Core started\r\n");
-	LOGPRINT("FatFs test started\r\n");
+	out.print("!!!");
+	RTTPRINT("\r\nCore started\r\n");
+	RTTPRINT("FatFs test started\r\n");
 	DISK::FATdisk a(1);
 	DISK::FRESULT r;
 	DISK::FATFS fs;
 	r = a.mount(&fs, "0:", 1);
-	LOGPRINT("f_mount? %s\r\n", a.FRESULT2str(r));
+	SEGGER_RTT_printf(0,"f_mount %s\r\n", a.result_to_str(r));
+	DISK::FIL test;
+	r = a.open(&test, "test.txt", FA_OPEN_ALWAYS | FA_WRITE |FA_READ);
+	SEGGER_RTT_printf(0,"open %s\r\n", a.result_to_str(r));
+	UINT bw = 0;
+	const char* text= "Hellow world!";
+	r = a.f_write(&test, text, strlen(text), &bw);
+	SEGGER_RTT_printf(0,"f_write %s\r\n", a.result_to_str(r));
+	r = a.close(&test);
+	SEGGER_RTT_printf(0,"close %s\r\n", a.result_to_str(r));
+	//LOGPRINT("Status: 0x%x\r\n", a.get_status());
 	//r = f_mkfs("0:", 0, 0);
 	//LOGPRINT("f_mount? %s\r\n", a.FRESULT2str(r));
 	//FIL test;

@@ -2,9 +2,11 @@
 DESCRIPTION:=mcu.ini
 
 ##########################
+CPU:=STM32F103C8
 MCU:=$(shell sed -n '/^family=/ {s///p;q;}' $(DESCRIPTION))
 PROJECTNAME:=$(shell sed -n '/^name=/ {s///p;q;}' $(DESCRIPTION))
 GCCPRFX:=$(shell sed -n '/^arch=/ {s///p;q;}' $(DESCRIPTION))
+RTTVER:=$(shell sed -n '/^JLINK_VERSION=/ {s///p;q;}' $(DESCRIPTION))
 
 __USE_FATFS:=$(shell sed -n '/^__USE_FATFS=/ {s///p;q;}' $(DESCRIPTION))
 __USE_TESTS:=$(shell sed -n '/^__USE_TESTS=/ {s///p;q;}' $(DESCRIPTION))
@@ -42,6 +44,9 @@ STDLIBSRC:=\
 
 CORELIB:=\
 	src/core
+
+RTTDIR:=\
+	external/SEGGER_RTT_$(RTTVER)
 
 AUXSRC:=\
 	src/support
@@ -95,8 +100,19 @@ CORESRC:=\
 	$(CORELIB)/usart.cc \
 	$(CORELIB)/vmmu.cc
 
+RTTSRC:=\
+	$(RTTDIR)/Syscalls/SEGGER_RTT_Syscalls_GCC.c \
+	$(RTTDIR)/RTT/SEGGER_RTT.c \
+	$(RTTDIR)/RTT/SEGGER_RTT_printf.c	
+
 STARTUP:=\
 	$(CORELIB)/startup.s
+	
+ifeq ($(MCU), STM32F10X_MD)
+	STARTUP:=$(CORELIB)/STM32F10X_MD.s
+else
+	STARTUP:=$(CORELIB)/STM32F10X_HD.s
+endif
 
 SUPPORTSRC:=\
 	$(SUPPORT)/common.cc \
@@ -149,12 +165,6 @@ ifneq ($(__VMMU_POOL_SUZE), 0)
 	CXXFLAGS+=-D__VMMU_POOL_SUZE=$(__VMMU_POOL_SUZE)
 endif
 
-ifneq ($(__USE_CONSOLE), 0)
-	CXXFLAGS+=-D__USE_CONSOLE=1
-else
-	CXXFLAGS+=-D__USE_CONSOLE=0
-endif
-
 CXXFLAGS+=\
 	--std=gnu++14 -Wall \
 	-Iinclude -Isrc \
@@ -172,16 +182,30 @@ CXXFLAGS+=\
 	-ffunction-sections \
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
 
+ifeq ($(__USE_CONSOLE), 0)
+	CXXFLAGS+=-D__USE_CONSOLE=1
+else
+	CXXFLAGS+=-D__USE_CONSOLE=0
+endif
+
+CXXFLAGS+=\
+	-I$(RTTDIR)/RTT
+
+ifeq ($(MCU), STM32F10X_MD)
+	LDFLAGS+=-TSTM32F10X_MD.ld
+else
+	LDFLAGS+=-TSTM32F10X_HD.ld
+endif
+
 #-Wl,--wrap,__aeabi_unwind_cpp_pr0
 LDFLAGS+=\
 	-flto \
 	-fno-exceptions \
 	-fdata-sections \
 	-ffunction-sections \
-	-Tstm32_link.ld \
 	-lm	-Wl,--gc-sections \
 	-Wl,--cref \
-	-Wl,-Map,$(EXEC).map
+	-Wl,-Map,$(FIRMWARE).map
 
 ##################OBJECT FILES###################
 
@@ -190,6 +214,7 @@ OBJ:=$(DRIVERSSRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(STARTUP:%.s=$(OBJSDIR)/%.o)
 OBJ+=$(CORESRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(SUPPORTSRC:%.cc=$(OBJSDIR)/%.o)
+OBJ+=$(RTTSRC:%.c=$(OBJSDIR)/%.o)
 
 ifeq ($(__USE_FATFS),1)
 OBJ+=$(FATFSSRC:%.cc=$(OBJSDIR)/%.o)
@@ -210,16 +235,16 @@ PROGOBJ:=$(SRC:%.cc=$(OBJSDIR)/%.o)
 
 ######################OUTPUT###########################
 
-EXEC:=$(OUTPUTDIR)/$(PROJECTNAME).elf
-FIRMWARE:=$(OUTPUTDIR)/$(PROJECTNAME)_linked.elf
-LIBEXEC:=$(LIBSDIR)/$(PROJECTNAME).a
+FIRMWARE:=$(OUTPUTDIR)/$(PROJECTNAME).elf
+FIRMWARE_LINKED:=$(OUTPUTDIR)/$(PROJECTNAME)_linked.elf
+LIBFIRMWARE:=$(LIBSDIR)/$(PROJECTNAME).a
 
 ######################TARGETS###########################
 all: clean directories stm_stdlib library firmware linked_firmware
 
 linked_firmware: directories library $(FIRMWARE)
 
-firmware: settings directories $(EXEC)
+firmware: settings directories $(FIRMWARE)
 
 flash:
 	@echo -e "device STM32F103C8\r\nerase\r\nloadbin bin/CoreTex.elf.bin, 0x08000000\r\nr\r\ng\r\nq" > __temp.jlink
@@ -227,16 +252,16 @@ flash:
 	$(RM) -f __temp.jlink
 
 reset:
-	@echo -e "device STM32F103C8\r\nr\r\ng\r\nq" > __temp.jlink
+	@echo -e "device $(CPU)\r\nr\r\ng\r\nq" > __temp.jlink
 	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
 	$(RM) -f __temp.jlink
 
 erase:
-	@echo -e "device STM32F103C8\r\nerase\r\nq" > __temp.jlink
+	@echo -e "device $(CPU)\r\nerase\r\nq" > __temp.jlink
 	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
 	$(RM) -f __temp.jlink
 
-library: corelib drivers supportlib $(LIBEXEC)
+library: corelib drivers supportlib $(LIBFIRMWARE)
 
 $(OBJSDIR)/%.o: %.cc
 	$(MKDIR_P) `dirname $@`
@@ -253,23 +278,23 @@ $(OBJSDIR)/%.o: %.s
 	$(ASM) $< -o $@
 	$(SIZE) -d --format=berkeley $@
 
-$(EXEC): $(OBJ)	$(PROGOBJ)
+$(FIRMWARE): $(OBJ)	$(PROGOBJ)
 	$(GPP) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
-	$(OCOPY) -O binary $(EXEC) $(EXEC).bin
-	@stat -c "Output size of <%n> is %s" $(EXEC).bin
-	@$(SIZE) --format=berkeley $(EXEC)
+	$(OCOPY) -O binary $(FIRMWARE) $(FIRMWARE).bin
+	@stat -c "Output size of <%n> is %s" $(FIRMWARE).bin
+	@$(SIZE) --format=berkeley $(FIRMWARE)
 	@-$(READELF) -s $@ | $(AWK) '$$3 != "0"' | $(AWK) '$$4 == "OBJECT"' | $(SORT) -k 3 -n -r | head -n 3 | $(CXXFILT)
 
 
-$(FIRMWARE): $(PROGOBJ)
-	$(GPP) -o $@ $^ $(LDFLAGS) $(LIBEXEC)
+$(FIRMWARE_LINKED): $(PROGOBJ)
+	$(GPP) -o $@ $^ $(LDFLAGS) $(LIBFIRMWARE)
 	$(OCOPY) -O binary $(FIRMWARE) $(FIRMWARE).bin
 	@stat -c "Output size of <%n> is %s" $(FIRMWARE).bin
 	@$(SIZE) -d --format=berkeley $(FIRMWARE)
 
-$(LIBEXEC): $(MRI)
+$(LIBFIRMWARE): $(MRI)
 	$(AR) M <$^
-	@stat -c "Output size of <%n> is %s" $(LIBEXEC)
+	@stat -c "Output size of <%n> is %s" $(LIBFIRMWARE)
 
 directories:	$(OUTPUTDIR) $(OBJSDIR) $(LIBSDIR)
 

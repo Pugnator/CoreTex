@@ -1,9 +1,9 @@
 /**
   ******************************************************************************
-  * @file      startup_stm32f10x_md.s
+  * @file      STM32F10X_MD.s
   * @author    MCD Application Team
-  * @version   V3.5.0
-  * @date      11-March-2011
+  * @version   V3.5.1
+  * @date      02-November-2016
   * @brief     STM32F10x Medium Density Devices vector table for RIDE7 toolchain.
   *            This module performs:
   *                - Set the initial SP
@@ -120,7 +120,9 @@ Infinite_Loop:
 	.type	g_pfnVectors, %object
 	.size	g_pfnVectors, .-g_pfnVectors
     
-    
+
+
+
 g_pfnVectors:
 	.word	_estack
 	.word	Reset_Handler
@@ -181,7 +183,7 @@ g_pfnVectors:
 	.word	0
 	.word	0
 	.word	0
-  .word	0
+  	.word	0
 	.word	0
 	.word	0
 	.word	0

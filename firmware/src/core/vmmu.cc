@@ -65,22 +65,22 @@ void print_memstat()
 #ifdef DEBUG_MEMMGR_SUPPORT_STATS
     mem_header_t* p;
 
-    DBGPRINT("------ Memory manager stats ------\n\n");
-    DBGPRINT("Pool: free_pos = %lu (%lu bytes left)\n\n", pool_free_pos,
+    SEGGER_RTT_WriteString(0,"------ Memory manager stats ------\n\n");
+    SEGGER_RTT_printf(0,"Pool: free_pos = %lu (%lu bytes left)\n\n", pool_free_pos,
     POOL_SIZE - pool_free_pos);
 
-    DBGPRINT("Allocated %lu times, freed %lu times\n", alloc_counter, free_counter);
+    SEGGER_RTT_printf(0,"Allocated %lu times, freed %lu times\n", alloc_counter, free_counter);
 
     p = (mem_header_t*) pool;
 
     while (p < (mem_header_t*) (pool + pool_free_pos))
       {
-    	DBGPRINT("  * Addr: 0x%8X; Size: %8X\n", p, (word) p->s.size);
+    		SEGGER_RTT_printf(0,"  * Addr: 0x%8X; Size: %8X\n", p, (word) p->s.size);
 
         p += p->s.size;
       }
 
-    DBGPRINT("\nFree list:\n\n");
+    SEGGER_RTT_printf(0,"\nFree list:\n\n");
 
     if (freep)
       {
@@ -88,7 +88,7 @@ void print_memstat()
 
         for(;;)
           {
-        	DBGPRINT("  * Addr: 0x%8X; Size: %8lu; Next: 0x%8X\n", p,
+        		SEGGER_RTT_printf(0,"  * Addr: 0x%8X; Size: %8lu; Next: 0x%8X\n", p,
                 (word) p->s.size, p->s.next);
 
             p = p->s.next;
@@ -98,10 +98,10 @@ void print_memstat()
       }
     else
       {
-    	DBGPRINT("Empty\n");
+    		SEGGER_RTT_printf(0,"Empty\n");
       }
 
-    DBGPRINT("\n");
+    SEGGER_RTT_printf(0,"\n");
 #endif // DEBUG_MEMMGR_SUPPORT_STATS
   }
 
@@ -143,7 +143,7 @@ void* stalloc(word nbytes)
     if(!nbytes)
       return nullptr;
 #ifdef MEMORY_ALLOC_DEBUG
-    DBGPRINT("ALLOC from 0x%X\n", __builtin_return_address(0));
+    SEGGER_RTT_printf(0,"ALLOC from 0x%X\n", __builtin_return_address(0));
     alloc_counter++;
 #endif
     mem_header_t* p;

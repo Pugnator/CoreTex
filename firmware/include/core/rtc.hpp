@@ -1,7 +1,7 @@
 #pragma once
 #include <drivers/console.hpp>
 #include <global.hpp>
-namespace
+namespace CORERTC
 {
 typedef enum RTC_UTC_OFFSET
 {

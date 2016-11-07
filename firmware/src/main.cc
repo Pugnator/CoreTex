@@ -17,6 +17,7 @@
 #include <global.hpp>
 #include <common.hpp>
 #include <log.hpp>
+#include <core/rtc.hpp>
 
 int main(void)
 {

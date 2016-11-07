@@ -204,7 +204,7 @@ namespace
 	static void
 	date_func (Console *self)
 	{
-		Rtc rtc;
+		CORERTC::Rtc rtc;
 		if (arg1)
 			{
 				rtc.set (str10_to_word (arg1));

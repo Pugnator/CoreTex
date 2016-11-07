@@ -21,23 +21,22 @@
 #include <global.hpp>
 #include <stdlib.h>
 
+using namespace CORERTC;
+
 Rtc::Rtc(word epoch)
 {
 	State = 0;
-	if (epoch)
+	if (0 == get())
+	{
+		SEGGER_RTT_printf(0,"RTC in reset state\r\n");
+		State = RTC_IN_THE_PAST;
+		init();
+	}
+	if(epoch)
 	{
 		init(epoch);
 	}
-	else
-	{
-		if (1970 == gety())
-		{
-			State = RTC_IN_THE_PAST;
-		}
-		return;
-	}
 }
-;
 
 void Rtc::init(word epoch)
 {
@@ -58,9 +57,12 @@ void Rtc::init(word epoch)
 	RTC->CRL |= RTC_CRL_CNF;
 	RTC->PRLH = 0;
 	RTC->PRLL = 32767; //32768 - 1, working from external 32768 quarz
-	RTC->CNTH = (epoch >> 16) & 0xFFFF;
-	RTC->CNTL = epoch & 0xFFFF;
-	/**/
+	if(epoch)
+	{
+		RTC->CNTH = (epoch >> 16) & 0xFFFF;
+		RTC->CNTL = epoch & 0xFFFF;
+	}
+
 	//RTC->CRH = RTC_CRH_SECIE;
 	RTC->CRL &= ~RTC_CRL_CNF;
 	while (!(RTC->CRL & RTC_CRL_RTOFF))
@@ -70,10 +72,10 @@ void Rtc::init(word epoch)
 		;
 }
 
-//FIXME: hangs here for some reason
 void Rtc::set(word epoch)
 {
-	init(epoch);
+	RTC->CNTH = (epoch >> 16) & 0xFFFF;
+	RTC->CNTL = epoch & 0xFFFF;
 }
 
 word Rtc::get(void)
@@ -155,5 +157,4 @@ word Rtc::state(void)
 {
 	return State;
 }
-
 

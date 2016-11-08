@@ -18,7 +18,10 @@
 #include <global.hpp>
 #include <stdint.h>
 #include <string.h>
+#include <log.hpp>
 
+#define CR_DS_MASK               ((uint32_t)0xFFFFFFFC)
+#define CR_PLS_MASK              ((uint32_t)0xFFFFFF1F)
 static uint32_t seed=2463534242;
 
 word str16_to_word(const char* str)
@@ -115,4 +118,22 @@ uint32_t xorshift()
   seed ^= (seed >> 17);
   seed ^= (seed << 5);
   return seed;
+}
+
+void __assert(int condition, const char *file, int line)
+{
+  if(condition)
+  {
+   return;
+  }
+  SEGGER_RTT_printf(0, "assertion failed at %u in %s\r\n", line, file);
+
+  uint32_t tmpreg = 0;
+  tmpreg = PWR->CR;
+  tmpreg &= CR_DS_MASK;
+  tmpreg |= 1;
+  PWR->CR = tmpreg;
+  SCB->SCR |= SCB_SCR_SLEEPDEEP;
+  __WFI();
+  SCB->SCR &= (uint32_t)~((uint32_t)SCB_SCR_SLEEPDEEP);
 }

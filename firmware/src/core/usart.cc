@@ -20,6 +20,7 @@
 #include <core/usart.hpp>
 #include <global.hpp>
 #include <queue.hpp>
+#include <log.hpp>
 
 /* UART class */
 
@@ -78,7 +79,7 @@ Uart::Uart(word ch, word bd, void (*isrptr)())
   IRQ_VECTOR_TABLE[USART3_IRQn + IRQ0_EX] = (word) isrptr;
   break;
  default:
-  //TODO: Make an adequate error here
+  SEGGER_RTT_printf(0, "Unsupported UART channel\r\n");
   ;
  }
  init(ch, bd);
@@ -156,16 +157,20 @@ char Uart::read()
 
 void Uart::isr(void)
 {
+ PIN_HI(LED);
+ SEGGER_RTT_printf(0, "ISR\r\n");
  if (self->Reg->SR & USART_SR_RXNE) //receive
  {
-  short c = USART1->DR;
-  QueuePut((char)c);
   self->Reg->SR &= ~USART_SR_RXNE;
+  SEGGER_RTT_printf(0, "Read\r\n");
+  volatile uint16_t c = USART1->DR;
+  QueuePut((char)c);
  }
  else if (self->Reg->SR & USART_SR_TC) //transfer
  {
   self->Reg->SR &= ~USART_SR_TC;
  }
+ PIN_LOW(LED);
 }
 
 void Uart::init(char channel, word baud)

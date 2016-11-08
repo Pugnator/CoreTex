@@ -50,4 +50,3 @@ extern "C" void SystemInit(void)
     PIN_OUT_PP(LED);
     PIN_LOW(LED);
   }
-

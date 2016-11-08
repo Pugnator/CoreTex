@@ -17,8 +17,17 @@
 #include <global.hpp>
 #include <common.hpp>
 #include <log.hpp>
+#include <core/usart.hpp>
 
 int main(void)
 {
+  UART::Uart u(1, 9600);
+  for(;;)
+  {
+   u.write('A');
+   u.write('T');
+   u.write('\r');
+   u.write('\t');
+  }
 	MAIN_END;
 }

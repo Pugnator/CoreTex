@@ -10,3 +10,5 @@ char *num2str(int i);
 char *strclone(const char *msg);
 char *ucs2ascii (const char *ucs2);
 uint32_t xorshift();
+void __assert(int condition, const char *file, int line);
+#define ASSERT(X) do{__assert(X, __FILE__, __LINE__);}while(0)

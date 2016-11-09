@@ -158,17 +158,17 @@ char Uart::read()
 void Uart::isr(void)
 {
  PIN_HI(LED);
- SEGGER_RTT_printf(0, "ISR\r\n");
  if (self->Reg->SR & USART_SR_RXNE) //receive
  {
   self->Reg->SR &= ~USART_SR_RXNE;
-  SEGGER_RTT_printf(0, "Read\r\n");
   volatile uint16_t c = USART1->DR;
+  SEGGER_RTT_printf(0, "Read [0x%X]\r\n", c);
   QueuePut((char)c);
  }
  else if (self->Reg->SR & USART_SR_TC) //transfer
  {
   self->Reg->SR &= ~USART_SR_TC;
+  SEGGER_RTT_printf(0, "Write\r\n");
  }
  PIN_LOW(LED);
 }
@@ -194,10 +194,25 @@ void Uart::init(char channel, word baud)
   break;
  }
  volatile int irqnum = UARTirq + channel;
+
  Reg->BRR = ( CRYSTAL_CLOCK + baud / 2) / baud;
+
  Reg->CR1 &= ~USART_CR1_M;
  Reg->CR2 &= ~USART_CR2_STOP;
- Reg->CR1 |= USART_CR1_UE | USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE;
+
+ volatile uint16_t __CR1 = Reg->CR1;
+ __CR1 |=
+		 USART_CR1_UE |
+		 USART_CR1_TE |
+		 USART_CR1_RE |
+		 USART_CR1_RXNEIE |
+		 USART_CR1_TCIE |
+		 USART_CR1_TXEIE |
+		 USART_CR1_PEIE |
+		 USART_CR1_IDLEIE;
+
+ Reg->CR1 = __CR1;
+
  NVIC_EnableIRQ((IRQn_Type) irqnum);
  NVIC_SetPriority((IRQn_Type) irqnum, 3);
 }

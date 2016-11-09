@@ -21,13 +21,12 @@
 
 int main(void)
 {
+	SEGGER_RTT_printf(0, "CPU started\r\n");
   UART::Uart u(1, 9600);
   for(;;)
   {
    u.write('A');
-   u.write('T');
-   u.write('\r');
-   u.write('\t');
+   delay_ms(1000);
   }
 	MAIN_END;
 }

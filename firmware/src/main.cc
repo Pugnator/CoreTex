@@ -22,10 +22,16 @@
 int main(void)
 {
 	SEGGER_RTT_printf(0, "CPU started\r\n");
-  UART::Uart u(1, 9600);
-  for(;;)
+
+  for(int speed = 1200;speed <=115200;speed+=1200)
   {
-   u.write('A');
+  		SEGGER_RTT_printf(0, "UART speed = %u\r\n", speed);
+  	UART::Uart u(1, speed);
+  	for(int i=0;i<20;i++)
+  		{
+  			u.writestr("AT\r\n");
+  		}
+
    delay_ms(1000);
   }
 	MAIN_END;

@@ -133,8 +133,8 @@ typedef enum ATRESPONSE
 class Modem: public Uart
   {
 public:
-  Modem(short ch, word bd, Console *debug = nullptr)
-      : Uart::Uart(ch, bd, &modemisr), conout(debug)
+  Modem(short ch, word bd)
+      : Uart::Uart(ch, bd, &modemisr)
     {
       ok = false;
       go = false;
@@ -157,7 +157,6 @@ public:
   void monitor(void);
   static void modemisr(void);
   static class Modem *self;
-  Console *conout;
   char modembuf[MODEM_IN_BUFFER_SIZE + 1];
   short buflen;
   bool ok;

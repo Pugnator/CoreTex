@@ -18,21 +18,20 @@
 #include <common.hpp>
 #include <log.hpp>
 #include <core/usart.hpp>
+#include <drivers/gsm.hpp>
 
 int main(void)
 {
 	SEGGER_RTT_printf(0, "CPU started\r\n");
-
-  for(int speed = 1200;speed <=115200;speed+=1200)
-  {
-  		SEGGER_RTT_printf(0, "UART speed = %u\r\n", speed);
-  	UART::Uart u(1, speed);
-  	for(int i=0;i<20;i++)
-  		{
-  			u.writestr("AT\r\n");
-  		}
-
-   delay_ms(1000);
-  }
+	MODEM::Modem m(1, 9600);
+	if(m.setup())
+	{
+	 SEGGER_RTT_printf(0, "OK\r\n");
+	}
+	else
+	{
+	 SEGGER_RTT_printf(0, "BAD\r\n");
+	}
+	m.send_sms("\"+79670472710\"", "hello!");
 	MAIN_END;
 }

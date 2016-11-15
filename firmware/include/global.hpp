@@ -25,7 +25,7 @@ extern volatile word timerms;
 
 #define USED __attribute__((used))
 
-#define MAIN_END for(;;)
+#define MAIN_END do{SEGGER_RTT_printf(0, "Program end\r\n");for(;;);}while(0)
 
 #define delayus_asm(us) do {\
 	asm volatile (	"MOV R0,%[loops]\n\t"\

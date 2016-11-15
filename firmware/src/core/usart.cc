@@ -136,6 +136,14 @@ void Uart::dma_on()
  __ISB();
 }
 
+void Uart::dma_go(word size)
+{
+  DMA1_Channel1->CCR  &= ~DMA_CCR1_EN;      //запретить работу канала
+  DMA1_Channel1->CNDTR =  size;      //загрузить количество данных для обмена
+  DMA1->IFCR          |=  DMA_IFCR_CTCIF1;  //сбросить флаг окончания обмена
+  DMA1_Channel1->CCR  |=  DMA_CCR1_EN;      //разрешить работу канала
+}
+
 const char*
 Uart::name()
 {
@@ -263,7 +271,7 @@ void Uart::init(char channel, word baud)
    PIN_INPUT_FLOATING(RX3);
    break;
  }
- volatile int irqnum = UARTirq + channel;
+ int irqnum = UARTirq + channel;
 
  Reg->BRR = ( CRYSTAL_CLOCK + baud / 2) / baud;
 
@@ -275,7 +283,6 @@ void Uart::init(char channel, word baud)
    USART_CR1_UE |
    USART_CR1_TE |
    USART_CR1_RE |
-   USART_CR1_IDLEIE |
    USART_CR1_RXNEIE |
    USART_CR1_PEIE;
 

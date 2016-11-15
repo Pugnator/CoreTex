@@ -23,21 +23,6 @@
 
 using namespace CORERTC;
 
-Rtc::Rtc(word epoch)
-{
-	State = 0;
-	if (0 == get())
-	{
-		SEGGER_RTT_printf(0,"RTC in reset state\r\n");
-		State = RTC_IN_THE_PAST;
-		init();
-	}
-	if(epoch)
-	{
-		init(epoch);
-	}
-}
-
 void Rtc::init(word epoch)
 {
 	RCC->APB1ENR |= RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN;

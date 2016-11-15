@@ -25,12 +25,16 @@ namespace UART
     virtual char read(void);
     virtual const char* name();
     void dma_on (void);
+    void dma_off (void);
     void dma_go(word size);
     void disable (void);
     static class Uart *self;
+    /* ISRs */
     static void isr (void);
-    static void dma (void);
+    static void dmarx (void);
+    static void dmatx (void);
   protected:
+    bool is_dma_on();
     uint8_t outbuf[32];
     uint8_t inbuf[32];
     void init (char channel, word baud);

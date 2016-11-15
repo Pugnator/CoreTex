@@ -25,5 +25,7 @@ int main(void)
 	UART::Uart u(1, 9600);
 	u.dma_on();
 	u.dma_go(4);
+	delay_ms(250);
+	u.writestr("!!!!!");
 	MAIN_END;
 }

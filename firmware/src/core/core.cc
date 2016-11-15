@@ -40,9 +40,11 @@ extern "C" void SystemInit(void)
  RCC->CIR = 0x009F0000;
 
  RCC->APB2ENR |=
-   RCC_APB2ENR_IOPAEN | RCC_APB2ENR_IOPBEN | RCC_APB2ENR_IOPCEN;
+   RCC_APB2ENR_IOPAEN |
+   RCC_APB2ENR_IOPBEN |
+   RCC_APB2ENR_IOPCEN |
+   RCC_APB2ENR_AFIOEN;
 
- RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
  /* System timer config */
  SysTick->LOAD = TIMERTICK;
  SysTick->VAL = TIMERTICK;
@@ -50,9 +52,11 @@ extern "C" void SystemInit(void)
  SCB->CCR |= 0x18; // enable div-by-0 and unaligned fault
  SCB->SHCSR |= 0x00070000; // enable Usage Fault, Bus Fault, and MMU Fault
 
- SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
+ SysTick->CTRL =
+   SysTick_CTRL_CLKSOURCE_Msk |
    SysTick_CTRL_TICKINT_Msk |
    SysTick_CTRL_ENABLE_Msk;
+
  /*  AFIO->EXTICR[0] &= ~AFIO_EXTICR1_EXTI0_PA;
      AFIO->EXTICR[0] |= AFIO_EXTICR1_EXTI0_PA;
      EXTI->RTSR |= EXTI_RTSR_TR0;

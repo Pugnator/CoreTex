@@ -24,10 +24,14 @@ namespace UART
     virtual void writestr(const char* str);
     virtual char read(void);
     virtual const char* name();
+    void dma_on (void);
     void disable (void);
     static class Uart *self;
     static void isr (void);
+    static void dma (void);
   protected:
+    uint8_t outbuf[32];
+    uint8_t inbuf[32];
     void init (char channel, word baud);
     word channel;
     USART_TypeDef* Reg;

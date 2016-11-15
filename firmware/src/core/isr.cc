@@ -109,6 +109,16 @@ void USART3_IRQHandler(void)
 
 }
 
+void DMA1_Channel1_IRQHandler(void)
+{
+ if(DMA1->ISR & DMA_ISR_TCIF4)
+ {
+  DMA1->IFCR |= DMA_ISR_TCIF4;
+ }
+}
+
+
+
 //TO USE: addr2line -e ./bin/program.elf -a 0x8002327 [GDB: p/x pc when it hit for(;;)]
 USED void unwindCPUstack(word* stackAddress)
 {

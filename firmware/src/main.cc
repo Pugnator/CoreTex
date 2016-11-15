@@ -18,22 +18,10 @@
 #include <common.hpp>
 #include <log.hpp>
 #include <core/usart.hpp>
-#include <drivers/gsm.hpp>
 
 int main(void)
 {
 	SEGGER_RTT_printf(0, "CPU started\r\n");
-	MODEM::Modem m(1, 9600);
-	if(m.setup())
-	{
-	 SEGGER_RTT_printf(0, "OK\r\n");
-	}
-	else
-	{
-	 SEGGER_RTT_printf(0, "BAD\r\n");
-	}
 
-	m.rawcmd(MODEM::CMD::CREG, MODEM::CMDMODE::CHECK);
-	//m.send_sms("\"+79670472710\"", "hello!");
 	MAIN_END;
 }

@@ -57,6 +57,7 @@ namespace CMD
 	ATCMD(CMEE)\
 	ATCMD(CSMS)\
 	ATCMD(CPMS)\
+	ATCMD(CLIP)\
 	ATCMD(CMGF)\
 	ATCMD(CSCA)\
 	ATCMD(CSMP)\
@@ -155,6 +156,8 @@ public:
   void restart(void);
   void turn_off(void);
   void monitor(void);
+  void rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, const char* arg = nullptr);
+  void rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, word argument);
   static void modemisr(void);
   static class Modem *self;
   char modembuf[MODEM_IN_BUFFER_SIZE + 1];
@@ -163,8 +166,6 @@ public:
 protected:
   bool go;
   char* extract_sms_body(char *message);
-  void rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, const char* arg);
-  void rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, word argument);
   bool wait_for_reply(CMD::ATCMD cmd, ATRESPONSE expected, word timeout = 1000);
   void parse_sms(char *message);
   void sync_speed(void);

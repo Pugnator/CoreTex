@@ -24,7 +24,8 @@
 #define CR_PLS_MASK              ((uint32_t)0xFFFFFF1F)
 static uint32_t seed=2463534242;
 
-enum {
+enum
+{
 	BITMASK_7BITS = 0x7F,
 	BITMASK_8BITS = 0xFF,
 	BITMASK_HIGH_4BITS = 0xF0,
@@ -127,32 +128,9 @@ void ascii2ucs2( const char *ascii )
   }
 }
 
-int ascii2ucs2(const char* sms_text, unsigned char* output_buffer, int buffer_size)
+int ascii2ucs2(const char* sms_text, uint8_t* output_buffer, int buffer_size)
 {
-	// Check if output buffer is big enough.
-	if ((strlen(sms_text) * 7 + 7) / 8 > buffer_size)
-		return -1;
-
-	int output_buffer_length = 0;
-	int carry_on_bits = 1;
-	int i = 0;
-
-	for (; i < strlen(sms_text) - 1; ++i) {
-		output_buffer[output_buffer_length++] =
-			((sms_text[i] & BITMASK_7BITS) >> (carry_on_bits - 1)) |
-			((sms_text[i + 1] & BITMASK_7BITS) << (8 - carry_on_bits));
-		carry_on_bits++;
-		if (carry_on_bits == 8) {
-			carry_on_bits = 1;
-			++i;
-		}
-	}
-
-
-	if (i < sms_text_length)
-		output_buffer[output_buffer_length++] =	(sms_text[i] & BITMASK_7BITS) >> (carry_on_bits - 1);
-
-	return output_buffer_length;
+	return 0;
 }
 
 uint32_t xorshift()
@@ -179,4 +157,21 @@ void __assert(int condition, const char *file, int line)
   SCB->SCR |= SCB_SCR_SLEEPDEEP;
   __WFI();
   SCB->SCR &= (uint32_t)~((uint32_t)SCB_SCR_SLEEPDEEP);
+}
+
+int isprint(char c)
+{
+  if(c >= ' ' && c <= '~')
+  {
+   return 1;
+  }
+  switch (c)
+  {
+   case '\r':
+   case '\n':
+   case '\t':
+    return 1;
+   default:
+    return 0;
+  }
 }

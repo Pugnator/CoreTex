@@ -33,7 +33,7 @@ namespace MODEM
   {
    __SR &= ~USART_SR_RXNE;
    volatile uint16_t a = self->Reg->DR;
-   SEGGER_RTT_printf(0, "%c", a);
+   SEGGER_RTT_printf(0, "%c", isprint(a) ? a : '?');
    if (!self->go || self->buflen >= MODEM_IN_BUFFER_SIZE)
    {
     self->go = false;
@@ -69,22 +69,32 @@ namespace MODEM
 
  bool Modem::setup(void)
  {
-	 if (!set(CMD::CMEE, "2"))
-	   {
-	    return false;
-	   }
+  if (!set(CMD::CMEE, "2"))
+  {
+   return false;
+  }
 
   if (!set(CMD::CMGF, "1"))
   {
    return false;
   }
 
+  if (!set(CMD::CLIP, "1"))
+    {
+     return false;
+    }
+
+  if (!set(CMD::CREG, "1"))
+      {
+       return false;
+      }
+
   if (!set(CMD::CNMI, "0,0,0,0,0"))
   {
    return false;
   }
 
-  if (!set(CMD::CSCS, "\"UCS2\""))
+  if (!set(CMD::CSCS, "\"GSM\""))
   {
    return false;
   }
@@ -102,9 +112,7 @@ namespace MODEM
 
  bool Modem::send_sms(const char* number, const char* text)
  {
-	 char num[128];
-	 ascii2ucs2(number, num, 128);
-  rawcmd(CMD::CMGS, CMDMODE::SET, num);
+  rawcmd(CMD::CMGS, CMDMODE::SET, number);
 
   if (!wait_for_reply(CMD::CMGS, AT_INPUT_PROMPT))
   {

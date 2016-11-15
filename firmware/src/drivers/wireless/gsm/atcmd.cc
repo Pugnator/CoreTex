@@ -84,7 +84,6 @@ namespace MODEM
     strcat(cmdstr, SIM900ATCMD_TEXT[cmd]);
     if (strstr(buf, cmdstr))
     {
-     SEGGER_RTT_printf(0, "SIM900: OK [%s]\r\n", buf);
      return ok = true;
     }
     else

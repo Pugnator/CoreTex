@@ -32,6 +32,8 @@ int main(void)
 	{
 	 SEGGER_RTT_printf(0, "BAD\r\n");
 	}
-	m.send_sms("\"+79670472710\"", "hello!");
+
+	m.rawcmd(MODEM::CMD::CREG, MODEM::CMDMODE::CHECK);
+	//m.send_sms("\"+79670472710\"", "hello!");
 	MAIN_END;
 }

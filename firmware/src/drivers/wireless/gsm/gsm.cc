@@ -69,6 +69,11 @@ namespace MODEM
 
  bool Modem::setup(void)
  {
+	 if (!set(CMD::CMEE, "2"))
+	   {
+	    return false;
+	   }
+
   if (!set(CMD::CMGF, "1"))
   {
    return false;
@@ -97,10 +102,13 @@ namespace MODEM
 
  bool Modem::send_sms(const char* number, const char* text)
  {
-  rawcmd(CMD::CMGS, CMDMODE::SET, number);
+	 char num[128];
+	 ascii2ucs2(number, num, 128);
+  rawcmd(CMD::CMGS, CMDMODE::SET, num);
 
   if (!wait_for_reply(CMD::CMGS, AT_INPUT_PROMPT))
   {
+   SEGGER_RTT_printf(0, "No input prompt\r\n");
    return false;
   }
   writestr(text);

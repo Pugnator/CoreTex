@@ -123,7 +123,15 @@ namespace MODEM
     //TODO: errors out here
     break;
   }
-  writestr("\r\n");
+  if(CMD::CMGS == cmd)
+  	{
+  		write('\r');
+  	}
+  else
+  	{
+  		writestr("\r\n");
+  	}
+
  }
 
  void Modem::rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, word arg)

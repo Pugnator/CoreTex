@@ -24,6 +24,21 @@
 #define CR_PLS_MASK              ((uint32_t)0xFFFFFF1F)
 static uint32_t seed=2463534242;
 
+enum {
+	BITMASK_7BITS = 0x7F,
+	BITMASK_8BITS = 0xFF,
+	BITMASK_HIGH_4BITS = 0xF0,
+	BITMASK_LOW_4BITS = 0x0F,
+
+	TYPE_OF_ADDRESS_INTERNATIONAL_PHONE = 0x91,
+	TYPE_OF_ADDRESS_NATIONAL_SUBSCRIBER = 0xC8,
+
+	SMS_DELIVER_ONE_MESSAGE = 0x04,
+	SMS_SUBMIT              = 0x11,
+
+	SMS_MAX_7BIT_TEXT_LENGTH  = 160,
+};
+
 word str16_to_word(const char* str)
 {
 	word res = 0;
@@ -110,6 +125,34 @@ void ascii2ucs2( const char *ascii )
     else modem2u16( (*ptr-192+1040) );*/
     ++ptr;
   }
+}
+
+int ascii2ucs2(const char* sms_text, unsigned char* output_buffer, int buffer_size)
+{
+	// Check if output buffer is big enough.
+	if ((strlen(sms_text) * 7 + 7) / 8 > buffer_size)
+		return -1;
+
+	int output_buffer_length = 0;
+	int carry_on_bits = 1;
+	int i = 0;
+
+	for (; i < strlen(sms_text) - 1; ++i) {
+		output_buffer[output_buffer_length++] =
+			((sms_text[i] & BITMASK_7BITS) >> (carry_on_bits - 1)) |
+			((sms_text[i + 1] & BITMASK_7BITS) << (8 - carry_on_bits));
+		carry_on_bits++;
+		if (carry_on_bits == 8) {
+			carry_on_bits = 1;
+			++i;
+		}
+	}
+
+
+	if (i < sms_text_length)
+		output_buffer[output_buffer_length++] =	(sms_text[i] & BITMASK_7BITS) >> (carry_on_bits - 1);
+
+	return output_buffer_length;
 }
 
 uint32_t xorshift()

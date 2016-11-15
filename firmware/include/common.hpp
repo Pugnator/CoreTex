@@ -4,6 +4,7 @@
 
 void delay_ms (uint32_t ms);
 void delay (uint32_t s);
+int ascii2ucs2(const char* sms_text, unsigned char* output_buffer, int buffer_size);
 word str16_to_word (const char* str);
 word str10_to_word (const char* str);
 char *num2str(int i);

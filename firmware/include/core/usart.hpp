@@ -26,7 +26,8 @@ namespace UART
     virtual const char* name();
     void dma_on (void);
     void dma_off (void);
-    void dma_go(word size);
+    void dmatx_go(word size);
+    void dmarx_go();
     void disable (void);
     static class Uart *self;
     /* ISRs */

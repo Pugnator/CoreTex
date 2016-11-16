@@ -24,8 +24,6 @@ int main(void)
 	SEGGER_RTT_printf(0, "CPU started\r\n");
 	UART::Uart u(1, 9600);
 	u.dma_on();
-	u.dma_go(4);
-	delay_ms(250);
-	u.writestr("!!!!!");
+
 	MAIN_END;
 }

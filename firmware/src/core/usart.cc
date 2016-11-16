@@ -36,7 +36,7 @@ Uart::Uart(word ch, word bd)
  __disable_irq();
  self = this;
  channel = ch;
- memset(outbuf, 0, sizeof outbuf);
+ memset(outbuf, 0xaa, sizeof outbuf);
  memset(inbuf, 0, sizeof inbuf);
  QueueInit();
  switch (channel)
@@ -114,14 +114,14 @@ Uart::~Uart(void)
 void Uart::dma_on()
 {
  __disable_irq();
- IRQ_VECTOR_TABLE[DMA1_Channel4_IRQn + IRQ0_EX] = (word) &dmarx;
- IRQ_VECTOR_TABLE[DMA1_Channel5_IRQn + IRQ0_EX] = (word) &dmatx;
+ IRQ_VECTOR_TABLE[DMA1_Channel4_IRQn + IRQ0_EX] = (word) &dmatx;
+ IRQ_VECTOR_TABLE[DMA1_Channel5_IRQn + IRQ0_EX] = (word) &dmarx;
 
  RCC->AHBENR |= RCC_AHBENR_DMA1EN;
 
- //Transmission
+ //Transmit
  DMA1_Channel4->CPAR  =  (word)&Reg->DR;
- DMA1_Channel4->CMAR  =  (word)&outbuf;
+ DMA1_Channel4->CMAR  =  (word)&outbuf[0];
  DMA1_Channel4->CNDTR =  sizeof outbuf;
 
 
@@ -136,19 +136,19 @@ void Uart::dma_on()
  //Ќастроить работу с пам€тью
  DMA1_Channel4->CCR  &= ~DMA_CCR4_MSIZE;          //размерность данных 8 бит
  DMA1_Channel4->CCR  |=  DMA_CCR4_MINC;           //использовать инкремент указател€
- USART1->CR3         |=  USART_CR3_DMAT;          //разрешить передачу USART1 через DMA
+ Reg->CR3         |=  USART_CR3_DMAT;          //разрешить передачу USART1 через DMA
 
  NVIC_EnableIRQ(DMA1_Channel4_IRQn);
  NVIC_SetPriority(DMA1_Channel4_IRQn, 4);
 
  //Receive
  DMA1_Channel5->CPAR  =  (word)&Reg->DR;
- DMA1_Channel5->CMAR  =  (word)&inbuf;
+ DMA1_Channel5->CMAR  =  (word)&inbuf[0];
  DMA1_Channel5->CNDTR =  sizeof inbuf;
 
 
  DMA1_Channel5->CCR   =  0;                       //предочистка регистра конфигурации
- DMA1_Channel5->CCR  |= DMA_CCR5_CIRC;           //выключить циклический режим
+ DMA1_Channel5->CCR  &= ~DMA_CCR5_CIRC;           //выключить циклический режим
  DMA1_Channel5->CCR  &=  ~DMA_CCR5_DIR;            //направление: чтение из пам€ти
  //Ќастроить работу с переферийным устройством
  DMA1_Channel5->CCR  &= ~DMA_CCR5_PSIZE;          //размерность данных 8 бит
@@ -156,7 +156,7 @@ void Uart::dma_on()
  //Ќастроить работу с пам€тью
  DMA1_Channel5->CCR  &= ~DMA_CCR5_MSIZE;          //размерность данных 8 бит
  DMA1_Channel5->CCR  |=  DMA_CCR5_MINC;           //использовать инкремент указател€
- USART1->CR3         |=  USART_CR3_DMAT;          //разрешить передачу USART1 через DMA
+ Reg->CR3         |=  USART_CR3_DMAR;          //разрешить передачу USART1 через DMA
 
  NVIC_EnableIRQ(DMA1_Channel5_IRQn);
  NVIC_SetPriority(DMA1_Channel5_IRQn, 4);
@@ -180,8 +180,16 @@ void Uart::dmatx_go(word size)
 {
   DMA1_Channel4->CCR  &= ~DMA_CCR4_EN;      //запретить работу канала
   DMA1_Channel4->CNDTR =  size;      //загрузить количество данных дл€ обмена
-  DMA1->IFCR          |=  DMA_IFCR_CTCIF1;  //сбросить флаг окончани€ обмена
+  DMA1->IFCR          |=  DMA_IFCR_CTCIF4;  //сбросить флаг окончани€ обмена
   DMA1_Channel4->CCR  |=  DMA_CCR4_EN;      //разрешить работу канала
+}
+
+void Uart::dmarx_go(word size)
+{
+  DMA1_Channel5->CCR  &= ~DMA_CCR5_EN;      //запретить работу канала
+  DMA1_Channel5->CNDTR =  size;      //загрузить количество данных дл€ обмена
+  DMA1->IFCR          |=  DMA_IFCR_CTCIF5;  //сбросить флаг окончани€ обмена
+  DMA1_Channel5->CCR  |=  DMA_CCR5_EN;      //разрешить работу канала
 }
 
 const char*
@@ -235,7 +243,7 @@ void Uart::dmarx(void)
  SEGGER_RTT_printf(0, "DMA ISR RX\r\n");
  if(DMA1->ISR & DMA_ISR_TCIF4)
  {
-  DMA1->IFCR |= DMA_ISR_TCIF4;
+
  }
 }
 
@@ -244,7 +252,7 @@ void Uart::dmatx(void)
  SEGGER_RTT_printf(0, "DMA ISR TX\r\n");
  if(DMA1->ISR & DMA_ISR_TCIF5)
  {
-  DMA1->IFCR |= DMA_ISR_TCIF5;
+
  }
 }
 

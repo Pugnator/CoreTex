@@ -27,7 +27,7 @@ namespace UART
     void dma_on (void);
     void dma_off (void);
     void dmatx_go(word size);
-    void dmarx_go();
+    void dmarx_go(word size);
     void disable (void);
     static class Uart *self;
     /* ISRs */

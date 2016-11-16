@@ -18,12 +18,19 @@
 #include <common.hpp>
 #include <log.hpp>
 #include <core/usart.hpp>
+#include <core/core.hpp>
 
 int main(void)
 {
-	SEGGER_RTT_printf(0, "CPU started\r\n");
-	UART::Uart u(1, 9600);
-	u.dma_on();
+ //SEGGER_SYSVIEW_Conf();
+ //SEGGER_SYSVIEW_Start();
+ //SEGGER_SYSVIEW_RecordEnterISR();
+ SEGGER_RTT_printf(0, "CPU started\r\n");
+ UART::Uart u(1, 9600);
+ for(;;)
+ {
+  //u.write(0xAA);
+ }
 
-	MAIN_END;
+ MAIN_END;
 }

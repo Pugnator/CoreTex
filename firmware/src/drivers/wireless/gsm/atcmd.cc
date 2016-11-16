@@ -108,7 +108,7 @@ namespace MODEM
   switch (mode)
   {
    case CMDMODE::CHECK:
-    writestr("=?");
+    writestr("?");
     break;
    case CMDMODE::SET:
     write('=');

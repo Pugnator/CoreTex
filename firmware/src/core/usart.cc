@@ -24,9 +24,11 @@
 
 /* UART class */
 
-#define UARTirq (USART1_IRQn - 1)
-
 using namespace UART;
+
+#define UARTirq (USART1_IRQn - 1)
+#define _SR self->Reg->SR
+#define _DR self->Reg->DR
 
 /* Pointer to the USART object itself in order to be accessible from within a static method */
 class Uart *Uart::self = nullptr;
@@ -126,18 +128,18 @@ void Uart::dma_on()
  DMA1_Channel4->CNDTR =  sizeof outbuf;
 
 
- DMA1_Channel4->CCR   =  0;                       //предочистка регистра конфигурации
- DMA1_Channel4->CCR  &= ~DMA_CCR4_CIRC;           //выключить циклический режим
- DMA1_Channel4->CCR  |=  DMA_CCR4_DIR;            //направление: чтение из памяти
+ DMA1_Channel4->CCR   =  0;
+ DMA1_Channel4->CCR  &= ~DMA_CCR4_CIRC;
+ DMA1_Channel4->CCR  |=  DMA_CCR4_DIR;
 
  DMA1_Channel4->CCR  |=  DMA_CCR4_TCIE;
- //Настроить работу с переферийным устройством
- DMA1_Channel4->CCR  &= ~DMA_CCR4_PSIZE;          //размерность данных 8 бит
- DMA1_Channel4->CCR  &= ~DMA_CCR4_PINC;           //неиспользовать инкремент указателя
- //Настроить работу с памятью
- DMA1_Channel4->CCR  &= ~DMA_CCR4_MSIZE;          //размерность данных 8 бит
- DMA1_Channel4->CCR  |=  DMA_CCR4_MINC;           //использовать инкремент указателя
- Reg->CR3         |=  USART_CR3_DMAT;          //разрешить передачу USART1 через DMA
+
+ DMA1_Channel4->CCR  &= ~DMA_CCR4_PSIZE;
+ DMA1_Channel4->CCR  &= ~DMA_CCR4_PINC;
+
+ DMA1_Channel4->CCR  &= ~DMA_CCR4_MSIZE;
+ DMA1_Channel4->CCR  |=  DMA_CCR4_MINC;
+ Reg->CR3         |=  USART_CR3_DMAT;
 
  NVIC_EnableIRQ(DMA1_Channel4_IRQn);
  NVIC_SetPriority(DMA1_Channel4_IRQn, 4);
@@ -149,16 +151,16 @@ void Uart::dma_on()
  DMA1_Channel5->CNDTR =  sizeof inbuf;
 
 
- DMA1_Channel5->CCR   =  0;                       //предочистка регистра конфигурации
- DMA1_Channel5->CCR  &= ~DMA_CCR5_CIRC;           //выключить циклический режим
- //DMA1_Channel5->CCR  &=  ~DMA_CCR5_DIR;            //направление: чтение из памяти
- //Настроить работу с переферийным устройством
- DMA1_Channel5->CCR  &= ~DMA_CCR5_PSIZE;          //размерность данных 8 бит
- DMA1_Channel5->CCR  &= ~DMA_CCR5_PINC;           //неиспользовать инкремент указателя
- //Настроить работу с памятью
- DMA1_Channel5->CCR  &= ~DMA_CCR5_MSIZE;          //размерность данных 8 бит
- DMA1_Channel5->CCR  |=  DMA_CCR5_MINC;           //использовать инкремент указателя
- Reg->CR3         |=  USART_CR3_DMAR;          //разрешить передачу USART1 через DMA
+ DMA1_Channel5->CCR   =  0;
+ DMA1_Channel5->CCR  &= ~DMA_CCR5_CIRC;
+ //DMA1_Channel5->CCR  &=  ~DMA_CCR5_DIR;
+
+ DMA1_Channel5->CCR  &= ~DMA_CCR5_PSIZE;
+ DMA1_Channel5->CCR  &= ~DMA_CCR5_PINC;
+
+ DMA1_Channel5->CCR  &= ~DMA_CCR5_MSIZE;
+ DMA1_Channel5->CCR  |=  DMA_CCR5_MINC;
+ Reg->CR3         |=  USART_CR3_DMAR;
 
  NVIC_EnableIRQ(DMA1_Channel5_IRQn);
  NVIC_SetPriority(DMA1_Channel5_IRQn, 4);
@@ -279,52 +281,57 @@ void Uart::dmatx(void)
 
 void Uart::isr(void)
 {
- volatile uint16_t __SR = self->Reg->SR;
- if (__SR & USART_SR_RXNE) //receive
+ if (_SR & USART_SR_RXNE) //receive
  {
-  __SR &= ~USART_SR_RXNE;
-  volatile uint16_t c = USART1->DR;
+  _SR &= ~USART_SR_RXNE;
+  volatile uint16_t c = _DR;
   SEGGER_RTT_printf(0, "Read [0x%X]\r\n", c);
   QueuePut((char)c);
  }
- else if (__SR & USART_SR_TC) //transfer
+ else if (_SR & USART_SR_TC) //transfer
  {
-  __SR &= ~USART_SR_TC;
+  _SR &= ~USART_SR_TC;
   SEGGER_RTT_printf(0, "Write completed\r\n");
  }
- else if (__SR & USART_SR_CTS)
+ else if (_SR & USART_SR_CTS)
  {
-  __SR &= ~USART_SR_CTS;
+  _SR &= ~USART_SR_CTS;
  }
- else if (__SR & USART_SR_FE)
+ else if (_SR & USART_SR_FE)
  {
-  __SR &= ~USART_SR_FE;
+  _SR &= ~USART_SR_FE;
+  volatile uint16_t tmp = _SR;
+  tmp = _DR;
  }
- else if (__SR & USART_SR_IDLE)
+ else if (_SR & USART_SR_IDLE)
  {
-  __SR &= ~USART_SR_IDLE;
+  _SR &= ~USART_SR_IDLE;
+  volatile uint16_t tmp = _SR;
+  tmp = _DR;
+  SEGGER_RTT_printf(0, "Idle line\r\n");
  }
- else if (__SR & USART_SR_LBD)
+ else if (_SR & USART_SR_LBD)
  {
-  __SR &= ~USART_SR_LBD;
+  _SR &= ~USART_SR_LBD;
  }
- else if (__SR & USART_SR_NE)
+ else if (_SR & USART_SR_NE)
  {
-  __SR &= ~USART_SR_NE;
+  _SR &= ~USART_SR_NE;
  }
- else if (__SR & USART_SR_ORE)
+ else if (_SR & USART_SR_ORE)
  {
-  __SR &= ~USART_SR_ORE;
+  _SR &= ~USART_SR_ORE;
+  volatile uint16_t tmp = _SR;
+  tmp = _DR;
  }
- else if (__SR & USART_SR_PE)
+ else if (_SR & USART_SR_PE)
  {
-  __SR &= ~USART_SR_PE;
+  _SR &= ~USART_SR_PE;
  }
- else if (__SR & USART_SR_TXE)
+ else if (_SR & USART_SR_TXE)
  {
-  __SR &= ~USART_SR_TXE;
+  _SR &= ~USART_SR_TXE;
  }
- self->Reg->SR = __SR;
 }
 
 void Uart::init(char channel, word baud)
@@ -366,4 +373,14 @@ void Uart::init(char channel, word baud)
 
  NVIC_EnableIRQ((IRQn_Type) irqnum);
  NVIC_SetPriority((IRQn_Type) irqnum, 3);
+}
+
+uint8_t *Uart::get_rx_buf()
+{
+ return inbuf;
+}
+
+uint8_t *Uart::get_tx_buf()
+{
+ return outbuf;
 }

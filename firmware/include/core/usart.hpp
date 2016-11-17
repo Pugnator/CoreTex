@@ -2,7 +2,7 @@
 #include <core/stm32f10x.hpp>
 #include <string.h>
 
-#include "../drivers/generic/iodriver.hpp"
+#include "drivers/generic/iodriver.hpp"
 
 namespace UART
 {
@@ -14,33 +14,35 @@ namespace UART
 #define RX3 B,11,SPEED_50MHz
 #define TX3 B,10,SPEED_50MHz
 
-  class Uart : private IODriver
-  {
-  public:
-    Uart (word ch, word bd);
-    Uart (word ch, word bd, void (*isrptr)(void));
-    ~Uart(void);
+ class Uart : private IODriver
+ {
+ public:
+  Uart (word ch, word bd);
+  Uart (word ch, word bd, void (*isrptr)(void));
+  ~Uart(void);
 
-    virtual void write (char c);
-    virtual void writestr(const char* str);
-    virtual char read(void);
-    virtual const char* name();
-    void dma_on (void);
-    void dma_off (void);
-    void dmatx_go(word size);
-    void dmarx_go(word size);
-    void disable (void);
-    static class Uart *self;
-    /* ISRs */
-    static void isr (void);
-    static void dmarx (void);
-    static void dmatx (void);
-  protected:
-    bool is_dma_on();
-    uint8_t outbuf[32];
-    uint8_t inbuf[32];
-    void init (char channel, word baud);
-    word channel;
-    USART_TypeDef* Reg;
-  };
+  virtual void write (char c);
+  virtual void writestr(const char* str);
+  virtual char read(void);
+  virtual const char* name();
+  void dma_on (void);
+  void dma_off (void);
+  void dmatx_go(word size);
+  void dmarx_go(word size);
+  void disable (void);
+  static class Uart *self;
+  /* ISRs */
+  static void isr (void);
+  static void dmarx (void);
+  static void dmatx (void);
+  uint8_t *get_rx_buf();
+  uint8_t *get_tx_buf();
+ protected:
+  bool is_dma_on();
+  uint8_t outbuf[32];
+  uint8_t inbuf[32];
+  void init (char channel, word baud);
+  word channel;
+  USART_TypeDef* Reg;
+ };
 }

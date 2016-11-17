@@ -224,7 +224,6 @@ OBJ+=$(STARTUP:%.s=$(OBJSDIR)/%.o)
 OBJ+=$(CORESRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(SUPPORTSRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(RTTSRC:%.c=$(OBJSDIR)/%.o)
-OBJ+=$(SYSVIEWSRC:%.c=$(OBJSDIR)/%.o)
 
 ifeq ($(__USE_FATFS),1)
 OBJ+=$(FATFSSRC:%.cc=$(OBJSDIR)/%.o)
@@ -236,6 +235,10 @@ endif
 
 ifeq ($(__USE_STDLIB),1)
 OBJ+=$(STMLIBSRC:%.c=$(OBJSDIR)/%.o)
+endif
+
+ifeq ($(__USE_SYSVIEW),1)
+OBJ+=$(SYSVIEWSRC:%.c=$(OBJSDIR)/%.o)
 endif
 
 DEPS := $(OBJ:.o=.d)

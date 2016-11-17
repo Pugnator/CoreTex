@@ -1,7 +1,8 @@
 #pragma once
 #include <core/stm32f10x.hpp>
 #include <string.h>
-#include <drivers/generic/driver.hpp>
+
+#include "../drivers/generic/iodriver.hpp"
 
 namespace UART
 {
@@ -13,7 +14,7 @@ namespace UART
 #define RX3 B,11,SPEED_50MHz
 #define TX3 B,10,SPEED_50MHz
 
-  class Uart : public Driver
+  class Uart : private IODriver
   {
   public:
     Uart (word ch, word bd);

@@ -180,18 +180,18 @@ bool Uart::is_dma_on()
 
 void Uart::dmatx_go(word size)
 {
-  DMA1_Channel4->CCR  &= ~DMA_CCR4_EN;      //запретить работу канала
-  DMA1_Channel4->CNDTR =  size;      //загрузить количество данных для обмена
-  DMA1->IFCR          |=  DMA_IFCR_CTCIF4;  //сбросить флаг окончания обмена
-  DMA1_Channel4->CCR  |=  DMA_CCR4_EN;      //разрешить работу канала
+ DMA1_Channel4->CCR  &= ~DMA_CCR4_EN;      //запретить работу канала
+ DMA1_Channel4->CNDTR =  size;      //загрузить количество данных для обмена
+ DMA1->IFCR          |=  DMA_IFCR_CTCIF4;  //сбросить флаг окончания обмена
+ DMA1_Channel4->CCR  |=  DMA_CCR4_EN;      //разрешить работу канала
 }
 
 void Uart::dmarx_go(word size)
 {
-  DMA1_Channel5->CCR  &= ~DMA_CCR5_EN;      //запретить работу канала
-  DMA1_Channel5->CNDTR =  size;      //загрузить количество данных для обмена
-  DMA1->IFCR          |=  DMA_IFCR_CTCIF5;  //сбросить флаг окончания обмена
-  DMA1_Channel5->CCR  |=  DMA_CCR5_EN;      //разрешить работу канала
+ DMA1_Channel5->CCR  &= ~DMA_CCR5_EN;      //запретить работу канала
+ DMA1_Channel5->CNDTR =  size;      //загрузить количество данных для обмена
+ DMA1->IFCR          |=  DMA_IFCR_CTCIF5;  //сбросить флаг окончания обмена
+ DMA1_Channel5->CCR  |=  DMA_CCR5_EN;      //разрешить работу канала
 }
 
 const char*
@@ -245,37 +245,36 @@ void Uart::dmarx(void)
  SEGGER_RTT_printf(0, "DMA ISR RX\r\n");
  if(DMA1->ISR & DMA_ISR_TCIF4)
  {
-		 DMA1->IFCR |= DMA_ISR_TCIF4;
+  DMA1->IFCR |= DMA_ISR_TCIF4;
  }
  else if(DMA1->ISR & DMA_ISR_HTIF4)
-  {
-		 DMA1->IFCR |= DMA_ISR_HTIF4;
-  }
+ {
+  DMA1->IFCR |= DMA_ISR_HTIF4;
+ }
  else if(DMA1->ISR & DMA_ISR_TEIF4)
-  {
-		 DMA1->IFCR |= DMA_ISR_TEIF4;
-  }
+ {
+  DMA1->IFCR |= DMA_ISR_TEIF4;
+ }
 }
 
 void Uart::dmatx(void)
 {
-
  if(DMA1->ISR & DMA_ISR_TCIF5)
  {
-		 DMA1->IFCR |= DMA_ISR_TCIF5;
+  DMA1->IFCR |= DMA_ISR_TCIF5;
  }
  else if(DMA1->ISR & DMA_ISR_HTIF5)
-  {
-		 DMA1->IFCR |= DMA_ISR_HTIF5;
-  }
+ {
+  DMA1->IFCR |= DMA_ISR_HTIF5;
+ }
  else if(DMA1->ISR & DMA_ISR_TEIF5)
-  {
-		 DMA1->IFCR |= DMA_ISR_TEIF5;
-  }
+ {
+  DMA1->IFCR |= DMA_ISR_TEIF5;
+ }
  else if(DMA1->ISR & DMA_ISR_GIF5)
-   {
- 		 DMA1->IFCR |= DMA_ISR_GIF5;
-   }
+ {
+  DMA1->IFCR |= DMA_ISR_GIF5;
+ }
 }
 
 void Uart::isr(void)

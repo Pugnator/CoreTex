@@ -2,15 +2,15 @@
 #include <global.hpp>
 #include <../res/text/drivers/text.hpp>
 
-class Driver
+class IODriver
 {
 public:
-	Driver ()
+	IODriver ()
 	{
 
 	}
 	virtual
-	~Driver ()
+	~IODriver ()
 	{
 
 	}

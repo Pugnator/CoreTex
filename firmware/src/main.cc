@@ -27,10 +27,8 @@ int main(void)
  //SEGGER_SYSVIEW_RecordEnterISR();
  SEGGER_RTT_printf(0, "CPU started\r\n");
  UART::Uart u(1, 9600);
- for(;;)
- {
-  //u.write(0xAA);
- }
-
+ u.dma_on();
+ u.dmarx_go(1);
+ u.dmatx_go(1);
  MAIN_END;
 }

@@ -120,6 +120,7 @@ void Uart::dma_on()
  RCC->AHBENR |= RCC_AHBENR_DMA1EN;
 
  //Transmit
+ DMA1_Channel4->CCR  &= ~DMA_CCR4_EN;
  DMA1_Channel4->CPAR  =  (word)&Reg->DR;
  DMA1_Channel4->CMAR  =  (word)&outbuf[0];
  DMA1_Channel4->CNDTR =  sizeof outbuf;
@@ -142,6 +143,7 @@ void Uart::dma_on()
  NVIC_SetPriority(DMA1_Channel4_IRQn, 4);
 
  //Receive
+ DMA1_Channel5->CCR  &= ~DMA_CCR5_EN;
  DMA1_Channel5->CPAR  =  (word)&Reg->DR;
  DMA1_Channel5->CMAR  =  (word)&inbuf[0];
  DMA1_Channel5->CNDTR =  sizeof inbuf;
@@ -149,7 +151,7 @@ void Uart::dma_on()
 
  DMA1_Channel5->CCR   =  0;                       //предочистка регистра конфигурации
  DMA1_Channel5->CCR  &= ~DMA_CCR5_CIRC;           //выключить циклический режим
- DMA1_Channel5->CCR  &=  ~DMA_CCR5_DIR;            //направление: чтение из памяти
+ //DMA1_Channel5->CCR  &=  ~DMA_CCR5_DIR;            //направление: чтение из памяти
  //Настроить работу с переферийным устройством
  DMA1_Channel5->CCR  &= ~DMA_CCR5_PSIZE;          //размерность данных 8 бит
  DMA1_Channel5->CCR  &= ~DMA_CCR5_PINC;           //неиспользовать инкремент указателя
@@ -243,22 +245,41 @@ void Uart::dmarx(void)
  SEGGER_RTT_printf(0, "DMA ISR RX\r\n");
  if(DMA1->ISR & DMA_ISR_TCIF4)
  {
-
+		 DMA1->IFCR |= DMA_ISR_TCIF4;
  }
+ else if(DMA1->ISR & DMA_ISR_HTIF4)
+  {
+		 DMA1->IFCR |= DMA_ISR_HTIF4;
+  }
+ else if(DMA1->ISR & DMA_ISR_TEIF4)
+  {
+		 DMA1->IFCR |= DMA_ISR_TEIF4;
+  }
 }
 
 void Uart::dmatx(void)
 {
- SEGGER_RTT_printf(0, "DMA ISR TX\r\n");
+
  if(DMA1->ISR & DMA_ISR_TCIF5)
  {
-
+		 DMA1->IFCR |= DMA_ISR_TCIF5;
  }
+ else if(DMA1->ISR & DMA_ISR_HTIF5)
+  {
+		 DMA1->IFCR |= DMA_ISR_HTIF5;
+  }
+ else if(DMA1->ISR & DMA_ISR_TEIF5)
+  {
+		 DMA1->IFCR |= DMA_ISR_TEIF5;
+  }
+ else if(DMA1->ISR & DMA_ISR_GIF5)
+   {
+ 		 DMA1->IFCR |= DMA_ISR_GIF5;
+   }
 }
 
 void Uart::isr(void)
 {
- PIN_HI(LED);
  volatile uint16_t __SR = self->Reg->SR;
  if (__SR & USART_SR_RXNE) //receive
  {
@@ -305,7 +326,6 @@ void Uart::isr(void)
   __SR &= ~USART_SR_TXE;
  }
  self->Reg->SR = __SR;
- PIN_LOW(LED);
 }
 
 void Uart::init(char channel, word baud)

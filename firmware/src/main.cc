@@ -25,7 +25,7 @@ int main(void)
  SEGGER_RTT_printf(0, "CPU started\r\n");
  UART::Uart u(1, 9600);
  u.dma_on();
- //u.dmarx_go(2);
+ u.dmarx_go(2);
  u.dmatx_go(3);
  delay_ms(500);
  SEGGER_RTT_printf(0, "Result: 0x%X 0x%X 0x%X\r\n", *u.get_rx_buf(), u.get_rx_buf()[1], u.get_rx_buf()[2]);

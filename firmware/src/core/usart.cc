@@ -132,7 +132,7 @@ void Uart::dma_on()
  DMA1_Channel4->CCR  &= ~DMA_CCR4_CIRC;
  DMA1_Channel4->CCR  |=  DMA_CCR4_DIR;
 
- DMA1_Channel4->CCR  |=  DMA_CCR4_TCIE;
+ DMA1_Channel4->CCR  &=  ~DMA_CCR4_TCIE;
 
  DMA1_Channel4->CCR  &= ~DMA_CCR4_PSIZE;
  DMA1_Channel4->CCR  &= ~DMA_CCR4_PINC;
@@ -154,7 +154,7 @@ void Uart::dma_on()
  DMA1_Channel5->CCR   =  0;
  DMA1_Channel5->CCR  &= ~DMA_CCR5_CIRC;
  //DMA1_Channel5->CCR  &=  ~DMA_CCR5_DIR;
-
+ DMA1_Channel5->CCR  &=  ~DMA_CCR5_TCIE;
  DMA1_Channel5->CCR  &= ~DMA_CCR5_PSIZE;
  DMA1_Channel5->CCR  &= ~DMA_CCR5_PINC;
 
@@ -172,7 +172,9 @@ void Uart::dma_on()
 
 void Uart::dma_off()
 {
-
+	DMA1_Channel4->CCR = 0;
+	DMA1_Channel5->CCR = 0;
+	RCC->AHBENR &= ~RCC_AHBENR_DMA1EN;
 }
 
 bool Uart::is_dma_on()
@@ -182,18 +184,18 @@ bool Uart::is_dma_on()
 
 void Uart::dmatx_go(word size)
 {
- DMA1_Channel4->CCR  &= ~DMA_CCR4_EN;      //запретить работу канала
- DMA1_Channel4->CNDTR =  size;      //загрузить количество данных для обмена
- DMA1->IFCR          |=  DMA_IFCR_CTCIF4;  //сбросить флаг окончания обмена
- DMA1_Channel4->CCR  |=  DMA_CCR4_EN;      //разрешить работу канала
+ DMA1_Channel4->CCR  &= ~DMA_CCR4_EN;
+ DMA1_Channel4->CNDTR =  size;
+ DMA1->IFCR          |=  DMA_IFCR_CTCIF4;
+ DMA1_Channel4->CCR  |=  DMA_CCR4_EN;
 }
 
 void Uart::dmarx_go(word size)
 {
- DMA1_Channel5->CCR  &= ~DMA_CCR5_EN;      //запретить работу канала
- DMA1_Channel5->CNDTR =  size;      //загрузить количество данных для обмена
- DMA1->IFCR          |=  DMA_IFCR_CTCIF5;  //сбросить флаг окончания обмена
- DMA1_Channel5->CCR  |=  DMA_CCR5_EN;      //разрешить работу канала
+ DMA1_Channel5->CCR  &= ~DMA_CCR5_EN;
+ DMA1_Channel5->CNDTR =  size;
+ DMA1->IFCR          |=  DMA_IFCR_CTCIF5;
+ DMA1_Channel5->CCR  |=  DMA_CCR5_EN;
 }
 
 const char*
@@ -244,7 +246,6 @@ char Uart::read()
 
 void Uart::dmarx(void)
 {
- SEGGER_RTT_printf(0, "DMA ISR RX\r\n");
  if(DMA1->ISR & DMA_ISR_TCIF4)
  {
   DMA1->IFCR |= DMA_ISR_TCIF4;
@@ -261,7 +262,11 @@ void Uart::dmarx(void)
 
 void Uart::dmatx(void)
 {
- if(DMA1->ISR & DMA_ISR_TCIF5)
+	if(DMA1->ISR & DMA_ISR_GIF5)
+	{
+		DMA1->IFCR |= DMA_ISR_GIF5;
+	}
+	else if(DMA1->ISR & DMA_ISR_TCIF5)
  {
   DMA1->IFCR |= DMA_ISR_TCIF5;
  }

@@ -113,6 +113,14 @@ typedef enum MODE
   } MODE;
 }
 
+typedef enum OPERATOR
+{
+ BEELINE,
+ MEGAFON,
+ MTS,
+ TELE2
+}OPERATOR;
+
 typedef enum ATRESPONSE
   {
   AT_OK,
@@ -149,15 +157,22 @@ public:
   bool get(CMD::ATCMD cmd);
   bool is_supported(CMD::ATCMD cmd);
   bool setup(void);
-  bool send_sms(const char* number, const char* text);
-  char* get_sms_by_index(word num);
-  bool delete_all_sms(void);
-  word get_sms_amount(void);
   void restart(void);
   void turn_off(void);
   void monitor(void);
   void rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, const char* arg = nullptr);
   void rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, word argument);
+
+  /*GSM functions*/
+  bool send_sms(const char* number, const char* text);
+  char* get_sms_by_index(word num);
+  bool delete_all_sms(void);
+  word get_sms_amount(void);
+  char* ussd(const char *request);
+  word get_account_debet(OPERATOR op);
+  /******************************************/
+
+
   static void modemisr(void);
   static class Modem *self;
   char modembuf[MODEM_IN_BUFFER_SIZE + 1];

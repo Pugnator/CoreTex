@@ -9,6 +9,9 @@
 namespace MODEM
 {
 
+#define USSD_TIMEOUT 10000
+#define USSD_REPLY_TIMEOUT 500
+
  static const char *SIM900ATCMD_TEXT[] =
  {
    FOREACH_ATCMD(GENERATE_ATCMD_STRING)
@@ -96,6 +99,36 @@ namespace MODEM
   while (STILL_WAIT);
   return ok;
  }
+
+ char* Modem::ussd(const char *request)
+  {
+   ok = false;
+   rawcmd(CMD::CUSD, CMDMODE::SET, "1,\"#102#\"");
+   if (!wait_for_reply(CMD::CUSD, AT_OK))
+   {
+    go = false;
+    return nullptr;
+   }
+   SEGGER_RTT_printf(0, "Waiting for USSD reply [10secs]\r\n");
+   WAIT_FOR(USSD_TIMEOUT);
+   while(STILL_WAIT)
+   {
+    if(strstr(modembuf, "+CUSD:"))
+    {
+     delay_ms(USSD_REPLY_TIMEOUT);
+     break;
+    }
+   }
+
+   SEGGER_RTT_printf(0, "Got USSD reply\r\n");
+   go = false;
+   char *buf = strclone(modembuf);
+   if(!buf)
+   {
+    return nullptr;
+   }
+   return buf;
+  }
 
  void Modem::rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, const char* arg)
  {

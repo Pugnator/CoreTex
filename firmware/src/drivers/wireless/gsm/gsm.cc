@@ -80,14 +80,14 @@ namespace MODEM
   }
 
   if (!set(CMD::CLIP, "1"))
-    {
-     return false;
-    }
+  {
+   return false;
+  }
 
   if (!set(CMD::CREG, "1"))
-      {
-       return false;
-      }
+  {
+   return false;
+  }
 
   if (!set(CMD::CNMI, "0,0,0,0,0"))
   {
@@ -135,6 +135,49 @@ namespace MODEM
   char *sms = extract_sms_body(strclone(modembuf));
   reset();
   return sms;
+ }
+
+ word Modem::get_account_debet(OPERATOR op)
+ {
+  ok = false;
+  char *buf = nullptr;
+  switch (op)
+  {
+   case BEELINE:
+    buf = ussd("\"#102#\"");
+    break;
+   case MTS:
+    buf = ussd("\"#102#\"");
+    break;
+   case MEGAFON:
+    buf = ussd("\"#102#\"");
+    break;
+   case TELE2:
+    buf = ussd("\"#102#\"");
+    break;
+   default:
+    return 0;
+  }
+  char *bal = strstr(buf, " r.");
+  word result = 0;
+  if(!bal)
+  {
+   return result;
+  }
+  *bal = 0;
+  while(*(--bal) != ' ' && bal != buf);
+  bal++;
+  char *dot = strstr(bal, ".");
+  if(dot)
+  {
+   *dot = result;
+  }
+  SEGGER_RTT_printf(0, "Balance: %s\r\n", bal);
+  ok = true;
+
+  result = str10_to_word(bal);
+  FREE(buf);
+  return result;
  }
 
  char* Modem::extract_sms_body(char *message)

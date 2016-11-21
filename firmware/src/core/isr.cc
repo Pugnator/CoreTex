@@ -16,11 +16,10 @@
  *******************************************************************************/
 
 #include <global.hpp>
-#include <drivers/console.hpp>
 #include <common.hpp>
+#include <log.hpp>
 #include <core/io_macro.hpp>
 #include <core/isr_helper.hpp>
-#include <core/usart.hpp>
 
 volatile word tickcounter = 0;
 volatile word timerms = 0;
@@ -109,6 +108,16 @@ void USART3_IRQHandler(void)
 
 }
 
+void DMA1_Channel1_IRQHandler(void)
+{
+ if(DMA1->ISR & DMA_ISR_TCIF4)
+ {
+  DMA1->IFCR |= DMA_ISR_TCIF4;
+ }
+}
+
+
+
 //TO USE: addr2line -e ./bin/program.elf -a 0x8002327 [GDB: p/x pc when it hit for(;;)]
 USED void unwindCPUstack(word* stackAddress)
 {
@@ -118,7 +127,6 @@ USED void unwindCPUstack(word* stackAddress)
   values of the variables, make them global my moving their declaration outside
   of this function.
   */
-#if __DEBUG
  volatile word r0 = stackAddress[0];
  volatile word r1 = stackAddress[1];
  volatile word r2 = stackAddress[2];
@@ -132,18 +140,12 @@ USED void unwindCPUstack(word* stackAddress)
  volatile word psr = stackAddress[7];
 
 
- Uart out(1, 9600);
- Console coredump(&out);
- coredump.foreground(COLOR_RED);
- coredump < "CPU fatal error trapped\r\nSystem halted";
- coredump.foreground(COLOR_CYAN);
- coredump < "*** CPU registers ***";
- coredump.foreground(COLOR_MAGENTA);
- coredump.xprintf(
-   "R0:  0x%08X\nR1:  0x%08X\nR2:  0x%08X\nR3:  0x%08X\nR12: 0x%08X\n", r0, r1,
+ SEGGER_RTT_printf(0, "CPU fatal error trapped\r\nSystem halted\r\n");
+ SEGGER_RTT_printf(0, "*** CPU registers ***\r\n");
+ SEGGER_RTT_printf(0, "R0:  0x%08X\nR1:  0x%08X\nR2:  0x%08X\nR3:  0x%08X\nR12: 0x%08X\n", r0, r1,
    r2, r3, r12);
- coredump.xprintf("LR:  0x%08X\nPC:  0x%08X\nPSR: 0x%08X\n", lr, pc, psr);
- coredump.foreground(COLOR_WHITE);
+ SEGGER_RTT_printf(0, "LR:  0x%08X\nPC:  0x%08X\nPSR: 0x%08X\n", lr, pc, psr);
+
 
  /* When the following line is hit, the variables contain the register values. */
  for (;;)
@@ -151,7 +153,6 @@ USED void unwindCPUstack(word* stackAddress)
 		 delayus_asm(1000000L);
 		 BLINK;
  }
-#endif
 }
 
 /* DTR */

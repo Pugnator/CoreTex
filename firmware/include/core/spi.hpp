@@ -1,6 +1,6 @@
 #pragma once
 #include <core/stm32f10x.hpp>
-#include <drivers/generic/driver.hpp>
+#include "../drivers/generic/iodriver.hpp"
 
 namespace SPI
 {
@@ -9,7 +9,7 @@ namespace SPI
 #define SPI1MISO_PIN A,6,SPEED_50MHz
 #define SPI1MOSI_PIN A,7,SPEED_50MHz
 
-class Spi : public Driver
+class Spi : public IODriver
   {
 public:
   Spi(char ch);

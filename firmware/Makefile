@@ -7,6 +7,7 @@ MCU:=$(shell sed -n '/^family=/ {s///p;q;}' $(DESCRIPTION))
 PROJECTNAME:=$(shell sed -n '/^name=/ {s///p;q;}' $(DESCRIPTION))
 GCCPRFX:=$(shell sed -n '/^arch=/ {s///p;q;}' $(DESCRIPTION))
 RTTVER:=$(shell sed -n '/^JLINK_VERSION=/ {s///p;q;}' $(DESCRIPTION))
+SYSVVER:=$(shell sed -n '/^SYSVIEW_VERSION=/ {s///p;q;}' $(DESCRIPTION))
 
 __USE_FATFS:=$(shell sed -n '/^__USE_FATFS=/ {s///p;q;}' $(DESCRIPTION))
 __USE_TESTS:=$(shell sed -n '/^__USE_TESTS=/ {s///p;q;}' $(DESCRIPTION))
@@ -44,6 +45,9 @@ STDLIBSRC:=\
 
 CORELIB:=\
 	src/core
+
+SYSVIEWDIR:=\
+	external/SEGGER_SYSTEMVIEW_$(SYSVVER)
 
 RTTDIR:=\
 	external/SEGGER_RTT_$(RTTVER)
@@ -104,6 +108,10 @@ RTTSRC:=\
 	$(RTTDIR)/Syscalls/SEGGER_RTT_Syscalls_GCC.c \
 	$(RTTDIR)/RTT/SEGGER_RTT.c \
 	$(RTTDIR)/RTT/SEGGER_RTT_printf.c	
+
+SYSVIEWSRC:=\
+	$(SYSVIEWDIR)/SEGGER_SYSVIEW.c \
+	$(SYSVIEWDIR)/SEGGER_SYSVIEW_Config_NoOS.c	
 
 STARTUP:=\
 	$(CORELIB)/startup.s
@@ -189,7 +197,8 @@ else
 endif
 
 CXXFLAGS+=\
-	-I$(RTTDIR)/RTT
+	-I$(RTTDIR)/RTT \
+	-I$(SYSVIEWDIR)
 
 ifeq ($(MCU), STM32F10X_MD)
 	LDFLAGS+=-TSTM32F10X_MD.ld
@@ -226,6 +235,10 @@ endif
 
 ifeq ($(__USE_STDLIB),1)
 OBJ+=$(STMLIBSRC:%.c=$(OBJSDIR)/%.o)
+endif
+
+ifeq ($(__USE_SYSVIEW),1)
+OBJ+=$(SYSVIEWSRC:%.c=$(OBJSDIR)/%.o)
 endif
 
 DEPS := $(OBJ:.o=.d)

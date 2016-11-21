@@ -54,7 +54,7 @@ typedef struct datetime_t
 	char second;
 } datetime_t;
 
-class Rtc : public Driver
+class Rtc : public IODriver
 {
 public:
 	Rtc(word epoch = 0);

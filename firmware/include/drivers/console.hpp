@@ -23,7 +23,7 @@ using namespace UART;
   class Console
   {
   public:
-    Console(class Driver *_io)
+    Console(class IODriver *_io)
   {
       memset(conbuf, 0, sizeof conbuf);
       io = _io;
@@ -93,6 +93,6 @@ using namespace UART;
     char conbuf[24];
     char strbuf[8];
     static class Console *self;
-    class Driver *io;
+    class IODriver *io;
   };
 #endif

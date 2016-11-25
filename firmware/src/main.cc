@@ -17,8 +17,19 @@
 #include <global.hpp>
 #include <common.hpp>
 #include <log.hpp>
+#include "../include/errors/trycatch.hpp"
 
 int main(void)
 {
+ TRY
+ {
+
+ }
+ CATCH(1)
+ {
+
+ }
+ ETRY;
+
 	MAIN_END;
 }

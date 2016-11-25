@@ -1,11 +1,6 @@
 #pragma once
 #include <core/usart.hpp>
 
-using namespace UART;
-
-namespace XMODEM
-{
-
 #define PACKET_SIZE 128
 
 #define SOH  0x01
@@ -18,30 +13,30 @@ namespace XMODEM
 #define CTRLZ 0x1A
 
 class xmodem: public Uart
-  {
+{
 public:
-  xmodem(short ch, word bd)
-      : Uart::Uart(ch, bd, &xmodemisr)
-    {
-      ok = false;
-      ack = false;
-      nack = false;
-      txmode = false;
-      self = this;
-    }
+ xmodem(short ch, word bd)
+: Uart::Uart(ch, bd, &xmodemisr)
+ {
+  ok = false;
+  ack = false;
+  nack = false;
+  txmode = false;
+  self = this;
+ }
 
-  void send_data(uint8_t *data, word size);
-  bool block_tx(uint8_t *data, word blockn);
+ void send_data(uint8_t *data, word size);
+ bool block_tx(uint8_t *data, word blockn);
 protected:
-  volatile bool ok;
-  volatile bool ack;
-  volatile bool nack;
-  void end(void);
-  bool wait(void);
-  bool send_header(char *filename, word filesize, word blockn = 0);
-  static class xmodem *self;
-  static void xmodemisr(void);
-  bool txmode;
-  uint16_t crc16(uint8_t *data, word size);
-  };
-}
+ volatile bool ok;
+ volatile bool ack;
+ volatile bool nack;
+ void end(void);
+ bool wait(void);
+ bool send_header(char *filename, word filesize, word blockn = 0);
+ static class xmodem *self;
+ static void xmodemisr(void);
+ bool txmode;
+ uint16_t crc16(uint8_t *data, word size);
+};
+

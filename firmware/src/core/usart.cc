@@ -24,8 +24,6 @@
 
 /* UART class */
 
-using namespace UART;
-
 #define UARTirq (USART1_IRQn - 1)
 #define _SR self->Reg->SR
 #define _DR self->Reg->DR

@@ -22,9 +22,6 @@
 #include <drivers/storage/integer.hpp>
 #include <cstdarg>
 
-namespace DISK
-{
-
 /*--------------------------------------------------------------------------
 
  Module Private Definitions
@@ -4941,4 +4938,3 @@ int f_printf (
 
 #endif /* !_FS_READONLY */
 #endif /* _USE_STRFUNC */
-}

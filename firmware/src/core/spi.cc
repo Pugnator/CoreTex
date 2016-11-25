@@ -23,8 +23,6 @@
 #include <core/stm32f10x.hpp>
 #include <global.hpp>
 
-namespace SPI
-{
 class Spi *Spi::self = nullptr;
 
 Spi::Spi(char ch)
@@ -254,4 +252,4 @@ void Spi::highspeed(void)
 	SEGGER_RTT_printf(0,"Spi::highspeed\r\n");
 	Reg->CR1 &= ~SPI_CR1_BR;
 }
-}
+

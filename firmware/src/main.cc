@@ -17,19 +17,19 @@
 #include <global.hpp>
 #include <common.hpp>
 #include <log.hpp>
-#include <core/usart.hpp>
-#include <drivers/gsm.hpp>
+#include "../include/errors/trycatch.hpp"
 
 int main(void)
 {
-	SEGGER_RTT_printf(0, "CPU started\r\n");
-	Modem m(1, 9600);
-	if(!m.setup())
-	{
-	 SEGGER_RTT_printf(0, "BAD\r\n");
-	 MAIN_END;
-	}
-	SEGGER_RTT_printf(0, "OK\r\n");
-	SEGGER_RTT_printf(0, "Debet: %u\r\n", m.get_account_debet(BEELINE));
+ TRY
+ {
+
+ }
+ CATCH(1)
+ {
+
+ }
+ ETRY;
+
 	MAIN_END;
 }

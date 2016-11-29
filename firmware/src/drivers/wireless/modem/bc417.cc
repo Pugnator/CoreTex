@@ -15,14 +15,15 @@
  * 2015
  *******************************************************************************/
 
+#include "drivers/bc417.hpp"
+
 #include <core/vmmu.hpp>
 #include <global.hpp>
-#include <drivers/bc470.hpp>
 #include <string.h>
 
 const char *BC470CMD[] =
   {
-  "AT\r"
+  "AT"
   };
 
 const char *RESPONSE_TEXT[] =

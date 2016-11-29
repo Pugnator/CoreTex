@@ -18,42 +18,16 @@
 #include <common.hpp>
 #include <core/isr_helper.hpp>
 #include <core/vmmu.hpp>
-#include <drivers/gsm.hpp>
 #include <stdarg.h>
 #include <log.hpp>
+#include "drivers/gsm.hpp"
 
-class Modem *Modem::self = nullptr;
+class GSM *GSM::self = nullptr;
 
-void Modem::modemisr(void)
-{
- volatile uint16_t __SR = self->Reg->SR;
- if (__SR & USART_SR_RXNE)
- {
-  __SR &= ~USART_SR_RXNE;
-  volatile uint16_t a = self->Reg->DR;
-  SEGGER_RTT_printf(0, "%c", isprint(a) ? a : '?');
-  if (!self->go || self->buflen >= MODEM_IN_BUFFER_SIZE)
-  {
-   self->go = false;
-   return;
-  }
-  self->modembuf[self->buflen++] = a;
- }
- else if (__SR & USART_SR_TC)
- {
-  __SR &= ~USART_SR_TC;
- }
- self->Reg->SR = __SR;
-}
+#define USSD_TIMEOUT 10000
+#define USSD_REPLY_TIMEOUT 500
 
-void Modem::reset(void)
-{
- buflen = 0;
- memset(modembuf, 0, sizeof modembuf);
- go = true;
-}
-
-void Modem::sync_speed(void)
+void GSM::sync_speed(void)
 {
  char try_count = 15;
  do
@@ -65,7 +39,37 @@ void Modem::sync_speed(void)
  while (try_count && !wait_for_reply(CMD::AT, AT_OK, 200));
 }
 
-bool Modem::setup(void)
+char* GSM::ussd(const char *request)
+{
+ ok = false;
+ rawcmd(CMD::CUSD, CMDMODE::SET, "1,\"#102#\"");
+ if (!wait_for_reply(CMD::CUSD, AT_OK))
+ {
+  go = false;
+  return nullptr;
+ }
+ SEGGER_RTT_printf(0, "Waiting for USSD reply [10secs]\r\n");
+ WAIT_FOR(USSD_TIMEOUT);
+ while(STILL_WAIT)
+ {
+  if(strstr(modembuf, "+CUSD:"))
+  {
+   delay_ms(USSD_REPLY_TIMEOUT);
+   break;
+  }
+ }
+
+ SEGGER_RTT_printf(0, "Got USSD reply\r\n");
+ go = false;
+ char *buf = strclone(modembuf);
+ if(!buf)
+ {
+  return nullptr;
+ }
+ return buf;
+}
+
+bool GSM::setup(void)
 {
  if (!set(CMD::CMEE, "2"))
  {
@@ -108,7 +112,7 @@ bool Modem::setup(void)
  return true;
 }
 
-bool Modem::send_sms(const char* number, const char* text)
+bool GSM::send_sms(const char* number, const char* text)
 {
  rawcmd(CMD::CMGS, CMDMODE::SET, number);
 
@@ -122,7 +126,7 @@ bool Modem::send_sms(const char* number, const char* text)
  return true;
 }
 
-char* Modem::get_sms_by_index(word num)
+char* GSM::get_sms_by_index(word num)
 {
  rawcmd(CMD::CMGR, CMDMODE::SET, num);
  if (!wait_for_reply(CMD::CPMS, AT_OK))
@@ -135,7 +139,7 @@ char* Modem::get_sms_by_index(word num)
  return sms;
 }
 
-word Modem::get_account_debet(OPERATOR op)
+word GSM::get_account_debet(CELLULAR_OP op)
 {
  ok = false;
  char *buf = nullptr;
@@ -178,7 +182,7 @@ word Modem::get_account_debet(OPERATOR op)
  return result;
 }
 
-char* Modem::extract_sms_body(char *message)
+char* GSM::extract_sms_body(char *message)
 {
  const char delimeter[] = "\r\n";
  char *token = strtok(message, delimeter);
@@ -196,7 +200,7 @@ char* Modem::extract_sms_body(char *message)
  return nullptr;
 }
 
-bool Modem::delete_all_sms(void)
+bool GSM::delete_all_sms(void)
 {
  rawcmd(CMD::CMGD, CMDMODE::SET, "1,4");
  if (!wait_for_reply(CMD::CMGD, AT_OK))
@@ -206,7 +210,7 @@ bool Modem::delete_all_sms(void)
  return true;
 }
 
-word Modem::get_sms_amount(void)
+word GSM::get_sms_amount(void)
 {
  for (word i = 1; i < 50; ++i)
  {
@@ -220,13 +224,29 @@ word Modem::get_sms_amount(void)
  return 0;
 }
 
-void Modem::restart(void)
+void GSM::restart(void)
 {
  rawcmd(CMD::CFUN, CMDMODE::SET, "1,1");
 }
 
-void Modem::turn_off(void)
+void GSM::turn_off(void)
 {
  rawcmd(CMD::CPOWD, CMDMODE::SET, 1);
 }
 
+bool GSM::get(CMD::ATCMD cmd)
+{
+ return wait_for_reply(cmd, AT_OK);
+}
+
+bool GSM::set(CMD::ATCMD cmd, const char* value)
+{
+ rawcmd(cmd, CMDMODE::SET, value);
+ return wait_for_reply(cmd, AT_OK);
+}
+
+bool GSM::is_supported(CMD::ATCMD cmd)
+{
+ rawcmd(cmd, CMDMODE::CHECK, nullptr);
+ return wait_for_reply(cmd, AT_OK);
+}

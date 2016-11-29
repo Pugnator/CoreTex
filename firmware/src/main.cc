@@ -18,12 +18,12 @@
 #include <common.hpp>
 #include <log.hpp>
 #include <core/usart.hpp>
-#include <drivers/gsm.hpp>
+#include "drivers/gsm.hpp"
 
 int main(void)
 {
 	SEGGER_RTT_printf(0, "CPU started\r\n");
-	Modem m(1, 9600);
+	GSM m(1, 9600);
 	if(!m.setup())
 	{
 	 SEGGER_RTT_printf(0, "BAD\r\n");

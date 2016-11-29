@@ -80,9 +80,9 @@ DRIVERSSRC:=\
 	$(DRIVERS)/storage/sdc.cc \
 	$(DRIVERS)/storage/ramdisk.cc \
 	$(DRIVERS)/storage/flash.cc \
-	$(DRIVERS)/wireless/bc470/bc470.cc \
-	$(DRIVERS)/wireless/gsm/atcmd.cc \
-	$(DRIVERS)/wireless/gsm/gsm.cc \
+	$(DRIVERS)/wireless/modem/atcmd.cc \
+	$(DRIVERS)/wireless/modem/bc417.cc \
+	$(DRIVERS)/wireless/modem/gsm.cc \
 	$(DRIVERS)/wireless/nrf24l01/nrf24.cc
 
 ifeq ($(__USE_CONSOLE), 1)

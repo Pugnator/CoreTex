@@ -1,13 +1,6 @@
 #pragma once
 #include <global.hpp>
-#include <drivers/console.hpp>
-#include <core/usart.hpp>
-
-typedef enum ATRESPONSE
-{
- AT_OK,
- AT_ERROR
-} ATRESPONSE;
+#include "drivers/atmodem.hpp"
 
 typedef enum ATCMD
 {
@@ -16,29 +9,20 @@ typedef enum ATCMD
 
 #define MODEM_IN_BUFFER_SIZE 512
 
-class bc470: public Uart
+class bc417: public ATModem
 {
 public:
- bc470(short ch, word bd)
-: Uart::Uart(ch, bd, &bc470isr)
+ bc417(short ch, word bd)
+: ATModem::ATModem(ch, bd)
  {
   self = this;
   buflen = 0;
-  go = false;
   ok = false;
+  reset();
  }
  ;
- ~bc470();
+ ~bc417();
  bool check(void);
- static void bc470isr(void);
- static class bc470 *self;
+ static class bc417 *self;
  bool factory_default(void);
- void rawcmd(ATCMD cmd, const char* arg);
- char modembuf[MODEM_IN_BUFFER_SIZE + 1];
- short buflen;
- bool ok;
-protected:
- void reset(void);
- bool wait4reply(word timeout = 100);
- bool go;
 };

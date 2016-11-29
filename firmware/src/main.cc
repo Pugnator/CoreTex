@@ -23,13 +23,6 @@
 int main(void)
 {
 	SEGGER_RTT_printf(0, "CPU started\r\n");
-	GSM m(1, 9600);
-	if(!m.setup())
-	{
-	 SEGGER_RTT_printf(0, "BAD\r\n");
-	 MAIN_END;
-	}
-	SEGGER_RTT_printf(0, "OK\r\n");
-	SEGGER_RTT_printf(0, "Debet: %u\r\n", m.get_account_debet(BEELINE));
+
 	MAIN_END;
 }

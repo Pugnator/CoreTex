@@ -10,7 +10,7 @@ public:
 : ATModem::ATModem(ch, bd)
  {
   ok = false;
-  GSM::self = this;
+  self = this;
   reset();
   sync_speed();
  }

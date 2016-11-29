@@ -16,20 +16,13 @@
  *******************************************************************************/
 
 #include "drivers/bc417.hpp"
-
-#include <core/vmmu.hpp>
 #include <global.hpp>
-#include <string.h>
 
-const char *BC470CMD[] =
-  {
-  "AT"
-  };
 
-const char *RESPONSE_TEXT[] =
-  {
-  "OK", "ERROR",
-  };
+bool bc417::at_check()
+{
+ ok = false;
+ rawcmd(CMD::AT, CMDMODE::EXEC);
 
-class bc417 *bc417::self = nullptr;
-
+ return ok = true;
+}

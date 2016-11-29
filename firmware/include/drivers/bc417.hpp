@@ -21,8 +21,6 @@ public:
   reset();
  }
  ;
- ~bc417();
- bool check(void);
- static class bc417 *self;
- bool factory_default(void);
+ ~bc417(){};
+ bool at_check(void);
 };

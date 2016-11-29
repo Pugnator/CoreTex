@@ -17,12 +17,18 @@
 #include <global.hpp>
 #include <common.hpp>
 #include <log.hpp>
-#include <core/usart.hpp>
-#include "drivers/gsm.hpp"
+#include <drivers/bc417.hpp>
+
 
 int main(void)
 {
 	SEGGER_RTT_printf(0, "CPU started\r\n");
+	bc417 b(1, 9600);
+	b.crlf_end = false;
+	delay_ms(1500);
+
+
+	b.rawcmd(CMD::PIN, CMDMODE::RAW, "1234");
 
 	MAIN_END;
 }

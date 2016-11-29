@@ -85,6 +85,10 @@ namespace CMD
 		ATCMD(CGSMS)\
 		ATCMD(CPOWD)\
 		ATCMD(GSMBUSY)\
+		ATCMD(VERSION)\
+		ATCMD(BAUD)\
+		ATCMD(NAME)\
+		ATCMD(PIN)\
 		ATCMD(WRONG_COMMAND)
 
 #define GENERATE_ATCMD(ATCMD) ATCMD,
@@ -143,12 +147,14 @@ public:
   ok = false;
   go = false;
   buflen = 0;
+  crlf_end = true;
   ATModem::self = this;
  }
 
  void rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, const char* arg = nullptr);
  void rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, word argument);
  bool wait_for_reply(CMD::ATCMD cmd, ATRESPONSE expected, word timeout = 1000);
+ bool wait_for_reply_noend(CMD::ATCMD cmd, ATRESPONSE expected, word timeout = 1000);
  const char *get_cmd_str(CMD::ATCMD cmd);
 
  static void procisr(void);
@@ -156,6 +162,7 @@ public:
  short buflen;
  bool ok;
  static class ATModem *self;
+ bool crlf_end;
 protected:
  void reset(void);
  bool go;

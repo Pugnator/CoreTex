@@ -2,12 +2,18 @@
 #include <global.hpp>
 #include "drivers/atmodem.hpp"
 
-typedef enum ATCMD
-{
- AT
-} ATCMD;
+#define REPLY_TIMEOUT 2000
 
-#define MODEM_IN_BUFFER_SIZE 512
+typedef enum BAUD_RATE
+{
+ BAUD1 = 1,
+ BAUD2 = 2,
+ BAUD3 = 3,
+ BAUD4 = 4,
+ BAUD5 = 5,
+ BAUD6 = 6,
+ BAUD7 = 7
+}BAUD_RATE;
 
 class bc417: public ATModem
 {
@@ -18,11 +24,12 @@ public:
   self = this;
   buflen = 0;
   ok = false;
+  use_ending(false);
   reset();
- }
- ;
- ~bc417();
- bool check(void);
- static class bc417 *self;
- bool factory_default(void);
+ };
+ ~bc417(){};
+ bool test(void);
+ void set_pin(const char* pin);
+ void set_name(const char* name);
+ void set_baud(BAUD_RATE speed);
 };

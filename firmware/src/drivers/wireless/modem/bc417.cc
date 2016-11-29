@@ -16,20 +16,38 @@
  *******************************************************************************/
 
 #include "drivers/bc417.hpp"
-
-#include <core/vmmu.hpp>
 #include <global.hpp>
-#include <string.h>
 
-const char *BC470CMD[] =
-  {
-  "AT"
-  };
 
-const char *RESPONSE_TEXT[] =
-  {
-  "OK", "ERROR",
-  };
+bool bc417::test()
+{
+ ok = false;
+ rawcmd(CMD::AT, CMDMODE::RAW);
+ if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
+ {
+  return ok;
+ }
+ return ok = true;
+}
 
-class bc417 *bc417::self = nullptr;
+void bc417::set_name(const char *name)
+{
+ ok = false;
+ rawcmd(CMD::NAME, CMDMODE::RAW, name);
+ if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
+ {
+  return;
+ }
+ ok = true;
+}
 
+void bc417::set_pin(const char *pin)
+{
+ ok = false;
+ rawcmd(CMD::PIN, CMDMODE::RAW, pin);
+ if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
+ {
+  return;
+ }
+ ok = true;
+}

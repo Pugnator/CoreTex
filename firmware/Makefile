@@ -175,7 +175,7 @@ endif
 
 CXXFLAGS+=\
 	--std=gnu++14 -Wall \
-	-Iinclude -Isrc \
+	-Iinclude -Iinclude/errors -Isrc \
 	-Iexternal/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc \
 	-Iexternal/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x \
 	-Iexternal/stdlib/Libraries/CMSIS/CM3/CoreSupport \

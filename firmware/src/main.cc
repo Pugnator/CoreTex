@@ -20,6 +20,7 @@
 #include <drivers/bc417.hpp>
 #include <errors.hpp>
 
+
 int main(void)
 {
  SEGGER_RTT_printf(LOGGING_CHANNEL, "CPU started\r\n");

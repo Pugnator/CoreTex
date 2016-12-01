@@ -17,7 +17,7 @@
 
 #include "drivers/bc417.hpp"
 #include <global.hpp>
-
+#include <errors.hpp>
 
 bool bc417::test()
 {
@@ -25,7 +25,7 @@ bool bc417::test()
  rawcmd(CMD::AT, CMDMODE::RAW);
  if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
  {
-  return ok;
+  THROW(ERROR_BC471_COMMTEST_FAILED);
  }
  return ok = true;
 }
@@ -36,7 +36,7 @@ void bc417::set_name(const char *name)
  rawcmd(CMD::NAME, CMDMODE::RAW, name);
  if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
  {
-  return;
+  THROW(ERROR_BC471_SET_NAME_FAILED);
  }
  ok = true;
 }
@@ -47,7 +47,7 @@ void bc417::set_pin(const char *pin)
  rawcmd(CMD::PIN, CMDMODE::RAW, pin);
  if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
  {
-  return;
+  THROW(ERROR_BC471_SET_PIN_FAILED);
  }
  ok = true;
 }

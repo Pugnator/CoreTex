@@ -2,6 +2,7 @@
 #include <core/io_macro.hpp>
 #include <stdint.h>
 #include <config.hpp>
+#include <setjmp.h>
 
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
@@ -16,7 +17,7 @@ typedef uint32_t word;
 #define BLINK (PIN_TOGGLE ( LED ))
 
 #define CONSOLE_SPEED 9600
-
+extern jmp_buf ex_buf__;
 extern volatile word tickcounter;
 extern volatile word timerms;
 

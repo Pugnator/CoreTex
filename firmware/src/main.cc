@@ -17,15 +17,23 @@
 #include <global.hpp>
 #include <common.hpp>
 #include <log.hpp>
-#include "../include/errors/trycatch.hpp"
-
+#include <drivers/bc417.hpp>
+#include <errors.hpp>
 
 int main(void)
 {
-	SEGGER_RTT_printf(0, "CPU started\r\n");
-	bc417 b(1, 9600);
-	b.test();
-	b.set_name("TEST");
-	b.set_pin("1234");
-	MAIN_END;
+ SEGGER_RTT_printf(LOGGING_CHANNEL, "CPU started\r\n");
+ bc417 b(1, 9600);
+ TRY
+ {
+  b.test();
+  b.set_name("TEST");
+  b.set_pin("1234");
+ }
+ CATCH(ERROR_GENERIC)
+ {
+  SEGGER_RTT_printf(LOGGING_CHANNEL, "Error occured\r\n");
+ }
+ ETRY;
+ MAIN_END;
 }

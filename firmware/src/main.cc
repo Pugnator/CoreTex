@@ -17,19 +17,12 @@
 #include <global.hpp>
 #include <common.hpp>
 #include <log.hpp>
-#include "../include/errors/trycatch.hpp"
+#include <drivers/storage/fatdisk.hpp>
 
 int main(void)
 {
- TRY
- {
-
- }
- CATCH(1)
- {
-
- }
- ETRY;
-
+	DISK::FATdisk d(0);
+	DISK::FATFS fs;
+	d.mount(&fs, "0:",0);
 	MAIN_END;
 }

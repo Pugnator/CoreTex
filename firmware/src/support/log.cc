@@ -34,4 +34,7 @@ void swo_print(const char *msg)
 }
 #endif
 
+extern "C"
+{
 
+}

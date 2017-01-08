@@ -15,17 +15,15 @@
  * 2015
  *******************************************************************************/
 
+#include "drivers/bc417.hpp"
+
 #include <core/vmmu.hpp>
 #include <global.hpp>
-#include <drivers/bc470.hpp>
 #include <string.h>
-
-namespace BC470
-{
 
 const char *BC470CMD[] =
   {
-  "AT\r"
+  "AT"
   };
 
 const char *RESPONSE_TEXT[] =
@@ -103,5 +101,3 @@ void bc470::bc470isr(void)
         self->Reg->SR &= ~USART_SR_TC;
       }
   }
-
-}

@@ -17,25 +17,23 @@
 #include <drivers/gps.hpp>
 #include <common.hpp>
 
-using namespace GPS;
-
 typedef enum NMEAFORMAT
 {
-	TYPE , TDEGR, TTRUE, TDEGR2, MAGNETIC, SPEEDKN, KNOTS, SPEEDKM, KMH, CS, END
+ TYPE , TDEGR, TTRUE, TDEGR2, MAGNETIC, SPEEDKN, KNOTS, SPEEDKM, KMH, CS, END
 } NMEAFORMAT;
 
 void Gps::fillVTGctx ( int sect, const char* field )
 {
-	switch ( sect )
-	{
-		case SPEEDKN:
-			//TODO: implement strod
-			//nmea.knots = strtod ( field, NULL );
-			break;
-		case SPEEDKM:
-			//nmea.kmh = strtod ( field, NULL );
-			break;
-		case END:
-			break;
-	}
+ switch ( sect )
+ {
+  case SPEEDKN:
+   //TODO: implement strod
+   //nmea.knots = strtod ( field, NULL );
+   break;
+  case SPEEDKM:
+   //nmea.kmh = strtod ( field, NULL );
+   break;
+  case END:
+   break;
+ }
 }

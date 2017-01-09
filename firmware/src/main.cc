@@ -21,8 +21,10 @@
 
 int main(void)
 {
-	FATdisk d(0);
+	FATdisk d(1);
 	FATFS fs;
-	d.mount(&fs, "0:",0);
+	FRESULT r;
+	r = d.mount(&fs, "0:",1);
+	SEGGER_RTT_printf(0, "Disk result: %s\r\n", d.result_to_str(r));
 	MAIN_END;
 }

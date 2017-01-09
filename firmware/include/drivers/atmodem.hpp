@@ -163,7 +163,6 @@ public:
  short buflen;
  bool ok;
  static class ATModem *self;
- bool crlf_end;
 protected:
  void reset(void);
  bool crlf_end;

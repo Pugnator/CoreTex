@@ -204,25 +204,14 @@ namespace
 	static void
 	date_func (Console *self)
 	{
-		Rtc rtc;
+
 		if (arg1)
 			{
-				rtc.set (str10_to_word (arg1));
+
 				FREE(arg1);
 			}
-		rtc.print ();
+
 	}
- static void
- date_func (Console *self)
- {
-  Rtc rtc;
-  if (arg1)
-  {
-   rtc.set (str10_to_word (arg1));
-   FREE(arg1);
-  }
-  rtc.print ();
- }
 }
 /*******************************************************************/
 

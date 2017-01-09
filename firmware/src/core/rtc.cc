@@ -21,8 +21,6 @@
 #include <global.hpp>
 #include <stdlib.h>
 
-using namespace CORERTC;
-
 void Rtc::init(word epoch)
 {
 	RCC->APB1ENR |= RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN;

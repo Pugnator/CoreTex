@@ -1,8 +1,6 @@
 #pragma once
 #include <drivers/console.hpp>
 #include <global.hpp>
-namespace CORERTC
-{
  typedef enum RTC_UTC_OFFSET
  {
   ZONE_YANKEE = -12,
@@ -54,7 +52,7 @@ namespace CORERTC
   char second;
  } datetime_t;
 
- class Rtc : public Driver
+ class Rtc : public IODriver
  {
  public:
   static Rtc& Instance(word epoch = 0)
@@ -85,4 +83,3 @@ namespace CORERTC
   void init(word epoch = 0);
   void epoch_to_date(datetime_t* date_time, word epoch = 0);
  };
-}

@@ -21,8 +21,8 @@
 
 int main(void)
 {
-	DISK::FATdisk d(0);
-	DISK::FATFS fs;
+	FATdisk d(0);
+	FATFS fs;
 	d.mount(&fs, "0:",0);
 	MAIN_END;
 }

@@ -10,7 +10,6 @@ public:
 : ATModem::ATModem(ch, bd)
  {
   ok = false;
-  GSM::self = this;
   reset();
   sync_speed();
  }
@@ -28,8 +27,6 @@ public:
  word get_sms_amount(void);
  char* ussd(const char *request);
  word get_account_debet(CELLULAR_OP op);
-
- static class GSM *self;
 private:
  char* extract_sms_body(char *message);
  void parse_sms(char *message);

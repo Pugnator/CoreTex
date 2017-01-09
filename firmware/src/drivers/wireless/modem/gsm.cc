@@ -22,8 +22,6 @@
 #include <log.hpp>
 #include "drivers/gsm.hpp"
 
-class GSM *GSM::self = nullptr;
-
 #define USSD_TIMEOUT 10000
 #define USSD_REPLY_TIMEOUT 500
 

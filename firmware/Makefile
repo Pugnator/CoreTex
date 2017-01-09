@@ -127,6 +127,7 @@ SUPPORTSRC:=\
 	$(SUPPORT)/compat.cc \
 	$(SUPPORT)/log.cc \
 	$(SUPPORT)/queue.cc \
+	$(SUPPORT)/make_error.cc \
 	$(SUPPORT)/morse.cc
 
 FATFSSRC:=\

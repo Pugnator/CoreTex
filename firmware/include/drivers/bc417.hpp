@@ -1,44 +1,35 @@
 #pragma once
 #include <global.hpp>
-#include <drivers/console.hpp>
-#include <core/usart.hpp>
+#include "drivers/atmodem.hpp"
 
-typedef enum ATRESPONSE
+#define REPLY_TIMEOUT 2000
+
+typedef enum BAUD_RATE
 {
- AT_OK,
- AT_ERROR
-} ATRESPONSE;
+ BAUD1 = 1,
+ BAUD2 = 2,
+ BAUD3 = 3,
+ BAUD4 = 4,
+ BAUD5 = 5,
+ BAUD6 = 6,
+ BAUD7 = 7
+}BAUD_RATE;
 
-typedef enum ATCMD
-{
- AT
-} ATCMD;
-
-#define MODEM_IN_BUFFER_SIZE 512
-
-class bc470: public Uart
+class bc417: public ATModem
 {
 public:
- bc470(short ch, word bd)
-: Uart::Uart(ch, bd, &bc470isr)
+ bc417(short ch, word bd)
+: ATModem::ATModem(ch, bd)
  {
   self = this;
   buflen = 0;
-  go = false;
   ok = false;
- }
- ;
- ~bc470();
- bool check(void);
- static void bc470isr(void);
- static class bc470 *self;
- bool factory_default(void);
- void rawcmd(ATCMD cmd, const char* arg);
- char modembuf[MODEM_IN_BUFFER_SIZE + 1];
- short buflen;
- bool ok;
-protected:
- void reset(void);
- bool wait4reply(word timeout = 100);
- bool go;
+  use_ending(false);
+  reset();
+ };
+ ~bc417(){};
+ bool test(void);
+ void set_pin(const char* pin);
+ void set_name(const char* name);
+ void set_baud(BAUD_RATE speed);
 };

@@ -16,88 +16,38 @@
  *******************************************************************************/
 
 #include "drivers/bc417.hpp"
-
-#include <core/vmmu.hpp>
 #include <global.hpp>
-#include <string.h>
+#include <errors.hpp>
 
-const char *BC470CMD[] =
-  {
-  "AT"
-  };
+bool bc417::test()
+{
+ ok = false;
+ rawcmd(CMD::AT, CMDMODE::RAW);
+ if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
+ {
+  THROW(ERROR_BC471_COMMTEST_FAILED);
+ }
+ return ok = true;
+}
 
-const char *RESPONSE_TEXT[] =
-  {
-  "OK", "ERROR",
-  };
+void bc417::set_name(const char *name)
+{
+ ok = false;
+ rawcmd(CMD::NAME, CMDMODE::RAW, name);
+ if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
+ {
+  THROW(ERROR_BC471_SET_NAME_FAILED);
+ }
+ ok = true;
+}
 
-class bc470 *bc470::self = nullptr;
-
-bool bc470::factory_default(void)
-  {
-    rawcmd(AT, nullptr);
-    if (!wait4reply(500))
-      {
-        return false;
-      }
-    return true;
-  }
-
-void bc470::rawcmd(ATCMD cmd, const char* arg)
-  {
-    reset();
-    writestr(BC470CMD[cmd]);
-  }
-
-void bc470::reset(void)
-  {
-    buflen = 0;
-    memset(modembuf, 0, sizeof modembuf);
-    go = true;
-  }
-
-bool bc470::wait4reply(word timeout)
-  {
-    ok = false;
-    char *buf = (char*) ALLOC(sizeof modembuf);
-    if (!buf) return false;
-    WAIT_FOR(timeout);
-    do
-      {
-        memcpy(buf, modembuf, sizeof modembuf);
-        //explicit check for error
-        if (strstr(buf, RESPONSE_TEXT[AT_ERROR]))
-          {
-            FREE(buf);
-            return !(ok = false);
-          }
-        //do we hit the response we expect?
-        else if (strstr(buf, RESPONSE_TEXT[AT_OK]))
-          {
-            return ok = true;
-          }
-      }
-    while (STILL_WAIT);
-    FREE(buf);
-    return ok;
-  }
-
-void bc470::bc470isr(void)
-  {
-    BLINK;
-    if (self->Reg->SR & USART_SR_RXNE)
-      {
-        uint16_t tmp = self->Reg->DR;
-        self->Reg->SR &= ~USART_SR_RXNE;
-        if (!self->go || self->buflen >= MODEM_IN_BUFFER_SIZE)
-          {
-            self->go = false;
-            return;
-          }
-        self->modembuf[self->buflen++] = tmp;
-      }
-    else if (self->Reg->SR & USART_SR_TC)
-      {
-        self->Reg->SR &= ~USART_SR_TC;
-      }
-  }
+void bc417::set_pin(const char *pin)
+{
+ ok = false;
+ rawcmd(CMD::PIN, CMDMODE::RAW, pin);
+ if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
+ {
+  THROW(ERROR_BC471_SET_PIN_FAILED);
+ }
+ ok = true;
+}

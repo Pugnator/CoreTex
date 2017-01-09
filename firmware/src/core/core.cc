@@ -20,6 +20,9 @@
 #include <core/isr_helper.hpp>
 #include <core/vmmu.hpp>
 #include <global.hpp>
+#include <setjmp.h>
+
+jmp_buf ex_buf__;
 
 extern "C" void SystemInit(void)
 {

@@ -24,31 +24,6 @@
 #include <drivers/console.hpp>
 #include <drivers/storage/sdc.hpp>
 
-/* MMC/SD command */
-enum
-{
- CMD0	=    0,            /* GO_IDLE_STATE */
- CMD1	=    1,            /* SEND_OP_COND (MMC) */
- ACMD41	= 	 0x80+41,      /* SEND_OP_COND (SDC) */
- CMD8	=    8,            /* SEND_IF_COND */
- CMD9	=    9,            /* SEND_CSD */
- CMD10	=   10,            /* SEND_CID */
- CMD12	=   12,            /* STOP_TRANSMISSION */
- ACMD13	=	0x80+13,       /* SD_STATUS (SDC) */
- CMD16	=   16,            /* SET_BLOCKLEN */
- CMD17	=   17,            /* READ_SINGLE_BLOCK */
- CMD18	=   18,            /* READ_MULTIPLE_BLOCK */
- CMD23	=   23,            /* SET_BLOCK_COUNT (MMC) */
- ACMD23	= 	0x80+23,       /* SET_WR_BLK_ERASE_COUNT (SDC) */
- CMD24	=   24,            /* WRITE_BLOCK */
- CMD25	=   25,            /* WRITE_MULTIPLE_BLOCK */
- CMD32	=   32,            /* ERASE_ER_BLK_START */
- CMD33	=   33,            /* ERASE_ER_BLK_END */
- CMD38	=   38,            /* ERASE */
- CMD55	=   55,            /* APP_CMD */
- CMD58	=   58,            /* READ_OCR */
-}SDCCMD;
-
 void print_readable_size(uint32_t size)
 {
  const char* units[5] = { "B", "KB", "MB", "GB"};
@@ -110,63 +85,51 @@ const char *Sdc::command_to_str (uint8_t command)
 
 void print_error(uint8_t r1)
 {
- if(0xFF == r1)
- {
-  return;
- }
- if( r1 & SD_IN_IDLE_STATE)
- {
-  SEGGER_RTT_WriteString(0,"SD_IN_IDLE_STATE\r\n");
- }
  if( r1 & SD_ERASE_RESET)
  {
-  SEGGER_RTT_WriteString(0,"SD_ERASE_RESET\r\n");
+  SEGGER_RTT_printf(0,"%sSD_ERASE_RESET%s\r\n", RTT_CTRL_BG_BRIGHT_RED, RTT_CTRL_RESET);
  }
  if( r1 & SD_ILLEGAL_COMMAND)
  {
-  SEGGER_RTT_WriteString(0,"SD_ILLEGAL_COMMAND\r\n");
+  SEGGER_RTT_printf(0,"%sSD_ILLEGAL_COMMAND%s\r\n", RTT_CTRL_BG_BRIGHT_RED, RTT_CTRL_RESET);
  }
  if( r1 & SD_COM_CRC_ERROR)
  {
-  SEGGER_RTT_WriteString(0,"SD_COM_CRC_ERROR\r\n");
+  SEGGER_RTT_printf(0,"%sSD_COM_CRC_ERROR%s\r\n", RTT_CTRL_BG_BRIGHT_RED, RTT_CTRL_RESET);
  }
  if( r1 & SD_ERASE_SEQUENCE_ERROR)
  {
-  SEGGER_RTT_WriteString(0,"SD_ERASE_SEQUENCE_ERROR\r\n");
+  SEGGER_RTT_printf(0,"%sSD_ERASE_SEQUENCE_ERROR%s\r\n", RTT_CTRL_BG_BRIGHT_RED, RTT_CTRL_RESET);
  }
  if( r1 & SD_ADDRESS_ERROR)
  {
-  SEGGER_RTT_WriteString(0,"SD_ADDRESS_ERROR\r\n");
+  SEGGER_RTT_printf(0,"%sSD_ADDRESS_ERROR%s\r\n", RTT_CTRL_BG_BRIGHT_RED, RTT_CTRL_RESET);
  }
  if( r1 & SD_PARAMETER_ERROR)
  {
-  SEGGER_RTT_WriteString(0,"SD_PARAMETER_ERROR\r\n");
- }
- if( r1 & SD_RESPONSE_FAILURE)
- {
-  SEGGER_RTT_WriteString(0,"SD_RESPONSE_FAILURE\r\n");
+  SEGGER_RTT_printf(0,"%sSD_PARAMETER_ERROR%s\r\n", RTT_CTRL_BG_BRIGHT_RED, RTT_CTRL_RESET);
  }
 }
 
-uint16_t Sdc::sdc_cmd(uint8_t cmd, uint32_t arg, uint8_t crc = 0)
+void Sdc::sdc_cmd(uint8_t cmd, uint32_t arg, uint8_t crc = 0)
 {
- SEGGER_RTT_printf(0,"sdc_cmd: %s\r\n", command_to_str(cmd));
+ SEGGER_RTT_printf(0,"%sCommand '%s'%s\r\n", RTT_CTRL_BG_GREEN, command_to_str(cmd), RTT_CTRL_RESET);
  if(CMD0 != cmd)
  {
-  do
-  {
-
-  }while(0xFF != read());
+  while(0xFF != read());
  }
- uint16_t res = 0;
+
  if (cmd & 0x80)
- {	/* Send a CMD55 prior to ACMD<n> */
+ {
   cmd &= 0x7F;
-  res = sdc_cmd(CMD55, 0);
-  if (res > 1)
+  SEGGER_RTT_printf(0,"%sSend a CMD55 prior to ACMD%s\r\n", RTT_CTRL_BG_YELLOW, RTT_CTRL_RESET);
+  sdc_cmd(CMD55, 0);
+  if (get_response(SD_IN_IDLE_STATE))
   {
-   return res;
+   SEGGER_RTT_printf(0,"%sCMD55 failed, aborting ACMD%s\r\n", RTT_CTRL_BG_BRIGHT_RED, RTT_CTRL_RESET);
+   return;
   }
+  SEGGER_RTT_printf(0,"%sIssue actual Application-Specific command 0x%X%s\r\n", RTT_CTRL_BG_YELLOW, cmd, RTT_CTRL_RESET);
  }
  switch (cmd)
  {
@@ -185,23 +148,22 @@ uint16_t Sdc::sdc_cmd(uint8_t cmd, uint32_t arg, uint8_t crc = 0)
 
  uint8_t Frame[6];
 
- Frame[0] = (cmd | 0x40); /*!< Construct byte 1 */
- Frame[1] = (uint8_t)(arg >> 24); /*!< Construct byte 2 */
- Frame[2] = (uint8_t)(arg >> 16); /*!< Construct byte 3 */
- Frame[3] = (uint8_t)(arg >> 8); /*!< Construct byte 4 */
- Frame[4] = (uint8_t)(arg); /*!< Construct byte 5 */
- Frame[5] = (crc); /*!< Construct CRC: byte 6 */
+ Frame[0] = (cmd | 0x40);
+ Frame[1] = (uint8_t)(arg >> 24);
+ Frame[2] = (uint8_t)(arg >> 16);
+ Frame[3] = (uint8_t)(arg >> 8);
+ Frame[4] = (uint8_t)(arg);
+ Frame[5] = (crc);
 
  for (int i = 0; i < 6; i++)
  {
-  res = read(Frame[i]); /*!< Send the Cmd bytes */
+  read(Frame[i]);
  }
 
  if (CMD12 == cmd)
  {
   read(0xFF);
  }
- return res;
 }
 
 uint32_t Sdc::get_card_capacity()
@@ -247,56 +209,75 @@ uint32_t Sdc::get_card_block_size()
  }
 }
 
-SDC_Error Sdc::get_response(uint8_t Response)
+SD_Error Sdc::get_response(SD_Error expected_r1, SD_RESPONSE_TYPE type)
 {
- SEGGER_RTT_printf(0,"get_response: expecting 0x%X\r\n", Response);
+ SEGGER_RTT_printf(0,"%sExpecting response 0x%X%s\r\n", RTT_CTRL_BG_BRIGHT_BLUE, expected_r1, RTT_CTRL_RESET);
  ok = false;
- uint32_t Count = 10;
- /*!< Check if response is got or a timeout is happen */
- uint16_t r1 = 0;
- do
+ word count;
+ word MAX_R1_RETRY_COUNT = 10;
+ for(count = 0; count < MAX_R1_RETRY_COUNT; ++count)
  {
-  r1 = read();
-  SEGGER_RTT_printf(0,"R: 0x%X\r\n", r1);
- }while (r1 != Response && --Count);
+  response = read();
+  if(SD_DATA_OTHER_ERROR == response)
+  {
+   SEGGER_RTT_printf(0,"0x%X\r\n", response);
+   continue;
+  }
 
- if (Count == 0)
+  if(response == expected_r1)
+  {
+   SEGGER_RTT_printf(0,"R1: 0x%X\r\n", response);
+   break;
+  }
+  else
+  {
+   SEGGER_RTT_printf(0,"0x%X\r\n", response);
+   print_error(response);
+   return SD_RESPONSE_FAILURE;
+  }
+
+ }
+
+ if (MAX_R1_RETRY_COUNT == count)
  {
-  /*!< After time out */
-  print_error(r1);
+  SEGGER_RTT_printf(0,"%sResponse timeout from SD card%s\r\n", RTT_CTRL_BG_RED, RTT_CTRL_RESET);
+  print_error(response);
   return SD_RESPONSE_FAILURE;
  }
- else
+
+ if (SDRT_3 == type)
  {
-  /*!< Right response got */
-  ok = true;
-  return SD_RESPONSE_NO_ERROR;
+  SEGGER_RTT_WriteString(0,"Reading trailing OCR\r\n");
+  ocr = read() << 24 | read() << 16 | read() << 8 | read();
+
+  SEGGER_RTT_printf(0,"%sOCR: 0x%x%s\r\n", RTT_CTRL_BG_GREEN, ocr, RTT_CTRL_RESET);
  }
+ ok = true;
+ return SD_RESPONSE_NO_ERROR;
 }
 
-SDC_Error Sdc::init_sd()
+SD_Error Sdc::init_sd()
 {
- SEGGER_RTT_WriteString(0,"SD v1 or MMC detected\r\n");
- uint8_t count = 100;
+ SEGGER_RTT_printf(0,"%sSD v1 or MMC detected%s\r\n", RTT_CTRL_BG_GREEN, RTT_CTRL_RESET);
+ uint8_t count = 5;
  do
  {
-  read();
   sdc_cmd(CMD1, 0, 0xFF);
  }
  while (get_response(SD_RESPONSE_NO_ERROR) && --count);
 
  if(!count)
  {
-  SEGGER_RTT_WriteString(0,"No response from SD card\r\n");
+  SEGGER_RTT_printf(0,"%sNo response from SD card%s\r\n", RTT_CTRL_BG_RED, RTT_CTRL_RESET);
   return SD_RESPONSE_FAILURE;
  }
  ok = true;
  isSDCv2 = false;
- SEGGER_RTT_WriteString(0,"SD init OK\r\n");
+ SEGGER_RTT_printf(0,"%sSD init OK%s\r\n", RTT_CTRL_BG_GREEN, RTT_CTRL_RESET);
  return SD_RESPONSE_NO_ERROR;
 }
 
-SDC_Error Sdc::init_sdhc()
+SD_Error Sdc::init_sdhc()
 {
  SEGGER_RTT_WriteString(0,"SDHC detected\r\n");
  //Get the remaining response after CMD8. 4 bytes
@@ -304,88 +285,69 @@ SDC_Error Sdc::init_sdhc()
  read();
  if(0x1 != read() || 0xAA != read()) //Actually an echo of arg = 0x1AA
  {
-  SEGGER_RTT_WriteString(0,"SD is rejected\r\n");
+  SEGGER_RTT_printf(0,"%sSD is rejected%s\r\n", RTT_CTRL_BG_RED, RTT_CTRL_RESET);
   return SD_RESPONSE_FAILURE;
  }
- SEGGER_RTT_WriteString(0,"SD v2\r\n");
+
  uint8_t count = 100;
  do
  {
   sdc_cmd(ACMD41, 1UL << 30);
-  delay_ms(500);
  }
  while(get_response(SD_IN_IDLE_STATE) && --count);
+
  if(!count)
  {
   return SD_RESPONSE_FAILURE;
  }
- else
- {
-  SEGGER_RTT_WriteString(0,"Supported voltage range\r\n");
- }
 
  sdc_cmd(CMD58, 0);
- if(get_response(SD_IN_IDLE_STATE))
+ if(get_response(SD_IN_IDLE_STATE, SDRT_3))
  {
-  return init_sd();
- }
- SEGGER_RTT_printf(0,"SD - v2, ID: 0x%X\r\n", read() & 0x40);
- read();
- read();
- read();
- sdc_cmd(CMD16, 512);
- if(get_response(SD_IN_IDLE_STATE))
- {
-  SEGGER_RTT_WriteString(0,"Failed to set block size 512\r\n");
   return SD_RESPONSE_FAILURE;
  }
- SEGGER_RTT_WriteString(0,"Block size was set to 512\r\n");
+
  isSDCv2 = true;
  return SD_RESPONSE_NO_ERROR;
 }
 
-SDC_Error Sdc::initialize(void)
+SD_Error Sdc::initialize(void)
 {
  ok = false;
  go8bit();
  lowspeed();
  for (int i = 0; i <=100; i++)
  {
-  /*!< Send dummy byte 0xFF */
   read();
  }
- /*!< Send CMD0 (SD_CMD_GO_IDLE_STATE) to put SD in SPI mode */
-
  sdc_cmd(CMD0, 0, 0x95);
-
- /*!< Wait for In Idle State Response (R1 Format) equal to 0x01 */
  if (get_response(SD_IN_IDLE_STATE))
  {
   /*!< No Idle State Response: return response failue */
-  SEGGER_RTT_WriteString(0,"CMD0 failed\r\n");
+  SEGGER_RTT_printf(0,"%sCMD0 failed%s\r\n", RTT_CTRL_BG_RED, RTT_CTRL_RESET);
   return SD_RESPONSE_FAILURE;
  }
 
- SEGGER_RTT_WriteString(0,"CMD0 OK\r\n");
+ SEGGER_RTT_printf(0,"%sCMD0 OK%s\r\n", RTT_CTRL_BG_GREEN, RTT_CTRL_RESET);
 
  sdc_cmd(CMD8, 0x1AA, 0x87);
 
  if(get_response(SD_IN_IDLE_STATE))
  {
-  SEGGER_RTT_WriteString(0,"CMD8 failed\r\n");
+  SEGGER_RTT_printf(0,"%sCMD8 failed%s\r\n", RTT_CTRL_BG_RED, RTT_CTRL_RESET);
   return init_sd();
  }
  else
  {
-  SEGGER_RTT_WriteString(0,"CMD8 OK\r\n");
+  SEGGER_RTT_printf(0,"%sCMD8 OK%s\r\n", RTT_CTRL_BG_GREEN, RTT_CTRL_RESET);
   return init_sdhc();
  }
 }
 
-SDC_Error Sdc::get_CID(SD_CID* SD_cid)
+SD_Error Sdc::get_CID(SD_CID* SD_cid)
 {
  uint32_t i = 0;
- SDC_Error rvalue = SD_RESPONSE_FAILURE;
+ SD_Error rvalue = SD_RESPONSE_FAILURE;
  ok = false;
  uint8_t CID_Tab[16];
 
@@ -395,26 +357,19 @@ SDC_Error Sdc::get_CID(SD_CID* SD_cid)
  /*!< Wait for response in the R1 format (0x00 is no errors) */
  if (!get_response(SD_RESPONSE_NO_ERROR))
  {
-  if (!get_response(0xFE))
+  if (!get_response((SD_Error)0xFE))
   {
-   /*!< Store CID register value on CID_Tab */
    for (i = 0; i < 16; i++)
    {
     CID_Tab[i] = read();
    }
   }
-  /*!< Get CRC bytes (not really needed by us, but required by SD) */
   read();
   read();
-  /*!< Set response value to success */
   ok = true;
   rvalue = SD_RESPONSE_NO_ERROR;
  }
-
- /*!< Send dummy byte: 8 Clock pulses of delay */
  read();
-
- /*!< Byte 0 */
  SD_cid->ManufacturerID = CID_Tab[0];
 
  /*!< Byte 1 */
@@ -468,9 +423,9 @@ SDC_Error Sdc::get_CID(SD_CID* SD_cid)
  return rvalue;
 }
 
-SDC_Error Sdc::get_CSD(SD_CSD* SD_csd)
+SD_Error Sdc::get_CSD(SD_CSD* SD_csd)
 {
- SDC_Error rvalue = SD_RESPONSE_FAILURE;
+ SD_Error rvalue = SD_RESPONSE_FAILURE;
  ok = false;
  uint8_t CSD_Tab[16];
 
@@ -479,7 +434,7 @@ SDC_Error Sdc::get_CSD(SD_CSD* SD_csd)
  /*!< Wait for response in the R1 format (0x00 is no errors) */
  if (!get_response(SD_RESPONSE_NO_ERROR))
  {
-  if (!get_response(0xFE))
+  if (!get_response((SD_Error)0xFE))
   {
    for (int i = 0; i < 16; i++)
    {
@@ -620,10 +575,10 @@ uint8_t Sdc::get_data_response(void)
  return response;
 }
 
-SDC_Error Sdc::write_block(const uint8_t* pBuffer, uint32_t WriteAddr, uint16_t BlockSize)
+SD_Error Sdc::write_block(const uint8_t* pBuffer, uint32_t WriteAddr, uint16_t BlockSize)
 {
  uint32_t i = 0;
- SDC_Error rvalue = SD_RESPONSE_FAILURE;
+ SD_Error rvalue = SD_RESPONSE_FAILURE;
  ok = false;
 
 
@@ -666,11 +621,11 @@ SDC_Error Sdc::write_block(const uint8_t* pBuffer, uint32_t WriteAddr, uint16_t 
  return rvalue;
 }
 
-SDC_Error Sdc::read_block(uint8_t* pBuffer, uint32_t ReadAddr, uint16_t BlockSize)
+SD_Error Sdc::read_block(uint8_t* pBuffer, uint32_t ReadAddr, uint16_t BlockSize)
 {
  SEGGER_RTT_printf(0,"Sdc::read_block, Address=%u, BlockSize=%u\r\n", ReadAddr, BlockSize);
  uint32_t i = 0;
- SDC_Error rvalue = SD_RESPONSE_FAILURE;
+ SD_Error rvalue = SD_RESPONSE_FAILURE;
  ok = false;
 
  /*!< Send CMD17 (SD_CMD_READ_SINGLE_BLOCK) to read one block */
@@ -680,7 +635,7 @@ SDC_Error Sdc::read_block(uint8_t* pBuffer, uint32_t ReadAddr, uint16_t BlockSiz
  if (!get_response(SD_RESPONSE_NO_ERROR))
  {
   /*!< Now look for the data token to signify the start of the data */
-  if (!get_response(0xFE))
+  if (!get_response((SD_Error)0xFE))
   {
    /*!< Read the SD block data : read NumByteToRead data */
    for (i = 0; i < BlockSize; i++)

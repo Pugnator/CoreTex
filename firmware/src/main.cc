@@ -26,5 +26,16 @@ int main(void)
 	FRESULT r;
 	r = d.mount(&fs, "0:",1);
 	SEGGER_RTT_printf(0, "Disk result: %s\r\n", d.result_to_str(r));
+	FIL file;
+	/*r = d.open(&file, "write.txt", FA_CREATE_ALWAYS | FA_WRITE);
+  if (r == FR_OK)
+  {
+   d.close(&file);
+  }
+  else
+  {
+   SEGGER_RTT_printf(0, "Write result: %s\r\n", d.result_to_str(r));
+  }*/
+
 	MAIN_END;
 }

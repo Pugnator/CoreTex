@@ -249,8 +249,9 @@ double atof(char* s)
     return a;
   }
 
-void *
-memcpy(void *dst, const void *src, size_t n)
+//XXX: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=51205
+void * memcpy(void *dst, const void *src, size_t n) __attribute__((used));
+void *memcpy(void *dst, const void *src, size_t n)
   {
     const char *p = (char *) src;
     char *q = (char *) dst;

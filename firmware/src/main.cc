@@ -22,6 +22,30 @@
 #include <drivers/storage/fatdisk.hpp>
 #include <drivers/gps.hpp>
 
+const char GPX_TRACK[]=
+"\
+<trkpt lat=\"%u.%u\" lon=\"%u.%u\">\
+ <time>%6u</time>\
+	<fix>%ud</fix>\
+  <sat>%ud</sat>\
+</trkpt>\
+	";
+
+typedef struct
+{
+ word deg;
+ word fract;
+}UTM;
+
+UTM coord2utm (double coord)
+{
+ UTM result;
+ result.deg = (word)coord;
+ result.fract =(word)(coord * 1000000UL);
+ result.fract = result.fract - (result.deg *1000000UL);
+ return result;
+}
+
 void write_track(Gps g, FATdisk disk, FIL gpx)
 {
  unsigned written;
@@ -30,6 +54,10 @@ void write_track(Gps g, FATdisk disk, FIL gpx)
  for(;;)
 	{
 	 while(!g.ready);
+	 UTM lat = coord2utm(g.get_dec_lat());
+	 UTM lon = coord2utm(g.get_dec_lon());
+	 xsprintf(text, "");
+	 SEGGER_RTT_printf(0, "%s\r\n", text);
 	 r = disk.f_write(&gpx, text, strlen(text),&written);
 	 if (r != FR_OK)
 	 {

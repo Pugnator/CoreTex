@@ -1,7 +1,6 @@
 #pragma once
 #include <global.hpp>
 #include <core/usart.hpp>
-#include <drivers/console.hpp>
 
 /*
  1 - +3.3
@@ -81,7 +80,7 @@ public:
   Gps::self = this;
   reset();
  }
- void print(Console& port);
+ void rttprint();
  NMEAERR prepare(void);
  static void gpsisr(void);
  void reset(void);
@@ -89,6 +88,11 @@ public:
  bool ready;
  char nmeastr[NMEA_MAX_LEN + 1];
  volatile uint8_t nmeastr_len;
+ coord getlat();
+ coord getlon();
+ double get_dec_lat();
+ double get_dec_lon();
+
 private:
  bool correct;
  NMEATYPE get_nmea_sent_type(const char* field);

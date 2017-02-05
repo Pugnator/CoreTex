@@ -2937,7 +2937,7 @@ FATdisk::f_write (FIL* fp, /* Pointer to the file object */
 /*-----------------------------------------------------------------------*/
 
 FRESULT
-FATdisk::sync (FIL* fp /* Pointer to the file object */
+FATdisk::flush (FIL* fp /* Pointer to the file object */
 )
 {
 	FRESULT res;
@@ -2991,7 +2991,7 @@ FRESULT FATdisk::close(FIL *fp /* Pointer to the file object to be closed */
 	FRESULT res;
 
 #if !_FS_READONLY
-	res = sync (fp); /* Flush cached data */
+	res = flush (fp); /* Flush cached data */
 	if (res == FR_OK)
 #endif
 	{
@@ -4630,7 +4630,7 @@ FRESULT f_fdisk (
 /* Get a string from the file                                            */
 /*-----------------------------------------------------------------------*/
 
-TCHAR* f_gets (
+TCHAR* FATdisk::gets (
 		TCHAR* buff, /* Pointer to the string buffer to read */
 		int len, /* Size of string buffer (characters) */
 		FIL* fp /* Pointer to the file object */
@@ -4714,15 +4714,7 @@ TCHAR* f_gets (
 /* Put a character to the file                                           */
 /*-----------------------------------------------------------------------*/
 
-typedef struct
-{
-	FIL* fp;
-	int idx, nchr;
-	BYTE buf[64];
-}putbuff;
-
-static
-void putc_bfd (
+void FATdisk::putc_bfd (
 		putbuff* pb,
 		TCHAR c
 )
@@ -4781,7 +4773,7 @@ void putc_bfd (
 	pb->nchr++;
 }
 
-int f_putc (
+int FATdisk::putc (
 		TCHAR c, /* A character to be output */
 		FIL* fp /* Pointer to the file object */
 )
@@ -4804,7 +4796,7 @@ int f_putc (
 /* Put a string to the file                                              */
 /*-----------------------------------------------------------------------*/
 
-int f_puts (
+int FATdisk::puts (
 		const TCHAR* str, /* Pointer to the string to be output */
 		FIL* fp /* Pointer to the file object */
 )
@@ -4828,7 +4820,7 @@ int f_puts (
 /* Put a formatted string to the file                                    */
 /*-----------------------------------------------------------------------*/
 
-int f_printf (
+int FATdisk::printf (
 		FIL* fp, /* Pointer to the file object */
 		const TCHAR* fmt, /* Pointer to the format string */
 		... /* Optional arguments... */

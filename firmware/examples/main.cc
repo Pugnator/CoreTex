@@ -17,43 +17,25 @@
 #include <global.hpp>
 #include <common.hpp>
 #include <log.hpp>
-#include <xprintf.h>
-#include <xml/xml.hpp>
 #include <drivers/storage/fatdisk.hpp>
-#include <drivers/gps.hpp>
-
-void write_track(Gps g, FATdisk disk, FIL gpx)
-{
- unsigned written;
- char text[128];
- FRESULT r;
- for(;;)
-	{
-	 while(!g.ready);
-	 r = disk.f_write(&gpx, text, strlen(text),&written);
-	 if (r != FR_OK)
-	 {
-		SEGGER_RTT_printf(0, "Failed to write to the file: %s\r\n", disk.result_to_str(r));
-		return;
-	 }
-	 g.reset();
-	}
-}
 
 int main(void)
 {
-	Gps g(1, 9600);
 	FATdisk d(1);
 	FATFS fs;
 	FRESULT r;
 	r = d.mount(&fs, "0:",1);
 	SEGGER_RTT_printf(0, "Disk result: %s\r\n", d.result_to_str(r));
 	FIL file;
-	r = d.open(&file, "log.gpx", FA_CREATE_ALWAYS | FA_WRITE);
-	if (r == FR_OK)
-	 {
-		write_track(g, d, file);
-	 }
-	d.close(&file);
+	/*r = d.open(&file, "write.txt", FA_CREATE_ALWAYS | FA_WRITE);
+  if (r == FR_OK)
+  {
+   d.close(&file);
+  }
+  else
+  {
+   SEGGER_RTT_printf(0, "Write result: %s\r\n", d.result_to_str(r));
+  }*/
+
 	MAIN_END;
 }

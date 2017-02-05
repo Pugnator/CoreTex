@@ -19,6 +19,8 @@
 #include <stdint.h>
 #include <strings.h>
 #include <string.h>
+#include <stdarg.h>
+#include <log.hpp>
 
 extern "C"
 {
@@ -317,3 +319,4 @@ void operator delete(void * p) // or delete(void *, std::size_t)
 {
 	stfree(p);
 }
+

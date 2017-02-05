@@ -4,6 +4,7 @@
 #include <core/isr_helper.hpp>
 #include <core/stm32f10x.hpp>
 #include <drivers/gps.hpp>
+#include <log.hpp>
 #include <string.h>
 
 const NMEATYPESTRUCT nmeatypesstr[] =
@@ -167,7 +168,7 @@ NMEAERR Gps::parseNMEA(char c)
  return NMEA_ERROR_OK;
 }
 
-void Gps::print(Console& out)
+void Gps::rttprint()
 {
  if(!correct)
  {
@@ -176,11 +177,11 @@ void Gps::print(Console& out)
    return;
   }
  }
- out.xprintf("Checksum [%X]: %s\n", nmea.checksum, nmea.nmeaok ? "OK" : "ERROR");
- out.xprintf("UTC: %6u\n", nmea.utc);
- out.xprintf("LAT:%3u.%2u\'%2u\" %c\n", nmea.lat.deg, nmea.lat.min,
+ SEGGER_RTT_printf(0, "Checksum [%X]: %s\n", nmea.checksum, nmea.nmeaok ? "OK" : "ERROR");
+ SEGGER_RTT_printf(0,"UTC: %6u\n", nmea.utc);
+ SEGGER_RTT_printf(0,"LAT:%3u.%2u\'%2u\" %c\n", nmea.lat.deg, nmea.lat.min,
              nmea.lat.sec, nmea.lat.dir);
- out.xprintf("LON:%3u.%2u\'%2u\" %c\n", nmea.lon.deg, nmea.lon.min,
+ SEGGER_RTT_printf(0,"LON:%3u.%2u\'%2u\" %c\n", nmea.lon.deg, nmea.lon.min,
              nmea.lon.sec, nmea.lon.dir);
 }
 
@@ -199,4 +200,24 @@ NMEAERR Gps::prepare(void)
  }
  correct = true;
  return err;
+}
+
+coord Gps::getlat()
+{
+ return nmea.lat;
+}
+
+coord Gps::getlon()
+{
+ return nmea.lon;
+}
+
+double Gps::get_dec_lat()
+{
+ return nmea.lat.deg + (nmea.lat.min / 60) + (nmea.lat.sec / 3600);
+}
+
+double Gps::get_dec_lon()
+{
+ return nmea.lon.deg + (nmea.lon.min / 60) + (nmea.lon.sec / 3600);
 }

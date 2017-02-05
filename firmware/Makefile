@@ -66,8 +66,7 @@ TESTSDIR:=\
 
 ######################## SOURCES ###############################
 
-SRC+=\
-	src/main.cc
+SRC?=src/main.cc
 
 DRIVERSSRC:=\
 	$(DRIVERS)/file_transfer/xmodem/xmodem.cc \
@@ -128,7 +127,11 @@ SUPPORTSRC:=\
 	$(SUPPORT)/log.cc \
 	$(SUPPORT)/queue.cc \
 	$(SUPPORT)/make_error.cc \
-	$(SUPPORT)/morse.cc
+	$(SUPPORT)/morse.cc \
+	$(SUPPORT)/xml/xml.cc
+
+XPRINTFSRC:=\
+	$(SUPPORT)/xprintf/xprintf.c
 
 FATFSSRC:=\
 	$(DRIVERS)/storage/disk/fatdisk.cc \
@@ -176,7 +179,7 @@ endif
 
 CXXFLAGS+=\
 	--std=gnu++14 -Wall \
-	-Iinclude -Iinclude/errors -Isrc \
+	-Iinclude -Iinclude/errors -Isrc -Iinclude/support \
 	-Iexternal/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc \
 	-Iexternal/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x \
 	-Iexternal/stdlib/Libraries/CMSIS/CM3/CoreSupport \
@@ -186,6 +189,7 @@ CXXFLAGS+=\
 	-fno-rtti \
 	-fno-exceptions \
 	-Dassert_param="" \
+	-fpermissive \
 	-fno-builtin \
 	-fdata-sections \
 	-ffunction-sections \
@@ -225,6 +229,7 @@ OBJ+=$(STARTUP:%.s=$(OBJSDIR)/%.o)
 OBJ+=$(CORESRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(SUPPORTSRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(RTTSRC:%.c=$(OBJSDIR)/%.o)
+OBJ+=$(XPRINTFSRC:%.c=$(OBJSDIR)/%.o)
 
 ifeq ($(__USE_FATFS),1)
 OBJ+=$(FATFSSRC:%.cc=$(OBJSDIR)/%.o)

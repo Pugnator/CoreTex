@@ -22,66 +22,108 @@
 #include <drivers/storage/fatdisk.hpp>
 #include <drivers/gps.hpp>
 
-const char GPX_TRACK[]=
-"\
-<trkpt lat=\"%u.%u\" lon=\"%u.%u\">\
- <time>%6u</time>\
-	<fix>%ud</fix>\
-  <sat>%ud</sat>\
-</trkpt>\
-	";
+const char GPX_HEADER[] =
+  "\
+<?xml version=\"1.0\"?>\r\n\
+<gpx>\r\n\
+xmlns=\"http://www.topografix.com/GPX/1/1\"\r\n\
+version=\"1.1\"\r\n\
+creator=\"Tracker\"\r\n\
+  <time>2017</time>\r\n\
+	  <metadata>\r\n\
+	    <name>STM32</name>\r\n\
+	    <desc>Description</desc>\r\n\
+	    <author>\r\n\
+	      <name>Autor</name>\r\n\
+	    </author>\r\n\
+	  </metadata>\r\n\
+	  <trk>\r\n\
+	    <name>Test run</name>\r\n\
+	    <trkseg>\r\n";
+
+const char GPX_TRACK_POINT[] =
+  "\
+	      <trkpt lat=\"%3u.%2u\'%2u\" %c\" lon=\"%3u.%2u\'%2u\" %c\">\"\r\n\
+	        <time>%u</time>\r\n\
+	      </trkpt>\r\n";
+
+const char GPX_FOOTER[] = "\
+	    </trkseg>\r\n\
+    </trk>\r\n\
+</gpx>";
 
 typedef struct
 {
  word deg;
  word fract;
-}UTM;
+} UTM;
 
-UTM coord2utm (double coord)
+UTM
+coord2utm (double coord)
 {
  UTM result;
- result.deg = (word)coord;
- result.fract =(word)(coord * 1000000UL);
- result.fract = result.fract - (result.deg *1000000UL);
+ result.deg = (word) coord;
+ result.fract = (word) (coord * 10000UL);
+ result.fract = result.fract - (result.deg * 10000UL);
  return result;
 }
 
-void write_track(Gps g, FATdisk disk, FIL gpx)
+int
+main (void)
 {
- unsigned written;
- char text[128];
- FRESULT r;
+ Gps g (1, 9600);
  for(;;)
 	{
-	 while(!g.ready);
-	 UTM lat = coord2utm(g.get_dec_lat());
-	 UTM lon = coord2utm(g.get_dec_lon());
-	 xsprintf(text, "");
-	 SEGGER_RTT_printf(0, "%s\r\n", text);
-	 r = disk.f_write(&gpx, text, strlen(text),&written);
-	 if (r != FR_OK)
-	 {
-		SEGGER_RTT_printf(0, "Failed to write to the file: %s\r\n", disk.result_to_str(r));
-		return;
-	 }
+	 g.rttprint();
 	 g.reset();
 	}
-}
+ SEGGER_RTT_printf (0, "%s", RTT_CTRL_RESET);
+ FATdisk disk (1);
+ FATFS fs;
+ FRESULT r;
+ r = disk.mount (&fs, "0:", 1);
+ SEGGER_RTT_printf (0, "Disk result: %s\r\n", disk.result_to_str (r));
 
-int main(void)
-{
-	Gps g(1, 9600);
-	FATdisk d(1);
-	FATFS fs;
-	FRESULT r;
-	r = d.mount(&fs, "0:",1);
-	SEGGER_RTT_printf(0, "Disk result: %s\r\n", d.result_to_str(r));
-	FIL file;
-	r = d.open(&file, "log.gpx", FA_CREATE_ALWAYS | FA_WRITE);
-	if (r == FR_OK)
-	 {
-		write_track(g, d, file);
-	 }
-	d.close(&file);
-	MAIN_END;
+ unsigned written;
+ char text[128];
+ FIL gpx;
+ r = disk.open (&gpx, "log.gpx", FA_CREATE_ALWAYS | FA_WRITE);
+ if (r != FR_OK)
+	{
+	 SEGGER_RTT_printf (0, "Failed to open the file: %s\r\n",
+		                  disk.result_to_str (r));
+	 MAIN_END
+	 ;
+	}
+ r = disk.f_write (&gpx, GPX_HEADER, strlen (GPX_HEADER), &written);
+ for (word count = 0; count < 10; count++)
+	{
+	 BLINK;
+	 while (NMEA_ERROR_OK != g.prepare ())
+		;
+	 coord lat = g.getlat ();
+	 coord lon = g.getlon ();
+	 xsprintf (text, GPX_TRACK_POINT, lat.deg, lat.min, lat.sec, lat.dir, lon.deg,
+		         lon.min, lon.sec, lon.dir, g.get_utc ());
+	 SEGGER_RTT_printf (0, "GPS: %s\r\n", text);
+	 g.rttprint ();
+	 r = disk.f_write (&gpx, text, strlen (text), &written);
+	 if (r != FR_OK)
+		{
+		 SEGGER_RTT_printf (0, "Failed to write to the file: %s\r\n",
+			                  disk.result_to_str (r));
+		 MAIN_END
+		 ;
+		}
+	 g.reset ();
+	 if (count % 10)
+		{
+		 SEGGER_RTT_WriteString (0, "flushing data to the disk\r\n");
+		 disk.flush (&gpx);
+		}
+	}
+ r = disk.f_write (&gpx, GPX_FOOTER, strlen (GPX_FOOTER), &written);
+ disk.close (&gpx);
+ MAIN_END
+ ;
 }

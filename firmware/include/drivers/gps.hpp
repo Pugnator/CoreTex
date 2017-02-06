@@ -15,6 +15,8 @@
 
 #define NMEA_MAX_LEN 82
 
+#define TIME_OFFSET 3
+
 typedef enum NMEAERR
 {
  NMEA_ERROR_OK = 0, NMEA_GENERIC_ERROR, NMEA_NOT_READY, NMEA_UNKNOWN_TALKER, NMEA_NOT_BEGINNING,
@@ -85,16 +87,18 @@ public:
  static void gpsisr(void);
  void reset(void);
  static class Gps *self;
- bool ready;
  char nmeastr[NMEA_MAX_LEN + 1];
  volatile uint8_t nmeastr_len;
  coord getlat();
  coord getlon();
+ word get_utc();
  double get_dec_lat();
  double get_dec_lon();
+ bool ok();
 
 private:
  bool correct;
+ volatile bool ready;
  NMEATYPE get_nmea_sent_type(const char* field);
  NMEATALKER get_nmea_talker(const char* field);
  void latlon2crd(const char* str, coord* c);

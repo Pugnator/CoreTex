@@ -111,7 +111,6 @@ Gps::ckecknmea (uint8_t sum, char* string)
 void
 Gps::reset (void)
 {
- SEGGER_RTT_WriteString (RTT_DEBUG_CHANNEL, "GPS parser was reset\r\n");
  nmea.fp = nmea.fstr;
  nmea.sect = 0;
  nmea.sumdone = false;

@@ -255,13 +255,10 @@ PROGOBJ:=$(SRC:%.cc=$(OBJSDIR)/%.o)
 ######################OUTPUT###########################
 
 FIRMWARE:=$(OUTPUTDIR)/$(PROJECTNAME).elf
-FIRMWARE_LINKED:=$(OUTPUTDIR)/$(PROJECTNAME)_linked.elf
 LIBFIRMWARE:=$(LIBSDIR)/$(PROJECTNAME).a
 
 ######################TARGETS###########################
-all: clean directories stm_stdlib library firmware linked_firmware
-
-linked_firmware: directories library $(FIRMWARE)
+all: clean directories stm_stdlib firmware
 
 firmware: settings directories $(FIRMWARE)
 
@@ -279,8 +276,6 @@ erase:
 	@echo -e "device $(CPU)\r\nerase\r\nq" > __temp.jlink
 	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
 	$(RM) -f __temp.jlink
-
-library: corelib drivers supportlib $(LIBFIRMWARE)
 
 $(OBJSDIR)/%.o: %.cc
 	$(MKDIR_P) `dirname $@`
@@ -304,16 +299,6 @@ $(FIRMWARE): $(OBJ)	$(PROGOBJ)
 	@$(SIZE) --format=berkeley $(FIRMWARE)
 	@-$(READELF) -s $@ | $(AWK) '$$3 != "0"' | $(AWK) '$$4 == "OBJECT"' | $(SORT) -k 3 -n -r | head -n 3 | $(CXXFILT)
 
-
-$(FIRMWARE_LINKED): $(PROGOBJ)
-	$(GPP) -o $@ $^ $(LDFLAGS) $(LIBFIRMWARE)
-	$(OCOPY) -O binary $(FIRMWARE) $(FIRMWARE).bin
-	@stat -c "Output size of <%n> is %s" $(FIRMWARE).bin
-	@$(SIZE) -d --format=berkeley $(FIRMWARE)
-
-$(LIBFIRMWARE): $(MRI)
-	$(AR) M <$^
-	@stat -c "Output size of <%n> is %s" $(LIBFIRMWARE)
 
 directories:	$(OUTPUTDIR) $(OBJSDIR) $(LIBSDIR)
 

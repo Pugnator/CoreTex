@@ -71,6 +71,7 @@ coord2utm (double coord)
 int
 main (void)
 {
+	SEGGER_RTT_WriteString (0, "CPU started\r\n");
  Gps g (1, 9600);
  for(;;)
 	{

@@ -1,6 +1,8 @@
 #pragma once
 #include <global.hpp>
 #include <core/usart.hpp>
+#include <stdlib.h>
+#include <math.h>
 
 /*
  1 - +3.3
@@ -53,6 +55,12 @@ typedef struct coord
  char dir;
 } coord;
 
+typedef struct
+{
+ word deg;
+ word fract;
+} UTM;
+
 //TODO: describe the fields
 typedef struct nmeactx
 {
@@ -94,6 +102,7 @@ public:
  word get_utc();
  double get_dec_lat();
  double get_dec_lon();
+ UTM coord2utm (coord coord);
  bool ok();
 
 private:

@@ -52,8 +52,8 @@ SYSVIEWDIR:=\
 RTTDIR:=\
 	external/SEGGER_RTT_$(RTTVER)
 
-AUXSRC:=\
-	src/support
+UTILS:=\
+	src/utils
 
 DRIVERS:=\
 	src/drivers
@@ -136,6 +136,9 @@ XPRINTFSRC:=\
 FATFSSRC:=\
 	$(DRIVERS)/storage/disk/fatdisk.cc \
 	$(DRIVERS)/storage/disk/fatfs.cc
+
+UTILSSRC:=\
+	$(UTILS)/tracker/gpx.cc
 
 TESTSSRC:=\
 	$(TESTSDIR)/core.cc
@@ -230,6 +233,8 @@ OBJ+=$(CORESRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(SUPPORTSRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(RTTSRC:%.c=$(OBJSDIR)/%.o)
 OBJ+=$(XPRINTFSRC:%.c=$(OBJSDIR)/%.o)
+OBJ+=$(UTILSSRC:%.cc=$(OBJSDIR)/%.o)
+
 
 ifeq ($(__USE_FATFS),1)
 OBJ+=$(FATFSSRC:%.cc=$(OBJSDIR)/%.o)

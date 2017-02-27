@@ -190,7 +190,7 @@ Gps::parseNMEA (char c)
 void
 Gps::rttprint ()
 {
- if (!correct)
+ if (!nmea.nmeaok)
 	{
 	 if (NMEA_ERROR_OK != prepare ())
 		{
@@ -205,6 +205,7 @@ Gps::rttprint ()
 	                  nmea.lat.sec, nmea.lat.dir);
  SEGGER_RTT_printf (0, "LON:%3u.%2u\'%2u\" %c\n", nmea.lon.deg, nmea.lon.min,
 	                  nmea.lon.sec, nmea.lon.dir);
+ reset();
 }
 
 NMEAERR
@@ -221,6 +222,7 @@ Gps::prepare (void)
 	 err = parseNMEA (nmeastr[i]);
 	 if (NMEA_ERROR_OK != err)
 		{
+		 reset();
 		 return err;
 		}
 	}
@@ -256,4 +258,19 @@ double
 Gps::get_dec_lon ()
 {
  return nmea.lon.deg + (nmea.lon.min / 60) + (nmea.lon.sec / 3600);
+}
+
+UTM
+Gps::coord2utm (coord coord)
+{
+ UTM result;
+ int nDigits = floor(log10(abs(coord.sec))) + 1;
+ double power = pow(10,nDigits);
+ double min = coord.min + coord.sec / power;
+ min /= 60;
+ double pos = coord.deg + min;
+ result.deg = (word) pos;
+ result.fract = (word) (pos * 1000000UL);
+ result.fract = result.fract - (result.deg * 1000000UL);
+ return result;
 }

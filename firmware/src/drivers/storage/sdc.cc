@@ -24,6 +24,11 @@
 #include <drivers/console.hpp>
 #include <drivers/storage/sdc.hpp>
 
+#ifdef SDC_DEBUG
+#pragma GCC diagnostic ignored "-Wunused-value"
+#define SEGGER_RTT_printf (void)sizeof
+#endif
+
 void print_readable_size(uint32_t size)
 {
  const char* units[5] = { "B", "KB", "MB", "GB"};

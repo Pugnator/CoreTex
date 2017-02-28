@@ -150,7 +150,7 @@ USED void unwindCPUstack(word* stackAddress)
  /* When the following line is hit, the variables contain the register values. */
  for (;;)
  {
-		 delayus_asm(1000000L);
+		 delayus_asm(300000L);
 		 BLINK;
  }
 }

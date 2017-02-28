@@ -52,6 +52,8 @@ static const char GPX_FOOTER[] = "\
 	    </trkseg>\r\n\
     </trk>\r\n\
 </gpx>";
+
+
 int
 main (void)
 {
@@ -107,6 +109,7 @@ main (void)
 	}
  r = disk.f_write (&gpx, GPX_FOOTER, strlen (GPX_FOOTER), &written);
  disk.close (&gpx);
+ PIN_HI(LED);
  MAIN_END
  ;
 }

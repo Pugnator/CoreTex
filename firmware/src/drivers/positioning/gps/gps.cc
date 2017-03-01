@@ -157,6 +157,8 @@ Gps::parseNMEA (char c)
 		 type = get_nmea_sent_type (nmea.fstr);
 		}
 	 //TODO: make some kind of specialized template here based on NMEATYPE
+	 if (*nmea.fstr)
+	 {
 	 switch (type)
 		{
 		case GGA:
@@ -172,7 +174,7 @@ Gps::parseNMEA (char c)
 		 return NMEA_UNKNOWN_TALKER;
 		 break;
 		}
-
+	 }
 	 nmea.sect++;
 	 memset (nmea.fstr, 0, sizeof nmea.fstr);
 	 nmea.fp = nmea.fstr;

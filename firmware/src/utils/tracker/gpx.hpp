@@ -6,8 +6,25 @@
 class GPX : public FATdisk
 {
 public:
-	GPX (char *filename) : FATdisk (1)
-{
+	GPX (Gps* g) :
+	 FATdisk (1),
+	 filesystem ({0}),
+	 result (FR_OK),
+	 gpx ({0}),
+	 gps (g),
+	 written(0)
+  {
 
-}
+  }
+
+	bool create(const char* filename);
+	bool commit(void);
+	bool do_point(void);
+
+private:
+	FATFS filesystem;
+	FRESULT result;
+	FIL gpx;
+	Gps *gps;
+	unsigned written;
 };

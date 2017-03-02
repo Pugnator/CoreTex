@@ -33,24 +33,24 @@ Gps::gpsisr (void)
 {
  if (self->Reg->SR & USART_SR_RXNE)
 	{
-	 short a = self->Reg->DR;
+	 short ch = self->Reg->DR;
 	 self->Reg->SR &= ~USART_SR_RXNE;
 	 if (self->ready)
 		{
 		 return;
 		}
 
-	 if (0 == self->nmeastr_len && '$' != a)
+	 if (0 == self->nmeastr_len && '$' != ch)
 		{
 		 return;
 		}
-	 else if ('\n' == a || NMEA_MAX_LEN <= self->nmeastr_len + 1)
+	 else if ('\n' == ch || NMEA_MAX_LEN <= self->nmeastr_len + 1)
 		{
-		 self->nmeastr[self->nmeastr_len] = a;
+		 self->nmeastr[self->nmeastr_len] = ch;
 		 self->ready = true;
 		 return;
 		}
-	 self->nmeastr[self->nmeastr_len++] = a;
+	 self->nmeastr[self->nmeastr_len++] = ch;
 	}
 }
 
@@ -111,13 +111,8 @@ Gps::ckecknmea (uint8_t sum, char* string)
 void
 Gps::reset (void)
 {
+ nmea  = {0};
  nmea.fp = nmea.fstr;
- nmea.sect = 0;
- nmea.sumdone = false;
- nmea.nmeaok = false;
- nmea.nmeaerr = 0;
- nmea.checksum = 0;
- nmeastr_len = 0;
  memset (nmeastr, 0, NMEA_MAX_LEN+1);
  correct = false;
  ready = false;
@@ -263,14 +258,14 @@ Gps::get_dec_lon ()
 }
 
 UTM
-Gps::coord2utm (coord coord)
+Gps::coord2utm (coord c)
 {
  UTM result;
- int nDigits = floor(log10(abs(coord.sec))) + 1;
+ int nDigits = floor(log10(abs(c.sec))) + 1;
  double power = pow(10,nDigits);
- double min = coord.min + coord.sec / power;
+ double min = c.min + c.sec / power;
  min /= 60;
- double pos = coord.deg + min;
+ double pos = c.deg + min;
  result.deg = (word) pos;
  result.fract = (word) (pos * 1000000UL);
  result.fract = result.fract - (result.deg * 1000000UL);

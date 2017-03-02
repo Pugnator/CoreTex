@@ -108,14 +108,18 @@ public:
 private:
  bool correct;
  volatile bool ready;
+
+ void latlon2crd(const char* str, coord* c);
+
+ bool ckecknmea(uint8_t sum, char* string);
  NMEATYPE get_nmea_sent_type(const char* field);
  NMEATALKER get_nmea_talker(const char* field);
- void latlon2crd(const char* str, coord* c);
- bool ckecknmea(uint8_t sum, char* string);
  NMEAERR parseNMEA(char c);
+
  void fillGGActx(int sect, const char* field);
  void fillVTGctx(int sect, const char* field);
  void fillRMCctx(int sect, const char* field);
+
  nmeactx nmea;
  NMEATYPE type;
 };

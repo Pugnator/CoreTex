@@ -61,8 +61,10 @@ FATdisk::disk_read (BYTE drv, BYTE* buff, DWORD sector, UINT count)
  if (!isSDCv2)
  {
   sector*=_MIN_SS;
-  count*=_MIN_SS;
  }
+
+ count*=_MIN_SS;
+
  SEGGER_RTT_printf(0,"disk_read: Drive=%u, sector=%u, count=%u\r\n", drv, sector, count);
  if(SD_RESPONSE_NO_ERROR == read_block(buff, sector, count ))
  {
@@ -81,8 +83,9 @@ FATdisk::disk_write (BYTE drv, const BYTE* buff, DWORD sector, UINT count)
  if (!isSDCv2)
  {
   sector*=_MIN_SS;
-  count*=_MIN_SS;
  }
+
+ count*=_MIN_SS;
  SEGGER_RTT_printf(0,"disk_write: Drive=%u, sector=%u, count=%u\r\n", drv, sector, count);
  if(SD_RESPONSE_NO_ERROR == write_block(buff, sector, count))
  {

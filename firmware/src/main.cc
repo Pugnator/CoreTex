@@ -19,10 +19,28 @@
 #include <log.hpp>
 #include <utils/tracker/gpx.hpp>
 #include <drivers/gps.hpp>
+#include <drivers/storage/fatdisk.hpp>
 
-int
-main (void)
+int main (void)
 {
+ FATdisk d(1);
+ FATFS filesystem;
+ FIL gpx;
+ FRESULT result = d.mount (&filesystem, "0:", 1);
+ SEGGER_RTT_printf (0, "Disk result: %s\r\n", d.result_to_str (result));
+
+ result = d.open (&gpx, "test.txt", FA_CREATE_ALWAYS | FA_WRITE);
+ if (result != FR_OK)
+ {
+   SEGGER_RTT_printf (0, "Failed to open the file: %s\r\n",  d.result_to_str (result));
+ }
+ d.close(&gpx);
+ MAIN_END;
+
+
+
+
+
  SEGGER_RTT_WriteString (0, "CPU started\r\n");
  Gps g (1, 9600);
  GPX tracker(&g);
@@ -38,6 +56,5 @@ main (void)
  }
  tracker.commit();
  PIN_HI(LED);
- MAIN_END
- ;
+ MAIN_END;
 }

@@ -186,8 +186,7 @@ uint32_t Sdc::get_card_capacity()
   card_capacity *= (1 << (SD_csd.DeviceSizeMul + 2));
   card_block_size = 1 << (SD_csd.RdBlockLen);
   card_capacity *= card_block_size;
-  SEGGER_RTT_WriteString(0,"CardCapacity = ");
-  print_readable_size(card_capacity);
+  SEGGER_RTT_printf(0,"CardCapacity = %u [%u]\r\n", card_capacity, card_block_size);
   return card_capacity;
  }
  else
@@ -293,17 +292,9 @@ SD_Error Sdc::init_sdhc()
   SEGGER_RTT_printf(0,"%sSD is rejected%s\r\n", RTT_CTRL_BG_RED, RTT_CTRL_RESET);
   return SD_RESPONSE_FAILURE;
  }
-
- uint8_t count = 100;
- do
+ else
  {
-  sdc_cmd(ACMD41, 1UL << 30);
- }
- while(get_response(SD_IN_IDLE_STATE) && --count);
-
- if(!count)
- {
-  return SD_RESPONSE_FAILURE;
+  SEGGER_RTT_printf(0,"%sSD voltage is in range%s\r\n", RTT_CTRL_BG_GREEN, RTT_CTRL_RESET);
  }
 
  sdc_cmd(CMD58, 0);
@@ -312,6 +303,19 @@ SD_Error Sdc::init_sdhc()
   return SD_RESPONSE_FAILURE;
  }
 
+ uint8_t count = 100;
+ do
+ {
+  sdc_cmd(ACMD41, 1UL << 30);
+ }
+ while(get_response(SD_RESPONSE_NO_ERROR) && --count);
+
+ if(!count)
+ {
+  return SD_RESPONSE_FAILURE;
+ }
+
+ word cap = get_card_capacity();
  isSDCv2 = true;
  return SD_RESPONSE_NO_ERROR;
 }
@@ -321,7 +325,7 @@ SD_Error Sdc::initialize(void)
  ok = false;
  go8bit();
  lowspeed();
- for (int i = 0; i <=100; i++)
+ for (int i = 0; i <=1000; i++)
  {
   read();
  }
@@ -647,7 +651,6 @@ SD_Error Sdc::read_block(uint8_t* pBuffer, uint32_t ReadAddr, uint16_t BlockSize
    {
     /*!< Save the received data */
     *pBuffer = read();
-
     /*!< Point to the next location where the byte read will be saved */
     pBuffer++;
    }

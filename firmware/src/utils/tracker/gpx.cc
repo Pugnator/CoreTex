@@ -97,6 +97,7 @@ GPX::do_point (void)
 	UTM lonutm = gps->coord2utm (lon);
 	xsprintf (text, GPX_TRACK_POINT, latutm.deg, latutm.fract, lonutm.deg,
 	          lonutm.fract, gps->get_utc ());
+
 	SEGGER_RTT_printf (0, "GPS: %s\r\n", text);
 	result = f_write (&gpx, text, strlen (text), &written);
 	if (result != FR_OK)
@@ -106,10 +107,9 @@ GPX::do_point (void)
 		close (&gpx);
 		return false;
 	}
-	if (track_count % 100)
-	{
-		flush(&gpx);
-	}
+
+	flush(&gpx);
+
 	gps->reset ();
 	return FR_OK == result;
 }

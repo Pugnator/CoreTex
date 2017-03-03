@@ -66,8 +66,7 @@ TESTSDIR:=\
 
 ######################## SOURCES ###############################
 
-SRC+=\
-	src/main.cc
+SRC?=src/main.cc
 
 DRIVERSSRC:=\
 	$(DRIVERS)/file_transfer/xmodem/xmodem.cc \
@@ -80,9 +79,9 @@ DRIVERSSRC:=\
 	$(DRIVERS)/storage/sdc.cc \
 	$(DRIVERS)/storage/ramdisk.cc \
 	$(DRIVERS)/storage/flash.cc \
-	$(DRIVERS)/wireless/bc470/bc470.cc \
-	$(DRIVERS)/wireless/gsm/atcmd.cc \
-	$(DRIVERS)/wireless/gsm/gsm.cc \
+	$(DRIVERS)/wireless/modem/atcmd.cc \
+	$(DRIVERS)/wireless/modem/bc417.cc \
+	$(DRIVERS)/wireless/modem/gsm.cc \
 	$(DRIVERS)/wireless/nrf24l01/nrf24.cc
 
 ifeq ($(__USE_CONSOLE), 1)
@@ -127,7 +126,12 @@ SUPPORTSRC:=\
 	$(SUPPORT)/compat.cc \
 	$(SUPPORT)/log.cc \
 	$(SUPPORT)/queue.cc \
-	$(SUPPORT)/morse.cc
+	$(SUPPORT)/make_error.cc \
+	$(SUPPORT)/morse.cc \
+	$(SUPPORT)/xml/xml.cc
+
+XPRINTFSRC:=\
+	$(SUPPORT)/xprintf/xprintf.c
 
 FATFSSRC:=\
 	$(DRIVERS)/storage/disk/fatdisk.cc \
@@ -175,7 +179,7 @@ endif
 
 CXXFLAGS+=\
 	--std=gnu++14 -Wall \
-	-Iinclude -Iinclude/errors -Isrc \
+	-Iinclude -Iinclude/errors -Isrc -Iinclude/support \
 	-Iexternal/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc \
 	-Iexternal/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x \
 	-Iexternal/stdlib/Libraries/CMSIS/CM3/CoreSupport \
@@ -185,6 +189,7 @@ CXXFLAGS+=\
 	-fno-rtti \
 	-fno-exceptions \
 	-Dassert_param="" \
+	-fpermissive \
 	-fno-builtin \
 	-fdata-sections \
 	-ffunction-sections \
@@ -224,6 +229,7 @@ OBJ+=$(STARTUP:%.s=$(OBJSDIR)/%.o)
 OBJ+=$(CORESRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(SUPPORTSRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(RTTSRC:%.c=$(OBJSDIR)/%.o)
+OBJ+=$(XPRINTFSRC:%.c=$(OBJSDIR)/%.o)
 
 ifeq ($(__USE_FATFS),1)
 OBJ+=$(FATFSSRC:%.cc=$(OBJSDIR)/%.o)

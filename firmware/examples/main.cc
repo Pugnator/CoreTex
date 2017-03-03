@@ -14,15 +14,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * 2015, 2016
  *******************************************************************************/
+#include <global.hpp>
+#include <common.hpp>
+#include <log.hpp>
+#include <drivers/storage/fatdisk.hpp>
 
-#ifndef __USE_CONSOLE
-#define __USE_CONSOLE 1
-#endif
+int main(void)
+{
+	FATdisk d(1);
+	FATFS fs;
+	FRESULT r;
+	r = d.mount(&fs, "0:",1);
+	SEGGER_RTT_printf(0, "Disk result: %s\r\n", d.result_to_str(r));
+	FIL file;
+	/*r = d.open(&file, "write.txt", FA_CREATE_ALWAYS | FA_WRITE);
+  if (r == FR_OK)
+  {
+   d.close(&file);
+  }
+  else
+  {
+   SEGGER_RTT_printf(0, "Write result: %s\r\n", d.result_to_str(r));
+  }*/
 
-#ifndef __DEBUG
-#define __DEBUG 1
-#endif
-
-
-
-
+	MAIN_END;
+}

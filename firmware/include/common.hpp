@@ -4,6 +4,11 @@
 
 void delay_ms (uint32_t ms);
 void delay (uint32_t s);
+void tsprintf (			/* Put a formatted string to the memory */
+	char* buff,			/* Pointer to the output buffer */
+	const char*	fmt,	/* Pointer to the format string */
+	...					/* Optional arguments */
+);
 int ascii2ucs2(const char* sms_text, uint8_t* output_buffer, int buffer_size);
 word str16_to_word (const char* str);
 word str10_to_word (const char* str);

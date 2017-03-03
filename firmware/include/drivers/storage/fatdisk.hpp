@@ -7,6 +7,13 @@
 #include <drivers/storage/integer.hpp>
 #include <sys/_stdint.h>
 
+typedef struct
+{
+	FIL* fp;
+	int idx, nchr;
+	BYTE buf[64];
+}putbuff;
+
 class FATdisk : public Sdc
 {
 public:
@@ -20,7 +27,7 @@ public:
  FRESULT forward (FIL* fp, UINT(*func)(const BYTE*,UINT), UINT btf, UINT* bf);	/* Forward data to the stream */
  FRESULT lseek (FIL* fp, DWORD ofs);								/* Move file pointer of a file object */
  FRESULT truncate (FIL* fp);										/* Truncate file */
- FRESULT sync (FIL* fp);											/* Flush cached data of a writing file */
+ FRESULT flush (FIL* fp);											/* Flush cached data of a writing file */
  FRESULT f_opendir (DIR* dp, const TCHAR* path);						/* Open a directory */
  FRESULT closedir (DIR* dp);										/* Close an open directory */
  FRESULT f_readdir (DIR* dp, FILINFO* fno);							/* Read a directory item */
@@ -56,6 +63,7 @@ protected:
  virtual DWORD get_fattime (void);
 
 protected:
+ void putc_bfd (putbuff* pb, TCHAR c);
  FRESULT	sync_window (FATFS* fs);
  FRESULT move_window(FATFS* fs,	DWORD sector);
  FRESULT	sync_fs (FATFS* fs);

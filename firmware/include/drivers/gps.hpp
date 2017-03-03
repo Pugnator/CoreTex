@@ -1,7 +1,6 @@
 #pragma once
 #include <global.hpp>
 #include <core/usart.hpp>
-#include <drivers/console.hpp>
 
 /*
  1 - +3.3
@@ -15,6 +14,8 @@
 #pragma GCC diagnostic ignored "-Wswitch"
 
 #define NMEA_MAX_LEN 82
+
+#define TIME_OFFSET 3
 
 typedef enum NMEAERR
 {
@@ -81,16 +82,23 @@ public:
   Gps::self = this;
   reset();
  }
- void print(Console& port);
+ void rttprint();
  NMEAERR prepare(void);
  static void gpsisr(void);
  void reset(void);
  static class Gps *self;
- bool ready;
  char nmeastr[NMEA_MAX_LEN + 1];
  volatile uint8_t nmeastr_len;
+ coord getlat();
+ coord getlon();
+ word get_utc();
+ double get_dec_lat();
+ double get_dec_lon();
+ bool ok();
+
 private:
  bool correct;
+ volatile bool ready;
  NMEATYPE get_nmea_sent_type(const char* field);
  NMEATALKER get_nmea_talker(const char* field);
  void latlon2crd(const char* str, coord* c);

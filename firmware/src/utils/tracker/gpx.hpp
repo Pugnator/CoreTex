@@ -12,7 +12,8 @@ public:
 	 result (FR_OK),
 	 gpx ({0}),
 	 gps (g),
-	 written(0)
+	 written(0),
+	 track_count(0)
   {
 
   }
@@ -27,4 +28,5 @@ private:
 	FIL gpx;
 	Gps *gps;
 	unsigned written;
+	word track_count;
 };

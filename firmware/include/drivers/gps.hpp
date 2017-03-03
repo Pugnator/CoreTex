@@ -53,6 +53,7 @@ typedef struct coord
  word min;
  word sec;
  char dir;
+ bool valid;
 } coord;
 
 typedef struct

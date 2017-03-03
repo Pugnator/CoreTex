@@ -27,10 +27,14 @@ main (void)
  Gps g (1, 9600);
  GPX tracker(&g);
  tracker.create("log.txt");
+ word count = 0;
  for(;;)
  {
- tracker.do_point();
- BLINK;
+	 if(tracker.do_point())
+	 {
+		 BLINK;
+	 }
+
  }
  tracker.commit();
  PIN_HI(LED);

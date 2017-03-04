@@ -21,6 +21,7 @@ public:
  bc417(short ch, word bd)
 : ATModem::ATModem(ch, bd)
  {
+	connected = false;
   self = this;
   buflen = 0;
   ok = false;
@@ -28,8 +29,10 @@ public:
   reset();
  };
  ~bc417(){};
- bool test(void);
  void set_pin(const char* pin);
  void set_name(const char* name);
  void set_baud(BAUD_RATE speed);
+ void is_connected();
+private:
+ bool connected;
 };

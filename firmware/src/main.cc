@@ -17,31 +17,11 @@
 #include <global.hpp>
 #include <common.hpp>
 #include <log.hpp>
-#include <drivers/bc417.hpp>
-#include <errors.hpp>
+#include <utils/tracker/gpx.hpp>
+#include <drivers/gps.hpp>
+#include <drivers/storage/fatdisk.hpp>
 
 int main (void)
 {
-	SEGGER_RTT_WriteString(0, "Started\n");
-	bc417 b(1, 9600);
-	b.set_name("BT417");
-	b.set_pin("1111");
-	for(;;)
-	{
-		TRY
-		{
-			b.is_connected();
-		}
-		CATCH (ERROR_BC471_COMMTEST_FAILED)
-		{
-			SEGGER_RTT_WriteString(0, "HC-05 is connected\n");
-		}
-		CATCH (ERROR_BC471_COMMTEST_OK)
-		{
-			SEGGER_RTT_WriteString(0, "HC-05 is in command mode\r\n");
-		}
-		ETRY;
-		delay_ms(1000);
-	}
  MAIN_END;
 }

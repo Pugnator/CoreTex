@@ -56,18 +56,23 @@ word str16_to_word(const char* str)
 
 word str10_to_word(const char* str)
 {
+  if (!str)
+  {
+   return 0;
+  }
 	word res = 0;
-	while (*str)
+	char ch = *str;
+	while (ch)
 	{
-		if ((*str >= '0') && (*str <= '9'))
+		if ((ch >= '0') && (ch <= '9'))
 		{
-			res = (res * 10) + ((*str) - '0');
+			res = (res * 10) + ((ch) - '0');
 		}
-		else if (',' == *str || '.' == *str)
+		else if (',' == ch || '.' == ch)
 		{
 			break;
 		}
-		str++;
+		ch = *++str;
 	}
 	return res;
 }

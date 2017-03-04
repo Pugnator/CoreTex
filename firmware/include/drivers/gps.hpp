@@ -1,6 +1,8 @@
 #pragma once
 #include <global.hpp>
 #include <core/usart.hpp>
+#include <stdlib.h>
+#include <math.h>
 
 /*
  1 - +3.3
@@ -19,7 +21,7 @@
 
 typedef enum NMEAERR
 {
- NMEA_ERROR_OK = 0, NMEA_GENERIC_ERROR, NMEA_NOT_READY, NMEA_UNKNOWN_TALKER, NMEA_NOT_BEGINNING,
+ NMEA_ERROR_OK = 0, NMEA_GENERIC_ERROR, NMEA_NOT_READY, NMEA_UNKNOWN_TALKER, NMEA_NOT_BEGINNING, NMEA_EMPTY_FIELD,
  NMEA_DIAGNOSTIC_MSG
 } NMEAERR;
 
@@ -51,7 +53,14 @@ typedef struct coord
  word min;
  word sec;
  char dir;
+ bool valid;
 } coord;
+
+typedef struct
+{
+ word deg;
+ word fract;
+} UTM;
 
 //TODO: describe the fields
 typedef struct nmeactx
@@ -94,19 +103,24 @@ public:
  word get_utc();
  double get_dec_lat();
  double get_dec_lon();
+ UTM coord2utm (coord coord);
  bool ok();
 
 private:
  bool correct;
  volatile bool ready;
+
+ void latlon2crd(const char* str, coord* c);
+
+ bool ckecknmea(uint8_t sum, char* string);
  NMEATYPE get_nmea_sent_type(const char* field);
  NMEATALKER get_nmea_talker(const char* field);
- void latlon2crd(const char* str, coord* c);
- bool ckecknmea(uint8_t sum, char* string);
  NMEAERR parseNMEA(char c);
+
  void fillGGActx(int sect, const char* field);
  void fillVTGctx(int sect, const char* field);
  void fillRMCctx(int sect, const char* field);
+
  nmeactx nmea;
  NMEATYPE type;
 };

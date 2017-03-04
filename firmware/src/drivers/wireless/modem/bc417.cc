@@ -19,15 +19,17 @@
 #include <global.hpp>
 #include <errors.hpp>
 
-bool bc417::test()
+void bc417::is_connected()
 {
- ok = false;
  rawcmd(CMD::AT, CMDMODE::RAW);
  if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
  {
   THROW(ERROR_BC471_COMMTEST_FAILED);
  }
- return ok = true;
+ else
+ {
+	 THROW(ERROR_BC471_COMMTEST_OK);
+ }
 }
 
 void bc417::set_name(const char *name)

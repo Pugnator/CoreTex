@@ -80,7 +80,7 @@ GPX::commit ()
 }
 
 bool
-GPX::do_point (void)
+GPX::set_point (void)
 {
 	char text[128];
 	while (NMEA_ERROR_OK != gps->prepare ())

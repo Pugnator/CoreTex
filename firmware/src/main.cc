@@ -23,5 +23,16 @@
 
 int main (void)
 {
- MAIN_END;
+	Gps g(1, 9600);
+	GPX tr(&g);
+	tr.create("log.txt");
+	for(;;)
+	{
+		if(tr.set_point())
+		{
+			BLINK;
+		}
+	}
+	tr.commit();
+	MAIN_END;
 }

@@ -17,10 +17,14 @@ public:
   {
 
   }
+	~GPX ()
+	{
+		commit();
+	}
 
 	bool create(const char* filename);
 	bool commit(void);
-	bool do_point(void);
+	bool set_point(void);
 
 private:
 	FATFS filesystem;

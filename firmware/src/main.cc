@@ -17,8 +17,12 @@
 #include <global.hpp>
 #include <common.hpp>
 #include <log.hpp>
+#include <core/adc.hpp>
 
 int main(void)
 {
+	Adc a;
+	uint16_t res = a.sample();
+	SEGGER_RTT_printf(0, "ADC: 0x%X\r\n", res);
 	MAIN_END;
 }

@@ -297,12 +297,6 @@ SD_Error Sdc::init_sdhc()
   SEGGER_RTT_printf(0,"%sSD voltage is in range%s\r\n", RTT_CTRL_BG_GREEN, RTT_CTRL_RESET);
  }
 
- sdc_cmd(CMD58, 0);
- if(get_response(SD_IN_IDLE_STATE, SDRT_3))
- {
-  return SD_RESPONSE_FAILURE;
- }
-
  uint8_t count = 100;
  do
  {
@@ -315,14 +309,26 @@ SD_Error Sdc::init_sdhc()
   return SD_RESPONSE_FAILURE;
  }
 
+ sdc_cmd(CMD58, 0);
+ if(get_response(SD_RESPONSE_NO_ERROR, SDRT_3))
+ {
+  return SD_RESPONSE_FAILURE;
+ }
+ SEGGER_RTT_printf(0,"%sOCR: 0x%x%s\r\n", RTT_CTRL_BG_GREEN, ocr, RTT_CTRL_RESET);
+ if((ocr >> 30) & 1)
+ {
+  SEGGER_RTT_printf(0,"%s30th bit of OCR is set, it's SDHC%s\r\n", RTT_CTRL_BG_BRIGHT_CYAN, RTT_CTRL_RESET);
+  isSDCv2 = true;
+ }
+
  word cap = get_card_capacity();
- isSDCv2 = true;
  return SD_RESPONSE_NO_ERROR;
 }
 
 SD_Error Sdc::initialize(void)
 {
  ok = false;
+ isSDCv2 = false;
  go8bit();
  lowspeed();
  for (int i = 0; i <=1000; i++)

@@ -20,6 +20,7 @@
 #include <log.hpp>
 #include <core/io_macro.hpp>
 #include <core/isr_helper.hpp>
+#include <drivers/storage/fatdisk.hpp>
 
 volatile word tickcounter = 0;
 volatile word timerms = 0;
@@ -145,6 +146,16 @@ USED void unwindCPUstack(word* stackAddress)
  SEGGER_RTT_printf(0, "R0:  0x%08X\nR1:  0x%08X\nR2:  0x%08X\nR3:  0x%08X\nR12: 0x%08X\n", r0, r1,
    r2, r3, r12);
  SEGGER_RTT_printf(0, "LR:  0x%08X\nPC:  0x%08X\nPSR: 0x%08X\n", lr, pc, psr);
+
+ __enable_irq();
+   __ISB();
+
+ FATdisk d(1);
+  FATFS filesystem;
+  FIL gpx;
+  FRESULT result = d.mount (&filesystem, "0:", 1);
+  d.open(&gpx, "dump.txt", FA_CREATE_ALWAYS | FA_WRITE);
+  d.close(&gpx);
 
 
  /* When the following line is hit, the variables contain the register values. */

@@ -46,6 +46,7 @@ static const char GPX_TRACK_POINT[] =
     "\
         <trkpt lat=\"%u.%u\" lon=\"%u.%u\">\"\r\n\
           <time>%u</time>\r\n\
+          <nmea>%s</nmea>\r\n\
         </trkpt>\r\n";
 
 static const char GPX_FOOTER[] =
@@ -96,7 +97,7 @@ GPX::set_point (void)
 	UTM latutm = gps->coord2utm (lat);
 	UTM lonutm = gps->coord2utm (lon);
 	xsprintf (text, GPX_TRACK_POINT, latutm.deg, latutm.fract, lonutm.deg,
-	          lonutm.fract, gps->get_utc ());
+	          lonutm.fract, gps->get_utc(), gps->nmeastr);
 
 	SEGGER_RTT_printf (0, "GPS: %s\r\n", text);
 	result = f_write (&gpx, text, strlen (text), &written);

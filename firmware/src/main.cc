@@ -23,13 +23,6 @@
 
 int main (void)
 {
- FATdisk d(1);
- FATFS filesystem;
- FIL gpx;
- FRESULT result = d.mount (&filesystem, "0:", 1);
- d.open(&gpx, "test123.txt", FA_CREATE_ALWAYS | FA_WRITE);
- d.close(&gpx);
- MAIN_END;
 	Gps g(1, 9600);
 	GPX tr(&g);
 	tr.create("log.txt");

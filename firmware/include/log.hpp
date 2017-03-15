@@ -8,6 +8,3 @@
 
 
 void swo_print(const char *msg);
-
-#define RTTPRINT(string) SEGGER_RTT_WriteString(LOGGING_CHANNEL, string)
-

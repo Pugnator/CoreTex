@@ -21,6 +21,7 @@
 #include <core/io_macro.hpp>
 #include <core/isr_helper.hpp>
 #include <drivers/storage/fatdisk.hpp>
+#include <xprintf.h>
 
 volatile word tickcounter = 0;
 volatile word timerms = 0;
@@ -117,11 +118,11 @@ void DMA1_Channel1_IRQHandler(void)
  }
 }
 
-
-
 //TO USE: addr2line -e ./bin/program.elf -a 0x8002327 [GDB: p/x pc when it hit for(;;)]
-USED void unwindCPUstack(word* stackAddress)
+USED void memory_dump(word* stackAddress)
 {
+ SEGGER_RTT_printf(0, "CPU fatal error trapped\r\nIssuing memory dump\r\n");
+
  /*
   These are volatile to try and prevent the compiler/linker optimising them
   away as the variables never actually get used.  If the debugger won't show the
@@ -139,32 +140,59 @@ USED void unwindCPUstack(word* stackAddress)
  volatile word pc = stackAddress[6];
  /* Program status register. */
  volatile word psr = stackAddress[7];
-
-
- SEGGER_RTT_printf(0, "CPU fatal error trapped\r\nSystem halted\r\n");
- SEGGER_RTT_printf(0, "*** CPU registers ***\r\n");
- SEGGER_RTT_printf(0, "R0:  0x%08X\nR1:  0x%08X\nR2:  0x%08X\nR3:  0x%08X\nR12: 0x%08X\n", r0, r1,
-   r2, r3, r12);
- SEGGER_RTT_printf(0, "LR:  0x%08X\nPC:  0x%08X\nPSR: 0x%08X\n", lr, pc, psr);
-
- __enable_irq();
-   __ISB();
-
  FATdisk d(1);
-  FATFS filesystem;
-  FIL gpx;
-  FRESULT result = d.mount (&filesystem, "0:", 1);
-  d.open(&gpx, "dump.txt", FA_CREATE_ALWAYS | FA_WRITE);
-  d.close(&gpx);
+   FATFS filesystem;
+   FIL dump;
+   FRESULT result = d.mount (&filesystem, "0:", 1);
 
+   SEGGER_RTT_printf(0, "Dumping CPU registers...\r\n");
 
- /* When the following line is hit, the variables contain the register values. */
- for (;;)
- {
-		 delayus_asm(300000L);
-		 BLINK;
- }
+   d.open(&dump, "REGISTERS.TXT", FA_CREATE_ALWAYS | FA_WRITE);
+   char registers[128];
+   word written;
+   xsprintf (registers, "R0:  0x%08X\nR1:  0x%08X\nR2:  0x%08X\nR3:  0x%08X\nR12: 0x%08X\r\n", r0, r1, r2, r3, r12);
+   d.f_write(&dump, registers, strlen(registers), &written);
+   xsprintf (registers, "LR:  0x%08X\nPC:  0x%08X\nPSR: 0x%08X\r\n", lr, pc, psr);
+   d.f_write(&dump, registers, strlen(registers), &written);
+   d.close(&dump);
+
+   SEGGER_RTT_printf(0, "Dumping RAM...\r\n");
+   d.open(&dump, "RAM.DMP", FA_CREATE_ALWAYS | FA_WRITE);
+   for(word a = 0x20000000U; a < 0x20000000 + 20480; a+=512)
+   {
+    result = d.f_write(&dump, *((char*)a), 512, &written);
+    if (FR_OK!= result)
+    {
+     SEGGER_RTT_printf(0, "Failed to write the file...\r\n");
+     break;
+    }
+    SEGGER_RTT_printf(0, "%u is written\r\n", written);
+   }
+   d.close(&dump);
+
+   SEGGER_RTT_printf(0, "Dumping FLASH...\r\n");
+   d.open(&dump, "FLASH.DMP", FA_CREATE_ALWAYS | FA_WRITE);
+   for(word a = 0x08000000; a < 0x08000000 + 65536; a+=512)
+      {
+       result = d.f_write(&dump, *((char*)a), 512, &written);
+       if (FR_OK!= result)
+           {
+            SEGGER_RTT_printf(0, "Failed to write the file...\r\n");
+            break;
+           }
+       SEGGER_RTT_printf(0, "%u is written\r\n", written);
+      }
+   d.close(&dump);
+
+   /* When the following line is hit, the variables contain the register values. */
+    for (;;)
+    {
+        delayus_asm(300000L);
+        BLINK;
+    }
 }
+
+
 
 /* DTR */
 void EXTI0_IRQHandler(void)
@@ -183,7 +211,7 @@ void HardFault_Handler(void)
    " ldr r1, [r0, #24]                                         \n"
    " ldr r2, handler_address_const                            \n"
    " bx r2                                                     \n"
-   " handler_address_const: .word unwindCPUstack    \n"
+   " handler_address_const: .word memory_dump    \n"
  );
 }
 
@@ -198,7 +226,7 @@ void MemManage_Handler(void)
    " ldr r1, [r0, #24]                                         \n"
    " ldr r2, handler2_address_const                            \n"
    " bx r2                                                     \n"
-   " handler2_address_const: .word unwindCPUstack    \n"
+   " handler2_address_const: .word memory_dump    \n"
  );
 }
 
@@ -213,7 +241,7 @@ void BusFault_Handler(void)
    " ldr r1, [r0, #24]                                         \n"
    " ldr r2, handler3_address_const                            \n"
    " bx r2                                                     \n"
-   " handler3_address_const: .word unwindCPUstack    \n"
+   " handler3_address_const: .word memory_dump    \n"
  );
 }
 
@@ -228,7 +256,7 @@ void UsageFault_Handler(void)
    " ldr r1, [r0, #24]                                         \n"
    " ldr r2, handler4_address_const                            \n"
    " bx r2                                                     \n"
-   " handler4_address_const: .word unwindCPUstack    \n"
+   " handler4_address_const: .word memory_dump    \n"
  );
 }
 }

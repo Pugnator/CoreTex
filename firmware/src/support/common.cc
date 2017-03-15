@@ -77,11 +77,24 @@ word str10_to_word(const char* str)
 	return res;
 }
 
+#ifdef USE_IRQ_DELAY
 void delay_ms(word ms)
 {
 	tickcounter = ms;
 	while (tickcounter);
 }
+#else
+void delay_ms(word ms)
+{
+ word us = ms * 1000;
+ asm volatile (  "MOV R0,%[loops]\n\t"\
+         "1: \n\t"\
+         "SUB R0, #1\n\t"\
+         "CMP R0, #0\n\t"\
+         "BNE 1b \n\t" : : [loops] "r" (us) : "memory"\
+     );
+}
+#endif
 
 void delay(word s)
 {

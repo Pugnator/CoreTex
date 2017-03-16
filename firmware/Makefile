@@ -72,8 +72,11 @@ DRIVERSSRC:=\
 	$(DRIVERS)/file_transfer/xmodem/xmodem.cc \
 	$(DRIVERS)/generic/driver.cc \
 	$(DRIVERS)/imaging/ov528/ov528.cc \
-	$(DRIVERS)/positioning/gps/gga.cc \
 	$(DRIVERS)/positioning/gps/gps.cc \
+	$(DRIVERS)/positioning/gps/gga.cc \
+	$(DRIVERS)/positioning/gps/gll.cc \
+	$(DRIVERS)/positioning/gps/gsv.cc \
+	$(DRIVERS)/positioning/gps/parser.cc \
 	$(DRIVERS)/positioning/gps/rmc.cc \
 	$(DRIVERS)/positioning/gps/vtg.cc \
 	$(DRIVERS)/storage/sdc.cc \

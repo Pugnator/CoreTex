@@ -32,7 +32,7 @@ typedef enum NMEATALKER
 
 typedef enum NMEATYPE
 {
- GGA = 1, GSV, VTG, RMC, GSA, WRONG
+ GGA = 1, GSV, VTG, RMC, GSA, GLL, WRONG
 } NMEATYPE;
 
 typedef struct NMEATYPESTRUCT
@@ -115,12 +115,15 @@ private:
  bool ckecknmea(uint8_t sum, char* string);
  NMEATYPE get_nmea_sent_type(const char* field);
  NMEATALKER get_nmea_talker(const char* field);
- NMEAERR parseNMEA(char c);
+ NMEAERR parse(char c);
 
  void fillGGActx(int sect, const char* field);
  void fillVTGctx(int sect, const char* field);
  void fillRMCctx(int sect, const char* field);
+ void fillGLLctx(int sect, const char* field);
+ void fillGSVctx(int sect, const char* field);
 
  nmeactx nmea;
  NMEATYPE type;
 };
+

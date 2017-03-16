@@ -16,6 +16,7 @@ const NMEATYPESTRUCT nmeatypesstr[] =
 { VTG, "VTG" },
 { RMC, "RMC" },
 { GSA, "GSA" },
+{ GLL, "GLL" },
 { (NMEATYPE) 0, NULL }, };
 
 const NMEATALKERSTRUCT nmeatalkerstr[] =
@@ -69,6 +70,7 @@ Gps::get_nmea_sent_type (const char* field)
 NMEATALKER
 Gps::get_nmea_talker (const char* field)
 {
+  SEGGER_RTT_printf (0, "GPS sender: '%s'\r\n", field);
 	if (!strncmp (field + 1, "PMTK", 4))
 	{
 		return PMTK;
@@ -131,72 +133,6 @@ Gps::reset (void)
 	ready = false;
 }
 
-NMEAERR
-Gps::parseNMEA (char c)
-{
-	if (nmea.nmeaerr && '$' != c)
-	{
-		return NMEA_NOT_BEGINNING;
-	}
-	switch (c)
-	{
-		case '$':
-			*nmea.fp++ = c;
-			break;
-		case '*':
-			nmea.sumdone = true;
-			nmea.sect++;
-			memset (nmea.fstr, 0, sizeof nmea.fstr);
-			nmea.fp = nmea.fstr;
-			break;
-		case '\n':
-			break;
-		case '\r':
-			nmea.nmeaok = ckecknmea (nmea.checksum, nmea.fstr);
-			break;
-		case ',':
-			nmea.checksum ^= c;
-			if (0 == nmea.sect)
-			{
-				if (PMTK == get_nmea_talker (nmea.fstr))
-				{
-					return NMEA_DIAGNOSTIC_MSG;
-				}
-				type = get_nmea_sent_type (nmea.fstr);
-			}
-			//TODO: make some kind of specialized template here based on NMEATYPE
-			if (*nmea.fstr)
-			{
-				switch (type)
-				{
-					case GGA:
-						fillGGActx (nmea.sect, nmea.fstr);
-						break;
-					case VTG:
-						fillVTGctx (nmea.sect, nmea.fstr);
-						break;
-					case RMC:
-						fillRMCctx (nmea.sect, nmea.fstr);
-						break;
-					default:
-						return NMEA_UNKNOWN_TALKER;
-						break;
-				}
-			}
-			nmea.sect++;
-			memset (nmea.fstr, 0, sizeof nmea.fstr);
-			nmea.fp = nmea.fstr;
-			break;
-		default:
-			*nmea.fp++ = c;
-			if (!nmea.sumdone)
-			{
-				nmea.checksum ^= c;
-			}
-	}
-	return NMEA_ERROR_OK;
-}
-
 void
 Gps::rttprint ()
 {
@@ -229,7 +165,7 @@ Gps::prepare (void)
 	//SEGGER_RTT_printf(0, "NMEA: %s\r\n", nmeastr);
 	for (int i = 0; i < nmeastr_len; ++i)
 	{
-		err = parseNMEA (nmeastr[i]);
+		err = parse (nmeastr[i]);
 		if (NMEA_ERROR_OK != err)
 		{
 			reset ();

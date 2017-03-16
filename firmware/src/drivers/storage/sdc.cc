@@ -297,7 +297,7 @@ SD_Error Sdc::init_sdhc()
   SEGGER_RTT_printf(0,"%sSD voltage is in range%s\r\n", RTT_CTRL_BG_GREEN, RTT_CTRL_RESET);
  }
 
- uint8_t count = 100;
+ uint8_t count = 5;
  do
  {
   sdc_cmd(ACMD41, 1UL << 30);

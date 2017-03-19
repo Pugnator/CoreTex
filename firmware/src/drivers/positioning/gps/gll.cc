@@ -57,5 +57,9 @@ typedef enum NMEAFORMAT
 
 void Gps::fillGLLctx(int sect, const char* field)
 {
-
+	switch (sect)
+	{
+		default:
+			break;
+	}
 }

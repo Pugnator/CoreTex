@@ -210,14 +210,11 @@ UTM
 Gps::coord2utm (coord c)
 {
 	UTM result;
-	int nDigits = floor (log10 (abs (c.sec))) + 1;
-	double power = pow (10, nDigits);
-	double min = c.min + c.sec / power;
-	min /= 60;
-	double pos = c.deg + min;
-	result.deg = (word) pos;
-	result.fract = (word) (pos * 1000000UL);
-	result.fract = result.fract - (result.deg * 1000000UL);
+	result.deg = c.deg;
+	double fract = ((c.sec / 60.0) + c.min)/60.0;
+	fract *= 1000000UL;
+	result.fract = (word) fract;
+	SEGGER_RTT_printf(0, "%u.%u.%u = %u.%u\r\n", c.deg, c.min, c.sec, result.deg, result.fract);
 	return result;
 }
 

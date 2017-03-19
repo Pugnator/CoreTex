@@ -23,20 +23,8 @@
 
 int main (void)
 {
- SEGGER_RTT_WriteString(0, "Started\r\n");
+	SEGGER_RTT_WriteString(0, "Started\r\n");
 	Gps g(1, 9600);
-	for(;;)
-	{
-	while (NMEA_ERROR_OK != g.prepare ())
-	    ;
-	  if (!g.ok())
-	  {
-	    g.reset ();
-	    continue;
-	  }
-	  BLINK;
-	}
-
 	GPX tr(&g);
 	tr.create("log.txt");
 	for(;;)

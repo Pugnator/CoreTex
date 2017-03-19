@@ -48,6 +48,7 @@ public:
  FRESULT mount (FATFS* fs, const TCHAR* path, BYTE opt);			/* Mount/Unmount a logical drive */
  FRESULT mkfs (const TCHAR* path, BYTE sfd, UINT au);				/* Create a file system on the volume */
  FRESULT fdisk (BYTE pdrv, const DWORD szt[], void* work);			/* Divide a physical drive into some partitions */
+ FRESULT dir_remove (DIR* dp);
  int putc (TCHAR c, FIL* fp);										/* Put a character to the file */
  int puts (const TCHAR* str, FIL* cp);								/* Put a string to the file */
  int printf (FIL* fp, const TCHAR* str, ...);						/* Put a formatted string to the file */

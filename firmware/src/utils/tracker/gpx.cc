@@ -21,6 +21,7 @@
 #include <core/stm32f10x.hpp>
 #include <global.hpp>
 #include <xprintf.h>
+#include <core/vmmu.hpp>
 #include "gpx.hpp"
 
 static const char GPX_HEADER[] =
@@ -47,6 +48,7 @@ static const char GPX_TRACK_POINT[] =
         <trkpt lat=\"%u.%u\" lon=\"%u.%u\">\"\r\n\
           <time>%u</time>\r\n\
           <nmea>%s</nmea>\r\n\
+    			<gsv>%u</gsv>\r\n\
         </trkpt>\r\n";
 
 static const char GPX_FOOTER[] =
@@ -60,6 +62,8 @@ GPX::create (const char* filename)
 {
 	result = mount (&filesystem, "0:", 1);
 	SEGGER_RTT_printf (0, "Disk result: %s\r\n", result_to_str (result));
+	mkdir("tracks");
+	chdir("tracks");
 	result = open (&gpx, filename, FA_CREATE_ALWAYS | FA_WRITE);
 	if (result != FR_OK)
 	{
@@ -83,7 +87,6 @@ GPX::commit ()
 bool
 GPX::set_point (void)
 {
-	char text[128];
 	while (NMEA_ERROR_OK != gps->prepare ())
 		;
 	if (!gps->ok())
@@ -96,20 +99,22 @@ GPX::set_point (void)
 	coord lon = gps->getlon ();
 	UTM latutm = gps->coord2utm (lat);
 	UTM lonutm = gps->coord2utm (lon);
+	char *text = (char*)stalloc(256);
 	xsprintf (text, GPX_TRACK_POINT, latutm.deg, latutm.fract, lonutm.deg,
-	          lonutm.fract, gps->get_utc(), gps->nmeastr);
+	          lonutm.fract, gps->get_utc(), gps->nmeastr, gps->gsv);
 
 	SEGGER_RTT_printf (0, "GPS: %s\r\n", text);
+
 	result = f_write (&gpx, text, strlen (text), &written);
+	stfree(text);
 	if (result != FR_OK)
 	{
 		SEGGER_RTT_printf (0, "Failed to write to the file: %s\r\n",
 		                   result_to_str (result));
-		close (&gpx);
 		return false;
 	}
 
-	flush(&gpx);
+	result = flush(&gpx);
 
 	gps->reset ();
 	return FR_OK == result;

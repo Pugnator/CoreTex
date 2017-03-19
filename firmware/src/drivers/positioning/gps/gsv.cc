@@ -45,10 +45,17 @@ eg. $GPGSV,3,1,11,03,03,111,00,04,15,270,00,06,01,010,00,13,06,292,00*74
 
 typedef enum NMEAFORMAT
 {
- TYPE , MSGTYPNUM, MSGNUM, SATNUM, SVPRN1, ELEV1, AZ1, SVPRN2, ELEV2, AZ2, SVPRN3, ELEV3, AZ3, SVPRN4, ELEV4, AZ4, SNR, CS, END
+ TYPE , MSGTYPNUM, MSGNUM, SATNUM, SVPRN1, ELEV1, AZ1, SNR1, SVPRN2, ELEV2, AZ2, SNR2, SVPRN3, ELEV3, AZ3, SNR3, SVPRN4, ELEV4, AZ4, SNR4, CS, END
 } NMEAFORMAT;
 
 void Gps::fillGSVctx(int sect, const char* field)
 {
-
+	switch(sect)
+	{
+		case SATNUM:
+			gsv = str10_to_word(field);
+			break;
+		default:
+		break;
+	}
 }

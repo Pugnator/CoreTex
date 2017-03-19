@@ -2,7 +2,6 @@
 #include <global.hpp>
 #include <core/usart.hpp>
 #include <stdlib.h>
-#include <math.h>
 
 /*
  1 - +3.3
@@ -89,6 +88,7 @@ public:
   Uart::Uart(ch, bd, &gpsisr)
  {
   Gps::self = this;
+  gsv = 0;
   reset();
  }
  void rttprint();
@@ -105,6 +105,8 @@ public:
  double get_dec_lon();
  UTM coord2utm (coord coord);
  bool ok();
+
+ word gsv;
 
 private:
  bool correct;

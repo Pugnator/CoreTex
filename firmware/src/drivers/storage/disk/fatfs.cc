@@ -1658,7 +1658,7 @@ FATdisk::dir_register ( /* FR_OK:Successful, FR_DENIED:No free entry or too many
 /*-----------------------------------------------------------------------*/
 #if !_FS_READONLY && !_FS_MINIMIZE
 static
-FRESULT dir_remove ( /* FR_OK: Successful, FR_DISK_ERR: A disk error */
+FRESULT FATdisk::dir_remove ( /* FR_OK: Successful, FR_DISK_ERR: A disk error */
 		DIR* dp /* Directory object pointing the entry to be removed */
 )
 {
@@ -3035,7 +3035,7 @@ FRESULT f_chdrive (
 }
 #endif
 
-FRESULT f_chdir (
+FRESULT FATdisk::chdir (
 		const TCHAR* path /* Pointer to the directory path */
 )
 {
@@ -3528,7 +3528,7 @@ FRESULT f_findfirst (
 /* Get File Status                                                       */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_stat (
+FRESULT FATdisk::stat (
 		const TCHAR* path, /* Pointer to the file path */
 		FILINFO* fno /* Pointer to file information to return */
 )
@@ -3565,7 +3565,7 @@ FRESULT f_stat (
 /* Get Number of Free Clusters                                           */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_getfree (
+FRESULT FATdisk::getfree (
 		const TCHAR* path, /* Path name of the logical drive number */
 		DWORD* nclst, /* Pointer to a variable to return number of free clusters */
 		FATFS** fatfs /* Pointer to return pointer to corresponding file system object */
@@ -3643,7 +3643,7 @@ FRESULT f_getfree (
 /* Truncate File                                                         */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_truncate (
+FRESULT FATdisk::truncate (
 		FIL* fp /* Pointer to the file object */
 )
 {
@@ -3706,7 +3706,7 @@ FRESULT f_truncate (
 /* Delete a File or Directory                                            */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_unlink (
+FRESULT FATdisk::unlink (
 		const TCHAR* path /* Pointer to the file or directory path */
 )
 {
@@ -3782,7 +3782,7 @@ FRESULT f_unlink (
 /* Create a Directory                                                    */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_mkdir (
+FRESULT FATdisk::mkdir (
 		const TCHAR* path /* Pointer to the directory path */
 )
 {
@@ -3859,7 +3859,7 @@ FRESULT f_mkdir (
 /* Change Attribute                                                      */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_chmod (
+FRESULT FATdisk::chmod (
 		const TCHAR* path, /* Pointer to the file path */
 		BYTE attr, /* Attribute bits */
 		BYTE mask /* Attribute mask to change */
@@ -3903,7 +3903,7 @@ FRESULT f_chmod (
 /* Rename File/Directory                                                 */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_rename (
+FRESULT FATdisk::rename (
 		const TCHAR* path_old, /* Pointer to the object to be renamed */
 		const TCHAR* path_new /* Pointer to the new name */
 )
@@ -3990,7 +3990,7 @@ FRESULT f_rename (
 /* Change Timestamp                                                      */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_utime (
+FRESULT FATdisk::utime (
 		const TCHAR* path, /* Pointer to the file/directory name */
 		const FILINFO* fno /* Pointer to the time stamp to be set */
 )

@@ -20,6 +20,7 @@
 #include <utils/tracker/gpx.hpp>
 #include <drivers/gps.hpp>
 #include <drivers/storage/fatdisk.hpp>
+#include <math.h>
 
 int main (void)
 {

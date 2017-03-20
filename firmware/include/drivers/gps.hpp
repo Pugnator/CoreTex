@@ -50,7 +50,7 @@ typedef struct coord
 {
  word deg;
  word min;
- word sec;
+ double sec;
  char dir;
  bool valid;
 } coord;

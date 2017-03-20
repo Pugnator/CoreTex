@@ -5,6 +5,7 @@
 #include <core/stm32f10x.hpp>
 #include <drivers/gps.hpp>
 #include <log.hpp>
+#include <math.h>
 #include <string.h>
 
 #define RTT_DEBUG_CHANNEL 0
@@ -99,9 +100,13 @@ Gps::latlon2crd (const char* str, coord* c)
 	{ 0 };
 	strcpy (latlon, str);
 	char* p = latlon;
-	while (*p++ != '.')
-		;
-	c->sec = str10_to_word (p) / 60;
+	while (*p++ != '.');
+
+	word sec = str10_to_word (p) / 60;
+	int secDigits = floor (log10 (abs (sec))) + 1;
+	double secPower = pow (10, secDigits);
+	c->sec = sec / secPower;
+	c->sec *=60.0;
 	*--p = 0;
 	c->min = str10_to_word (p - 2);
 	p -= 2;
@@ -214,7 +219,7 @@ Gps::coord2utm (coord c)
 	double fract = ((c.sec / 60.0) + c.min)/60.0;
 	fract *= 1000000UL;
 	result.fract = (word) fract;
-	SEGGER_RTT_printf(0, "%u.%u.%u = %u.%u\r\n", c.deg, c.min, c.sec, result.deg, result.fract);
+	SEGGER_RTT_printf(0, "%u.%u.%u = %u.%u\r\n", c.deg, c.min, (word)c.sec, result.deg, result.fract);
 	return result;
 }
 

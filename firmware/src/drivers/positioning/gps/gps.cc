@@ -97,18 +97,20 @@ Gps::latlon2crd (const char* str, coord* c)
 	}
 	//Check for valid string here
 	//XXXYY.ZZ or XXYY.ZZ
-	char latlon[9] =
+	char latlon[16] =
 	{ 0 };
 	strcpy (latlon, str);
 	char* p = latlon;
+	//Find and extract fraction of minutes
 	while (*p++ != '.');
 
-	word sec = str10_to_word (p) / 60;
-	int secDigits = floor (log10 (abs (sec))) + 1;
+	word minute_fr = str10_to_word (p);
+	int secDigits = floor (log10 (abs (minute_fr))) + 1;
 	double secPower = pow (10, secDigits);
-	c->sec = sec / secPower;
-	c->sec *=60.0;
+	c->sec = minute_fr / secPower;
+	c->sec *= 60.0;
 	*--p = 0;
+	//Go on with minutes
 	c->min = str10_to_word (p - 2);
 	p -= 2;
 	*p = 0;
@@ -240,7 +242,7 @@ bool Gps::correct_rtc()
    }
 
   Rtc r;
-  if(r.get() + 5 < nmea.utc)
+  if(nmea.utc - r.get() > 5)
   {
    r.init(nmea.utc);
    SEGGER_RTT_printf(0, "New RTC value is %u\r\n", r.get());

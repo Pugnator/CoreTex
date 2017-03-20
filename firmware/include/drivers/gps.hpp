@@ -105,6 +105,7 @@ public:
  double get_dec_lon();
  UTM coord2utm (coord coord);
  bool ok();
+ bool correct_rtc();
 
  word gsv;
 

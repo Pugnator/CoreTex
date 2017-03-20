@@ -34,6 +34,8 @@ int main (void)
 		{
 			BLINK;
 		}
+		SEGGER_RTT_printf(0, "UTC: %u\r\n", g.get_utc());
+		g.correct_rtc();
 	}
 	tr.commit();
 	MAIN_END;

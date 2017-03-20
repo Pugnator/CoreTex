@@ -3,6 +3,7 @@
 #include <core/io_macro.hpp>
 #include <core/isr_helper.hpp>
 #include <core/stm32f10x.hpp>
+#include <core/rtc.hpp>
 #include <drivers/gps.hpp>
 #include <log.hpp>
 #include <math.h>
@@ -226,4 +227,23 @@ Gps::coord2utm (coord c)
 bool Gps::ok()
 {
 	return nmea.lat.valid && nmea.lon.valid;
+}
+
+bool Gps::correct_rtc()
+{
+   while (NMEA_ERROR_OK != prepare())
+     ;
+
+   if(!nmea.utc)
+   {
+    return false;
+   }
+
+  Rtc r;
+  if(r.get() + 5 < nmea.utc)
+  {
+   r.init(nmea.utc);
+   SEGGER_RTT_printf(0, "New RTC value is %u\r\n", r.get());
+  }
+  return true;
 }

@@ -27,6 +27,7 @@ public:
  word get_sms_amount(void);
  char* ussd(const char *request);
  word get_account_debet(CELLULAR_OP op);
+ bool get_stations(void);
 private:
  char* extract_sms_body(char *message);
  void parse_sms(char *message);

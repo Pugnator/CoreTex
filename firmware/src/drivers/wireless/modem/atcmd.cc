@@ -62,7 +62,7 @@ void ATModem::procisr(void)
  {
   __SR &= ~USART_SR_RXNE;
   volatile uint16_t a = self->Reg->DR;
-  //SEGGER_RTT_printf(0, "%c", isprint(a) ? a : '?');
+  SEGGER_RTT_printf(0, "%c", isprint(a) ? a : '?');
   if (!self->go || self->buflen >= MODEM_IN_BUFFER_SIZE)
   {
    self->go = false;

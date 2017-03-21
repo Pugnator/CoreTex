@@ -62,8 +62,16 @@ GPX::create (const char* filename)
 {
 	result = mount (&filesystem, "0:", 1);
 	SEGGER_RTT_printf (0, "Disk result: %s\r\n", result_to_str (result));
-	mkdir("tracks");
-	chdir("tracks");
+	if (FR_OK != result)
+	{
+	 return false;
+	}
+	result = mkdir("tracks");
+	result = chdir("tracks");
+	if (FR_OK != result)
+	{
+	  return false;
+	}
 	result = open (&gpx, filename, FA_CREATE_ALWAYS | FA_WRITE);
 	if (result != FR_OK)
 	{

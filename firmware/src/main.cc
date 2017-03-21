@@ -28,7 +28,11 @@ int main (void)
 	SEGGER_RTT_WriteString(0, "Started\r\n");
 	Gps g(1, 9600);
 	GPX tr(&g);
-	tr.create("log.txt");
+	if (!tr.create("log.txt"))
+	{
+	 MAIN_END;
+	}
+
 	for(;;)
 	{
 		if(tr.set_point())

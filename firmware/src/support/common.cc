@@ -173,8 +173,8 @@ void __assert(int condition, const char *file, int line)
   tmpreg |= 1;
   PWR->CR = tmpreg;
   SCB->SCR |= SCB_SCR_SLEEPDEEP;
-  __WFI();
   SCB->SCR &= (uint32_t)~((uint32_t)SCB_SCR_SLEEPDEEP);
+  __WFI();
 }
 
 int isprint(char c)

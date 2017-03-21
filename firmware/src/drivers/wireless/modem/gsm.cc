@@ -19,6 +19,7 @@
 #include <core/isr_helper.hpp>
 #include <core/vmmu.hpp>
 #include <stdarg.h>
+#include <xprintf.h>
 #include <log.hpp>
 #include "drivers/gsm.hpp"
 
@@ -84,7 +85,12 @@ bool GSM::setup(void)
   return false;
  }
 
- if (!set(CMD::CREG, "1"))
+ if (!set(CMD::CREG, "2"))
+ {
+  return false;
+ }
+
+ if (!set(CMD::CENG, "1"))
  {
   return false;
  }
@@ -129,6 +135,7 @@ char* GSM::get_sms_by_index(word num)
  rawcmd(CMD::CMGR, CMDMODE::SET, num);
  if (!wait_for_reply(CMD::CPMS, AT_OK))
  {
+  SEGGER_RTT_printf(0, "No reply\r\n");
   return nullptr;
  }
  go = false;
@@ -215,6 +222,7 @@ word GSM::get_sms_amount(void)
   char *sms = get_sms_by_index(i);
   if (!sms)
   {
+   FREE(sms);
    return i - 1;
   }
   FREE(sms);
@@ -247,4 +255,15 @@ bool GSM::is_supported(CMD::ATCMD cmd)
 {
  rawcmd(cmd, CMDMODE::CHECK, nullptr);
  return wait_for_reply(cmd, AT_OK);
+}
+
+bool GSM::get_cc_info()
+{
+ rawcmd(CMD::CREG, CMDMODE::CHECK, nullptr);
+ bool result = wait_for_reply(CMD::CREG, AT_OK);
+ if (result)
+ {
+  SEGGER_RTT_printf(0, "CELL ID: %s\r\n", modembuf);
+ }
+ return result;
 }

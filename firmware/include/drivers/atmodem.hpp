@@ -68,6 +68,8 @@ namespace CMD
 		ATCMD(CMSS)\
 		ATCMD(CMGW)\
 		ATCMD(CMGD)\
+		ATCMD(CENG)\
+		ATCMD(CNETSCAN)\
 		ATCMD(CGDCONT)\
 		ATCMD(CGDSCONT)\
 		ATCMD(CGEQREQ)\
@@ -86,6 +88,7 @@ namespace CMD
 		ATCMD(CGSMS)\
 		ATCMD(CPOWD)\
 		ATCMD(GSMBUSY)\
+		ATCMD(RFSTS)\
 		ATCMD(VERSION)\
 		ATCMD(BAUD)\
 		ATCMD(NAME)\
@@ -165,6 +168,7 @@ public:
  bool ok;
  static class ATModem *self;
 protected:
+ char replystr[MODEM_IN_BUFFER_SIZE + 1];
  void reset(void);
  bool crlf_end;
  bool go;

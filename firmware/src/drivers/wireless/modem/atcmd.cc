@@ -171,6 +171,11 @@ bool ATModem::wait_for_reply(CMD::ATCMD cmd, ATRESPONSE expected, word timeout)
    strcat(cmdstr, get_cmd_str(cmd));
    if (strstr(buf, cmdstr))
    {
+    //Found echo reply
+    if (strstr(buf, "OK"))
+    {
+     SEGGER_RTT_WriteString(0, "Found OK\r\n");
+    }
     return ok = true;
    }
    else

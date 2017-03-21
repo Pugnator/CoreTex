@@ -18,37 +18,28 @@
 #include <common.hpp>
 #include <log.hpp>
 #include <utils/tracker/gpx.hpp>
-#include <drivers/gps.hpp>
+#include <drivers/gsm.hpp>
 #include <drivers/storage/fatdisk.hpp>
-#include "drivers/gsm.hpp"
 #include <core/rtc.hpp>
-
 
 int main (void)
 {
 	SEGGER_RTT_WriteString(0, "Started\r\n");
 	GSM m(2, 38400);
-	m.setup();
-	//SEGGER_RTT_printf(0, "Debet: %u\r\n",m.get_account_debet(BEELINE));
-
-	m.get_stations();
-	MAIN_END;
-	Gps g(1, 9600);
-	GPX tr(&g);
-	if (!tr.create("log.txt"))
+	if (m.setup())
+	{
+	 SEGGER_RTT_WriteString(0, "GSM inited\r\n");
+	}
+	else
 	{
 	 MAIN_END;
 	}
 
 	for(;;)
 	{
-		if(tr.set_point())
-		{
-			BLINK;
-		}
-		SEGGER_RTT_printf(0, "UTC: %u\r\n", g.get_utc());
-		g.correct_rtc();
+	 m.get_cc_info();
+	 delay_ms(5000);
 	}
-	tr.commit();
+
 	MAIN_END;
 }

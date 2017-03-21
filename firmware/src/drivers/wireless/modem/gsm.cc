@@ -18,8 +18,8 @@
 #include <common.hpp>
 #include <core/isr_helper.hpp>
 #include <core/vmmu.hpp>
-#include <xprintf.h>
 #include <stdarg.h>
+#include <xprintf.h>
 #include <log.hpp>
 #include "drivers/gsm.hpp"
 
@@ -70,7 +70,6 @@ char* GSM::ussd(const char *request)
 
 bool GSM::setup(void)
 {
- sync_speed();
  if (!set(CMD::CMEE, "2"))
  {
   return false;
@@ -86,7 +85,12 @@ bool GSM::setup(void)
   return false;
  }
 
- if (!set(CMD::CREG, "1"))
+ if (!set(CMD::CREG, "2"))
+ {
+  return false;
+ }
+
+ if (!set(CMD::CENG, "1"))
  {
   return false;
  }
@@ -114,9 +118,7 @@ bool GSM::setup(void)
 
 bool GSM::send_sms(const char* number, const char* text)
 {
- char num[32] = {0};
- xsprintf(num, "\"%s\"", number);
- rawcmd(CMD::CMGS, CMDMODE::SET, num);
+ rawcmd(CMD::CMGS, CMDMODE::SET, number);
 
  if (!wait_for_reply(CMD::CMGS, AT_INPUT_PROMPT))
  {
@@ -133,6 +135,7 @@ char* GSM::get_sms_by_index(word num)
  rawcmd(CMD::CMGR, CMDMODE::SET, num);
  if (!wait_for_reply(CMD::CPMS, AT_OK))
  {
+  SEGGER_RTT_printf(0, "No reply\r\n");
   return nullptr;
  }
  go = false;
@@ -219,6 +222,7 @@ word GSM::get_sms_amount(void)
   char *sms = get_sms_by_index(i);
   if (!sms)
   {
+   FREE(sms);
    return i - 1;
   }
   FREE(sms);
@@ -253,16 +257,13 @@ bool GSM::is_supported(CMD::ATCMD cmd)
  return wait_for_reply(cmd, AT_OK);
 }
 
-/*
- ------MOST SUITABLE CELL------
-Operator:"Beeline",MCC:250,MNC:99,Rxlev:21,Cellid:0a73,Arfcn:0514
-Operator:"Beeline",MCC:250,MNC:99,Rxlev:16,Cellid:9af9,Arfcn:0532
-Operator:"Beeline",MCC:250,MNC:99,Rxlev:25,Cellid:ffff,Arfcn:0038
-Operator:"Beeline",MCC:250,MNC:99,Rxlev:24,Cellid:9afd,Arfcn:0046
-------OTHER SUITABLE CELL------
- */
-bool GSM::get_stations()
+bool GSM::get_cc_info()
 {
-	rawcmd(CMD::CNETSCAN, CMDMODE::EXEC, nullptr);
-	return wait_for_reply(CMD::CNETSCAN, AT_OK);
+ rawcmd(CMD::CREG, CMDMODE::CHECK, nullptr);
+ bool result = wait_for_reply(CMD::CREG, AT_OK);
+ if (result)
+ {
+  SEGGER_RTT_printf(0, "CELL ID: %s\r\n", modembuf);
+ }
+ return result;
 }

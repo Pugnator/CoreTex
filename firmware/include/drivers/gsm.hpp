@@ -27,9 +27,13 @@ public:
  word get_sms_amount(void);
  char* ussd(const char *request);
  word get_account_debet(CELLULAR_OP op);
- bool get_stations(void);
+ bool get_cc_info();
 private:
  char* extract_sms_body(char *message);
  void parse_sms(char *message);
  void sync_speed(void);
+
+private:
+ word cellid;
+ word lac;
 };

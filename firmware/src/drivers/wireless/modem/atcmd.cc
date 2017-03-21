@@ -172,9 +172,23 @@ bool ATModem::wait_for_reply(CMD::ATCMD cmd, ATRESPONSE expected, word timeout)
    if (strstr(buf, cmdstr))
    {
     //Found echo reply
-    if (strstr(buf, "OK"))
+    if (strstr(modembuf, RESPONSE_TEXT_PTR[AT_OK]))
     {
-     SEGGER_RTT_WriteString(0, "Found OK\r\n");
+    	//Remove trailing OK
+    	*strstr(modembuf, RESPONSE_TEXT_PTR[AT_OK]) = 0;
+    	//Remove command and it's echo
+    	strcpy(cmdstr, "+");
+    	strcat(cmdstr, get_cmd_str(cmd));
+    	strcat(cmdstr, ":");
+    	char *reply = strstr(modembuf, cmdstr);
+    	if (reply)
+    	{
+    		SEGGER_RTT_printf(0, "Command echo found: %s\r\n", reply);
+    		reply += strlen(cmdstr);
+    		strcpy(buf, reply);
+    		strcpy(modembuf, buf);
+
+    	}
     }
     return ok = true;
    }

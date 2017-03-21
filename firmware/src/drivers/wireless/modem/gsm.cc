@@ -18,6 +18,7 @@
 #include <common.hpp>
 #include <core/isr_helper.hpp>
 #include <core/vmmu.hpp>
+#include <xprintf.h>
 #include <stdarg.h>
 #include <log.hpp>
 #include "drivers/gsm.hpp"
@@ -69,6 +70,7 @@ char* GSM::ussd(const char *request)
 
 bool GSM::setup(void)
 {
+ sync_speed();
  if (!set(CMD::CMEE, "2"))
  {
   return false;
@@ -112,7 +114,9 @@ bool GSM::setup(void)
 
 bool GSM::send_sms(const char* number, const char* text)
 {
- rawcmd(CMD::CMGS, CMDMODE::SET, number);
+ char num[32] = {0};
+ xsprintf(num, "\"%s\"", number);
+ rawcmd(CMD::CMGS, CMDMODE::SET, num);
 
  if (!wait_for_reply(CMD::CMGS, AT_INPUT_PROMPT))
  {
@@ -247,4 +251,18 @@ bool GSM::is_supported(CMD::ATCMD cmd)
 {
  rawcmd(cmd, CMDMODE::CHECK, nullptr);
  return wait_for_reply(cmd, AT_OK);
+}
+
+/*
+ ------MOST SUITABLE CELL------
+Operator:"Beeline",MCC:250,MNC:99,Rxlev:21,Cellid:0a73,Arfcn:0514
+Operator:"Beeline",MCC:250,MNC:99,Rxlev:16,Cellid:9af9,Arfcn:0532
+Operator:"Beeline",MCC:250,MNC:99,Rxlev:25,Cellid:ffff,Arfcn:0038
+Operator:"Beeline",MCC:250,MNC:99,Rxlev:24,Cellid:9afd,Arfcn:0046
+------OTHER SUITABLE CELL------
+ */
+bool GSM::get_stations()
+{
+	rawcmd(CMD::CNETSCAN, CMDMODE::EXEC, nullptr);
+	return wait_for_reply(CMD::CNETSCAN, AT_OK);
 }

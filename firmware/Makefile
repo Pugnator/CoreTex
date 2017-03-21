@@ -130,8 +130,7 @@ SUPPORTSRC:=\
 	$(SUPPORT)/log.cc \
 	$(SUPPORT)/queue.cc \
 	$(SUPPORT)/make_error.cc \
-	$(SUPPORT)/morse.cc \
-	$(SUPPORT)/xml/xml.cc
+	$(SUPPORT)/morse.cc
 
 XPRINTFSRC:=\
 	$(SUPPORT)/xprintf/xprintf.c
@@ -141,7 +140,9 @@ FATFSSRC:=\
 	$(DRIVERS)/storage/disk/fatfs.cc
 
 UTILSSRC:=\
-	$(UTILS)/tracker/gpx.cc
+	$(UTILS)/tracker/gpx.cc \
+	$(UTILS)/csv/csv.cc \
+	$(UTILS)/xml/xml.cc
 
 TESTSSRC:=\
 	$(TESTSDIR)/core.cc

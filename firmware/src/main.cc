@@ -22,24 +22,46 @@
 #include <drivers/storage/fatdisk.hpp>
 #include <core/rtc.hpp>
 
+void track()
+{
+	Gps g(1, 9600);
+	 	GPX tr(&g);
+	 	tr.create("log.txt");
+	 	for(;;)
+	 	{
+	 		if(tr.set_point())
+	 		{
+	 			BLINK;
+	 		}
+	 		SEGGER_RTT_printf(0, "UTC: %u\r\n", g.get_utc());
+	 		g.correct_rtc();
+	 	}
+	tr.commit();
+}
+
+void gsm()
+{
+	GSM m(2, 38400);
+		if (m.setup())
+		{
+		 SEGGER_RTT_WriteString(0, "GSM inited\r\n");
+		}
+		else
+		{
+		 MAIN_END;
+		}
+
+		for(;;)
+		{
+		 m.get_cc_info();
+		 delay_ms(5000);
+		}
+
+}
+
 int main (void)
 {
 	SEGGER_RTT_WriteString(0, "Started\r\n");
-	GSM m(2, 38400);
-	if (m.setup())
-	{
-	 SEGGER_RTT_WriteString(0, "GSM inited\r\n");
-	}
-	else
-	{
-	 MAIN_END;
-	}
-
-	for(;;)
-	{
-	 m.get_cc_info();
-	 delay_ms(5000);
-	}
-
+	track();
 	MAIN_END;
 }

@@ -129,7 +129,7 @@ extern "C"
 	USED void
 	memory_dump (word* stackAddress)
 	{
-
+#ifdef __USE_MEMORY_DUMP
 		/*
 		 These are volatile to try and prevent the compiler/linker optimising them
 		 away as the variables never actually get used.  If the debugger won't show the
@@ -194,7 +194,7 @@ extern "C"
 			SEGGER_RTT_printf (0, "%u is written\r\n", written);
 		}
 		d.close (&dump);
-
+#endif
 		/* When the following line is hit, the variables contain the register values. */
 		for (;;)
 		{

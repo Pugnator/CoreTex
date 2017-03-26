@@ -62,7 +62,7 @@
 //    for single thread/task applications.
 //
 
-#define FREE(x) stfree(x)
+#define FREE(x) stfree((void*)x)
 #define ALLOC(x) stalloc(x)
 //Will destroy all allocated memory
 #define EMERGENCY_MEM_POOL_FLUSH vmmu_init()

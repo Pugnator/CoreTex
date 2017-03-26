@@ -21,6 +21,7 @@
 #include <drivers/gsm.hpp>
 #include <drivers/storage/fatdisk.hpp>
 #include <core/rtc.hpp>
+#include <drivers/ov528.hpp>
 
 void track()
 {
@@ -62,6 +63,13 @@ void gsm()
 int main (void)
 {
 	SEGGER_RTT_WriteString(0, "Started\r\n");
-	track();
+
+	ov528 cam(1);
+	cam.hard_reset();
+	cam.default_setup();
+	cam.snapshot();
+	cam.request_picture();
+	delay_ms(500);
+	cam.transfer();
 	MAIN_END;
 }

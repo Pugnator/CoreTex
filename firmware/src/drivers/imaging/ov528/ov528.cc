@@ -5,6 +5,12 @@
 #include <drivers/xmodem.hpp>
 #include <log.hpp>
 
+#ifdef OV528_DEBUG
+#define DEBUG_LOG SEGGER_RTT_printf
+#else
+#define DEBUG_LOG(...)
+#endif
+
 class ov528 *ov528::self = nullptr;
 
 void ov528::ov528isr(void)
@@ -14,7 +20,7 @@ void ov528::ov528isr(void)
   BLINK;
   short tmp = self->Reg->DR;
   self->Reg->SR &= ~USART_SR_RXNE;
-  //SEGGER_RTT_printf(0, "0x%X\r\n", tmp);
+  //DEBUG_LOG(0, "0x%X\r\n", tmp);
   if (!self->pictransfer && self->buf_size < sizeof self->buf)
   {
    self->buf[self->buf_size++] = tmp;
@@ -66,13 +72,13 @@ bool ov528::wakeup(void)
  };
  for (word i = 0; i < WAKEUP_RETRY_COUNT; ++i)
  {
-	SEGGER_RTT_WriteString(0, "Waking camera up...\r\n");
+	DEBUG_LOG(0, "Waking camera up...\r\n");
   docmd(wake);
   wait_reply();
 
   if (0 == memcmp((void *) buf, ack, sizeof ack))
   {
-   SEGGER_RTT_WriteString(0, "Camera answered\r\n");
+   DEBUG_LOG(0, "Camera answered\r\n");
    for (word j = 0; j < sizeof ack; j++)
    {
     write(ack[j]);
@@ -99,7 +105,7 @@ bool ov528::setup(void)
 
  if (0 == memcmp((void *) buf, ack, sizeof ack))
  {
-	 SEGGER_RTT_WriteString(0, "Camera was set up\r\n");
+	 DEBUG_LOG(0, "Camera was set up\r\n");
   return true;
  }
  return false;
@@ -107,7 +113,7 @@ bool ov528::setup(void)
 
 bool ov528::snapshot(void)
 {
-	SEGGER_RTT_WriteString(0, "Image snapshot\r\n");
+	DEBUG_LOG(0, "Image snapshot\r\n");
  uint8_t cmd[] =
  {
    0xaa, 0x5, 0, 0, 0, 0
@@ -122,7 +128,7 @@ bool ov528::snapshot(void)
 
  if (0 == memcmp((void *) buf, ack, sizeof ack))
  {
-	 SEGGER_RTT_WriteString(0, "Snapshot OK\r\n");
+	 DEBUG_LOG(0, "Snapshot OK\r\n");
   return true;
  }
  return false;
@@ -130,7 +136,7 @@ bool ov528::snapshot(void)
 
 bool ov528::set_packet_size(void)
 {
-	SEGGER_RTT_WriteString(0, "Setting packet size\r\n");
+	DEBUG_LOG(0, "Setting packet size\r\n");
  uint8_t cmd[] =
  {
    0xaa, 0x6, 0x8, 0, 0x4, 0
@@ -145,7 +151,7 @@ bool ov528::set_packet_size(void)
 
  if (0 == memcmp((void *) buf, ack, sizeof ack))
  {
-	SEGGER_RTT_WriteString(0, "Packet size set OK\r\n");
+  DEBUG_LOG(0, "Packet size set OK\r\n");
   return true;
  }
  return false;
@@ -153,7 +159,7 @@ bool ov528::set_packet_size(void)
 
 bool ov528::request_picture(void)
 {
-	SEGGER_RTT_WriteString(0, "Request a picture\r\n");
+	DEBUG_LOG(0, "Request a picture\r\n");
  uint8_t cmd[] =
  {
    0xaa, 0x4, 0x1, 0, 0, 0
@@ -168,7 +174,7 @@ bool ov528::request_picture(void)
 
  if (0 == memcmp((void *) buf, ack, sizeof ack))
  {
-	 SEGGER_RTT_WriteString(0, "Image request OK\r\n");
+	 DEBUG_LOG(0, "Image request OK\r\n");
   return true;
  }
  return false;
@@ -176,7 +182,7 @@ bool ov528::request_picture(void)
 
 void ov528::hard_reset(void)
 {
- SEGGER_RTT_WriteString(0, "Camera hard reset\r\n");
+ DEBUG_LOG(0, "Camera hard reset\r\n");
  uint8_t cmd[] =
  {
    0xaa, 0x8, 0x0, 0, 0x0, 0
@@ -187,7 +193,7 @@ void ov528::hard_reset(void)
 
 void ov528::soft_reset(void)
 {
-	SEGGER_RTT_WriteString(0, "Camera soft reset\r\n");
+	DEBUG_LOG(0, "Camera soft reset\r\n");
  uint8_t cmd[] =
  {
    0xaa, 0x8, 0x1, 0, 0x0, 0
@@ -218,7 +224,7 @@ bool ov528::sleep(void)
 }
 void ov528::transfer(void)
 {
- SEGGER_RTT_WriteString(0, "Starting image transfer\r\n");
+ DEBUG_LOG(0, "Starting image transfer\r\n");
  pictransfer = true;
  pic_size = 0;
  uint8_t cmd[] =
@@ -246,7 +252,7 @@ void ov528::transfer(void)
  unsigned written = 0;
  for (word i = 0; i < 255; ++i)
  {
-	SEGGER_RTT_printf(0, "Image block %u [size: %u]\r\n", i, pic_size);
+	DEBUG_LOG(0, "Image block %u [size: %u]\r\n", i, pic_size);
   imageblk_size = 0;
   prev_packet_size = pic_size;
   cmd[4] = i;
@@ -263,11 +269,11 @@ void ov528::transfer(void)
   }
 
   /* TRANSFER */
-  SEGGER_RTT_WriteString(0, "Writing image block\r\n");
+  DEBUG_LOG(0, "Writing image block\r\n");
   res = disk->f_write(&pic, (void*)imageblk + 4, imageblk_size - 6, &written);
   if (FR_OK != res)
   {
-  	 SEGGER_RTT_WriteString(0, "Failed to write the image block\r\n");
+  	 DEBUG_LOG(0, "Failed to write the image block\r\n");
   	return;
   }
 
@@ -295,7 +301,7 @@ bool ov528::default_setup(void)
  res &= wakeup();
  res &= setup();
  res &= set_packet_size();
- SEGGER_RTT_printf(0, "Camera setup %s\r\n", res ? "OK" : "FAILED");
+ DEBUG_LOG(0, "Camera setup %s\r\n", res ? "OK" : "FAILED");
  return res;
 }
 

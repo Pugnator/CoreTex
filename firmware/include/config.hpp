@@ -24,5 +24,5 @@
 #endif
 
 
-
+#define OV528_DEBUG
 

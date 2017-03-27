@@ -26,3 +26,4 @@
 
 #define OV528_DEBUG
 
+#define FATDISK_DEBUG

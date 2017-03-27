@@ -64,8 +64,10 @@ int main (void)
 {
 	SEGGER_RTT_WriteString(0, "Started\r\n");
 	FATdisk disk(1);
-	 	FATFS fs;
-	 	FRESULT res =	disk.mount(&fs, "0:", 1);
+	FATFS fs;
+	FIL pic;
+	FRESULT res =	disk.mount(&fs, "0:", 1);
+	res = disk.open(&pic, "image.jpg", FA_WRITE | FA_CREATE_ALWAYS);
 	ov528 cam(1, &disk);
 	cam.hard_reset();
 	cam.default_setup();

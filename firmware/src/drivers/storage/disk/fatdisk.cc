@@ -3,6 +3,7 @@
 #include <drivers/storage/integer.hpp>
 #include <log.hpp>
 #include <sys/_stdint.h>
+#include <config.hpp>
 
 #ifdef FATDISK_DEBUG
 #define DEBUG_LOG SEGGER_RTT_printf

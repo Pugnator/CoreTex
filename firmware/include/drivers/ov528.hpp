@@ -10,9 +10,8 @@
 class ov528: public Uart
 {
 public:
- ov528(short ch, FATdisk *Disk)
+ ov528(short ch)
 : Uart::Uart(ch, 115200, &ov528isr),
-  disk (Disk),
   imageblk (nullptr),
   imageblk_size (0),
   pictransfer (false),
@@ -33,13 +32,12 @@ public:
  bool request_picture(void);
  void transfer(void);
  bool default_setup(void);
-
+ uint8_t* get_block();
+ word get_block_size();
  static class ov528 *self;
  static void ov528isr(void);
 
 private:
- FATdisk *disk;
-
  volatile word imageblk_size;
  volatile uint8_t *imageblk;
  volatile bool pictransfer;

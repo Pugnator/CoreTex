@@ -242,14 +242,7 @@ void ov528::transfer(void)
  word prev_packet_size = 0;
  word byte_cnt = 0;
 
- FIL pic;
- FRESULT res = disk->open(&pic, "image.jpg", FA_WRITE | FA_CREATE_ALWAYS);
- if (FR_OK != res)
- {
-	 SEGGER_RTT_WriteString(0, "Failed to create image file\r\n");
-	 return;
- }
- unsigned written = 0;
+
  for (word i = 0; i < 255; ++i)
  {
 	DEBUG_LOG(0, "Image block %u [size: %u]\r\n", i, pic_size);
@@ -279,7 +272,6 @@ void ov528::transfer(void)
 
   if (prev_packet_size == pic_size)
   {
-
    /*
     * first 6 bytes of the very first packet is ack, we should skip it
     * a packet has 4 bytes header and 2 bytes footer             *
@@ -291,9 +283,9 @@ void ov528::transfer(void)
  }
  docmd(stop);
  pictransfer = false;
- disk->flush(&pic);
- disk->close(&pic);
 }
+
+uint8_t
 
 bool ov528::default_setup(void)
 {

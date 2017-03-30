@@ -74,6 +74,6 @@ int main (void)
 	cam.snapshot();
 	cam.request_picture();
 	delay_ms(500);
-	cam.transfer();
+	cam.start_transfer();
 	MAIN_END;
 }

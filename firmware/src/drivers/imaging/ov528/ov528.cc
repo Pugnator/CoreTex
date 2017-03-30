@@ -222,7 +222,7 @@ bool ov528::sleep(void)
  }
  return false;
 }
-void ov528::transfer(void)
+void ov528::start_transfer(void)
 {
  DEBUG_LOG(0, "Starting image transfer\r\n");
  pictransfer = true;
@@ -285,7 +285,11 @@ void ov528::transfer(void)
  pictransfer = false;
 }
 
-uint8_t
+uint8_t* ov528::next_block(word *size)
+{
+ *size = imageblk_size - 6;
+ return nullptr;
+}
 
 bool ov528::default_setup(void)
 {

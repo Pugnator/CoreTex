@@ -12,11 +12,12 @@ class ov528: public Uart
 public:
  ov528(short ch)
 : Uart::Uart(ch, 115200, &ov528isr),
-  imageblk (nullptr),
   imageblk_size (0),
+  imageblk (nullptr),
   pictransfer (false),
   buf_size (0),
-  pic_size (0)
+  pic_size (0),
+  block_count(0)
  {
 	 self = this;
   memset((void *)buf, 0, sizeof buf);
@@ -30,9 +31,9 @@ public:
  void hard_reset(void);
  void soft_reset(void);
  bool request_picture(void);
- void transfer(void);
+ void start_transfer(void);
  bool default_setup(void);
- uint8_t* get_block();
+ uint8_t* next_block(word *size);
  word get_block_size();
  static class ov528 *self;
  static void ov528isr(void);
@@ -43,7 +44,7 @@ private:
  volatile bool pictransfer;
  volatile uint8_t buf_size;
  volatile word pic_size;
-
+ word block_count;
  volatile uint8_t buf[16];
 
 

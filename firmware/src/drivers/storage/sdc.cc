@@ -226,6 +226,7 @@ SD_Error Sdc::get_response(SD_Error expected_r1, SD_RESPONSE_TYPE type)
   if(SD_DATA_OTHER_ERROR == response)
   {
    DEBUG_LOG(0,"0x%X\r\n", response);
+   delay_ms(100);
    continue;
   }
 
@@ -240,12 +241,12 @@ SD_Error Sdc::get_response(SD_Error expected_r1, SD_RESPONSE_TYPE type)
    print_error(response);
    return SD_RESPONSE_FAILURE;
   }
-
+  delay_ms(100);
  }
 
  if (MAX_R1_RETRY_COUNT == count)
  {
-  DEBUG_LOG(0,"%sResponse timeout from SD card%s\r\n", RTT_CTRL_BG_RED, RTT_CTRL_RESET);
+	DEBUG_LOG(0,"%sResponse timeout from SD card%s\r\n", RTT_CTRL_BG_RED, RTT_CTRL_RESET);
   print_error(response);
   return SD_RESPONSE_FAILURE;
  }

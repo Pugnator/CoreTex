@@ -10,16 +10,17 @@
 class ov528: public Uart
 {
 public:
- ov528(short ch)
+ ov528(short ch, FATdisk& _disk)
 : Uart::Uart(ch, 115200, &ov528isr),
   imageblk_size (0),
   imageblk (nullptr),
   pictransfer (false),
   buf_size (0),
   pic_size (0),
-  block_count(0)
+  expected_pic_size(0),
+  disk(_disk)
  {
-	 self = this;
+	self = this;
   memset((void *)buf, 0, sizeof buf);
  }
 
@@ -44,11 +45,13 @@ private:
  volatile bool pictransfer;
  volatile uint8_t buf_size;
  volatile word pic_size;
- word block_count;
+ word expected_pic_size;
  volatile uint8_t buf[16];
+ FATdisk& disk;
 
 
- void wait_reply(void);
+ void wait_reply(word expected = 0);
+ void buf_reset(void);
  void docmd(uint8_t *cmd);
  void ack(void);
 };

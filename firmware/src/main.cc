@@ -65,15 +65,33 @@ int main (void)
 	SEGGER_RTT_WriteString(0, "Started\r\n");
 	FATdisk disk(1);
 	FATFS fs;
-	FIL pic;
+
 	FRESULT res =	disk.mount(&fs, "0:", 1);
-	res = disk.open(&pic, "image.jpg", FA_WRITE | FA_CREATE_ALWAYS);
-	ov528 cam(1, &disk);
+	if(FR_OK != res)
+			{
+				SEGGER_RTT_WriteString (0, "Failed to mount the disk\r\n");
+
+			}
+	FIL pic;
+		res = disk.open(&pic, "image.jpg", FA_WRITE | FA_CREATE_ALWAYS);
+		if(FR_OK != res)
+		{
+			SEGGER_RTT_WriteString (0, "Failed to create the file\r\n");
+
+		}
+		else
+		{
+			SEGGER_RTT_WriteString (0, "Created the file\r\n");
+		}
+		disk.close(&pic);
+		MAIN_END;
+	//res = disk.open(&pic, "image.jpg", FA_WRITE | FA_CREATE_ALWAYS);
+	ov528 cam(1, disk);
 	cam.hard_reset();
+	cam.soft_reset();
 	cam.default_setup();
 	cam.snapshot();
 	cam.request_picture();
-	delay_ms(500);
 	cam.start_transfer();
 	MAIN_END;
 }

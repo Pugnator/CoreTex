@@ -15,6 +15,8 @@ typedef uint32_t word;
 #define LED C,13,SPEED_50MHz
 #define SWEEP A,6,SPEED_50MHz
 #define BLINK (PIN_TOGGLE ( LED ))
+#define LEDON (PIN_HI ( LED ))
+#define LEDOFF (PIN_LOW ( LED ))
 
 #define CONSOLE_SPEED 9600
 extern jmp_buf ex_buf__;

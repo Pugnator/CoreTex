@@ -594,6 +594,7 @@ uint8_t Sdc::get_data_response(void)
 
 SD_Error Sdc::write_block(const uint8_t* pBuffer, uint32_t WriteAddr, uint16_t BlockSize)
 {
+ LEDON;
  uint32_t i = 0;
  SD_Error rvalue = SD_RESPONSE_FAILURE;
  ok = false;
@@ -635,11 +636,13 @@ SD_Error Sdc::write_block(const uint8_t* pBuffer, uint32_t WriteAddr, uint16_t B
  read();
 
  /*!< Returns the reponse */
+ LEDOFF;
  return rvalue;
 }
 
 SD_Error Sdc::read_block(uint8_t* pBuffer, uint32_t ReadAddr, uint16_t BlockSize)
 {
+ LEDON;
  DEBUG_LOG(0,"Sdc::read_block, Address=%u, BlockSize=%u\r\n", ReadAddr, BlockSize);
  uint32_t i = 0;
  SD_Error rvalue = SD_RESPONSE_FAILURE;
@@ -675,6 +678,7 @@ SD_Error Sdc::read_block(uint8_t* pBuffer, uint32_t ReadAddr, uint16_t BlockSize
  read();
 
  /*!< Returns the reponse */
+ LEDOFF;
  return rvalue;
 }
 

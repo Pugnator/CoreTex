@@ -99,7 +99,7 @@ bool
 ov528::setup (void)
 {
 	uint8_t cmd[] =
-	{ 0xaa, 0x1, 0, 0x7, 0, 0x7 };
+	{ 0xaa, 0x1, 0, 0x7, 3, 0x7 };
 
 	uint8_t ack[] =
 	{ 0xaa, 0x0e, 0x01 };
@@ -232,6 +232,18 @@ ov528::sleep (void)
 void
 ov528::start_transfer (void)
 {
+	FIL pic;
+	FRESULT res = disk.open (&pic, "image.jpg", FA_WRITE | FA_CREATE_ALWAYS);
+	if (FR_OK != res)
+	{
+		DEBUG_LOG (0, "Failed to create the file\r\n");
+
+	}
+	else
+	{
+		DEBUG_LOG (0, "Created the image file\r\n");
+	}
+
 	DEBUG_LOG (0, "Starting image transfer\r\n");
 	pictransfer = true;
 	pic_size = 0;
@@ -250,7 +262,9 @@ ov528::start_transfer (void)
 	docmd (cmd);
 
 	DEBUG_LOG (0, "Starting transfer\r\n");
-	word blocksn = expected_pic_size % 1024 ? expected_pic_size / 1024 + 1 : expected_pic_size / 1024;
+	word blocksn =
+	    expected_pic_size % 1024 ?
+	        expected_pic_size / 1024 + 1 : expected_pic_size / 1024;
 	DEBUG_LOG (0, "Blocks to read: %u\r\n", blocksn);
 	for (word i = 0; i < blocksn; ++i)
 	{
@@ -268,21 +282,25 @@ ov528::start_transfer (void)
 			}
 		}
 
-
-			/* TRANSFER */
-			word id = (imageblk[1] << 8) | (imageblk[0] & 0xFF);
-			word size = (imageblk[3] << 8) | (imageblk[2] & 0xFF);
-			word crc = imageblk[imageblk_size - 1];
-			DEBUG_LOG (0, "Writing image block, ID:%u Size:%u CRC: 0x%X\r\n", id,
-			           size, crc);
-			//FRESULT res = disk->f_write(&pic, (void*)imageblk + 4, imageblk_size - 6, &written);
+		/* TRANSFER */
+		word id = (imageblk[1] << 8) | (imageblk[0] & 0xFF);
+		word size = (imageblk[3] << 8) | (imageblk[2] & 0xFF);
+		word crc = imageblk[imageblk_size - 1];
+		DEBUG_LOG (0, "Writing image block, ID:%u Size:%u CRC: 0x%X\r\n", id, size,
+		           crc);
+		unsigned written = 0;
+		res = disk.f_write(&pic, (void*)imageblk + 4, imageblk_size - 6, &written);
+		if (written == size)
+		{
+			DEBUG_LOG (0, "Wrote %u bytes\r\n", written);
+		}
 
 	}
 	docmd (stop);
 	pictransfer = false;
 	DEBUG_LOG (0, "Transfer completed, %u == %u\r\n", pic_size,
 	           expected_pic_size);
-
+	disk.close (&pic);
 }
 
 uint8_t*

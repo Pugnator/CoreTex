@@ -14,8 +14,7 @@
 class Uart : private IODriver
 {
 public:
- Uart (word ch, word bd);
- Uart (word ch, word bd, void (*isrptr)(void));
+ Uart (word ch, word bd, void (*isrptr)(void) = nullptr);
  ~Uart(void);
 
  virtual void write (char c);
@@ -28,17 +27,21 @@ public:
  void dmarx_go(word size);
  void disable (void);
  static class Uart *self;
+ irq* next;
  /* ISRs */
- static void isr (void);
+ static void isr (word address = 0);
  static void dmarx (void);
  static void dmatx (void);
  uint8_t *get_rx_buf();
  uint8_t *get_tx_buf();
 protected:
  bool is_dma_on();
+ void signup();
+ void signout();
  uint8_t outbuf[32];
  uint8_t inbuf[32];
  void init (char channel, word baud);
  word channel;
  USART_TypeDef* Reg;
+ irq* extirq;
 };

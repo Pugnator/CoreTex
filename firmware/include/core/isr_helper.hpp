@@ -24,3 +24,9 @@ extern "C"
 
 inline bool is_in_interrupt();
 void remap_vector_table (void);
+void hardware_manager_init(void);
+
+enum
+{
+	USART1_HANDLER, USART2_HANDLER, USART3_HANDLER, USART4_HANDLER
+};

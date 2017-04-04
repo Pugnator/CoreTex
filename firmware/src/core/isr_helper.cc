@@ -20,7 +20,7 @@
 #include <string.h>
 
 volatile word __attribute__((section (".vectorsSection")))
-IRQ_VECTOR_TABLE[76] =
+HARDWARE_TABLE[76] =
 { 0 };
 
 inline bool is_in_interrupt()
@@ -32,10 +32,15 @@ void remap_vector_table(void)
 {
  //VTOR is 0 on startup, so we change VTOR only once
  if (SCB->VTOR) return;
- memcpy((void*) IRQ_VECTOR_TABLE, (void*) SCB->VTOR, sizeof IRQ_VECTOR_TABLE);
+ memcpy((void*) HARDWARE_TABLE, (void*) SCB->VTOR, sizeof HARDWARE_TABLE);
  __disable_irq();
- SCB->VTOR = (uint32_t)(IRQ_VECTOR_TABLE); //Set VTOR offset
+ SCB->VTOR = (uint32_t)(HARDWARE_TABLE); //Set VTOR offset
  __DSB(); //Complete all memory requests
  __enable_irq();
  __ISB();
+}
+
+void hardware_manager_init(void)
+{
+ memset((void*) HARDWARE_TABLE, 0, sizeof HARDWARE_TABLE);
 }

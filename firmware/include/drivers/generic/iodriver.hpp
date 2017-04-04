@@ -2,6 +2,8 @@
 #include <global.hpp>
 #include <../res/text/drivers/text.hpp>
 
+typedef void irq(word addr);
+
 class IODriver
 {
 public:
@@ -45,6 +47,16 @@ public:
  }
 
  virtual void multiwrite(const uint8_t *buff, uint32_t size)
+ {
+
+ }
+
+ virtual void signup()
+ {
+
+ }
+
+ virtual void signout()
  {
 
  }

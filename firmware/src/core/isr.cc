@@ -72,6 +72,13 @@ extern "C"
 	void
 	USART1_IRQHandler (void)
 	{
+		irq* i = (irq*)HARDWARE_TABLE[USART1_HANDLER];
+		if (i)
+		{
+			i(0);
+			return;
+		}
+
 		if ( USART1->SR & USART_SR_RXNE) //receive
 		{
 			short c = USART1->DR;
@@ -83,8 +90,6 @@ extern "C"
 			USART1->SR &= ~USART_SR_TC;
 		}
 	}
-
-	/* GSM port */
 
 	void
 	USART2_IRQHandler (void)
@@ -100,7 +105,6 @@ extern "C"
 		}
 	}
 
-	/* GPS port */
 	void
 	USART3_IRQHandler (void)
 	{

@@ -21,6 +21,13 @@
 #include <global.hpp>
 #include <queue.hpp>
 #include <log.hpp>
+#include <list.hpp>
+
+#ifdef UART_DEBUG
+#define DEBUG_LOG SEGGER_RTT_printf
+#else
+#define DEBUG_LOG(...)
+#endif
 
 /* UART class */
 
@@ -31,82 +38,26 @@
 /* Pointer to the USART object itself in order to be accessible from within a static method */
 class Uart *Uart::self = nullptr;
 
-Uart::Uart(word ch, word bd)
-{
- __disable_irq();
- self = this;
- channel = ch;
- memset(outbuf, 0xaa, sizeof outbuf);
- memset(inbuf, 0, sizeof inbuf);
- QueueInit();
- switch (channel)
- {
-  case 1:
-   Reg = (USART_TypeDef*) USART1_BASE;
-   IRQ_VECTOR_TABLE[USART1_IRQn + IRQ0_EX] = (word) &isr;
-   break;
-  case 2:
-   Reg = (USART_TypeDef*) USART2_BASE;
-   IRQ_VECTOR_TABLE[USART2_IRQn + IRQ0_EX] = (word) &isr;
-   break;
-  case 3:
-   Reg = (USART_TypeDef*) USART3_BASE;
-   IRQ_VECTOR_TABLE[USART3_IRQn + IRQ0_EX] = (word) &isr;
-   break;
-  default:
-   //ERROR
-   ;
- }
- init(ch, bd);
- __enable_irq();
-}
-
 Uart::Uart(word ch, word bd, void (*isrptr)())
 {
  __disable_irq();
  self = this;
  channel = ch;
- switch (channel)
- {
-  case 1:
-   Reg = (USART_TypeDef*) USART1_BASE;
-   IRQ_VECTOR_TABLE[USART1_IRQn + IRQ0_EX] = (word) isrptr;
-   break;
-  case 2:
-   Reg = (USART_TypeDef*) USART2_BASE;
-   IRQ_VECTOR_TABLE[USART2_IRQn + IRQ0_EX] = (word) isrptr;
-   break;
-  case 3:
-   Reg = (USART_TypeDef*) USART3_BASE;
-   IRQ_VECTOR_TABLE[USART3_IRQn + IRQ0_EX] = (word) isrptr;
-   break;
-  default:
-   SEGGER_RTT_printf(0, "Unsupported UART channel\r\n");
-   ;
- }
+ next = 0;
+ extirq = isrptr;
+ memset(outbuf, 0, sizeof outbuf);
+ memset(inbuf, 0, sizeof inbuf);
+ QueueInit();
+ signup();
  init(ch, bd);
- isrptr ? __enable_irq() : __disable_irq();
+ __enable_irq();
 }
 
 /* In the destructor we assign IRQ to default one in order to avoid CPU hang */
 Uart::~Uart(void)
 {
  __disable_irq();
- switch (channel)
- {
-  case 1:
-   IRQ_VECTOR_TABLE[USART1_IRQn + IRQ0_EX] = (word) &USART1_IRQHandler;
-   break;
-  case 2:
-   IRQ_VECTOR_TABLE[USART2_IRQn + IRQ0_EX] = (word) &USART2_IRQHandler;
-   break;
-  case 3:
-   IRQ_VECTOR_TABLE[USART3_IRQn + IRQ0_EX] = (word) &USART3_IRQHandler;
-   break;
-  default:
-   //ERROR
-   ;
- }
+ signout();
  __enable_irq();
  __ISB();
 }
@@ -114,8 +65,8 @@ Uart::~Uart(void)
 void Uart::dma_on()
 {
  __disable_irq();
- IRQ_VECTOR_TABLE[DMA1_Channel4_IRQn + IRQ0_EX] = (word) &dmatx;
- IRQ_VECTOR_TABLE[DMA1_Channel5_IRQn + IRQ0_EX] = (word) &dmarx;
+ HARDWARE_TABLE[DMA1_Channel4_IRQn + IRQ0_EX] = (word) &dmatx;
+ HARDWARE_TABLE[DMA1_Channel5_IRQn + IRQ0_EX] = (word) &dmarx;
 
  RCC->AHBENR |= RCC_AHBENR_DMA1EN;
 
@@ -282,19 +233,27 @@ void Uart::dmatx(void)
  }
 }
 
-void Uart::isr(void)
+void Uart::isr(word address)
 {
+	if(address)
+	{
+		DEBUG_LOG(0, "UART IRQ registration: 0x%X\r\n", address);
+		self->next = address;
+		return;
+	}
+
+	DEBUG_LOG(0, "UART ISR entered\r\n");
  if (_SR & USART_SR_RXNE) //receive
  {
   _SR &= ~USART_SR_RXNE;
   volatile uint16_t c = _DR;
-  SEGGER_RTT_printf(0, "Read [0x%X]\r\n", c);
+  DEBUG_LOG(0, "Read [0x%X]\r\n", c);
   QueuePut((char)c);
  }
  else if (_SR & USART_SR_TC) //transfer
  {
   _SR &= ~USART_SR_TC;
-  SEGGER_RTT_printf(0, "Write completed\r\n");
+  DEBUG_LOG(0, "Write completed\r\n");
  }
  else if (_SR & USART_SR_CTS)
  {
@@ -311,7 +270,7 @@ void Uart::isr(void)
   _SR &= ~USART_SR_IDLE;
   volatile uint16_t tmp = _SR;
   tmp = _DR;
-  SEGGER_RTT_printf(0, "Idle line\r\n");
+  DEBUG_LOG(0, "Idle line\r\n");
  }
  else if (_SR & USART_SR_LBD)
  {
@@ -334,6 +293,13 @@ void Uart::isr(void)
  else if (_SR & USART_SR_TXE)
  {
   _SR &= ~USART_SR_TXE;
+ }
+
+ if(self->next)
+ {
+	 DEBUG_LOG(0, "UART ISR chaining\r\n");
+	 irq *n = (irq*)self->next;
+	 n(0);
  }
 }
 
@@ -376,6 +342,42 @@ void Uart::init(char channel, word baud)
 
  NVIC_EnableIRQ((IRQn_Type) irqnum);
  NVIC_SetPriority((IRQn_Type) irqnum, 3);
+}
+
+void Uart::signup()
+{
+	switch (channel)
+	 {
+	  case 1:
+	   Reg = (USART_TypeDef*) USART1_BASE;
+	   break;
+	  case 2:
+	   Reg = (USART_TypeDef*) USART2_BASE;
+	   break;
+	  case 3:
+	   Reg = (USART_TypeDef*) USART3_BASE;
+	   break;
+	  default:
+	   DEBUG_LOG(0, "Unsupported UART channel\r\n");
+	   return;
+	 }
+
+	irq* i = (irq*)HARDWARE_TABLE[USART1_HANDLER + channel - 1];
+	if(i)
+	{
+		DEBUG_LOG(0, "Another instance of UART is registered 0x%X, adding myself 0x%X\r\n", (word)i,(word)&isr);
+		i(&isr);
+	}
+	else
+	{
+		DEBUG_LOG(0, "First UART handler registration 0x%X\r\n", (word)&isr);
+		HARDWARE_TABLE[USART1_HANDLER + channel - 1] = extirq ? extirq : &isr;
+	}
+}
+
+void Uart::signout()
+{
+	HARDWARE_TABLE[USART1_HANDLER + channel - 1] = next ? (word)next : 0;
 }
 
 uint8_t *Uart::get_rx_buf()

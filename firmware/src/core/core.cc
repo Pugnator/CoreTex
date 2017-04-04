@@ -27,7 +27,8 @@ jmp_buf ex_buf__;
 extern "C" void SystemInit(void)
 {
  vmmu_init();
- remap_vector_table();
+ hardware_manager_init();
+ //remap_vector_table();
 
  RCC->CR |= 0x00000001;
  /* Reset SW, HPRE, PPRE1, PPRE2, ADCPRE and MCO bits */

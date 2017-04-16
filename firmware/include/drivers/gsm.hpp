@@ -3,11 +3,11 @@
 #include "drivers/atmodem.hpp"
 
 
-class GSM: public ATModem
+class GSM: public ATMODEM
 {
 public:
  GSM(short ch, word bd)
-: ATModem::ATModem(ch, bd)
+: ATMODEM::ATMODEM(ch, bd)
  {
   ok = false;
   reset();

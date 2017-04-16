@@ -35,7 +35,7 @@
 #define _SR Reg->SR
 #define _DR Reg->DR
 
-Uart::Uart(word ch, word bd, Uart *isrptr)
+USART::USART(word ch, word bd, USART *isrptr)
 {
  __disable_irq();
  channel = ch;
@@ -50,7 +50,7 @@ Uart::Uart(word ch, word bd, Uart *isrptr)
 }
 
 /* In the destructor we assign IRQ to default one in order to avoid CPU hang */
-Uart::~Uart(void)
+USART::~USART(void)
 {
  __disable_irq();
  signout();
@@ -58,7 +58,7 @@ Uart::~Uart(void)
  __ISB();
 }
 
-void Uart::dma_on()
+void USART::dma_on()
 {
  __disable_irq();
  //HARDWARE_TABLE[DMA1_Channel4_IRQn + IRQ0_EX] = (word) &dmatx;
@@ -115,19 +115,19 @@ void Uart::dma_on()
  __ISB();
 }
 
-void Uart::dma_off()
+void USART::dma_off()
 {
 	DMA1_Channel4->CCR = 0;
 	DMA1_Channel5->CCR = 0;
 	RCC->AHBENR &= ~RCC_AHBENR_DMA1EN;
 }
 
-bool Uart::is_dma_on()
+bool USART::is_dma_on()
 {
  return RCC->AHBENR & RCC_AHBENR_DMA1EN;
 }
 
-void Uart::dmatx_go(word size)
+void USART::dmatx_go(word size)
 {
  DMA1_Channel4->CCR  &= ~DMA_CCR4_EN;
  DMA1_Channel4->CNDTR =  size;
@@ -135,7 +135,7 @@ void Uart::dmatx_go(word size)
  DMA1_Channel4->CCR  |=  DMA_CCR4_EN;
 }
 
-void Uart::dmarx_go(word size)
+void USART::dmarx_go(word size)
 {
  DMA1_Channel5->CCR  &= ~DMA_CCR5_EN;
  DMA1_Channel5->CNDTR =  size;
@@ -144,12 +144,12 @@ void Uart::dmarx_go(word size)
 }
 
 const char*
-Uart::name()
+USART::name()
 {
  return USART_DRIVER_DISPLAY_NAME;
 }
 
-void Uart::disable(void)
+void USART::disable(void)
 {
  switch (channel)
  {
@@ -165,7 +165,7 @@ void Uart::disable(void)
  }
 }
 
-void Uart::writestr(const char* str)
+void USART::writestr(const char* str)
 {
  const char *p = str;
  while (*p)
@@ -176,20 +176,20 @@ void Uart::writestr(const char* str)
  while (Reg->SR & USART_SR_TC);
 }
 
-void Uart::write(char ch)
+void USART::write(char ch)
 {
  while (!(Reg->SR & USART_SR_TXE));
  Reg->DR = ch;
  while (Reg->SR & USART_SR_TC);
 }
 
-char Uart::read()
+char USART::read()
 {
  while (!(Reg->SR & USART_SR_RXNE));
  return Reg->DR;
 }
 
-void Uart::dmarx(void)
+void USART::dmarx(word address)
 {
  if(DMA1->ISR & DMA_ISR_TCIF4)
  {
@@ -205,7 +205,7 @@ void Uart::dmarx(void)
  }
 }
 
-void Uart::dmatx(void)
+void USART::dmatx(word address)
 {
 	if(DMA1->ISR & DMA_ISR_GIF5)
 	{
@@ -223,13 +223,9 @@ void Uart::dmatx(void)
  {
   DMA1->IFCR |= DMA_ISR_TEIF5;
  }
- else if(DMA1->ISR & DMA_ISR_GIF5)
- {
-  DMA1->IFCR |= DMA_ISR_GIF5;
- }
 }
 
-void Uart::isr(word address)
+void USART::isr(word address)
 {
 	if(address)
 	{
@@ -294,12 +290,12 @@ void Uart::isr(word address)
  if(next)
  {
 	 DEBUG_LOG(0, "UART ISR chaining\r\n");
-	 Uart *n = (Uart*)next;
+	 USART *n = (USART*)next;
 	 n->isr(0);
  }
 }
 
-void Uart::init(char channel, word baud)
+void USART::init(char channel, word baud)
 {
  switch (channel)
  {
@@ -340,7 +336,7 @@ void Uart::init(char channel, word baud)
  NVIC_SetPriority((IRQn_Type) irqnum, 3);
 }
 
-void Uart::signup()
+void USART::signup()
 {
 	switch (channel)
 	 {
@@ -358,7 +354,7 @@ void Uart::signup()
 	   return;
 	 }
 
-	Uart* i = (Uart*)HARDWARE_TABLE[USART1_HANDLER + channel - 1];
+	USART* i = (USART*)HARDWARE_TABLE[USART1_HANDLER + channel - 1];
 	if(i)
 	{
 		DEBUG_LOG(0, "Another instance of UART is registered 0x%X, adding myself 0x%X\r\n", (word)i,(word)this);
@@ -371,17 +367,17 @@ void Uart::signup()
 	}
 }
 
-void Uart::signout()
+void USART::signout()
 {
 	HARDWARE_TABLE[USART1_HANDLER + channel - 1] = next ? (word)next : 0;
 }
 
-uint8_t *Uart::get_rx_buf()
+uint8_t *USART::get_rx_buf()
 {
  return inbuf;
 }
 
-uint8_t *Uart::get_tx_buf()
+uint8_t *USART::get_tx_buf()
 {
  return outbuf;
 }

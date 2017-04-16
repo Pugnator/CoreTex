@@ -174,7 +174,7 @@ word GSM::get_account_debet(CELLULAR_OP op)
  *bal = 0;
  while(*(--bal) != ' ' && bal != buf);
  bal++;
- char *dot = strstr(bal, ".");
+ char *dot = strchr(bal, '.');
  if(dot)
  {
   *dot = result;

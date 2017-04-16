@@ -12,11 +12,11 @@
 #define CAN  0x18
 #define CTRLZ 0x1A
 
-class xmodem: public Uart
+class xmodem: public USART
 {
 public:
  xmodem(short ch, word bd)
-: Uart::Uart(ch, bd, this)
+: USART::USART(ch, bd, this)
  {
   ok = false;
   ack = false;

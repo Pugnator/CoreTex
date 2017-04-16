@@ -71,7 +71,6 @@ SRC?=src/main.cc
 
 DRIVERSSRC:=\
 	$(DRIVERS)/file_transfer/xmodem/xmodem.cc \
-	$(DRIVERS)/generic/driver.cc \
 	$(DRIVERS)/imaging/ov528/ov528.cc \
 	$(DRIVERS)/positioning/gps/gps.cc \
 	$(DRIVERS)/positioning/gps/gga.cc \
@@ -98,7 +97,7 @@ CORESRC:=\
 	$(CORELIB)/adc.cc \
 	$(CORELIB)/core.cc \
 	$(CORELIB)/gpio.cc \
-	$(CORELIB)/i2c.cc \
+	$(CORELIB)/iic.cc \
 	$(CORELIB)/isr.cc \
 	$(CORELIB)/isr_helper.cc \
 	$(CORELIB)/rtc.cc \

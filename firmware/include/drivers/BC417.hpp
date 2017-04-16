@@ -15,20 +15,19 @@ typedef enum BAUD_RATE
  BAUD7 = 7
 }BAUD_RATE;
 
-class bc417: public ATModem
+class BC417: public ATMODEM
 {
 public:
- bc417(short ch, word bd)
-: ATModem::ATModem(ch, bd)
+ BC417(short ch, word bd)
+: ATMODEM::ATMODEM(ch, bd)
  {
 	connected = false;
-  self = this;
   buflen = 0;
   ok = false;
   use_ending(false);
   reset();
  };
- ~bc417(){};
+ ~BC417(){};
  void set_pin(const char* pin);
  void set_name(const char* name);
  void set_baud(BAUD_RATE speed);

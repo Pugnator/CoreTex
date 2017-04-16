@@ -72,10 +72,10 @@ extern "C"
 	void
 	USART1_IRQHandler (void)
 	{
-		Uart* i = (Uart*)HARDWARE_TABLE[USART1_HANDLER];
+		USART* i = (USART*) HARDWARE_TABLE[USART1_HANDLER];
 		if (i)
 		{
-			i->isr(0);
+			i->isr (0);
 			return;
 		}
 
@@ -94,6 +94,12 @@ extern "C"
 	void
 	USART2_IRQHandler (void)
 	{
+		USART* i = (USART*) HARDWARE_TABLE[USART2_HANDLER];
+		if (i)
+		{
+			i->isr (0);
+			return;
+		}
 		if ( USART2->SR & USART_SR_RXNE) //receive
 		{
 			char c = USART2->DR;
@@ -108,6 +114,12 @@ extern "C"
 	void
 	USART3_IRQHandler (void)
 	{
+		USART* i = (USART*) HARDWARE_TABLE[USART3_HANDLER];
+		if (i)
+		{
+			i->isr (0);
+			return;
+		}
 		if ( USART3->SR & USART_SR_RXNE) //receive
 		{
 			char c = USART3->DR;
@@ -121,6 +133,46 @@ extern "C"
 	}
 
 	void
+	RTC_IRQHandler (void)
+	{
+	}
+	;
+	void
+	FLASH_IRQHandler (void)
+	{
+	}
+	;
+	void
+	RCC_IRQHandler (void)
+	{
+	}
+	;
+	void
+	EXTI0_IRQHandler (void)
+	{
+	}
+	;
+	void
+	EXTI1_IRQHandler (void)
+	{
+	}
+	;
+	void
+	EXTI2_IRQHandler (void)
+	{
+	}
+	;
+	void
+	EXTI3_IRQHandler (void)
+	{
+	}
+	;
+	void
+	EXTI4_IRQHandler (void)
+	{
+	}
+	;
+	void
 	DMA1_Channel1_IRQHandler (void)
 	{
 		if (DMA1->ISR & DMA_ISR_TCIF4)
@@ -128,6 +180,102 @@ extern "C"
 			DMA1->IFCR |= DMA_ISR_TCIF4;
 		}
 	}
+	;
+	void
+	DMA1_Channel2_IRQHandler (void)
+	{
+	}
+	;
+	void
+	DMA1_Channel3_IRQHandler (void)
+	{
+	}
+	;
+	void
+	DMA1_Channel4_IRQHandler (void)
+	{
+	}
+	;
+	void
+	DMA1_Channel5_IRQHandler (void)
+	{
+	}
+	;
+	void
+	DMA1_Channel6_IRQHandler (void)
+	{
+	}
+	;
+	void
+	DMA1_Channel7_IRQHandler (void)
+	{
+	}
+	;
+	void
+	ADC1_2_IRQHandler (void)
+	{
+	}
+	;
+	void
+	USB_HP_CAN1_TX_IRQHandler (void)
+	{
+	}
+	;
+	void
+	USB_LP_CAN1_RX0_IRQHandler (void)
+	{
+	}
+	;
+	void
+	CAN1_RX1_IRQHandler (void)
+	{
+	}
+	;
+	void
+	CAN1_SCE_IRQHandler (void)
+	{
+	}
+	;
+	void
+	EXTI9_5_IRQHandler (void)
+	{
+	}
+	;
+	void
+	TIM1_BRK_IRQHandler (void)
+	{
+	}
+	;
+	void
+	TIM1_UP_IRQHandler (void)
+	{
+	}
+	;
+	void
+	TIM1_TRG_COM_IRQHandler (void)
+	{
+	}
+	;
+	void
+	TIM1_CC_IRQHandler (void)
+	{
+	}
+	;
+	void
+	TIM2_IRQHandler (void)
+	{
+	}
+	;
+	void
+	TIM3_IRQHandler (void)
+	{
+	}
+	;
+	void
+	TIM4_IRQHandler (void)
+	{
+	}
+	;
 
 //TO USE: addr2line -e ./bin/program.elf -a 0x8002327 [GDB: p/x pc when it hit for(;;)]
 	USED void
@@ -162,12 +310,12 @@ extern "C"
 		char registers[128];
 		word written;
 		xsprintf (
-		    registers,
-		    "R0:  0x%08X\nR1:  0x%08X\nR2:  0x%08X\nR3:  0x%08X\nR12: 0x%08X\r\n",
-		    r0, r1, r2, r3, r12);
+				registers,
+				"R0:  0x%08X\nR1:  0x%08X\nR2:  0x%08X\nR3:  0x%08X\nR12: 0x%08X\r\n",
+				r0, r1, r2, r3, r12);
 		d.f_write (&dump, registers, strlen (registers), &written);
 		xsprintf (registers, "LR:  0x%08X\nPC:  0x%08X\nPSR: 0x%08X\r\n", lr, pc,
-		          psr);
+				psr);
 		d.f_write (&dump, registers, strlen (registers), &written);
 		d.close (&dump);
 
@@ -205,13 +353,6 @@ extern "C"
 			delayus_asm(300000L);
 			BLINK;
 		}
-	}
-
-	/* DTR */
-	void
-	EXTI0_IRQHandler (void)
-	{
-		//EXTI->PR = EXTI_PR_PR0;
 	}
 
 	void

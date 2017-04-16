@@ -15,30 +15,42 @@
  * 2015
  *******************************************************************************/
 
+#include "../../../../include/drivers/BC417.hpp"
+
 #include <global.hpp>
-#include <common.hpp>
-#include <core/i2c.hpp>
-#include <core/io_macro.hpp>
-#include <core/stm32f10x.hpp>
+#include <errors.hpp>
 
-
-#define I2C1SDA_PIN B,7,SPEED_50MHz
-#define I2C1SCK_PIN B,6,SPEED_50MHz
-I2c::I2c(char ch)
+void BC417::is_connected()
 {
- channel = ch;
- Reg = (I2C_TypeDef*) nullptr;
- PIN_OUT_ALT_OD(I2C1SCK_PIN);
- PIN_OUT_ALT_OD(I2C1SDA_PIN);
- RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;
- /* Enable I2C1 reset state */
- RCC->APB1RSTR |= RCC_APB1RSTR_I2C1RST;
- /* Release I2C1 from reset state */
- RCC->APB1RSTR &= ~RCC_APB1RSTR_I2C1RST;
- I2C1->CR1 |= I2C_CR1_PE;
- I2C1->DR = 0xAA;
- //I2C1->TIMINGR = (((word)0x40912732) & ((word)0xF0FFFFFF));
+ rawcmd(CMD::AT, CMDMODE::RAW);
+ if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
+ {
+  THROW(ERROR_BC471_COMMTEST_FAILED);
+ }
+ else
+ {
+	 THROW(ERROR_BC471_COMMTEST_OK);
+ }
+}
 
- //I2C1->CR2 = (1 << 16) | I2C_CR2_START | 0xA0;
+void BC417::set_name(const char *name)
+{
+ ok = false;
+ rawcmd(CMD::NAME, CMDMODE::RAW, name);
+ if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
+ {
+  THROW(ERROR_BC471_SET_NAME_FAILED);
+ }
+ ok = true;
+}
 
+void BC417::set_pin(const char *pin)
+{
+ ok = false;
+ rawcmd(CMD::PIN, CMDMODE::RAW, pin);
+ if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
+ {
+  THROW(ERROR_BC471_SET_PIN_FAILED);
+ }
+ ok = true;
 }

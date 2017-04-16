@@ -68,34 +68,32 @@ typedef struct nmeactx
  coord lat;
  coord lon;
  word msl;
+ char fstr[16];
  double knots;
  double kmh;
  float course;
  bool isvalid;
  word nmeaerr;
- word sect;
- char fstr[16];
+ word sect; 
  char* fp;
  uint8_t checksum;
  bool sumdone;
  bool nmeaok;
 } nmeactx;
 
-class Gps: public Uart
+class Gps: public USART
 {
 public:
  Gps(short ch, word bd) :
-  Uart::Uart(ch, bd, this)
+  USART::USART(ch, bd, this)
  {
-  Gps::self = this;
   gsv = 0;
   reset();
  }
  void rttprint();
  NMEAERR prepare(void);
- static void gpsisr(void);
+ virtual void isr(word address);
  void reset(void);
- static class Gps *self;
  char nmeastr[NMEA_MAX_LEN + 1];
  volatile uint8_t nmeastr_len;
  coord getlat();

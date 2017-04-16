@@ -28,32 +28,29 @@ const NMEATALKERSTRUCT nmeatalkerstr[] =
 { GL, "GL" },
 { (NMEATALKER) 0, NULL }, };
 
-/* Pointer to the Gps object itself in order to be accessible from within a static method */
-class Gps *Gps::self = nullptr;
-
 void
-Gps::gpsisr (void)
+Gps::isr (word address)
 {
-	if (self->Reg->SR & USART_SR_RXNE)
+	if (Reg->SR & USART_SR_RXNE)
 	{
-		short ch = self->Reg->DR;
-		self->Reg->SR &= ~USART_SR_RXNE;
-		if (self->ready)
+		short ch = Reg->DR;
+		Reg->SR &= ~USART_SR_RXNE;
+		if (ready)
 		{
 			return;
 		}
 
-		if (0 == self->nmeastr_len && '$' != ch)
+		if (0 == nmeastr_len && '$' != ch)
 		{
 			return;
 		}
-		else if ('\n' == ch || NMEA_MAX_LEN <= self->nmeastr_len + 1)
+		else if ('\n' == ch || NMEA_MAX_LEN <= nmeastr_len + 1)
 		{
-			self->nmeastr[self->nmeastr_len] = ch;
-			self->ready = true;
+			nmeastr[nmeastr_len] = ch;
+			ready = true;
 			return;
 		}
-		self->nmeastr[self->nmeastr_len++] = ch;
+		nmeastr[nmeastr_len++] = ch;
 	}
 }
 

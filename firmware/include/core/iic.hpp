@@ -1,15 +1,15 @@
 #pragma once
 #include <core/stm32f10x.hpp>
+#include "drivers/generic/iodriver.hpp"
 
-class I2c
+class IIC : private IODriver
 {
 public:
- I2c(char ch);
- ~I2c(void);
+ IIC(char ch);
+ ~IIC(void);
 
  short read(short data);
- static class I2c *self;
- static void isr(void);
+ virtual void isr(void);
 
 protected:
  int channel;

@@ -16,7 +16,7 @@ class xmodem: public Uart
 {
 public:
  xmodem(short ch, word bd)
-: Uart::Uart(ch, bd, &xmodemisr)
+: Uart::Uart(ch, bd, this)
  {
   ok = false;
   ack = false;

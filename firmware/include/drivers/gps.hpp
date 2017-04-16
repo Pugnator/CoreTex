@@ -85,7 +85,7 @@ class Gps: public Uart
 {
 public:
  Gps(short ch, word bd) :
-  Uart::Uart(ch, bd, &gpsisr)
+  Uart::Uart(ch, bd, this)
  {
   Gps::self = this;
   gsv = 0;

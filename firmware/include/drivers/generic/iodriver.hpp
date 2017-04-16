@@ -2,8 +2,6 @@
 #include <global.hpp>
 #include <../res/text/drivers/text.hpp>
 
-typedef void irq(word addr);
-
 class IODriver
 {
 public:

@@ -32,16 +32,12 @@
 /* UART class */
 
 #define UARTirq (USART1_IRQn - 1)
-#define _SR self->Reg->SR
-#define _DR self->Reg->DR
+#define _SR Reg->SR
+#define _DR Reg->DR
 
-/* Pointer to the USART object itself in order to be accessible from within a static method */
-class Uart *Uart::self = nullptr;
-
-Uart::Uart(word ch, word bd, void (*isrptr)())
+Uart::Uart(word ch, word bd, Uart *isrptr)
 {
  __disable_irq();
- self = this;
  channel = ch;
  next = 0;
  extirq = isrptr;
@@ -65,8 +61,8 @@ Uart::~Uart(void)
 void Uart::dma_on()
 {
  __disable_irq();
- HARDWARE_TABLE[DMA1_Channel4_IRQn + IRQ0_EX] = (word) &dmatx;
- HARDWARE_TABLE[DMA1_Channel5_IRQn + IRQ0_EX] = (word) &dmarx;
+ //HARDWARE_TABLE[DMA1_Channel4_IRQn + IRQ0_EX] = (word) &dmatx;
+ //HARDWARE_TABLE[DMA1_Channel5_IRQn + IRQ0_EX] = (word) &dmarx;
 
  RCC->AHBENR |= RCC_AHBENR_DMA1EN;
 
@@ -238,11 +234,11 @@ void Uart::isr(word address)
 	if(address)
 	{
 		DEBUG_LOG(0, "UART IRQ registration: 0x%X\r\n", address);
-		self->next = address;
+		next = address;
 		return;
 	}
 
-	DEBUG_LOG(0, "UART ISR entered\r\n");
+ DEBUG_LOG(0, "UART ISR entered\r\n");
  if (_SR & USART_SR_RXNE) //receive
  {
   _SR &= ~USART_SR_RXNE;
@@ -295,11 +291,11 @@ void Uart::isr(word address)
   _SR &= ~USART_SR_TXE;
  }
 
- if(self->next)
+ if(next)
  {
 	 DEBUG_LOG(0, "UART ISR chaining\r\n");
-	 irq *n = (irq*)self->next;
-	 n(0);
+	 Uart *n = (Uart*)next;
+	 n->isr(0);
  }
 }
 
@@ -362,16 +358,16 @@ void Uart::signup()
 	   return;
 	 }
 
-	irq* i = (irq*)HARDWARE_TABLE[USART1_HANDLER + channel - 1];
+	Uart* i = (Uart*)HARDWARE_TABLE[USART1_HANDLER + channel - 1];
 	if(i)
 	{
-		DEBUG_LOG(0, "Another instance of UART is registered 0x%X, adding myself 0x%X\r\n", (word)i,(word)&isr);
-		i(&isr);
+		DEBUG_LOG(0, "Another instance of UART is registered 0x%X, adding myself 0x%X\r\n", (word)i,(word)this);
+		i->isr(this);
 	}
 	else
 	{
-		DEBUG_LOG(0, "First UART handler registration 0x%X\r\n", (word)&isr);
-		HARDWARE_TABLE[USART1_HANDLER + channel - 1] = extirq ? extirq : &isr;
+		DEBUG_LOG(0, "First UART handler registration 0x%X\r\n", (word)this);
+		HARDWARE_TABLE[USART1_HANDLER + channel - 1] = extirq ? (word)extirq : (word)this;
 	}
 }
 

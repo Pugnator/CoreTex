@@ -72,10 +72,10 @@ extern "C"
 	void
 	USART1_IRQHandler (void)
 	{
-		irq* i = (irq*)HARDWARE_TABLE[USART1_HANDLER];
+		Uart* i = (Uart*)HARDWARE_TABLE[USART1_HANDLER];
 		if (i)
 		{
-			i(0);
+			i->isr(0);
 			return;
 		}
 

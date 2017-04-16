@@ -145,7 +145,7 @@ class ATModem: public Uart
 {
 public:
  ATModem(short ch, word bd)
-: Uart::Uart(ch, bd, &procisr)
+: Uart::Uart(ch, bd, this)
  {
   ok = false;
   go = false;

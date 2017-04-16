@@ -23,6 +23,7 @@
 #include <core/rtc.hpp>
 #include <core/usart.hpp>
 #include <drivers/ov528.hpp>
+#include <core/iic.hpp>
 
 void track()
 {

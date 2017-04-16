@@ -17,9 +17,9 @@
 
 #include <global.hpp>
 #include <common.hpp>
-#include <core/i2c.hpp>
 #include <core/io_macro.hpp>
 #include <core/stm32f10x.hpp>
+#include "../../include/core/iic.hpp"
 
 
 #define I2C1SDA_PIN B,7,SPEED_50MHz

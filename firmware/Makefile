@@ -98,7 +98,7 @@ CORESRC:=\
 	$(CORELIB)/adc.cc \
 	$(CORELIB)/core.cc \
 	$(CORELIB)/gpio.cc \
-	$(CORELIB)/i2c.cc \
+	$(CORELIB)/iic.cc \
 	$(CORELIB)/isr.cc \
 	$(CORELIB)/isr_helper.cc \
 	$(CORELIB)/rtc.cc \

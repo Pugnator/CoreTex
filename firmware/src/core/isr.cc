@@ -72,10 +72,10 @@ extern "C"
 	void
 	USART1_IRQHandler (void)
 	{
-		Uart* i = (Uart*)HARDWARE_TABLE[USART1_HANDLER];
+		Uart* i = (Uart*) HARDWARE_TABLE[USART1_HANDLER];
 		if (i)
 		{
-			i->isr(0);
+			i->isr (0);
 			return;
 		}
 
@@ -94,6 +94,12 @@ extern "C"
 	void
 	USART2_IRQHandler (void)
 	{
+		Uart* i = (Uart*) HARDWARE_TABLE[USART2_HANDLER];
+		if (i)
+		{
+			i->isr (0);
+			return;
+		}
 		if ( USART2->SR & USART_SR_RXNE) //receive
 		{
 			char c = USART2->DR;
@@ -108,6 +114,12 @@ extern "C"
 	void
 	USART3_IRQHandler (void)
 	{
+		Uart* i = (Uart*) HARDWARE_TABLE[USART3_HANDLER];
+		if (i)
+		{
+			i->isr (0);
+			return;
+		}
 		if ( USART3->SR & USART_SR_RXNE) //receive
 		{
 			char c = USART3->DR;
@@ -162,12 +174,12 @@ extern "C"
 		char registers[128];
 		word written;
 		xsprintf (
-		    registers,
-		    "R0:  0x%08X\nR1:  0x%08X\nR2:  0x%08X\nR3:  0x%08X\nR12: 0x%08X\r\n",
-		    r0, r1, r2, r3, r12);
+				registers,
+				"R0:  0x%08X\nR1:  0x%08X\nR2:  0x%08X\nR3:  0x%08X\nR12: 0x%08X\r\n",
+				r0, r1, r2, r3, r12);
 		d.f_write (&dump, registers, strlen (registers), &written);
 		xsprintf (registers, "LR:  0x%08X\nPC:  0x%08X\nPSR: 0x%08X\r\n", lr, pc,
-		          psr);
+				psr);
 		d.f_write (&dump, registers, strlen (registers), &written);
 		d.close (&dump);
 

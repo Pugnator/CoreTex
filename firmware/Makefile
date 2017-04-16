@@ -71,7 +71,6 @@ SRC?=src/main.cc
 
 DRIVERSSRC:=\
 	$(DRIVERS)/file_transfer/xmodem/xmodem.cc \
-	$(DRIVERS)/generic/driver.cc \
 	$(DRIVERS)/imaging/ov528/ov528.cc \
 	$(DRIVERS)/positioning/gps/gps.cc \
 	$(DRIVERS)/positioning/gps/gga.cc \

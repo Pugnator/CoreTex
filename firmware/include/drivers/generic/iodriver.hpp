@@ -59,6 +59,21 @@ public:
 
  }
 
+ virtual void isr (word address)
+ {
+
+ }
+
+ virtual void dmatx (word address)
+ {
+
+ }
+
+ virtual void dmarx (word address)
+ {
+
+ }
+
  virtual const char* name (void)
  {
   return GENERIC_DRIVER_DISPLAY_NAME;

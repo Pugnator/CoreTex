@@ -28,9 +28,9 @@ public:
  void disable (void);
  Uart* next;
  /* ISRs */
- void isr (word address = 0);
- void dmarx (void);
- void dmatx (void);
+ virtual void isr (word address);
+ virtual void dmarx (word address);
+ virtual void dmatx (word address);
  uint8_t *get_rx_buf();
  uint8_t *get_tx_buf();
 protected:

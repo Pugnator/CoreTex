@@ -189,7 +189,7 @@ char Uart::read()
  return Reg->DR;
 }
 
-void Uart::dmarx(void)
+void Uart::dmarx(word address)
 {
  if(DMA1->ISR & DMA_ISR_TCIF4)
  {
@@ -205,7 +205,7 @@ void Uart::dmarx(void)
  }
 }
 
-void Uart::dmatx(void)
+void Uart::dmatx(word address)
 {
 	if(DMA1->ISR & DMA_ISR_GIF5)
 	{

@@ -11,7 +11,7 @@ class ov528: public Uart
 {
 public:
  ov528(short ch, FATdisk& _disk)
-: Uart::Uart(ch, 115200, &ov528isr),
+: Uart::Uart(ch, 115200, this),
   imageblk_size (0),
   imageblk (nullptr),
   pictransfer (false),

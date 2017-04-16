@@ -272,8 +272,6 @@ FIRMWARE:=$(OUTPUTDIR)/$(PROJECTNAME).elf
 LIBFIRMWARE:=$(LIBSDIR)/$(PROJECTNAME).a
 
 ######################TARGETS###########################
-all: clean directories stm_stdlib firmware
-
 firmware: settings directories $(FIRMWARE)
 
 flash:
@@ -325,29 +323,6 @@ $(OBJSDIR):
 $(LIBSDIR):
 	$(MKDIR_P) $(LIBSDIR)
 
-fatfs:
-	$(MAKE) -C $(FATFSDIR);
-
-stm_stdlib:
-	for dir in $(STMSTDLIBDIR); do \
-		$(MAKE) BLD=$(BLD) -C $$dir; \
-	done
-
-corelib:
-	for dir in $(CORELIB); do \
-		$(MAKE) BLD=$(BLD) -C $$dir; \
-	done
-
-supportlib:
-	for dir in $(SUPPORT); do \
-		$(MAKE) BLD=$(BLD) -C $$dir; \
-	done
-
-drivers:
-	for dir in $(DRIVERS); do \
-		$(MAKE) BLD=$(BLD) -C $$dir; \
-	done
-
 clean:
 	$(RM) -f $(STDLIB)
 	$(RM) -rf $(OUTPUTDIR) $(LIBSDIR)	$(OBJSDIR)
@@ -358,10 +333,6 @@ ifneq ($(__VMMU_POOL_SIZE), 0)
 	@echo -e "Memory pool size is $(__VMMU_POOL_SIZE)"
 endif
 
-.PHONY: stm_stdlib
-.PHONY: corelib
-.PHONY: drivers
-.PHONY: support
 .PHONY: flash
 .PHONY: erase
 .PHONY: reset

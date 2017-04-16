@@ -65,7 +65,7 @@ int main (void)
 {
 	SEGGER_RTT_WriteString(0, "Started\r\n");
 	Uart u(1, 9600);
-	//Uart u1(1, 9600);
+	Uart u1(1, 9600);
 	u.write(0xaa);
 	MAIN_END;
 }

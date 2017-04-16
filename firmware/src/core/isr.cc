@@ -75,7 +75,7 @@ extern "C"
 		Uart* i = (Uart*)HARDWARE_TABLE[USART1_HANDLER];
 		if (i)
 		{
-			//i(0);
+			i->isr(0);
 			return;
 		}
 

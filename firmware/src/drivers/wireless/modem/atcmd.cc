@@ -6,7 +6,6 @@
 #include <log.hpp>
 #include "drivers/atmodem.hpp"
 
-class ATModem *ATModem::self = nullptr;
 
 //TODO: may be should add \r\n at runtime to save some space
 static const char *RESPONSE_TEXT_CRLF[] =
@@ -50,41 +49,41 @@ static const char *ATCMD_TEXT[] =
   FOREACH_ATCMD(GENERATE_ATCMD_STRING)
 };
 
-const char *ATModem::get_cmd_str(CMD::ATCMD cmd)
+const char *ATMODEM::get_cmd_str(CMD::ATCMD cmd)
 {
  return ATCMD_TEXT[cmd];
 }
 
-void ATModem::procisr(void)
+void ATMODEM::isr(word address)
 {
- volatile uint16_t __SR = self->Reg->SR;
+ volatile uint16_t __SR = Reg->SR;
  if (__SR & USART_SR_RXNE)
  {
   __SR &= ~USART_SR_RXNE;
-  volatile uint16_t a = self->Reg->DR;
+  volatile uint16_t a = Reg->DR;
   SEGGER_RTT_printf(0, "%c", isprint(a) ? a : '?');
-  if (!self->go || self->buflen >= MODEM_IN_BUFFER_SIZE)
+  if (!go || buflen >= MODEM_IN_BUFFER_SIZE)
   {
-   self->go = false;
+   go = false;
    return;
   }
-  self->modembuf[self->buflen++] = a;
+  modembuf[buflen++] = a;
  }
  else if (__SR & USART_SR_TC)
  {
   __SR &= ~USART_SR_TC;
  }
- self->Reg->SR = __SR;
+ Reg->SR = __SR;
 }
 
-void ATModem::reset(void)
+void ATMODEM::reset(void)
 {
  buflen = 0;
  memset(modembuf, 0, sizeof modembuf);
  go = true;
 }
 
-void ATModem::rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, const char* arg)
+void ATMODEM::rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, const char* arg)
 {
  reset();
  if (CMD::AT != cmd)
@@ -126,7 +125,7 @@ void ATModem::rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, const char* arg)
 
 }
 
-void ATModem::rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, word arg)
+void ATMODEM::rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, word arg)
 {
  //XXX: fix it
  char result[2] =
@@ -137,7 +136,7 @@ void ATModem::rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, word arg)
  rawcmd(cmd, mode, result);
 }
 
-bool ATModem::wait_for_reply(CMD::ATCMD cmd, ATRESPONSE expected, word timeout)
+bool ATMODEM::wait_for_reply(CMD::ATCMD cmd, ATRESPONSE expected, word timeout)
 {
  ok = false;
  char buf[MODEM_IN_BUFFER_SIZE + 1] = {0};
@@ -203,7 +202,7 @@ bool ATModem::wait_for_reply(CMD::ATCMD cmd, ATRESPONSE expected, word timeout)
  return ok;
 }
 
-void ATModem::use_ending(bool mode)
+void ATMODEM::use_ending(bool mode)
 {
  crlf_end = mode;
 }

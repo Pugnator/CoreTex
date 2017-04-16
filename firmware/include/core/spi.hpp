@@ -16,8 +16,7 @@ public:
  virtual uint16_t read(uint16_t data = 0xFF);
  virtual void multiread(uint8_t *buff, uint32_t size);
  virtual void multiwrite(const uint8_t *buff, uint32_t size);
- static class Spi *self;
- static void isr(void);
+ virtual void isr(word address);
  void lowspeed(void);
  void highspeed(void);
  void go8bit(void) ;

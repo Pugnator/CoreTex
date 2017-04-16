@@ -29,19 +29,16 @@
 #define DEBUG_LOG(...)
 #endif
 
-class Spi *Spi::self = nullptr;
-
 Spi::Spi(char ch)
 {
 	DEBUG_LOG(0,"SPI%u activated\r\n", ch);
 	__disable_irq();
-	self = this;
 	channel = ch;
 	switch (channel)
 	{
 	case 1:
 		Reg = (SPI_TypeDef*) SPI1_BASE;
-		HARDWARE_TABLE[SPI1_IRQn + IRQ0_EX] = (word) &isr;
+		HARDWARE_TABLE[SPI1_IRQn + IRQ0_EX] = (word) this;
 		RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
 		PORT_ENABLE_CLOCK_START()
 		/* enable all clock */
@@ -60,7 +57,7 @@ Spi::Spi(char ch)
 		break;
 	case 2:
 		Reg = (SPI_TypeDef*) SPI2_BASE;
-		HARDWARE_TABLE[SPI2_IRQn + IRQ0_EX] = (word) &isr;
+		HARDWARE_TABLE[SPI2_IRQn + IRQ0_EX] = (word) this;
 		break;
 	default:
 		//ERROR
@@ -76,10 +73,10 @@ Spi::~Spi(void)
 	switch (channel)
 	{
 	case 1:
-		HARDWARE_TABLE[SPI1_IRQn + IRQ0_EX] = (word) &isr;
+		HARDWARE_TABLE[SPI1_IRQn + IRQ0_EX] = (word) this;
 		break;
 	case 2:
-		HARDWARE_TABLE[SPI2_IRQn + IRQ0_EX] = (word) &isr;
+		HARDWARE_TABLE[SPI2_IRQn + IRQ0_EX] = (word) this;
 		break;
 	default:
 		//ERROR
@@ -89,20 +86,20 @@ Spi::~Spi(void)
 	__ISB();
 }
 
-void Spi::isr(void)
+void Spi::isr(word address)
 {
-	if (self->Reg->SR & SPI_SR_RXNE)
+	if (Reg->SR & SPI_SR_RXNE)
 	{
 		short c = SPI1->DR;
-		self->Reg->SR &= ~SPI_SR_RXNE;
+		Reg->SR &= ~SPI_SR_RXNE;
 	}
 	else if ( SPI1->SR & SPI_SR_TXE)
 	{
-		self->Reg->SR &= ~SPI_SR_TXE;
+		Reg->SR &= ~SPI_SR_TXE;
 	}
 	else if ( SPI1->SR & SPI_SR_UDR)
 	{
-		self->Reg->SR &= ~SPI_SR_UDR;
+		Reg->SR &= ~SPI_SR_UDR;
 	}
 }
 

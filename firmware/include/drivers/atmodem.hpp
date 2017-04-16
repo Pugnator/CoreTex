@@ -141,17 +141,16 @@ typedef enum ATRESPONSE
  AT_READY
 } ATRESPONSE;
 
-class ATModem: public USART
+class ATMODEM: public USART
 {
 public:
- ATModem(short ch, word bd)
+ ATMODEM(short ch, word bd)
 : USART::USART(ch, bd, this)
  {
   ok = false;
   go = false;
   buflen = 0;
   crlf_end = true;
-  ATModem::self = this;
  }
 
  void rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, const char* arg = nullptr);
@@ -161,11 +160,10 @@ public:
  const char *get_cmd_str(CMD::ATCMD cmd);
  void use_ending(bool mode);
 
- static void procisr(void);
+ virtual void isr(word address);
  char modembuf[MODEM_IN_BUFFER_SIZE + 1];
  short buflen;
  bool ok;
- static class ATModem *self;
 protected:
  char replystr[MODEM_IN_BUFFER_SIZE + 1];
  void reset(void);

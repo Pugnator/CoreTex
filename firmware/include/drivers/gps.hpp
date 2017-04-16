@@ -87,15 +87,13 @@ public:
  Gps(short ch, word bd) :
   USART::USART(ch, bd, this)
  {
-  Gps::self = this;
   gsv = 0;
   reset();
  }
  void rttprint();
  NMEAERR prepare(void);
- static void gpsisr(void);
+ virtual void isr(word address);
  void reset(void);
- static class Gps *self;
  char nmeastr[NMEA_MAX_LEN + 1];
  volatile uint8_t nmeastr_len;
  coord getlat();

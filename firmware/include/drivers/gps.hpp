@@ -68,13 +68,13 @@ typedef struct nmeactx
  coord lat;
  coord lon;
  word msl;
+ char fstr[16];
  double knots;
  double kmh;
  float course;
  bool isvalid;
  word nmeaerr;
- word sect;
- char fstr[16];
+ word sect; 
  char* fp;
  uint8_t checksum;
  bool sumdone;

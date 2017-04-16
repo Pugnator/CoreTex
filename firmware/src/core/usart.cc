@@ -223,10 +223,6 @@ void Uart::dmatx(void)
  {
   DMA1->IFCR |= DMA_ISR_TEIF5;
  }
- else if(DMA1->ISR & DMA_ISR_GIF5)
- {
-  DMA1->IFCR |= DMA_ISR_GIF5;
- }
 }
 
 void Uart::isr(word address)

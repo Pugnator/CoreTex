@@ -239,7 +239,6 @@ SD_Error Sdc::get_response(SD_Error expected_r1, SD_RESPONSE_TYPE type)
   {
    DEBUG_LOG(0,"0x%X\r\n", response);
    print_error(response);
-   return SD_RESPONSE_FAILURE;
   }
   delay_ms(100);
  }

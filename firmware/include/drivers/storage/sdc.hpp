@@ -24,20 +24,20 @@ typedef enum
 
 typedef struct
 {
+  uint32_t DeviceSize;           /*!< Device Size */
+  uint16_t CardComdClasses;      /*!< Card command classes */
   uint8_t  CSDStruct;            /*!< CSD structure */
   uint8_t  SysSpecVersion;       /*!< System specification version */
   uint8_t  Reserved1;            /*!< Reserved */
   uint8_t  TAAC;                 /*!< Data read access-time 1 */
   uint8_t  NSAC;                 /*!< Data read access-time 2 in CLK cycles */
-  uint8_t  MaxBusClkFrec;        /*!< Max. bus clock frequency */
-  uint16_t CardComdClasses;      /*!< Card command classes */
+  uint8_t  MaxBusClkFrec;        /*!< Max. bus clock frequency */  
   uint8_t  RdBlockLen;           /*!< Max. read data block length */
   uint8_t  PartBlockRead;        /*!< Partial blocks for read allowed */
   uint8_t  WrBlockMisalign;      /*!< Write block misalignment */
   uint8_t  RdBlockMisalign;      /*!< Read block misalignment */
   uint8_t  DSRImpl;              /*!< DSR implemented */
-  uint8_t  Reserved2;            /*!< Reserved */
-  uint32_t DeviceSize;           /*!< Device Size */
+  uint8_t  Reserved2;            /*!< Reserved */  
   uint8_t  MaxRdCurrentVDDMin;   /*!< Max. read current @ VDD min */
   uint8_t  MaxRdCurrentVDDMax;   /*!< Max. read current @ VDD max */
   uint8_t  MaxWrCurrentVDDMin;   /*!< Max. write current @ VDD min */
@@ -65,14 +65,14 @@ typedef struct
 
 typedef struct
 {
-  uint8_t  ManufacturerID;       /*!< ManufacturerID */
-  uint16_t OEM_AppliID;          /*!< OEM/Application ID */
-  uint32_t ProdName1;            /*!< Product Name part1 */
-  uint8_t  ProdName2;            /*!< Product Name part2*/
-  uint8_t  ProdRev;              /*!< Product Revision */
   uint32_t ProdSN;               /*!< Product Serial Number */
-  uint8_t  Reserved1;            /*!< Reserved1 */
+  uint32_t ProdName1;            /*!< Product Name part1 */
   uint16_t ManufactDate;         /*!< Manufacturing Date */
+  uint16_t OEM_AppliID;          /*!< OEM/Application ID */
+  uint8_t  ManufacturerID;       /*!< ManufacturerID */
+  uint8_t  ProdName2;            /*!< Product Name part2*/
+  uint8_t  ProdRev;              /*!< Product Revision */  
+  uint8_t  Reserved1;            /*!< Reserved1 */  
   uint8_t  CID_CRC;              /*!< CID CRC */
   uint8_t  Reserved2;            /*!< always 1 */
 } SD_CID;

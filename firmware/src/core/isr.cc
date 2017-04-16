@@ -72,7 +72,7 @@ extern "C"
 	void
 	USART1_IRQHandler (void)
 	{
-		Uart* i = (Uart*) HARDWARE_TABLE[USART1_HANDLER];
+		USART* i = (USART*) HARDWARE_TABLE[USART1_HANDLER];
 		if (i)
 		{
 			i->isr (0);
@@ -94,7 +94,7 @@ extern "C"
 	void
 	USART2_IRQHandler (void)
 	{
-		Uart* i = (Uart*) HARDWARE_TABLE[USART2_HANDLER];
+		USART* i = (USART*) HARDWARE_TABLE[USART2_HANDLER];
 		if (i)
 		{
 			i->isr (0);
@@ -114,7 +114,7 @@ extern "C"
 	void
 	USART3_IRQHandler (void)
 	{
-		Uart* i = (Uart*) HARDWARE_TABLE[USART3_HANDLER];
+		USART* i = (USART*) HARDWARE_TABLE[USART3_HANDLER];
 		if (i)
 		{
 			i->isr (0);

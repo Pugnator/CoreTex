@@ -141,11 +141,11 @@ typedef enum ATRESPONSE
  AT_READY
 } ATRESPONSE;
 
-class ATModem: public Uart
+class ATModem: public USART
 {
 public:
  ATModem(short ch, word bd)
-: Uart::Uart(ch, bd, this)
+: USART::USART(ch, bd, this)
  {
   ok = false;
   go = false;

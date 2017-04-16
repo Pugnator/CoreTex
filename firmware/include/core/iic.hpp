@@ -1,14 +1,14 @@
 #pragma once
 #include <core/stm32f10x.hpp>
 
-class I2c
+class IIC
 {
 public:
- I2c(char ch);
- ~I2c(void);
+ IIC(char ch);
+ ~IIC(void);
 
  short read(short data);
- static class I2c *self;
+ static class IIC *self;
  static void isr(void);
 
 protected:

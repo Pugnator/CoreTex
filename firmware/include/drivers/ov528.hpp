@@ -7,11 +7,11 @@
 #define CMD_SIZE 6
 #define WAKEUP_RETRY_COUNT 100
 
-class ov528: public Uart
+class ov528: public USART
 {
 public:
  ov528(short ch, FATdisk& _disk)
-: Uart::Uart(ch, 115200, this),
+: USART::USART(ch, 115200, this),
   imageblk_size (0),
   imageblk (nullptr),
   pictransfer (false),

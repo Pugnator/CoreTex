@@ -81,11 +81,11 @@ typedef struct nmeactx
  bool nmeaok;
 } nmeactx;
 
-class Gps: public Uart
+class Gps: public USART
 {
 public:
  Gps(short ch, word bd) :
-  Uart::Uart(ch, bd, this)
+  USART::USART(ch, bd, this)
  {
   Gps::self = this;
   gsv = 0;

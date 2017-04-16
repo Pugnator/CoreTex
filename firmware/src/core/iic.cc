@@ -24,7 +24,7 @@
 
 #define I2C1SDA_PIN B,7,SPEED_50MHz
 #define I2C1SCK_PIN B,6,SPEED_50MHz
-I2c::I2c(char ch)
+IIC::IIC(char ch)
 {
  channel = ch;
  Reg = (I2C_TypeDef*) nullptr;

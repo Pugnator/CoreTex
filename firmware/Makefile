@@ -7,13 +7,15 @@ MCU:=$(shell sed -n '/^family=/ {s///p;q;}' $(DESCRIPTION))
 PROJECTNAME:=$(shell sed -n '/^name=/ {s///p;q;}' $(DESCRIPTION))
 GCCPRFX:=$(shell sed -n '/^arch=/ {s///p;q;}' $(DESCRIPTION))
 RTTVER:=$(shell sed -n '/^JLINK_VERSION=/ {s///p;q;}' $(DESCRIPTION))
+SYSVVER:=$(shell sed -n '/^SYSVIEW_VERSION=/ {s///p;q;}' $(DESCRIPTION))
 
 __USE_FATFS:=$(shell sed -n '/^__USE_FATFS=/ {s///p;q;}' $(DESCRIPTION))
 __USE_TESTS:=$(shell sed -n '/^__USE_TESTS=/ {s///p;q;}' $(DESCRIPTION))
 __USE_STDLIB:=$(shell sed -n '/^__USE_STDLIB=/ {s///p;q;}' $(DESCRIPTION))
 __BUILDTYPE:=$(shell sed -n '/^__BUILDTYPE=/ {s///p;q;}' $(DESCRIPTION))
 __USE_CONSOLE:=$(shell sed -n '/^__USE_CONSOLE=/ {s///p;q;}' $(DESCRIPTION))
-__VMMU_POOL_SUZE:=$(shell sed -n '/^__VMMU_POOL_SUZE=/ {s///p;q;}' $(DESCRIPTION))
+__VMMU_POOL_SIZE:=$(shell sed -n '/^__VMMU_POOL_SIZE=/ {s///p;q;}' $(DESCRIPTION))
+__USE_MEMORY_DUMP:=$(shell sed -n '/^__USE_MEMORY_DUMP=/ {s///p;q;}' $(DESCRIPTION))
 ##########################
 
 AR:=$(GCCPRFX)-ar
@@ -45,11 +47,14 @@ STDLIBSRC:=\
 CORELIB:=\
 	src/core
 
+SYSVIEWDIR:=\
+	external/SEGGER_SYSTEMVIEW_$(SYSVVER)
+
 RTTDIR:=\
 	external/SEGGER_RTT_$(RTTVER)
 
-AUXSRC:=\
-	src/support
+UTILS:=\
+	src/utils
 
 DRIVERS:=\
 	src/drivers
@@ -62,23 +67,25 @@ TESTSDIR:=\
 
 ######################## SOURCES ###############################
 
-SRC+=\
-	src/main.cc
+SRC?=src/main.cc
 
 DRIVERSSRC:=\
 	$(DRIVERS)/file_transfer/xmodem/xmodem.cc \
-	$(DRIVERS)/generic/driver.cc \
 	$(DRIVERS)/imaging/ov528/ov528.cc \
-	$(DRIVERS)/positioning/gps/gga.cc \
 	$(DRIVERS)/positioning/gps/gps.cc \
+	$(DRIVERS)/positioning/gps/gga.cc \
+	$(DRIVERS)/positioning/gps/gll.cc \
+	$(DRIVERS)/positioning/gps/gsv.cc \
+	$(DRIVERS)/positioning/gps/parser.cc \
 	$(DRIVERS)/positioning/gps/rmc.cc \
 	$(DRIVERS)/positioning/gps/vtg.cc \
 	$(DRIVERS)/storage/sdc.cc \
 	$(DRIVERS)/storage/ramdisk.cc \
 	$(DRIVERS)/storage/flash.cc \
-	$(DRIVERS)/wireless/bc470/bc470.cc \
-	$(DRIVERS)/wireless/gsm/atcmd.cc \
-	$(DRIVERS)/wireless/gsm/gsm.cc \
+	$(DRIVERS)/storage/eeprom.cc \
+	$(DRIVERS)/wireless/modem/atcmd.cc \
+	$(DRIVERS)/wireless/modem/bc417.cc \
+	$(DRIVERS)/wireless/modem/gsm.cc \
 	$(DRIVERS)/wireless/nrf24l01/nrf24.cc
 
 ifeq ($(__USE_CONSOLE), 1)
@@ -91,7 +98,7 @@ CORESRC:=\
 	$(CORELIB)/adc.cc \
 	$(CORELIB)/core.cc \
 	$(CORELIB)/gpio.cc \
-	$(CORELIB)/i2c.cc \
+	$(CORELIB)/iic.cc \
 	$(CORELIB)/isr.cc \
 	$(CORELIB)/isr_helper.cc \
 	$(CORELIB)/rtc.cc \
@@ -104,6 +111,10 @@ RTTSRC:=\
 	$(RTTDIR)/Syscalls/SEGGER_RTT_Syscalls_GCC.c \
 	$(RTTDIR)/RTT/SEGGER_RTT.c \
 	$(RTTDIR)/RTT/SEGGER_RTT_printf.c	
+
+SYSVIEWSRC:=\
+	$(SYSVIEWDIR)/SEGGER_SYSVIEW.c \
+	$(SYSVIEWDIR)/SEGGER_SYSVIEW_Config_NoOS.c	
 
 STARTUP:=\
 	$(CORELIB)/startup.s
@@ -119,11 +130,20 @@ SUPPORTSRC:=\
 	$(SUPPORT)/compat.cc \
 	$(SUPPORT)/log.cc \
 	$(SUPPORT)/queue.cc \
+	$(SUPPORT)/make_error.cc \
 	$(SUPPORT)/morse.cc
+
+XPRINTFSRC:=\
+	$(SUPPORT)/xprintf/xprintf.c
 
 FATFSSRC:=\
 	$(DRIVERS)/storage/disk/fatdisk.cc \
 	$(DRIVERS)/storage/disk/fatfs.cc
+
+UTILSSRC:=\
+	$(UTILS)/tracker/gpx.cc \
+	$(UTILS)/csv/csv.cc \
+	$(UTILS)/xml/xml.cc
 
 TESTSSRC:=\
 	$(TESTSDIR)/core.cc
@@ -161,13 +181,17 @@ else
 	CXXFLAGS:=-flto -Os -s -D__DEBUG=0
 endif
 
-ifneq ($(__VMMU_POOL_SUZE), 0)
-	CXXFLAGS+=-D__VMMU_POOL_SUZE=$(__VMMU_POOL_SUZE)
+ifneq ($(__VMMU_POOL_SIZE), 0)
+	CXXFLAGS+=-D__VMMU_POOL_SIZE=$(__VMMU_POOL_SIZE)
+endif
+
+ifeq ($(__USE_MEMORY_DUMP)), 1)
+	CXXFLAGS+=-D__USE_MEMORY_DUMP=$(__USE_MEMORY_DUMP)
 endif
 
 CXXFLAGS+=\
 	--std=gnu++14 -Wall \
-	-Iinclude -Isrc \
+	-Iinclude -Iinclude/errors -Isrc -Iinclude/support \
 	-Iexternal/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc \
 	-Iexternal/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x \
 	-Iexternal/stdlib/Libraries/CMSIS/CM3/CoreSupport \
@@ -177,6 +201,7 @@ CXXFLAGS+=\
 	-fno-rtti \
 	-fno-exceptions \
 	-Dassert_param="" \
+	-fpermissive \
 	-fno-builtin \
 	-fdata-sections \
 	-ffunction-sections \
@@ -189,7 +214,8 @@ else
 endif
 
 CXXFLAGS+=\
-	-I$(RTTDIR)/RTT
+	-I$(RTTDIR)/RTT \
+	-I$(SYSVIEWDIR)
 
 ifeq ($(MCU), STM32F10X_MD)
 	LDFLAGS+=-TSTM32F10X_MD.ld
@@ -215,6 +241,9 @@ OBJ+=$(STARTUP:%.s=$(OBJSDIR)/%.o)
 OBJ+=$(CORESRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(SUPPORTSRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(RTTSRC:%.c=$(OBJSDIR)/%.o)
+OBJ+=$(XPRINTFSRC:%.c=$(OBJSDIR)/%.o)
+OBJ+=$(UTILSSRC:%.cc=$(OBJSDIR)/%.o)
+
 
 ifeq ($(__USE_FATFS),1)
 OBJ+=$(FATFSSRC:%.cc=$(OBJSDIR)/%.o)
@@ -228,6 +257,10 @@ ifeq ($(__USE_STDLIB),1)
 OBJ+=$(STMLIBSRC:%.c=$(OBJSDIR)/%.o)
 endif
 
+ifeq ($(__USE_SYSVIEW),1)
+OBJ+=$(SYSVIEWSRC:%.c=$(OBJSDIR)/%.o)
+endif
+
 DEPS := $(OBJ:.o=.d)
 -include $(DEPS)
 
@@ -236,14 +269,9 @@ PROGOBJ:=$(SRC:%.cc=$(OBJSDIR)/%.o)
 ######################OUTPUT###########################
 
 FIRMWARE:=$(OUTPUTDIR)/$(PROJECTNAME).elf
-FIRMWARE_LINKED:=$(OUTPUTDIR)/$(PROJECTNAME)_linked.elf
 LIBFIRMWARE:=$(LIBSDIR)/$(PROJECTNAME).a
 
 ######################TARGETS###########################
-all: clean directories stm_stdlib library firmware linked_firmware
-
-linked_firmware: directories library $(FIRMWARE)
-
 firmware: settings directories $(FIRMWARE)
 
 flash:
@@ -260,8 +288,6 @@ erase:
 	@echo -e "device $(CPU)\r\nerase\r\nq" > __temp.jlink
 	$(JLINK) -if SWD -speed 4000 -CommanderScript __temp.jlink
 	$(RM) -f __temp.jlink
-
-library: corelib drivers supportlib $(LIBFIRMWARE)
 
 $(OBJSDIR)/%.o: %.cc
 	$(MKDIR_P) `dirname $@`
@@ -286,16 +312,6 @@ $(FIRMWARE): $(OBJ)	$(PROGOBJ)
 	@-$(READELF) -s $@ | $(AWK) '$$3 != "0"' | $(AWK) '$$4 == "OBJECT"' | $(SORT) -k 3 -n -r | head -n 3 | $(CXXFILT)
 
 
-$(FIRMWARE_LINKED): $(PROGOBJ)
-	$(GPP) -o $@ $^ $(LDFLAGS) $(LIBFIRMWARE)
-	$(OCOPY) -O binary $(FIRMWARE) $(FIRMWARE).bin
-	@stat -c "Output size of <%n> is %s" $(FIRMWARE).bin
-	@$(SIZE) -d --format=berkeley $(FIRMWARE)
-
-$(LIBFIRMWARE): $(MRI)
-	$(AR) M <$^
-	@stat -c "Output size of <%n> is %s" $(LIBFIRMWARE)
-
 directories:	$(OUTPUTDIR) $(OBJSDIR) $(LIBSDIR)
 
 $(OUTPUTDIR):
@@ -307,43 +323,16 @@ $(OBJSDIR):
 $(LIBSDIR):
 	$(MKDIR_P) $(LIBSDIR)
 
-fatfs:
-	$(MAKE) -C $(FATFSDIR);
-
-stm_stdlib:
-	for dir in $(STMSTDLIBDIR); do \
-		$(MAKE) BLD=$(BLD) -C $$dir; \
-	done
-
-corelib:
-	for dir in $(CORELIB); do \
-		$(MAKE) BLD=$(BLD) -C $$dir; \
-	done
-
-supportlib:
-	for dir in $(SUPPORT); do \
-		$(MAKE) BLD=$(BLD) -C $$dir; \
-	done
-
-drivers:
-	for dir in $(DRIVERS); do \
-		$(MAKE) BLD=$(BLD) -C $$dir; \
-	done
-
 clean:
 	$(RM) -f $(STDLIB)
 	$(RM) -rf $(OUTPUTDIR) $(LIBSDIR)	$(OBJSDIR)
 
 settings:
 	@echo -e "Project settings [$(PROJECTNAME)/$(MCU)]:"
-ifneq ($(__VMMU_POOL_SUZE), 0)
-	@echo -e "Memory pool size is $(__VMMU_POOL_SUZE)b"
+ifneq ($(__VMMU_POOL_SIZE), 0)
+	@echo -e "Memory pool size is $(__VMMU_POOL_SIZE)"
 endif
 
-.PHONY: stm_stdlib
-.PHONY: corelib
-.PHONY: drivers
-.PHONY: support
 .PHONY: flash
 .PHONY: erase
 .PHONY: reset

@@ -22,3 +22,12 @@
 #ifndef __DEBUG
 #define __DEBUG 1
 #endif
+
+
+#define OV528_DEBUG
+
+#define FATDISK_DEBUG
+
+#define UART_DEBUG
+
+#define EEPROM_DEBUG 1

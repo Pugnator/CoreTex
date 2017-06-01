@@ -1,9 +1,13 @@
 #include <drivers/storage/flash.hpp>
 
+#ifdef FLASH_DEBUG
+#define DEBUG_LOG SEGGER_RTT_printf
+#else
+#define DEBUG_LOG(...)
+#endif
+
 #define FLASH_KEY1      ((uint32_t)0x45670123)
 #define FLASH_KEY2      ((uint32_t)0xCDEF89AB)
-
-using namespace NAND;
 
 void Flash::mass_erase()
 {

@@ -15,7 +15,6 @@
  * 2015
  *******************************************************************************/
 
-
 #ifdef DEBUG
 void swo_print(const char *msg)
 {
@@ -34,4 +33,7 @@ void swo_print(const char *msg)
 }
 #endif
 
+extern "C"
+{
 
+}

@@ -16,207 +16,406 @@
  *******************************************************************************/
 
 #include <global.hpp>
-#include <drivers/console.hpp>
 #include <common.hpp>
+#include <log.hpp>
 #include <core/io_macro.hpp>
 #include <core/isr_helper.hpp>
-#include <core/usart.hpp>
+#include <drivers/storage/fatdisk.hpp>
+#include <xprintf.h>
 
 volatile word tickcounter = 0;
 volatile word timerms = 0;
 
 extern "C"
 {
-void SysTick_Handler(void)
-{
- if (tickcounter)
- {
-  --tickcounter;
- }
- if (timerms)
-	 {
-		 ++timerms;
-	 }
-}
+	void
+	SysTick_Handler (void)
+	{
+		if (tickcounter)
+		{
+			--tickcounter;
+		}
+		if (timerms)
+		{
+			++timerms;
+		}
+	}
 
-void SPI1_IRQHandler(void)
-{
- if ( SPI1->SR & SPI_SR_RXNE) //receive
- {
-  short c = SPI1->DR;
-  SPI1->SR &= ~SPI_SR_RXNE;
- }
- else if ( SPI1->SR & SPI_SR_TXE) //transfer
- {
-  SPI1->SR &= ~SPI_SR_TXE;
- }
-}
+	void
+	SPI1_IRQHandler (void)
+	{
+		if ( SPI1->SR & SPI_SR_RXNE) //receive
+		{
+			short c = SPI1->DR;
+			SPI1->SR &= ~SPI_SR_RXNE;
+		}
+		else if ( SPI1->SR & SPI_SR_TXE) //transfer
+		{
+			SPI1->SR &= ~SPI_SR_TXE;
+		}
+	}
 
-void SPI2_IRQHandler(void)
-{
- if ( SPI1->SR & SPI_SR_RXNE) //receive
- {
-  short c = SPI1->DR;
-  SPI1->SR &= ~SPI_SR_RXNE;
- }
- else if ( SPI1->SR & SPI_SR_TXE) //transfer
- {
-  SPI1->SR &= ~SPI_SR_TXE;
- }
-}
+	void
+	SPI2_IRQHandler (void)
+	{
+		if ( SPI1->SR & SPI_SR_RXNE) //receive
+		{
+			short c = SPI1->DR;
+			SPI1->SR &= ~SPI_SR_RXNE;
+		}
+		else if ( SPI1->SR & SPI_SR_TXE) //transfer
+		{
+			SPI1->SR &= ~SPI_SR_TXE;
+		}
+	}
 
-void USART1_IRQHandler(void)
-{
- if ( USART1->SR & USART_SR_RXNE) //receive
- {
-  short c = USART1->DR;
-  USART1->SR &= ~USART_SR_RXNE;
-  ;
- }
- else if ( USART1->SR & USART_SR_TC) //transfer
- {
-  USART1->SR &= ~USART_SR_TC;
- }
-}
+	void
+	USART1_IRQHandler (void)
+	{
+		USART* i = (USART*) HARDWARE_TABLE[USART1_HANDLER];
+		if (i)
+		{
+			i->isr (0);
+			return;
+		}
 
-/* GSM port */
+		if ( USART1->SR & USART_SR_RXNE) //receive
+		{
+			short c = USART1->DR;
+			USART1->SR &= ~USART_SR_RXNE;
+			;
+		}
+		else if ( USART1->SR & USART_SR_TC) //transfer
+		{
+			USART1->SR &= ~USART_SR_TC;
+		}
+	}
 
-void USART2_IRQHandler(void)
-{
- if ( USART2->SR & USART_SR_RXNE) //receive
- {
-  char c = USART2->DR;
-  USART2->SR &= ~USART_SR_RXNE;
- }
- else if ( USART2->SR & USART_SR_TC) //transfer
- {
-  USART2->SR &= ~USART_SR_TC;
- }
-}
+	void
+	USART2_IRQHandler (void)
+	{
+		USART* i = (USART*) HARDWARE_TABLE[USART2_HANDLER];
+		if (i)
+		{
+			i->isr (0);
+			return;
+		}
+		if ( USART2->SR & USART_SR_RXNE) //receive
+		{
+			char c = USART2->DR;
+			USART2->SR &= ~USART_SR_RXNE;
+		}
+		else if ( USART2->SR & USART_SR_TC) //transfer
+		{
+			USART2->SR &= ~USART_SR_TC;
+		}
+	}
 
-/* GPS port */
-void USART3_IRQHandler(void)
-{
- if ( USART3->SR & USART_SR_RXNE) //receive
- {
-  char c = USART3->DR;
-  USART3->SR &= ~USART_SR_RXNE;
- }
- else if ( USART3->SR & USART_SR_TC) //transfer
- {
-  USART3->SR &= ~USART_SR_TC;
- }
+	void
+	USART3_IRQHandler (void)
+	{
+		USART* i = (USART*) HARDWARE_TABLE[USART3_HANDLER];
+		if (i)
+		{
+			i->isr (0);
+			return;
+		}
+		if ( USART3->SR & USART_SR_RXNE) //receive
+		{
+			char c = USART3->DR;
+			USART3->SR &= ~USART_SR_RXNE;
+		}
+		else if ( USART3->SR & USART_SR_TC) //transfer
+		{
+			USART3->SR &= ~USART_SR_TC;
+		}
 
-}
+	}
+
+	void
+	RTC_IRQHandler (void)
+	{
+	}
+	;
+	void
+	FLASH_IRQHandler (void)
+	{
+	}
+	;
+	void
+	RCC_IRQHandler (void)
+	{
+	}
+	;
+	void
+	EXTI0_IRQHandler (void)
+	{
+	}
+	;
+	void
+	EXTI1_IRQHandler (void)
+	{
+	}
+	;
+	void
+	EXTI2_IRQHandler (void)
+	{
+	}
+	;
+	void
+	EXTI3_IRQHandler (void)
+	{
+	}
+	;
+	void
+	EXTI4_IRQHandler (void)
+	{
+	}
+	;
+	void
+	DMA1_Channel1_IRQHandler (void)
+	{
+		if (DMA1->ISR & DMA_ISR_TCIF4)
+		{
+			DMA1->IFCR |= DMA_ISR_TCIF4;
+		}
+	}
+	;
+	void
+	DMA1_Channel2_IRQHandler (void)
+	{
+	}
+	;
+	void
+	DMA1_Channel3_IRQHandler (void)
+	{
+	}
+	;
+	void
+	DMA1_Channel4_IRQHandler (void)
+	{
+	}
+	;
+	void
+	DMA1_Channel5_IRQHandler (void)
+	{
+	}
+	;
+	void
+	DMA1_Channel6_IRQHandler (void)
+	{
+	}
+	;
+	void
+	DMA1_Channel7_IRQHandler (void)
+	{
+	}
+	;
+	void
+	ADC1_2_IRQHandler (void)
+	{
+	}
+	;
+	void
+	USB_HP_CAN1_TX_IRQHandler (void)
+	{
+	}
+	;
+	void
+	USB_LP_CAN1_RX0_IRQHandler (void)
+	{
+	}
+	;
+	void
+	CAN1_RX1_IRQHandler (void)
+	{
+	}
+	;
+	void
+	CAN1_SCE_IRQHandler (void)
+	{
+	}
+	;
+	void
+	EXTI9_5_IRQHandler (void)
+	{
+	}
+	;
+	void
+	TIM1_BRK_IRQHandler (void)
+	{
+	}
+	;
+	void
+	TIM1_UP_IRQHandler (void)
+	{
+	}
+	;
+	void
+	TIM1_TRG_COM_IRQHandler (void)
+	{
+	}
+	;
+	void
+	TIM1_CC_IRQHandler (void)
+	{
+	}
+	;
+	void
+	TIM2_IRQHandler (void)
+	{
+	}
+	;
+	void
+	TIM3_IRQHandler (void)
+	{
+	}
+	;
+	void
+	TIM4_IRQHandler (void)
+	{
+	}
+	;
 
 //TO USE: addr2line -e ./bin/program.elf -a 0x8002327 [GDB: p/x pc when it hit for(;;)]
-USED void unwindCPUstack(word* stackAddress)
-{
- /*
-  These are volatile to try and prevent the compiler/linker optimising them
-  away as the variables never actually get used.  If the debugger won't show the
-  values of the variables, make them global my moving their declaration outside
-  of this function.
-  */
-#if __DEBUG
- volatile word r0 = stackAddress[0];
- volatile word r1 = stackAddress[1];
- volatile word r2 = stackAddress[2];
- volatile word r3 = stackAddress[3];
- volatile word r12 = stackAddress[4];
- /* Link register. */
- volatile word lr = stackAddress[5];
- /* Program counter. */
- volatile word pc = stackAddress[6];
- /* Program status register. */
- volatile word psr = stackAddress[7];
+	USED void
+	memory_dump (word* stackAddress)
+	{
+#ifdef __USE_MEMORY_DUMP
+		/*
+		 These are volatile to try and prevent the compiler/linker optimising them
+		 away as the variables never actually get used.  If the debugger won't show the
+		 values of the variables, make them global my moving their declaration outside
+		 of this function.
+		 */
+		volatile word r0 = stackAddress[0];
+		volatile word r1 = stackAddress[1];
+		volatile word r2 = stackAddress[2];
+		volatile word r3 = stackAddress[3];
+		volatile word r12 = stackAddress[4];
+		/* Link register. */
+		volatile word lr = stackAddress[5];
+		/* Program counter. */
+		volatile word pc = stackAddress[6];
+		/* Program status register. */
+		volatile word psr = stackAddress[7];
+		FATdisk d (1);
+		FATFS filesystem;
+		FIL dump;
+		FRESULT result = d.mount (&filesystem, "0:", 1);
 
+		SEGGER_RTT_printf (0, "Dumping CPU registers...\r\n");
 
- Uart out(1, 9600);
- Console coredump(&out);
- coredump.foreground(COLOR_RED);
- coredump < "CPU fatal error trapped\r\nSystem halted";
- coredump.foreground(COLOR_CYAN);
- coredump < "*** CPU registers ***";
- coredump.foreground(COLOR_MAGENTA);
- coredump.xprintf(
-   "R0:  0x%08X\nR1:  0x%08X\nR2:  0x%08X\nR3:  0x%08X\nR12: 0x%08X\n", r0, r1,
-   r2, r3, r12);
- coredump.xprintf("LR:  0x%08X\nPC:  0x%08X\nPSR: 0x%08X\n", lr, pc, psr);
- coredump.foreground(COLOR_WHITE);
+		d.open (&dump, "REGISTERS.TXT", FA_CREATE_ALWAYS | FA_WRITE);
+		char registers[128];
+		word written;
+		xsprintf (
+				registers,
+				"R0:  0x%08X\nR1:  0x%08X\nR2:  0x%08X\nR3:  0x%08X\nR12: 0x%08X\r\n",
+				r0, r1, r2, r3, r12);
+		d.f_write (&dump, registers, strlen (registers), &written);
+		xsprintf (registers, "LR:  0x%08X\nPC:  0x%08X\nPSR: 0x%08X\r\n", lr, pc,
+				psr);
+		d.f_write (&dump, registers, strlen (registers), &written);
+		d.close (&dump);
 
- /* When the following line is hit, the variables contain the register values. */
- for (;;)
- {
-		 delayus_asm(1000000L);
-		 BLINK;
- }
+		SEGGER_RTT_printf (0, "Dumping RAM...\r\n");
+		d.open (&dump, "RAM.DMP", FA_CREATE_ALWAYS | FA_WRITE);
+		for (word a = 0x20000000U; a < 0x20000000 + 20480; a += 512)
+		{
+			result = d.f_write (&dump, *((word*) a), 512, &written);
+			if (FR_OK != result)
+			{
+				SEGGER_RTT_printf (0, "Failed to write the file...\r\n");
+				break;
+			}
+			SEGGER_RTT_printf (0, "%u is written\r\n", written);
+		}
+		d.close (&dump);
+
+		SEGGER_RTT_printf (0, "Dumping FLASH...\r\n");
+		d.open (&dump, "FLASH.DMP", FA_CREATE_ALWAYS | FA_WRITE);
+		for (word a = 0x08000000; a < 0x08000000 + 65536; a += 512)
+		{
+			result = d.f_write (&dump, *((word*) a), 512, &written);
+			if (FR_OK != result)
+			{
+				SEGGER_RTT_printf (0, "Failed to write the file...\r\n");
+				break;
+			}
+			SEGGER_RTT_printf (0, "%u is written\r\n", written);
+		}
+		d.close (&dump);
 #endif
-}
+		/* When the following line is hit, the variables contain the register values. */
+		for (;;)
+		{
+			delayus_asm(300000L);
+			BLINK;
+		}
+	}
 
-/* DTR */
-void EXTI0_IRQHandler(void)
-{
- //EXTI->PR = EXTI_PR_PR0;
-}
+	void
+	HardFault_Handler (void)
+	{
+		__asm volatile
+		(
+				" tst lr, #4                                                \n"
+				" ite eq                                                    \n"
+				" mrseq r0, msp                                             \n"
+				" mrsne r0, psp                                             \n"
+				" ldr r1, [r0, #24]                                         \n"
+				" ldr r2, handler_address_const                            \n"
+				" bx r2                                                     \n"
+				" handler_address_const: .word memory_dump    \n"
+		);
+	}
 
-void HardFault_Handler(void)
-{
- __asm volatile
- (
-   " tst lr, #4                                                \n"
-   " ite eq                                                    \n"
-   " mrseq r0, msp                                             \n"
-   " mrsne r0, psp                                             \n"
-   " ldr r1, [r0, #24]                                         \n"
-   " ldr r2, handler_address_const                            \n"
-   " bx r2                                                     \n"
-   " handler_address_const: .word unwindCPUstack    \n"
- );
-}
+	void
+	MemManage_Handler (void)
+	{
+		__asm volatile
+		(
+				" tst lr, #4                                                \n"
+				" ite eq                                                    \n"
+				" mrseq r0, msp                                             \n"
+				" mrsne r0, psp                                             \n"
+				" ldr r1, [r0, #24]                                         \n"
+				" ldr r2, handler2_address_const                            \n"
+				" bx r2                                                     \n"
+				" handler2_address_const: .word memory_dump    \n"
+		);
+	}
 
-void MemManage_Handler(void)
-{
- __asm volatile
- (
-   " tst lr, #4                                                \n"
-   " ite eq                                                    \n"
-   " mrseq r0, msp                                             \n"
-   " mrsne r0, psp                                             \n"
-   " ldr r1, [r0, #24]                                         \n"
-   " ldr r2, handler2_address_const                            \n"
-   " bx r2                                                     \n"
-   " handler2_address_const: .word unwindCPUstack    \n"
- );
-}
+	void
+	BusFault_Handler (void)
+	{
+		__asm volatile
+		(
+				" tst lr, #4                                                \n"
+				" ite eq                                                    \n"
+				" mrseq r0, msp                                             \n"
+				" mrsne r0, psp                                             \n"
+				" ldr r1, [r0, #24]                                         \n"
+				" ldr r2, handler3_address_const                            \n"
+				" bx r2                                                     \n"
+				" handler3_address_const: .word memory_dump    \n"
+		);
+	}
 
-void BusFault_Handler(void)
-{
- __asm volatile
- (
-   " tst lr, #4                                                \n"
-   " ite eq                                                    \n"
-   " mrseq r0, msp                                             \n"
-   " mrsne r0, psp                                             \n"
-   " ldr r1, [r0, #24]                                         \n"
-   " ldr r2, handler3_address_const                            \n"
-   " bx r2                                                     \n"
-   " handler3_address_const: .word unwindCPUstack    \n"
- );
-}
-
-void UsageFault_Handler(void)
-{
- __asm volatile
- (
-   " tst lr, #4                                                \n"
-   " ite eq                                                    \n"
-   " mrseq r0, msp                                             \n"
-   " mrsne r0, psp                                             \n"
-   " ldr r1, [r0, #24]                                         \n"
-   " ldr r2, handler4_address_const                            \n"
-   " bx r2                                                     \n"
-   " handler4_address_const: .word unwindCPUstack    \n"
- );
-}
+	void
+	UsageFault_Handler (void)
+	{
+		__asm volatile
+		(
+				" tst lr, #4                                                \n"
+				" ite eq                                                    \n"
+				" mrseq r0, msp                                             \n"
+				" mrsne r0, psp                                             \n"
+				" ldr r1, [r0, #24]                                         \n"
+				" ldr r2, handler4_address_const                            \n"
+				" bx r2                                                     \n"
+				" handler4_address_const: .word memory_dump    \n"
+		);
+	}
 }

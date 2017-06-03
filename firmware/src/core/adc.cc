@@ -19,9 +19,8 @@
 #include <core/adc.hpp>
 #include <core/io_macro.hpp>
 
-namespace ADC
-{
 #define TEMP A,0,SPEED_10MHz
+
 void Adc::init(void)
   {
     PIN_INPUT_ANALOG(TEMP);
@@ -41,18 +40,17 @@ void Adc::init(void)
     delay_ms(100);
   }
 
-short Adc::sample(void)
+uint16_t Adc::sample(void)
   {
     ADC1->CR2 |= ADC_CR2_SWSTART;
     while (!(ADC1->SR & ADC_SR_EOC))
       ;
-    short result = ADC1->DR & 0xFFFF;
+    uint16_t result = ADC1->DR & 0xFFFF;
     ADC1->SR = 0;
     return result;
   }
 
-short Adc::voltage(void)
+uint16_t Adc::voltage(void)
   {
     return sample() / 4096 * 3;
   }
-}

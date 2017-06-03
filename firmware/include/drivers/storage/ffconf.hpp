@@ -39,7 +39,7 @@
 /  and optional writing functions as well. */
 
 
-#define _FS_MINIMIZE	1
+#define _FS_MINIMIZE	0
 /* This option defines minimization level to remove some basic API functions.
 /
 /   0: All basic functions are enabled.
@@ -49,7 +49,7 @@
 /   3: f_lseek() function is removed in addition to 2. */
 
 
-#define	_USE_STRFUNC	0
+#define	_USE_STRFUNC	1
 /* This option switches string functions, f_gets(), f_putc(), f_puts() and
 /  f_printf().
 /
@@ -143,7 +143,7 @@
 /  When _LFN_UNICODE is 0, this option has no effect. */
 
 
-#define _FS_RPATH	0
+#define _FS_RPATH	1
 /* This option configures relative path feature.
 /
 /   0: Disable relative path feature and remove related functions.
@@ -225,7 +225,7 @@
 /  These options have no effect at read-only configuration (_FS_READONLY == 1). */
 
 
-#define	_FS_LOCK	0
+#define	_FS_LOCK	5
 /* The _FS_LOCK option switches file lock feature to control duplicated file open
 /  and illegal operation to open objects. This option must be 0 when _FS_READONLY
 /  is 1.

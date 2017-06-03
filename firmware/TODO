@@ -1,13 +1,10 @@
-Devices to support:
-
 Cameras:
 
 OV528
 OV7670
 
 
-Wireless:
+Sensors:
 
-Ethernet:
-
-Sensors
+TPIC8101
+L9101

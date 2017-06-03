@@ -22,9 +22,6 @@
 #include <drivers/storage/integer.hpp>
 #include <cstdarg>
 
-namespace DISK
-{
-
 /*--------------------------------------------------------------------------
 
  Module Private Definitions
@@ -498,7 +495,6 @@ int chk_chr(const char* str, int chr)
 /* Request/Release grant to access the volume                            */
 /*-----------------------------------------------------------------------*/
 #if _FS_REENTRANT
-static
 int lock_fs (
 		FATFS* fs /* File system object */
 )
@@ -506,7 +502,6 @@ int lock_fs (
 	return ff_req_grant(fs->sobj);
 }
 
-static
 void unlock_fs (
 		FATFS* fs, /* File system object */
 		FRESULT res /* Result code to be returned */
@@ -528,7 +523,6 @@ void unlock_fs (
 /*-----------------------------------------------------------------------*/
 #if _FS_LOCK
 
-static
 FRESULT chk_lock ( /* Check if the file can be accessed */
 		DIR* dp, /* Directory object pointing the file to be checked */
 		int acc /* Desired access type (0:Read, 1:Write, 2:Delete/Rename) */
@@ -557,7 +551,6 @@ FRESULT chk_lock ( /* Check if the file can be accessed */
 	return (acc || Files[i].ctr == 0x100) ? FR_LOCKED : FR_OK;
 }
 
-static
 int enq_lock (void) /* Check if an entry is available for a new object */
 {
 	UINT i;
@@ -566,7 +559,6 @@ int enq_lock (void) /* Check if an entry is available for a new object */
 	return (i == _FS_LOCK) ? 0 : 1;
 }
 
-static
 UINT inc_lock ( /* Increment object open counter and returns its index (0:Internal error) */
 		DIR* dp, /* Directory object pointing the file to register or increment */
 		int acc /* Desired access (0:Read, 1:Write, 2:Delete/Rename) */
@@ -598,7 +590,6 @@ UINT inc_lock ( /* Increment object open counter and returns its index (0:Intern
 	return i + 1;
 }
 
-static
 FRESULT dec_lock ( /* Decrement object open counter */
 		UINT i /* Semaphore index (1..) */
 )
@@ -622,7 +613,6 @@ FRESULT dec_lock ( /* Decrement object open counter */
 	return res;
 }
 
-static
 void clear_lock ( /* Clear lock entries of the volume */
 		FATFS *fs
 )
@@ -1660,8 +1650,7 @@ FATdisk::dir_register ( /* FR_OK:Successful, FR_DENIED:No free entry or too many
 /* Remove an object from the directory                                   */
 /*-----------------------------------------------------------------------*/
 #if !_FS_READONLY && !_FS_MINIMIZE
-static
-FRESULT dir_remove ( /* FR_OK: Successful, FR_DISK_ERR: A disk error */
+FRESULT FATdisk::dir_remove ( /* FR_OK: Successful, FR_DISK_ERR: A disk error */
 		DIR* dp /* Directory object pointing the entry to be removed */
 )
 {
@@ -1784,7 +1773,6 @@ FILINFO* fno /* Pointer to the file information to be filled */
 /* Pattern matching                                                      */
 /*-----------------------------------------------------------------------*/
 #if _USE_FIND && _FS_MINIMIZE <= 1
-static
 WCHAR get_achar ( /* Get a character and advances ptr 1 or 2 */
 		const TCHAR** ptr /* Pointer to pointer to the SBCS/DBCS/Unicode string */
 )
@@ -1805,7 +1793,6 @@ WCHAR get_achar ( /* Get a character and advances ptr 1 or 2 */
 	return chr;
 }
 
-static
 int pattern_matching ( /* Return value: 0:mismatched, 1:matched */
 		const TCHAR* pat, /* Matching pattern */
 		const TCHAR* nam, /* String to be tested */
@@ -2940,7 +2927,7 @@ FATdisk::f_write (FIL* fp, /* Pointer to the file object */
 /*-----------------------------------------------------------------------*/
 
 FRESULT
-FATdisk::sync (FIL* fp /* Pointer to the file object */
+FATdisk::flush (FIL* fp /* Pointer to the file object */
 )
 {
 	FRESULT res;
@@ -2994,7 +2981,7 @@ FRESULT FATdisk::close(FIL *fp /* Pointer to the file object to be closed */
 	FRESULT res;
 
 #if !_FS_READONLY
-	res = sync (fp); /* Flush cached data */
+	res = flush (fp); /* Flush cached data */
 	if (res == FR_OK)
 #endif
 	{
@@ -3038,7 +3025,7 @@ FRESULT f_chdrive (
 }
 #endif
 
-FRESULT f_chdir (
+FRESULT FATdisk::chdir (
 		const TCHAR* path /* Pointer to the directory path */
 )
 {
@@ -3531,7 +3518,7 @@ FRESULT f_findfirst (
 /* Get File Status                                                       */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_stat (
+FRESULT FATdisk::stat (
 		const TCHAR* path, /* Pointer to the file path */
 		FILINFO* fno /* Pointer to file information to return */
 )
@@ -3568,7 +3555,7 @@ FRESULT f_stat (
 /* Get Number of Free Clusters                                           */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_getfree (
+FRESULT FATdisk::getfree (
 		const TCHAR* path, /* Path name of the logical drive number */
 		DWORD* nclst, /* Pointer to a variable to return number of free clusters */
 		FATFS** fatfs /* Pointer to return pointer to corresponding file system object */
@@ -3646,7 +3633,7 @@ FRESULT f_getfree (
 /* Truncate File                                                         */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_truncate (
+FRESULT FATdisk::truncate (
 		FIL* fp /* Pointer to the file object */
 )
 {
@@ -3709,7 +3696,7 @@ FRESULT f_truncate (
 /* Delete a File or Directory                                            */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_unlink (
+FRESULT FATdisk::unlink (
 		const TCHAR* path /* Pointer to the file or directory path */
 )
 {
@@ -3785,7 +3772,7 @@ FRESULT f_unlink (
 /* Create a Directory                                                    */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_mkdir (
+FRESULT FATdisk::mkdir (
 		const TCHAR* path /* Pointer to the directory path */
 )
 {
@@ -3862,7 +3849,7 @@ FRESULT f_mkdir (
 /* Change Attribute                                                      */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_chmod (
+FRESULT FATdisk::chmod (
 		const TCHAR* path, /* Pointer to the file path */
 		BYTE attr, /* Attribute bits */
 		BYTE mask /* Attribute mask to change */
@@ -3906,7 +3893,7 @@ FRESULT f_chmod (
 /* Rename File/Directory                                                 */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_rename (
+FRESULT FATdisk::rename (
 		const TCHAR* path_old, /* Pointer to the object to be renamed */
 		const TCHAR* path_new /* Pointer to the new name */
 )
@@ -3993,7 +3980,7 @@ FRESULT f_rename (
 /* Change Timestamp                                                      */
 /*-----------------------------------------------------------------------*/
 
-FRESULT f_utime (
+FRESULT FATdisk::utime (
 		const TCHAR* path, /* Pointer to the file/directory name */
 		const FILINFO* fno /* Pointer to the time stamp to be set */
 )
@@ -4633,7 +4620,7 @@ FRESULT f_fdisk (
 /* Get a string from the file                                            */
 /*-----------------------------------------------------------------------*/
 
-TCHAR* f_gets (
+TCHAR* FATdisk::gets (
 		TCHAR* buff, /* Pointer to the string buffer to read */
 		int len, /* Size of string buffer (characters) */
 		FIL* fp /* Pointer to the file object */
@@ -4717,15 +4704,7 @@ TCHAR* f_gets (
 /* Put a character to the file                                           */
 /*-----------------------------------------------------------------------*/
 
-typedef struct
-{
-	FIL* fp;
-	int idx, nchr;
-	BYTE buf[64];
-}putbuff;
-
-static
-void putc_bfd (
+void FATdisk::putc_bfd (
 		putbuff* pb,
 		TCHAR c
 )
@@ -4784,7 +4763,7 @@ void putc_bfd (
 	pb->nchr++;
 }
 
-int f_putc (
+int FATdisk::putc (
 		TCHAR c, /* A character to be output */
 		FIL* fp /* Pointer to the file object */
 )
@@ -4807,7 +4786,7 @@ int f_putc (
 /* Put a string to the file                                              */
 /*-----------------------------------------------------------------------*/
 
-int f_puts (
+int FATdisk::puts (
 		const TCHAR* str, /* Pointer to the string to be output */
 		FIL* fp /* Pointer to the file object */
 )
@@ -4831,7 +4810,7 @@ int f_puts (
 /* Put a formatted string to the file                                    */
 /*-----------------------------------------------------------------------*/
 
-int f_printf (
+int FATdisk::printf (
 		FIL* fp, /* Pointer to the file object */
 		const TCHAR* fmt, /* Pointer to the format string */
 		... /* Optional arguments... */
@@ -4941,4 +4920,3 @@ int f_printf (
 
 #endif /* !_FS_READONLY */
 #endif /* _USE_STRFUNC */
-}

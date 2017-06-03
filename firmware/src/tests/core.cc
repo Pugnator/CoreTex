@@ -67,7 +67,7 @@ bool spi_test(Console *con)
 bool tests_exec()
 {
 	bool result = false;
-	Uart out (1, CONSOLE_SPEED);
+	USART out (1, CONSOLE_SPEED);
 	Console con (&out);
 	con.cursor(false);
 	con.cls();

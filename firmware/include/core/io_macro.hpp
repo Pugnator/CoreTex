@@ -1,5 +1,5 @@
 /*********************************************************************\
-* Copyleft (>) 2014 Roman 'Fallout' Ilichev <fxdteam@gmail.com>      *
+ * Copyleft (>) 2014 Roman 'Fallout' Ilichev <fxdteam@gmail.com>      *
  *                                                                   *
  * This file is part of OpenXHC project                              *
  *                             WTFPL LICENSE v2                      *
@@ -16,8 +16,8 @@
 
 /* compiler will calculate this hell staticaly */
 #define EX_GPIO_PIN_MODE( PORT, PIN, MODE, SPEED ) do{\
-((uint32_t*)GPIO##PORT##_BASE)[PIN>>3u] &= ~(0x0Fu<<((PIN%8u)<<2u));\
-((uint32_t*)GPIO##PORT##_BASE)[PIN>>3u] |= (MODE|SPEED)<<((PIN%8u)<<2u);\
+		((uint32_t*)GPIO##PORT##_BASE)[PIN>>3u] &= ~(0x0Fu<<((PIN%8u)<<2u));\
+		((uint32_t*)GPIO##PORT##_BASE)[PIN>>3u] |= (MODE|SPEED)<<((PIN%8u)<<2u);\
 }while(0)
 
 #define EX_GPIO_INPUT_PD( PORT, PIN, ... )              do{ EX_GPIO_PIN_MODE( PORT, PIN, 0x08u, 0 );  GPIO##PORT->BRR = (1u<<PIN); }while(0)

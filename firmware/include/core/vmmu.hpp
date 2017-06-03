@@ -62,7 +62,7 @@
 //    for single thread/task applications.
 //
 
-#define FREE(x) stfree(x)
+#define FREE(x) stfree((void*)x)
 #define ALLOC(x) stalloc(x)
 //Will destroy all allocated memory
 #define EMERGENCY_MEM_POOL_FLUSH vmmu_init()
@@ -73,7 +73,7 @@
 #ifndef __VMMU_POOL_SUZE
 #define POOL_SIZE 1 * 512
 #else
-#define POOL_SIZE __VMMU_POOL_SUZE
+#define POOL_SIZE __VMMU_POOL_SIZE
 #endif
 #define MIN_POOL_ALLOC_QUANTAS 8
 

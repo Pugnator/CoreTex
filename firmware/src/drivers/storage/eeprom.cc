@@ -29,37 +29,47 @@
 #define DEBUG_LOG(...)
 #endif
 
-void Eeprom::cell_write(uint16_t cell, uint8_t value)
+void Eeprom::write(uint16_t cell, uint8_t value)
 {
+  if (EEPROM_SIZE * 1024 <= cell)
+  {
+    DEBUG_LOG(0, "requested EEPROM cell is out of bounds [%u > %u]\r\n", cell, EEPROM_SIZE * 1024);
+    return;
+  }
   DEBUG_LOG(0, "Writing to the FLASH, page address: 0x%X [*cell = 0x%X]\r\n", EEPROM_DATA, *((uint16_t*)EEPROM_DATA + cell));
-  uint8_t *backup = reinterpret_cast<uint8_t*> (stalloc(1024));
+  uint8_t *backup = reinterpret_cast<uint8_t*> (ALLOC(1024));
   if(!backup)
   {
     DEBUG_LOG(0, "Failed to allocate 1024 bytes\r\n");
     return;
   }
-  backup[cell] = value;
   memcpy(backup, reinterpret_cast<void*>(EEPROM_DATA), 1024);
+  backup[cell] = value;
+  DEBUG_LOG(0, "Memory page content: 0x%X\r\n", backup[cell]);
   unlock();
   erase();
   FLASH->CR |= FLASH_CR_PG;
   while((FLASH->SR & FLASH_SR_BSY));
   for(uint16_t i = 0; i < 1024; i += 2)
   {
-    DEBUG_LOG(0, "Writing to 0x%X + %u\r\n", reinterpret_cast<word>(EEPROM_DATA), i);
-    *(reinterpret_cast<volatile uint16_t*>(EEPROM_DATA + i)) = (backup[i] << 8) | (backup[i + 1] & 0xff);;
+    *(reinterpret_cast<volatile uint16_t*>(EEPROM_DATA + i)) = (backup[i+1] << 8) | (backup[i] & 0xff);
     while(!(FLASH->SR & FLASH_SR_EOP));
     FLASH->SR = FLASH_SR_EOP;
   }
   FLASH->CR &= ~FLASH_CR_PG;
   lock();
-  stfree(backup);
-  DEBUG_LOG(0, "Cell content: 0x%X\r\n", *((uint16_t*)EEPROM_DATA+cell));
+  FREE(backup);
+  DEBUG_LOG(0, "Result: 0x%X\r\n", *((uint8_t*)EEPROM_DATA+cell));
 }
 
-uint8_t Eeprom::cell_read(uint16_t cell)
+uint8_t Eeprom::read(uint16_t cell)
 {
-  return 0;
+  if (EEPROM_SIZE * 1024 <= cell)
+  {
+    DEBUG_LOG(0, "requested EEPROM cell is out of bounds [%u > %u]\r\n", cell, EEPROM_SIZE * 1024);
+    return 0;
+  }
+  return *(reinterpret_cast<volatile uint8_t*>(EEPROM_DATA + cell));
 }
 
 void Eeprom::erase()

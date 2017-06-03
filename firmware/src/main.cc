@@ -66,8 +66,5 @@ void gsm()
 int main (void)
 {
 	SEGGER_RTT_WriteString(0, "Started\r\n");
-	Eeprom e;
-	e.cell_write(2, 0xAA);
-
 	MAIN_END;
 }

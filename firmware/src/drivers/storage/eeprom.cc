@@ -29,8 +29,6 @@
 #define DEBUG_LOG(...)
 #endif
 
-const uint16_t __attribute__((section (".eepromSection"))) EEPROM_DATA[512] = { 0xAAAA };
-
 void Eeprom::ewrite(word cell, uint16_t value)
 {
   unlock();

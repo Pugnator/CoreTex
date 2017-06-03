@@ -6,8 +6,7 @@
 
 #define FLASH_KEY1      ((uint32_t)0x45670123)
 #define FLASH_KEY2      ((uint32_t)0xCDEF89AB)
-
-extern const uint16_t __attribute__((section (".eepromSection"))) EEPROM_DATA[512];
+#define EEPROM_DATA 0
 
 class Eeprom
 {

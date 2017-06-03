@@ -6,18 +6,19 @@
 
 #define FLASH_KEY1      ((uint32_t)0x45670123)
 #define FLASH_KEY2      ((uint32_t)0xCDEF89AB)
-#define EEPROM_DATA 0
+#define EEPROM_DATA (FLASH_BASE+(63*1024))
 
 class Eeprom
 {
 public:
   Eeprom()
   {
-    cell_erase((word)EEPROM_DATA);
+    erase();
   }
-  void ewrite(word cell, uint16_t value);
-  uint16_t eread(word cell);
+  void cell_write(uint16_t cell, uint8_t value);
+  uint8_t cell_read(uint16_t cell);
 private:
-  void cell_erase(word cell);
+  void erase();
   void unlock();
+  void lock();
 };

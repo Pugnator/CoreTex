@@ -67,14 +67,6 @@
 //Will destroy all allocated memory
 #define EMERGENCY_MEM_POOL_FLUSH vmmu_init()
 
-#define DEBUG_MEMMGR_SUPPORT_STATS 0
-//#define MEMORY_ALLOC_DEBUG
-
-#ifndef __VMMU_POOL_SUZE
-#define POOL_SIZE 1 * 512
-#else
-#define POOL_SIZE __VMMU_POOL_SIZE
-#endif
 #define MIN_POOL_ALLOC_QUANTAS 8
 
 

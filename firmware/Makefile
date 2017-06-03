@@ -14,7 +14,6 @@ __USE_TESTS:=$(shell sed -n '/^__USE_TESTS=/ {s///p;q;}' $(DESCRIPTION))
 __USE_STDLIB:=$(shell sed -n '/^__USE_STDLIB=/ {s///p;q;}' $(DESCRIPTION))
 __BUILDTYPE:=$(shell sed -n '/^__BUILDTYPE=/ {s///p;q;}' $(DESCRIPTION))
 __USE_CONSOLE:=$(shell sed -n '/^__USE_CONSOLE=/ {s///p;q;}' $(DESCRIPTION))
-__VMMU_POOL_SIZE:=$(shell sed -n '/^__VMMU_POOL_SIZE=/ {s///p;q;}' $(DESCRIPTION))
 __USE_MEMORY_DUMP:=$(shell sed -n '/^__USE_MEMORY_DUMP=/ {s///p;q;}' $(DESCRIPTION))
 ##########################
 
@@ -181,10 +180,6 @@ else
 	CXXFLAGS:=-flto -Os -s -D__DEBUG=0
 endif
 
-ifneq ($(__VMMU_POOL_SIZE), 0)
-	CXXFLAGS+=-D__VMMU_POOL_SIZE=$(__VMMU_POOL_SIZE)
-endif
-
 ifeq ($(__USE_MEMORY_DUMP)), 1)
 	CXXFLAGS+=-D__USE_MEMORY_DUMP=$(__USE_MEMORY_DUMP)
 endif
@@ -329,9 +324,9 @@ clean:
 
 settings:
 	@echo -e "Project settings [$(PROJECTNAME)/$(MCU)]:"
-ifneq ($(__VMMU_POOL_SIZE), 0)
-	@echo -e "Memory pool size is $(__VMMU_POOL_SIZE)"
-endif
+#ifneq ($(__VMMU_POOL_SIZE), 0)
+#	@echo -e "Memory pool size is $(__VMMU_POOL_SIZE)"
+#endif
 
 .PHONY: flash
 .PHONY: erase

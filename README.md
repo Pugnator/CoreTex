@@ -25,4 +25,4 @@
 - [ ] Simple FTP client
 - [ ] External RAM support
 - [ ] Xmodem
-- [ ] Threding/multitasking
+- [ ] Threading/multitasking

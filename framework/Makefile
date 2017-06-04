@@ -1,10 +1,6 @@
 #Setting file
 DESCRIPTION:=mcu.ini
 
-ifndef SRC
-$(error SRC is not set)
-endif
-
 ##########################
 CPU:=STM32F103C8
 MCU:=$(shell sed -n '/^family=/ {s///p;q;}' $(DESCRIPTION))
@@ -269,7 +265,11 @@ FIRMWARE:=$(OUTPUTDIR)/$(PROJECTNAME).elf
 LIBFIRMWARE:=$(LIBSDIR)/$(PROJECTNAME).a
 
 ######################TARGETS###########################
-firmware: settings directories $(FIRMWARE)
+firmware:
+	ifndef SRC
+	$(error SRC is not set)
+	endif 
+	settings directories $(FIRMWARE)
 
 flash:
 	@echo -e "device STM32F103C8\r\nerase\r\nloadbin bin/CoreTex.elf.bin, 0x08000000\r\nr\r\ng\r\nq" > __temp.jlink

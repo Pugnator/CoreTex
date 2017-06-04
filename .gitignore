@@ -42,3 +42,4 @@ firmware/libs/
 firmware/obj/
 firmware/bin/
 pics/
+*.d

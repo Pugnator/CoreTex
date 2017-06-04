@@ -1,1 +1,0 @@
-void ramdisk_init();

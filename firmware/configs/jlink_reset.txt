@@ -1,4 +1,0 @@
-device STM32F103C8
-r
-g
-q

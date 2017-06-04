@@ -1,3 +1,3 @@
 [submodule "firmware/external/stdlib"]
-	path = firmware/external/stdlib
+	path = framework/external/stdlib
 	url = https://github.com/Pugnator/STM32_STDLIB.git

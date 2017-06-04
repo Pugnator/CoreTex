@@ -3,7 +3,7 @@
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*       (c) 2014 - 2016  SEGGER Microcontroller GmbH & Co. KG        *
+*       (c) 2014 - 2017  SEGGER Microcontroller GmbH & Co. KG        *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -52,64 +52,38 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       RTT version: 6.10d                                           *
+*       RTT version: 6.16                                           *
 *                                                                    *
 **********************************************************************
 --------- END-OF-HEADER --------------------------------------------
-File    : Main_RTT_SpeedTestApp.c
-Purpose : Sample program for measuring RTT performance.
+File    : Main_RTT_MenuApp.c
+Purpose : Sample application to demonstrate RTT bi-directional functionality
 */
 
-#include "RTOS.h"
-#include "BSP.h"
+#define MAIN_C
 
-#include "SEGGER_RTT.h"
 #include <stdio.h>
 
-OS_STACKPTR int StackHP[128], StackLP[128];          /* Task stacks */
-OS_TASK TCBHP, TCBLP;                        /* Task-control-blocks */
+#include "SEGGER_RTT.h"
 
-static void HPTask(void) {
-  while (1) {
-    //
-    // Measure time needed for RTT output
-    // Perform dummy write with 0 characters, so we know the overhead of toggling LEDs and RTT in general
-    //
-// Set BP here. Then start sampling on scope
-    BSP_ClrLED(0);
-    SEGGER_RTT_Write(0, 0, 0);
-    BSP_SetLED(0);
-    BSP_ClrLED(0);
-    SEGGER_RTT_Write(0, "01234567890123456789012345678901234567890123456789012345678901234567890123456789\r\n", 82);
-    BSP_SetLED(0);
-// Set BP here. Then stop sampling on scope
-    OS_Delay(200);
-  }
-}
+volatile int _Cnt;
+volatile int _Delay;
 
-static void LPTask(void) {
-  while (1) {
-    BSP_ToggleLED(1);
-    OS_Delay (500);
-  }
-}
+static char r;
 
 /*********************************************************************
 *
 *       main
-*
-*********************************************************************/
+*/
+void main(void) {
 
-int main(void) {
-  OS_IncDI();                      /* Initially disable interrupts  */
-  OS_InitKern();                   /* Initialize OS                 */
-  OS_InitHW();                     /* Initialize Hardware for OS    */
-  BSP_Init();                      /* Initialize LED ports          */
-  BSP_SetLED(0);
-  /* You need to create at least one task before calling OS_Start() */
-  OS_CREATETASK(&TCBHP, "HP Task", HPTask, 100, StackHP);
-  OS_CREATETASK(&TCBLP, "LP Task", LPTask,  50, StackLP);
-  OS_Start();                      /* Start multitasking            */
-  return 0;
+  SEGGER_RTT_WriteString(0, "SEGGER Real-Time-Terminal Sample\r\n");
+  SEGGER_RTT_ConfigUpBuffer(0, NULL, NULL, 0, SEGGER_RTT_MODE_NO_BLOCK_SKIP);
+  do {
+    r = SEGGER_RTT_WaitKey();
+    SEGGER_RTT_Write(0, &r, 1);
+    r++;
+  } while (1);
 }
 
+/*************************** End of file ****************************/

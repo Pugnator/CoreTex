@@ -3,7 +3,7 @@
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*       (c) 2014 - 2016  SEGGER Microcontroller GmbH & Co. KG        *
+*       (c) 2014 - 2017  SEGGER Microcontroller GmbH & Co. KG        *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -52,83 +52,64 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       RTT version: 6.10d                                           *
+*       RTT version: 6.16                                           *
 *                                                                    *
 **********************************************************************
----------------------------END-OF-HEADER------------------------------
-File    : SEGGER_RTT_Syscalls_GCC.c
-Purpose : Low-level functions for using printf() via RTT in GCC.
-          To use RTT for printf output, include this file in your 
-          application.
-Revision: $Rev: 4351 $
-----------------------------------------------------------------------
+--------- END-OF-HEADER --------------------------------------------
+File    : Main_RTT_SpeedTestApp.c
+Purpose : Sample program for measuring RTT performance.
 */
-#if (defined __GNUC__) && !(defined __SES_ARM) && !(defined __CROSSWORKS_ARM)
 
-#include <reent.h>  // required for _write_r
+#include "RTOS.h"
+#include "BSP.h"
+
 #include "SEGGER_RTT.h"
+#include <stdio.h>
 
+OS_STACKPTR int StackHP[128], StackLP[128];          /* Task stacks */
+OS_TASK TCBHP, TCBLP;                        /* Task-control-blocks */
 
-/*********************************************************************
-*
-*       Types
-*
-**********************************************************************
-*/
-//
-// If necessary define the _reent struct 
-// to match the one passed by the used standard library.
-//
-struct _reent;
+static void HPTask(void) {
+  while (1) {
+    //
+    // Measure time needed for RTT output
+    // Perform dummy write with 0 characters, so we know the overhead of toggling LEDs and RTT in general
+    //
+// Set BP here. Then start sampling on scope
+    BSP_ClrLED(0);
+    SEGGER_RTT_Write(0, 0, 0);
+    BSP_SetLED(0);
+    BSP_ClrLED(0);
+    SEGGER_RTT_Write(0, "01234567890123456789012345678901234567890123456789012345678901234567890123456789\r\n", 82);
+    BSP_SetLED(0);
+// Set BP here. Then stop sampling on scope
+    OS_Delay(200);
+  }
+}
 
-/*********************************************************************
-*
-*       Function prototypes
-*
-**********************************************************************
-*/
-int _write(int file, char *ptr, int len);
-int _write_r(struct _reent *r, int file, const void *ptr, int len);
-
-/*********************************************************************
-*
-*       Global functions
-*
-**********************************************************************
-*/
-
-/*********************************************************************
-*
-*       _write()
-*
-* Function description
-*   Low-level write function.
-*   libc subroutines will use this system routine for output to all files,
-*   including stdout.
-*   Write data via RTT.
-*/
-int _write(int file, char *ptr, int len) {
-  (void) file;  /* Not used, avoid warning */
-  SEGGER_RTT_Write(0, ptr, len);
-  return len;
+static void LPTask(void) {
+  while (1) {
+    BSP_ToggleLED(1);
+    OS_Delay (500);
+  }
 }
 
 /*********************************************************************
 *
-*       _write_r()
+*       main
 *
-* Function description
-*   Low-level reentrant write function.
-*   libc subroutines will use this system routine for output to all files,
-*   including stdout.
-*   Write data via RTT.
-*/
-int _write_r(struct _reent *r, int file, const void *ptr, int len) {
-  (void) file;  /* Not used, avoid warning */
-  (void) r;     /* Not used, avoid warning */
-  SEGGER_RTT_Write(0, ptr, len);
-  return len;
+*********************************************************************/
+
+int main(void) {
+  OS_IncDI();                      /* Initially disable interrupts  */
+  OS_InitKern();                   /* Initialize OS                 */
+  OS_InitHW();                     /* Initialize Hardware for OS    */
+  BSP_Init();                      /* Initialize LED ports          */
+  BSP_SetLED(0);
+  /* You need to create at least one task before calling OS_Start() */
+  OS_CREATETASK(&TCBHP, "HP Task", HPTask, 100, StackHP);
+  OS_CREATETASK(&TCBLP, "LP Task", LPTask,  50, StackLP);
+  OS_Start();                      /* Start multitasking            */
+  return 0;
 }
 
-#endif
-/****** End Of File *************************************************/

@@ -3,7 +3,7 @@
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*       (c) 2014 - 2016  SEGGER Microcontroller GmbH & Co. KG        *
+*       (c) 2014 - 2017  SEGGER Microcontroller GmbH & Co. KG        *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -52,68 +52,66 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       RTT version: 6.10d                                           *
+*       RTT version: 6.16                                           *
 *                                                                    *
 **********************************************************************
----------------------------END-OF-HEADER------------------------------
-File    : SEGGER_RTT_Syscalls_IAR.c
-Purpose : Low-level functions for using printf() via RTT in IAR.
-          To use RTT for printf output, include this file in your 
-          application and set the Library Configuration to Normal.
-Revision: $Rev: 4351 $
-----------------------------------------------------------------------
+--------- END-OF-HEADER --------------------------------------------
+File    : Main_RTT_MenuApp.c
+Purpose : Sample application to demonstrate RTT bi-directional functionality
 */
-#ifdef __IAR_SYSTEMS_ICC__
 
-#include <yfuns.h>
+#define MAIN_C
+
+#include <stdio.h>
+
 #include "SEGGER_RTT.h"
-#pragma module_name = "?__write"
+
+volatile int _Cnt;
+volatile int _Delay;
 
 /*********************************************************************
 *
-*       Function prototypes
-*
-**********************************************************************
+*       main
 */
-size_t __write(int handle, const unsigned char * buffer, size_t size);
+void main(void) {
+  int r;
+  int CancelOp;
 
-/*********************************************************************
-*
-*       Global functions
-*
-**********************************************************************
-*/
-/*********************************************************************
-*
-*       __write()
-*
-* Function description
-*   Low-level write function.
-*   Standard library subroutines will use this system routine
-*   for output to all files, including stdout.
-*   Write data via RTT.
-*/
-size_t __write(int handle, const unsigned char * buffer, size_t size) {
-  (void) handle;  /* Not used, avoid warning */
-  SEGGER_RTT_Write(0, (const char*)buffer, size);
-  return size;
+  do {
+    _Cnt = 0;
+
+    SEGGER_RTT_WriteString(0, "SEGGER Real-Time-Terminal Sample\r\n");
+    SEGGER_RTT_WriteString(0, "Press <1> to continue in blocking mode (Application waits if necessary, no data lost)\r\n");
+    SEGGER_RTT_WriteString(0, "Press <2> to continue in non-blocking mode (Application does not wait, data lost if fifo full)\r\n");
+    do {
+      r = SEGGER_RTT_WaitKey();
+    } while ((r != '1') && (r != '2'));
+    if (r == '1') {
+      SEGGER_RTT_WriteString(0, "\r\nSelected <1>. Configuring RTT and starting...\r\n");
+      SEGGER_RTT_ConfigUpBuffer(0, NULL, NULL, 0, SEGGER_RTT_MODE_BLOCK_IF_FIFO_FULL);
+    } else {
+      SEGGER_RTT_WriteString(0, "\r\nSelected <2>. Configuring RTT and starting...\r\n");
+      SEGGER_RTT_ConfigUpBuffer(0, NULL, NULL, 0, SEGGER_RTT_MODE_NO_BLOCK_SKIP);
+    }
+    CancelOp = 0;
+    do {
+      //for (_Delay = 0; _Delay < 10000; _Delay++);
+      SEGGER_RTT_printf(0, "Count: %d. Press <Space> to get back to menu.\r\n", _Cnt++);
+      r = SEGGER_RTT_HasKey();
+      if (r) {
+        CancelOp = (SEGGER_RTT_GetKey() == ' ') ? 1 : 0;
+      }
+      //
+      // Check if user selected to cancel the current operation
+      //
+      if (CancelOp) {
+        SEGGER_RTT_WriteString(0, "Operation cancelled, going back to menu...\r\n");
+        break;
+      }
+    } while (1);
+    SEGGER_RTT_GetKey();
+    SEGGER_RTT_WriteString(0, "\r\n");
+  } while (1);
 }
 
-/*********************************************************************
-*
-*       __write_buffered()
-*
-* Function description
-*   Low-level write function.
-*   Standard library subroutines will use this system routine
-*   for output to all files, including stdout.
-*   Write data via RTT.
-*/
-size_t __write_buffered(int handle, const unsigned char * buffer, size_t size) {
-  (void) handle;  /* Not used, avoid warning */
-  SEGGER_RTT_Write(0, (const char*)buffer, size);
-  return size;
-}
-
-#endif
-/****** End Of File *************************************************/
+/*************************** End of file ****************************/

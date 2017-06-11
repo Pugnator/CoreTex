@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/Pugnator/CoreTex.svg?branch=master)](https://travis-ci.org/Pugnator/CoreTex)
 
-#### Framework for my DIY projects based on STM32 MCU
+#### STM32 HAL for my DIY projects
 
 ###### Drivers list:
 

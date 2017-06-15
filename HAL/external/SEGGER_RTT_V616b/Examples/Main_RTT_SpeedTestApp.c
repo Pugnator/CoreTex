@@ -52,68 +52,64 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       RTT version: 6.16                                           *
+*       RTT version: 6.16b                                           *
 *                                                                    *
 **********************************************************************
----------------------------END-OF-HEADER------------------------------
-File    : SEGGER_RTT_Syscalls_IAR.c
-Purpose : Low-level functions for using printf() via RTT in IAR.
-          To use RTT for printf output, include this file in your 
-          application and set the Library Configuration to Normal.
-Revision: $Rev: 4351 $
-----------------------------------------------------------------------
+--------- END-OF-HEADER --------------------------------------------
+File    : Main_RTT_SpeedTestApp.c
+Purpose : Sample program for measuring RTT performance.
 */
-#ifdef __IAR_SYSTEMS_ICC__
 
-#include <yfuns.h>
+#include "RTOS.h"
+#include "BSP.h"
+
 #include "SEGGER_RTT.h"
-#pragma module_name = "?__write"
+#include <stdio.h>
 
-/*********************************************************************
-*
-*       Function prototypes
-*
-**********************************************************************
-*/
-size_t __write(int handle, const unsigned char * buffer, size_t size);
+OS_STACKPTR int StackHP[128], StackLP[128];          /* Task stacks */
+OS_TASK TCBHP, TCBLP;                        /* Task-control-blocks */
 
-/*********************************************************************
-*
-*       Global functions
-*
-**********************************************************************
-*/
-/*********************************************************************
-*
-*       __write()
-*
-* Function description
-*   Low-level write function.
-*   Standard library subroutines will use this system routine
-*   for output to all files, including stdout.
-*   Write data via RTT.
-*/
-size_t __write(int handle, const unsigned char * buffer, size_t size) {
-  (void) handle;  /* Not used, avoid warning */
-  SEGGER_RTT_Write(0, (const char*)buffer, size);
-  return size;
+static void HPTask(void) {
+  while (1) {
+    //
+    // Measure time needed for RTT output
+    // Perform dummy write with 0 characters, so we know the overhead of toggling LEDs and RTT in general
+    //
+// Set BP here. Then start sampling on scope
+    BSP_ClrLED(0);
+    SEGGER_RTT_Write(0, 0, 0);
+    BSP_SetLED(0);
+    BSP_ClrLED(0);
+    SEGGER_RTT_Write(0, "01234567890123456789012345678901234567890123456789012345678901234567890123456789\r\n", 82);
+    BSP_SetLED(0);
+// Set BP here. Then stop sampling on scope
+    OS_Delay(200);
+  }
+}
+
+static void LPTask(void) {
+  while (1) {
+    BSP_ToggleLED(1);
+    OS_Delay (500);
+  }
 }
 
 /*********************************************************************
 *
-*       __write_buffered()
+*       main
 *
-* Function description
-*   Low-level write function.
-*   Standard library subroutines will use this system routine
-*   for output to all files, including stdout.
-*   Write data via RTT.
-*/
-size_t __write_buffered(int handle, const unsigned char * buffer, size_t size) {
-  (void) handle;  /* Not used, avoid warning */
-  SEGGER_RTT_Write(0, (const char*)buffer, size);
-  return size;
+*********************************************************************/
+
+int main(void) {
+  OS_IncDI();                      /* Initially disable interrupts  */
+  OS_InitKern();                   /* Initialize OS                 */
+  OS_InitHW();                     /* Initialize Hardware for OS    */
+  BSP_Init();                      /* Initialize LED ports          */
+  BSP_SetLED(0);
+  /* You need to create at least one task before calling OS_Start() */
+  OS_CREATETASK(&TCBHP, "HP Task", HPTask, 100, StackHP);
+  OS_CREATETASK(&TCBLP, "LP Task", LPTask,  50, StackLP);
+  OS_Start();                      /* Start multitasking            */
+  return 0;
 }
 
-#endif
-/****** End Of File *************************************************/

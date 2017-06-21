@@ -25,14 +25,4 @@
 
 #define POOL_SIZE 1 * 2048
 
-#define OV528_DEBUG
-
 #define FATDISK_DEBUG
-
-#define UART_DEBUG
-
-#define EEPROM_DEBUG
-
-#define DEBUG_MEMMGR_SUPPORT_STATS
-
-#define MEMORY_ALLOC_DEBUG

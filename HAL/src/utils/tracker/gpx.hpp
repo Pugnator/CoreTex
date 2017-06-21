@@ -11,8 +11,9 @@ public:
 	 result (FR_OK),
 	 gpx ({0}),
 	 gps (g),
-	 written(0),
-	 track_count(0)
+	 track_count(0),
+	 wpt_count(0),
+	 track_type(0)
   {
 
   }
@@ -21,7 +22,7 @@ public:
 		commit();
 	}
 
-	bool create(const char* filename);
+	bool create(const char* filename, word mode);
 	bool commit(void);
 	bool set_point(void);
 
@@ -30,6 +31,7 @@ private:
 	FRESULT result;
 	FIL gpx;
 	Gps *gps;
-	unsigned written;
 	word track_count;
+	word wpt_count;
+	word track_type;
 };

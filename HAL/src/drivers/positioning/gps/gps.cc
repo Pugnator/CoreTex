@@ -217,8 +217,8 @@ Gps::coord2utm (coord c)
 	UTM result;
 	result.deg = c.deg;
 	double fract = ((c.sec / 60.0) + c.min)/60.0;
-	fract *= 1000000UL;
-	result.fract = (word) fract;
+	double dummy;
+	result.fract = (word) round(fabs(modf(fract, &dummy)) * 1e9);
 	SEGGER_RTT_printf(0, "%u.%u.%u = %u.%u\r\n", c.deg, c.min, (word)c.sec, result.deg, result.fract);
 	return result;
 }

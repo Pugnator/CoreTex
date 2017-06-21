@@ -57,7 +57,7 @@ typedef struct coord
 
 typedef struct
 {
- word deg;
+ int16_t deg;
  word fract;
 } UTM;
 

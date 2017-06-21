@@ -58,8 +58,9 @@ static const char GPX_FOOTER[] =
 </gpx>";
 
 bool
-GPX::create (const char* filename)
+GPX::create (const char* filename, word mode)
 {
+  track_type = mode;
 	result = mount (&filesystem, "0:", 1);
 	SEGGER_RTT_printf (0, "Disk result: %s\r\n", result_to_str (result));
 	if (FR_OK != result)
@@ -67,19 +68,27 @@ GPX::create (const char* filename)
 	 return false;
 	}
 	result = mkdir("tracks");
-	result = chdir("tracks");
+  result = chdir("tracks");
+  result = mkdir(filename);
+	result = chdir(filename);
 	if (FR_OK != result)
 	{
 	  return false;
 	}
-	result = open (&gpx, filename, FA_CREATE_ALWAYS | FA_WRITE);
+	char *tracknum = num2str(track_count);
+	char trackname[8] = {0};
+	strcpy(trackname, tracknum);
+	strcat(trackname, ".gpx");
+	SEGGER_RTT_printf (0, "Creating track: %s/%s\r\n",  filename, trackname);
+	result = open (&gpx, trackname, FA_CREATE_ALWAYS | FA_WRITE);
+	FREE(tracknum);
 	if (result != FR_OK)
 	{
 		SEGGER_RTT_printf (0, "Failed to open the file: %s\r\n",
 		                   result_to_str (result));
 		return false;
 	}
-
+	unsigned written = 0;
 	result = f_write (&gpx, GPX_HEADER, strlen (GPX_HEADER), &written);
 	return FR_OK == result;
 }
@@ -87,6 +96,7 @@ GPX::create (const char* filename)
 bool
 GPX::commit ()
 {
+  unsigned written = 0;
 	result = f_write (&gpx, GPX_FOOTER, strlen (GPX_FOOTER), &written);
 	close (&gpx);
 	return FR_OK == result;
@@ -103,6 +113,12 @@ GPX::set_point (void)
 		return false;
 	}
 
+	if(0 == track_type)
+	{
+	  unsigned written = 0;
+	  return FR_OK == f_write (&gpx, gps->nmeastr, strlen (gps->nmeastr), &written);
+	}
+
 	coord lat = gps->getlat ();
 	coord lon = gps->getlon ();
 	UTM latutm = gps->coord2utm (lat);
@@ -112,7 +128,7 @@ GPX::set_point (void)
 	          lonutm.fract, gps->get_utc(), gps->nmeastr, gps->gsv);
 
 	SEGGER_RTT_printf (0, "GPS: %s\r\n", text);
-
+	unsigned written = 0;
 	result = f_write (&gpx, text, strlen (text), &written);
 	stfree(text);
 	if (result != FR_OK)
@@ -123,7 +139,7 @@ GPX::set_point (void)
 	}
 
 	result = flush(&gpx);
-
+	track_count++;
 	gps->reset ();
 	return FR_OK == result;
 }

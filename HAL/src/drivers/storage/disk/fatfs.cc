@@ -687,7 +687,7 @@ DWORD sector /* Sector number to make appearance in the fs->win[] */
 }
 
 /*-----------------------------------------------------------------------*/
-/* Synchronize file system and strage device                             */
+/* Synchronize file system and storage device                             */
 /*-----------------------------------------------------------------------*/
 #if !_FS_READONLY
 FRESULT

@@ -11,7 +11,6 @@ public:
 	 result (FR_OK),
 	 gpx ({0}),
 	 gps (g),
-	 track_count(0),
 	 wpt_count(0),
 	 track_type(0)
   {
@@ -23,15 +22,18 @@ public:
 	}
 
 	bool create(const char* filename, word mode);
+	bool create(void);
 	bool commit(void);
 	bool set_point(void);
 
+private:
+	bool new_dir();
 private:
 	FATFS filesystem;
 	FRESULT result;
 	FIL gpx;
 	Gps *gps;
-	word track_count;
 	word wpt_count;
 	word track_type;
+	word current_track;
 };

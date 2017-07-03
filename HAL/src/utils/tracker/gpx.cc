@@ -17,7 +17,6 @@
 #include <common.hpp>
 #include <log.hpp>
 #include <core/io_macro.hpp>
-#include <core/isr_helper.hpp>
 #include <core/stm32f10x.hpp>
 #include <global.hpp>
 #include <xprintf.h>
@@ -26,62 +25,75 @@
 
 static const char GPX_HEADER[] =
     "\
-<?xml version=\"1.0\"?>\r\n\
-<gpx>\r\n\
-xmlns=\"http://www.topografix.com/GPX/1/1\"\r\n\
-version=\"1.1\"\r\n\
-creator=\"Tracker\"\r\n\
-  <time>2017</time>\r\n\
-    <metadata>\r\n\
-      <name>STM32</name>\r\n\
-      <desc>Sample track</desc>\r\n\
-      <author>\r\n\
-        <name>Pugnator</name>\r\n\
-      </author>\r\n\
-    </metadata>\r\n\
-    <trk>\r\n\
-      <name>Test run</name>\r\n\
-      <trkseg>\r\n";
+<?xml version=\"1.0\"?>\
+<gpx>\
+xmlns=\"http://www.topografix.com/GPX/1/1\"\
+version=\"1.1\"\
+creator=\"Tracker\"\
+  <time>2017</time>\
+    <metadata>\
+      <name>STM32</name>\
+      <desc>Sample track</desc>\
+      <author>\
+        <name>Pugnator</name>\
+      </author>\
+    </metadata>\
+    <trk>\
+      <name>Test run</name>\
+      <trkseg>";
 
 static const char GPX_TRACK_POINT[] =
     "\
-        <trkpt lat=\"%u.%u\" lon=\"%u.%u\">\"\r\n\
-          <time>%u</time>\r\n\
-          <nmea>%s</nmea>\r\n\
-    			<gsv>%u</gsv>\r\n\
-        </trkpt>\r\n";
+        <trkpt lat=\"%u.%u\" lon=\"%u.%u\">\"\
+          <time>%u</time>\
+          <nmea>%s</nmea>\
+    			<gsv>%u</gsv>\
+        </trkpt>";
 
 static const char GPX_FOOTER[] =
     "\
-      </trkseg>\r\n\
-    </trk>\r\n\
+      </trkseg>\
+    </trk>\
 </gpx>";
 
 bool
 GPX::create (const char* filename, word mode)
 {
   track_type = mode;
-	result = mount (&filesystem, "0:", 1);
-	SEGGER_RTT_printf (0, "Disk result: %s\r\n", result_to_str (result));
-	if (FR_OK != result)
-	{
-	 return false;
-	}
-	result = mkdir("tracks");
-  result = chdir("tracks");
-  result = mkdir(filename);
-	result = chdir(filename);
-	if (FR_OK != result)
-	{
-	  return false;
-	}
-	char *tracknum = num2str(track_count);
+  result = mount (&filesystem, "0:", 1);
+  SEGGER_RTT_printf (0, "Disk result: %s\r\n", result_to_str (result));
+  if (FR_OK != result)
+  {
+    return false;
+  }
+
+  mkdir("tracks");
+  if (FR_OK != chdir("tracks"))
+  {
+    return false;
+  }
+  mkdir(filename);
+
+  if (FR_OK != chdir(filename))
+  {
+    return false;
+  }
+
 	char trackname[8] = {0};
-	strcpy(trackname, tracknum);
-	strcat(trackname, ".gpx");
+	for(word i=1; i < 255; ++i)
+	{
+
+	  xsprintf(trackname, "%u.gpx", i);
+	  FILINFO fno;
+	  result = stat(trackname, &fno);
+	  if(FR_OK != result)
+	  {
+	    current_track = i;
+	    break;
+	  }
+	}
 	SEGGER_RTT_printf (0, "Creating track: %s/%s\r\n",  filename, trackname);
 	result = open (&gpx, trackname, FA_CREATE_ALWAYS | FA_WRITE);
-	FREE(tracknum);
 	if (result != FR_OK)
 	{
 		SEGGER_RTT_printf (0, "Failed to open the file: %s\r\n",
@@ -91,6 +103,36 @@ GPX::create (const char* filename, word mode)
 	unsigned written = 0;
 	result = f_write (&gpx, GPX_HEADER, strlen (GPX_HEADER), &written);
 	return FR_OK == result;
+}
+
+bool
+GPX::new_dir()
+{
+  if (FR_OK != chdir(".."))
+    {
+      return false;
+    }
+
+  mkdir("tracks");
+  return true;
+}
+
+bool
+GPX::create ()
+{
+  char trackname[8] = {0};
+  xsprintf(trackname, "%u.gpx", ++current_track);
+  SEGGER_RTT_printf (0, "Creating track: %s\r\n",  trackname);
+  result = open (&gpx, trackname, FA_CREATE_ALWAYS | FA_WRITE);
+  if (result != FR_OK)
+  {
+    SEGGER_RTT_printf (0, "Failed to open the file: %s\r\n",
+                       result_to_str (result));
+    return false;
+  }
+  unsigned written = 0;
+  result = f_write (&gpx, GPX_HEADER, strlen (GPX_HEADER), &written);
+  return FR_OK == result;
 }
 
 bool
@@ -105,6 +147,12 @@ GPX::commit ()
 bool
 GPX::set_point (void)
 {
+  if(100 == wpt_count)
+  {
+    wpt_count = 0;
+    commit();
+    create();
+  }
 	while (NMEA_ERROR_OK != gps->prepare ())
 		;
 	if (!gps->ok())
@@ -115,8 +163,8 @@ GPX::set_point (void)
 
 	if(0 == track_type)
 	{
-	  unsigned written = 0;
-	  return FR_OK == f_write (&gpx, gps->nmeastr, strlen (gps->nmeastr), &written);
+	  //unsigned written = 0;
+	 // return FR_OK == f_write (&gpx, gps->nmeastr, strlen (gps->nmeastr), &written);
 	}
 
 	coord lat = gps->getlat ();
@@ -139,7 +187,7 @@ GPX::set_point (void)
 	}
 
 	result = flush(&gpx);
-	track_count++;
+	wpt_count++;
 	gps->reset ();
 	return FR_OK == result;
 }

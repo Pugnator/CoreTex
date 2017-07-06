@@ -21,6 +21,7 @@
 #include <global.hpp>
 #include <xprintf.h>
 #include <core/vmmu.hpp>
+#include <core/rtc.hpp>
 #include "gpx.hpp"
 
 static const char GPX_HEADER[] =
@@ -80,18 +81,9 @@ GPX::create (const char* filename, word mode)
   }
 
 	char trackname[8] = {0};
-	for(word i=1; i < 255; ++i)
-	{
+	Rtc r;
+	xsprintf(trackname, "%u.gpx", r.get());
 
-	  xsprintf(trackname, "%u.gpx", i);
-	  FILINFO fno;
-	  result = stat(trackname, &fno);
-	  if(FR_OK != result)
-	  {
-	    current_track = i;
-	    break;
-	  }
-	}
 	SEGGER_RTT_printf (0, "Creating track: %s/%s\r\n",  filename, trackname);
 	result = open (&gpx, trackname, FA_CREATE_ALWAYS | FA_WRITE);
 	if (result != FR_OK)
@@ -121,7 +113,8 @@ bool
 GPX::create ()
 {
   char trackname[8] = {0};
-  xsprintf(trackname, "%u.gpx", ++current_track);
+  Rtc r;
+  xsprintf(trackname, "%u.gpx", r.get());
   SEGGER_RTT_printf (0, "Creating track: %s\r\n",  trackname);
   result = open (&gpx, trackname, FA_CREATE_ALWAYS | FA_WRITE);
   if (result != FR_OK)

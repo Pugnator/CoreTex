@@ -239,7 +239,7 @@ bool Gps::correct_rtc()
    }
 
   Rtc r;
-  if(nmea.utc - r.get() > 5)
+  if(nmea.utc - r.get() > 5 && nmea.utc < MAX_UNIX_TIMESTAMP)
   {
    r.init(nmea.utc);
    SEGGER_RTT_printf(0, "New RTC value is %u\r\n", r.get());

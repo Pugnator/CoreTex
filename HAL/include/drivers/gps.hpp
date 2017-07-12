@@ -123,6 +123,7 @@ private:
  void fillRMCctx(int sect, const char* field);
  void fillGLLctx(int sect, const char* field);
  void fillGSVctx(int sect, const char* field);
+ void fillGSActx(int sect, const char* field);
 
  nmeactx nmea;
  NMEATYPE type;

@@ -57,6 +57,10 @@ typedef enum NMEAFORMAT
 void
 Gps::fillRMCctx (int sect, const char* field)
 {
+ if(!*field)
+ {
+	 return;
+ }
  switch (sect)
  {
   case UTC:
@@ -76,7 +80,8 @@ Gps::fillRMCctx (int sect, const char* field)
    nmea.lat.dir = *field;
    break;
   case KNOTS:
-   //nmea.knots = strtod ( field, NULL );
+   *strchr(field, '.') = 0;
+   nmea.knots = str10_to_word(field);
    break;
   case END:
    break;

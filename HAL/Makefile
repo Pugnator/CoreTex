@@ -75,6 +75,7 @@ DRIVERSSRC:=\
 	$(DRIVERS)/positioning/gps/gga.cc \
 	$(DRIVERS)/positioning/gps/gll.cc \
 	$(DRIVERS)/positioning/gps/gsv.cc \
+	$(DRIVERS)/positioning/gps/gsa.cc \
 	$(DRIVERS)/positioning/gps/parser.cc \
 	$(DRIVERS)/positioning/gps/rmc.cc \
 	$(DRIVERS)/positioning/gps/vtg.cc \

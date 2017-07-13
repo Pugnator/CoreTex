@@ -11,13 +11,14 @@
 #define DEBUG_LOG(...)
 #endif
 
-FATdisk::FATdisk (uint8_t channel)
-: Sdc(channel)
+FATdisk::FATdisk (uint8_t channel) :
+  Sdc (channel)
 {
  SDCstat = 0;
 }
 
-DWORD FATdisk::get_fattime (void)
+DWORD
+FATdisk::get_fattime (void)
 {
  return 0;
 }
@@ -25,30 +26,30 @@ DWORD FATdisk::get_fattime (void)
 DSTATUS
 FATdisk::disk_initialize (BYTE drv)
 {
- DEBUG_LOG(0,"disk_initialize: Drive=%u\r\n", drv);
- lowspeed();
- go8bit();
- if (drv)
+ DEBUG_LOG (0, "disk_initialize: Drive=%u\r\n", drv);
+ lowspeed ();
+ go8bit ();
+ if ( drv )
  {
-  DEBUG_LOG(0,"disk_initialize: STA_NOINIT\r\n");
+  DEBUG_LOG (0, "disk_initialize: STA_NOINIT\r\n");
   return STA_NOINIT; /* Supports only drive 0 */
  }
 
- if (SDCstat & STA_NODISK)
+ if ( SDCstat & STA_NODISK )
  {
-  DEBUG_LOG(0,"disk_initialize: MMCstat=%u\r\n", SDCstat);
+  DEBUG_LOG (0, "disk_initialize: MMCstat=%u\r\n", SDCstat);
   return SDCstat; /* Is card existing in the soket? */
  }
 
- if( SD_RESPONSE_FAILURE == initialize())
+ if ( SD_RESPONSE_FAILURE == initialize () )
  {
-  DEBUG_LOG(0,"SD init failed\r\n");
+  DEBUG_LOG (0, "SD init failed\r\n");
   SDCstat = STA_NOINIT;
  }
  else
  {
-  DEBUG_LOG(0,"SD init OK\r\n");
-  highspeed();
+  DEBUG_LOG (0, "SD init OK\r\n");
+  highspeed ();
   SDCstat &= ~STA_NOINIT;
  }
  return SDCstat;
@@ -64,15 +65,16 @@ DRESULT
 FATdisk::disk_read (BYTE drv, BYTE* buff, DWORD sector, UINT count)
 {
  /* LBA ==> BA for SDv1*/
- if (!isSDCv2)
+ if ( !isSDCv2 )
  {
-  sector*=_MIN_SS;
+  sector *= _MIN_SS;
  }
 
- count*=_MIN_SS;
+ count *= _MIN_SS;
 
- DEBUG_LOG(0,"disk_read: Drive=%u, sector=%u, count=%u\r\n", drv, sector, count);
- if(SD_RESPONSE_NO_ERROR == read_block(buff, sector, count ))
+ DEBUG_LOG (0, "disk_read: Drive=%u, sector=%u, count=%u\r\n", drv, sector,
+            count);
+ if ( SD_RESPONSE_NO_ERROR == read_block (buff, sector, count) )
  {
   return RES_OK; /* Return result */
  }
@@ -86,14 +88,15 @@ DRESULT
 FATdisk::disk_write (BYTE drv, const BYTE* buff, DWORD sector, UINT count)
 {
  /* LBA ==> BA conversion (byte addressing cards) */
- if (!isSDCv2)
+ if ( !isSDCv2 )
  {
-  sector*=_MIN_SS;
+  sector *= _MIN_SS;
  }
 
- count*=_MIN_SS;
- DEBUG_LOG(0,"disk_write: Drive=%u, sector=%u, count=%u\r\n", drv, sector, count);
- if(SD_RESPONSE_NO_ERROR == write_block(buff, sector, count))
+ count *= _MIN_SS;
+ DEBUG_LOG (0, "disk_write: Drive=%u, sector=%u, count=%u\r\n", drv, sector,
+            count);
+ if ( SD_RESPONSE_NO_ERROR == write_block (buff, sector, count) )
  {
   return RES_OK; /* Return result */
  }
@@ -106,10 +109,10 @@ FATdisk::disk_write (BYTE drv, const BYTE* buff, DWORD sector, UINT count)
 DRESULT
 FATdisk::disk_ioctl (BYTE drv, BYTE cmd, void* buff)
 {
- DEBUG_LOG(0,"disk_ioctl drive=%u, cmd=%u\r\n", drv, cmd);
- if (drv)
+ DEBUG_LOG (0, "disk_ioctl drive=%u, cmd=%u\r\n", drv, cmd);
+ if ( drv )
   return RES_PARERR; /* Check parameter */
- if (SDCstat & STA_NOINIT)
+ if ( SDCstat & STA_NOINIT )
   return RES_NOTRDY; /* Check if drive is ready */
 
  DWORD sector = 0;
@@ -121,15 +124,15 @@ FATdisk::disk_ioctl (BYTE drv, BYTE cmd, void* buff)
    return RES_OK;
 
   case GET_SECTOR_COUNT: /* Get drive capacity in unit of sector (DWORD) */
-   sector = get_card_capacity() / get_card_block_size();
+   sector = get_card_capacity () / get_card_block_size ();
    *(DWORD*) buff = sector;
-   DEBUG_LOG(0,"sector = %u\r\n", *(DWORD*) buff);
+   DEBUG_LOG (0, "sector = %u\r\n", *(DWORD*) buff);
    return RES_OK;
 
   case GET_BLOCK_SIZE: /* Get erase block size in unit of sector (DWORD) */
-   bs = get_card_block_size();
+   bs = get_card_block_size ();
    *(DWORD*) buff = bs;
-   DEBUG_LOG(0,"bs = %u\r\n", *(DWORD*) buff);
+   DEBUG_LOG (0, "bs = %u\r\n", *(DWORD*) buff);
    return RES_OK;
 
   case CTRL_TRIM: /* Erase a block of sectors (used when _USE_ERASE == 1) */
@@ -142,7 +145,7 @@ FATdisk::disk_ioctl (BYTE drv, BYTE cmd, void* buff)
 const char *
 FATdisk::result_to_str (DRESULT r)
 {
- switch(r)
+ switch (r)
  {
   case RES_OK:
    return "OK";

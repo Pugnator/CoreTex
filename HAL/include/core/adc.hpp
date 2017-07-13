@@ -3,18 +3,25 @@
 #include <global.hpp>
 
 class Adc
-  {
+{
 public:
-  Adc(void)
-	{
-  	init();
-	};
-  ~Adc(void){};
-  uint16_t sample(void);
-  uint16_t voltage(void);
+ Adc (void)
+ {
+  init ();
+ }
+ ;
+ ~Adc (void)
+ {
+ }
+ ;
+ uint16_t
+ sample (void);
+ uint16_t
+ voltage (void);
 
 protected:
-  void init(void);
-  int channel;
-  ADC_TypeDef* Reg;
-  };
+ void
+ init (void);
+ int channel;
+ ADC_TypeDef* Reg;
+};

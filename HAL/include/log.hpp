@@ -6,5 +6,5 @@
 
 #define LOGGING_CHANNEL 0
 
-
-void swo_print(const char *msg);
+void
+swo_print (const char *msg);

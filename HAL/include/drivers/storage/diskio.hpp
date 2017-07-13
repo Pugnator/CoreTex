@@ -15,8 +15,8 @@
  * 2015
  *******************************************************************************/
 /*-----------------------------------------------------------------------/
-/  Low level disk interface modlue include file   (C)ChaN, 2014          /
-/-----------------------------------------------------------------------*/
+ /  Low level disk interface modlue include file   (C)ChaN, 2014          /
+ /-----------------------------------------------------------------------*/
 
 #pragma once
 
@@ -25,19 +25,18 @@
 
 #include "integer.hpp"
 
-
 /* Status of Disk Functions */
 typedef unsigned char DSTATUS;
 
 /* Results of Disk Functions */
-typedef enum {
- RES_OK = 0,		/* 0: Successful */
- RES_ERROR,		/* 1: R/W Error */
- RES_WRPRT,		/* 2: Write Protected */
- RES_NOTRDY,		/* 3: Not Ready */
- RES_PARERR		/* 4: Invalid Parameter */
+typedef enum
+{
+ RES_OK = 0, /* 0: Successful */
+ RES_ERROR, /* 1: R/W Error */
+ RES_WRPRT, /* 2: Write Protected */
+ RES_NOTRDY, /* 3: Not Ready */
+ RES_PARERR /* 4: Invalid Parameter */
 } DRESULT;
-
 
 /*---------------------------------------*/
 /* Prototypes for disk control functions */
@@ -47,7 +46,6 @@ typedef enum {
 #define STA_NOINIT		0x01	/* Drive not initialized */
 #define STA_NODISK		0x02	/* No medium in the drive */
 #define STA_PROTECT		0x04	/* Write protected */
-
 
 /* Command code for disk_ioctrl fucntion */
 

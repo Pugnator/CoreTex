@@ -25,7 +25,7 @@
 #include "gpx.hpp"
 
 static const char GPX_HEADER[] =
-    "\
+  "\
 <?xml version=\"1.0\"?>\
 <gpx>\
 xmlns=\"http://www.topografix.com/GPX/1/1\"\
@@ -44,15 +44,14 @@ creator=\"Tracker\"\
       <trkseg>";
 
 static const char GPX_TRACK_POINT[] =
-    "\
+  "\
         <trkpt lat=\"%u.%u\" lon=\"%u.%u\">\"\
           <time>%u</time>\
           <nmea>%s</nmea>\
     			<gsv>%u</gsv>\
         </trkpt>";
 
-static const char GPX_FOOTER[] =
-    "\
+static const char GPX_FOOTER[] = "\
       </trkseg>\
     </trk>\
 </gpx>";
@@ -60,127 +59,133 @@ static const char GPX_FOOTER[] =
 bool
 GPX::create (const char* filename, word mode)
 {
-  track_type = mode;
-  result = mount (&filesystem, "0:", 1);
-  SEGGER_RTT_printf (0, "Disk result: %s\r\n", result_to_str (result));
-  if (FR_OK != result)
-  {
-    return false;
-  }
+ track_type = mode;
+ result = mount (&filesystem, "0:", 1);
+ SEGGER_RTT_printf (0, "Disk result: %s\r\n", result_to_str (result));
+ if ( FR_OK != result )
+ {
+  return false;
+ }
 
-  mkdir("tracks");
-  if (FR_OK != chdir("tracks"))
-  {
-    return false;
-  }
-  mkdir(filename);
+ mkdir ("tracks");
+ if ( FR_OK != chdir ("tracks") )
+ {
+  return false;
+ }
 
-  if (FR_OK != chdir(filename))
-  {
-    return false;
-  }
+ if ( FR_OK != mkdir (filename) )
+ {
+  return false;
+ }
 
-	char trackname[8] = {0};
-	Rtc r;
-	xsprintf(trackname, "%u.gpx", r.get());
+ if ( FR_OK != chdir (filename) )
+ {
+  return false;
+ }
 
-	SEGGER_RTT_printf (0, "Creating track: %s/%s\r\n",  filename, trackname);
-	result = open (&gpx, trackname, FA_CREATE_ALWAYS | FA_WRITE);
-	if (result != FR_OK)
-	{
-		SEGGER_RTT_printf (0, "Failed to open the file: %s\r\n",
-		                   result_to_str (result));
-		return false;
-	}
-	unsigned written = 0;
-	result = f_write (&gpx, GPX_HEADER, strlen (GPX_HEADER), &written);
-	return FR_OK == result;
+ char trackname[8] =
+ { 0 };
+ Rtc r;
+ xsprintf (trackname, "%u.gpx", r.get ());
+
+ SEGGER_RTT_printf (0, "Creating track: %s/%s\r\n", filename, trackname);
+ result = open (&gpx, trackname, FA_CREATE_ALWAYS | FA_WRITE);
+ if ( result != FR_OK )
+ {
+  SEGGER_RTT_printf (0, "Failed to open the file: %s\r\n",
+                     result_to_str (result));
+  return false;
+ }
+ unsigned written = 0;
+ result = f_write (&gpx, GPX_HEADER, strlen (GPX_HEADER), &written);
+ return FR_OK == result;
 }
 
 bool
-GPX::new_dir()
+GPX::new_dir ()
 {
-  if (FR_OK != chdir(".."))
-    {
-      return false;
-    }
+ if ( FR_OK != chdir ("..") )
+ {
+  return false;
+ }
 
-  mkdir("tracks");
-  return true;
+ mkdir ("tracks");
+ return true;
 }
 
 bool
 GPX::create ()
 {
-  char trackname[8] = {0};
-  Rtc r;
-  xsprintf(trackname, "%u.gpx", r.get());
-  SEGGER_RTT_printf (0, "Creating track: %s\r\n",  trackname);
-  result = open (&gpx, trackname, FA_CREATE_ALWAYS | FA_WRITE);
-  if (result != FR_OK)
-  {
-    SEGGER_RTT_printf (0, "Failed to open the file: %s\r\n",
-                       result_to_str (result));
-    return false;
-  }
-  unsigned written = 0;
-  result = f_write (&gpx, GPX_HEADER, strlen (GPX_HEADER), &written);
-  return FR_OK == result;
+ char trackname[8] =
+ { 0 };
+ Rtc r;
+ xsprintf (trackname, "%u.gpx", r.get ());
+ SEGGER_RTT_printf (0, "Creating track: %s\r\n", trackname);
+ result = open (&gpx, trackname, FA_CREATE_ALWAYS | FA_WRITE);
+ if ( result != FR_OK )
+ {
+  SEGGER_RTT_printf (0, "Failed to open the file: %s\r\n",
+                     result_to_str (result));
+  return false;
+ }
+ unsigned written = 0;
+ result = f_write (&gpx, GPX_HEADER, strlen (GPX_HEADER), &written);
+ return FR_OK == result;
 }
 
 bool
 GPX::commit ()
 {
-  unsigned written = 0;
-	result = f_write (&gpx, GPX_FOOTER, strlen (GPX_FOOTER), &written);
-	close (&gpx);
-	return FR_OK == result;
+ unsigned written = 0;
+ result = f_write (&gpx, GPX_FOOTER, strlen (GPX_FOOTER), &written);
+ close (&gpx);
+ return FR_OK == result;
 }
 
 bool
 GPX::set_point (void)
 {
-  if(100 == wpt_count)
-  {
-    wpt_count = 0;
-    commit();
-    create();
-  }
-	while (NMEA_ERROR_OK != gps->prepare ())
-		;
-	if (!gps->ok())
-	{
-		gps->reset ();
-		return false;
-	}
+ if ( 100 == wpt_count )
+ {
+  wpt_count = 0;
+  commit ();
+  create ();
+ }
+ while (NMEA_ERROR_OK != gps->prepare ())
+  ;
+ if ( !gps->ok () )
+ {
+  gps->reset ();
+  return false;
+ }
 
-	if(0 == track_type)
-	{
-	  //unsigned written = 0;
-	 // return FR_OK == f_write (&gpx, gps->nmeastr, strlen (gps->nmeastr), &written);
-	}
+ if ( 0 == track_type )
+ {
+  //unsigned written = 0;
+  // return FR_OK == f_write (&gpx, gps->nmeastr, strlen (gps->nmeastr), &written);
+ }
 
-	coord lat = gps->getlat ();
-	coord lon = gps->getlon ();
-	UTM latutm = gps->coord2utm (lat);
-	UTM lonutm = gps->coord2utm (lon);
-	char *text = (char*)stalloc(256);
-	xsprintf (text, GPX_TRACK_POINT, latutm.deg, latutm.fract, lonutm.deg,
-	          lonutm.fract, gps->get_utc(), gps->nmeastr, gps->gsv);
+ coord lat = gps->getlat ();
+ coord lon = gps->getlon ();
+ UTM latutm = gps->coord2utm (lat);
+ UTM lonutm = gps->coord2utm (lon);
+ char *text = (char*) stalloc (256);
+ xsprintf (text, GPX_TRACK_POINT, latutm.deg, latutm.fract, lonutm.deg,
+           lonutm.fract, gps->get_utc (), gps->nmeastr, gps->gsv);
 
-	SEGGER_RTT_printf (0, "GPS: %s\r\n", text);
-	unsigned written = 0;
-	result = f_write (&gpx, text, strlen (text), &written);
-	stfree(text);
-	if (result != FR_OK)
-	{
-		SEGGER_RTT_printf (0, "Failed to write to the file: %s\r\n",
-		                   result_to_str (result));
-		return false;
-	}
+ SEGGER_RTT_printf (0, "GPS: %s\r\n", text);
+ unsigned written = 0;
+ result = f_write (&gpx, text, strlen (text), &written);
+ stfree (text);
+ if ( result != FR_OK )
+ {
+  SEGGER_RTT_printf (0, "Failed to write to the file: %s\r\n",
+                     result_to_str (result));
+  return false;
+ }
 
-	result = flush(&gpx);
-	wpt_count++;
-	gps->reset ();
-	return FR_OK == result;
+ result = flush (&gpx);
+ wpt_count++;
+ gps->reset ();
+ return FR_OK == result;
 }

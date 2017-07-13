@@ -69,24 +69,28 @@
 
 #define MIN_POOL_ALLOC_QUANTAS 8
 
-
 // Initialize the memory manager. This function should be called
 // only once in the beginning of the program.
 //
-void vmmu_init();
+void
+vmmu_init ();
 
 // 'malloc' clone
 //
-void* stalloc(word nbytes);
+void*
+stalloc (word nbytes);
 
 // 'free' clone
 //
-void stfree(void* ap);
+void
+stfree (void* ap);
 
 // Prints statistics about the current state of the memory
 // manager
 //
-void print_memstat(void);
+void
+print_memstat (void);
 
 //How much memory left
-word get_free_memory(void);
+word
+get_free_memory (void);

@@ -12,11 +12,11 @@
 #define CAN  0x18
 #define CTRLZ 0x1A
 
-class xmodem: public USART
+class xmodem : public USART
 {
 public:
- xmodem(short ch, word bd)
-: USART::USART(ch, bd, this)
+ xmodem (short ch, word bd) :
+   USART::USART (ch, bd, this)
  {
   ok = false;
   ack = false;
@@ -25,18 +25,25 @@ public:
   self = this;
  }
 
- void send_data(uint8_t *data, word size);
- bool block_tx(uint8_t *data, word blockn);
+ void
+ send_data (uint8_t *data, word size);
+ bool
+ block_tx (uint8_t *data, word blockn);
 protected:
  volatile bool ok;
  volatile bool ack;
  volatile bool nack;
- void end(void);
- bool wait(void);
- bool send_header(char *filename, word filesize, word blockn = 0);
+ void
+ end (void);
+ bool
+ wait (void);
+ bool
+ send_header (char *filename, word filesize, word blockn = 0);
  static class xmodem *self;
- static void xmodemisr(void);
+ static void
+ xmodemisr (void);
  bool txmode;
- uint16_t crc16(uint8_t *data, word size);
+ uint16_t
+ crc16 (uint8_t *data, word size);
 };
 

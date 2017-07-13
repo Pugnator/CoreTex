@@ -2,9 +2,6 @@
 #include <global.hpp>
 
 typedef enum
-  {
-    NONE = 0,
-    USART,
-    SPI,
-    I2C
-  }HARDWARE_TYPE;
+{
+ NONE = 0, USART, SPI, I2C
+} HARDWARE_TYPE;

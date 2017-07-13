@@ -15,31 +15,49 @@ class USART : private IODriver
 {
 public:
  USART (word ch, word bd, USART *isrptr = nullptr);
- ~USART(void);
+ ~USART (void);
 
- virtual void write (char c);
- virtual void writestr(const char* str);
- virtual char read(void);
- virtual const char* name();
- void dma_on (void);
- void dma_off (void);
- void dmatx_go(word size);
- void dmarx_go(word size);
- void disable (void);
+ virtual void
+ write (char c);
+ virtual void
+ writestr (const char* str);
+ virtual char
+ read (void);
+ virtual const char*
+ name ();
+ void
+ dma_on (void);
+ void
+ dma_off (void);
+ void
+ dmatx_go (word size);
+ void
+ dmarx_go (word size);
+ void
+ disable (void);
  USART* next;
  /* ISRs */
- virtual void isr (word address);
- virtual void dmarx (word address);
- virtual void dmatx (word address);
- uint8_t *get_rx_buf();
- uint8_t *get_tx_buf();
+ virtual void
+ isr (word address);
+ virtual void
+ dmarx (word address);
+ virtual void
+ dmatx (word address);
+ uint8_t *
+ get_rx_buf ();
+ uint8_t *
+ get_tx_buf ();
 protected:
- bool is_dma_on();
- void signup();
- void signout();
+ bool
+ is_dma_on ();
+ void
+ signup ();
+ void
+ signout ();
  uint8_t outbuf[32];
  uint8_t inbuf[32];
- void init (char channel, word baud);
+ void
+ init (char channel, word baud);
  word channel;
  USART_TypeDef* Reg;
  USART* extirq;

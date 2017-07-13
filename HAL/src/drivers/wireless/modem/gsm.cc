@@ -26,201 +26,211 @@
 #define USSD_TIMEOUT 10000
 #define USSD_REPLY_TIMEOUT 500
 
-void GSM::sync_speed(void)
+void
+GSM::sync_speed (void)
 {
  char try_count = 15;
  do
  {
   --try_count;
-  reset();
-  rawcmd(CMD::AT, CMDMODE::EXEC, nullptr);
+  reset ();
+  rawcmd (CMD::AT, CMDMODE::EXEC, nullptr);
  }
- while (try_count && !wait_for_reply(CMD::AT, AT_OK, 200));
+ while (try_count && !wait_for_reply (CMD::AT, AT_OK, 200));
 }
 
-char* GSM::ussd(const char *request)
+char*
+GSM::ussd (const char *request)
 {
  ok = false;
- rawcmd(CMD::CUSD, CMDMODE::SET, "1,\"#102#\"");
- if (!wait_for_reply(CMD::CUSD, AT_OK))
+ rawcmd (CMD::CUSD, CMDMODE::SET, "1,\"#102#\"");
+ if ( !wait_for_reply (CMD::CUSD, AT_OK) )
  {
   go = false;
   return nullptr;
  }
- SEGGER_RTT_printf(0, "Waiting for USSD reply [10secs]\r\n");
+ SEGGER_RTT_printf (0, "Waiting for USSD reply [10secs]\r\n");
  WAIT_FOR(USSD_TIMEOUT);
- while(STILL_WAIT)
+ while (STILL_WAIT)
  {
-  if(strstr(modembuf, "+CUSD:"))
+  if ( strstr (modembuf, "+CUSD:") )
   {
-   delay_ms(USSD_REPLY_TIMEOUT);
+   delay_ms (USSD_REPLY_TIMEOUT);
    break;
   }
  }
 
- SEGGER_RTT_printf(0, "Got USSD reply\r\n");
+ SEGGER_RTT_printf (0, "Got USSD reply\r\n");
  go = false;
- char *buf = strclone(modembuf);
- if(!buf)
+ char *buf = strclone (modembuf);
+ if ( !buf )
  {
   return nullptr;
  }
  return buf;
 }
 
-bool GSM::setup(void)
+bool
+GSM::setup (void)
 {
- if (!set(CMD::CMEE, "2"))
+ if ( !set (CMD::CMEE, "2") )
  {
   return false;
  }
 
- if (!set(CMD::CMGF, "1"))
+ if ( !set (CMD::CMGF, "1") )
  {
   return false;
  }
 
- if (!set(CMD::CLIP, "1"))
+ if ( !set (CMD::CLIP, "1") )
  {
   return false;
  }
 
- if (!set(CMD::CREG, "2"))
+ if ( !set (CMD::CREG, "2") )
  {
   return false;
  }
 
- if (!set(CMD::CENG, "1"))
+ if ( !set (CMD::CENG, "1") )
  {
   return false;
  }
 
- if (!set(CMD::CNMI, "0,0,0,0,0"))
+ if ( !set (CMD::CNMI, "0,0,0,0,0") )
  {
   return false;
  }
 
- if (!set(CMD::CSCS, "\"GSM\""))
+ if ( !set (CMD::CSCS, "\"GSM\"") )
  {
   return false;
  }
- if (!set(CMD::CSMP, "17,167,0,8"))
+ if ( !set (CMD::CSMP, "17,167,0,8") )
  {
   return false;
  }
 
- if (!set(CMD::CPMS, "\"SM\""))
+ if ( !set (CMD::CPMS, "\"SM\"") )
  {
   return false;
  }
  return true;
 }
 
-bool GSM::send_sms(const char* number, const char* text)
+bool
+GSM::send_sms (const char* number, const char* text)
 {
- rawcmd(CMD::CMGS, CMDMODE::SET, number);
+ rawcmd (CMD::CMGS, CMDMODE::SET, number);
 
- if (!wait_for_reply(CMD::CMGS, AT_INPUT_PROMPT))
+ if ( !wait_for_reply (CMD::CMGS, AT_INPUT_PROMPT) )
  {
-  SEGGER_RTT_printf(0, "No input prompt\r\n");
+  SEGGER_RTT_printf (0, "No input prompt\r\n");
   return false;
  }
- writestr(text);
- write(0x1A);
+ writestr (text);
+ write (0x1A);
  return true;
 }
 
-char* GSM::get_sms_by_index(word num)
+char*
+GSM::get_sms_by_index (word num)
 {
- rawcmd(CMD::CMGR, CMDMODE::SET, num);
- if (!wait_for_reply(CMD::CPMS, AT_OK))
+ rawcmd (CMD::CMGR, CMDMODE::SET, num);
+ if ( !wait_for_reply (CMD::CPMS, AT_OK) )
  {
-  SEGGER_RTT_printf(0, "No reply\r\n");
+  SEGGER_RTT_printf (0, "No reply\r\n");
   return nullptr;
  }
  go = false;
- char *sms = extract_sms_body(strclone(modembuf));
- reset();
+ char *sms = extract_sms_body (strclone (modembuf));
+ reset ();
  return sms;
 }
 
-word GSM::get_account_debet(CELLULAR_OP op)
+word
+GSM::get_account_debet (CELLULAR_OP op)
 {
  ok = false;
  char *buf = nullptr;
  switch (op)
  {
   case BEELINE:
-   buf = ussd("\"#102#\"");
+   buf = ussd ("\"#102#\"");
    break;
   case MTS:
-   buf = ussd("\"#102#\"");
+   buf = ussd ("\"#102#\"");
    break;
   case MEGAFON:
-   buf = ussd("\"#102#\"");
+   buf = ussd ("\"#102#\"");
    break;
   case TELE2:
-   buf = ussd("\"#102#\"");
+   buf = ussd ("\"#102#\"");
    break;
   default:
    return 0;
  }
- char *bal = strstr(buf, " r.");
+ char *bal = strstr (buf, " r.");
  word result = 0;
- if(!bal)
+ if ( !bal )
  {
   return result;
  }
  *bal = 0;
- while(*(--bal) != ' ' && bal != buf);
+ while (*(--bal) != ' ' && bal != buf)
+  ;
  bal++;
- char *dot = strchr(bal, '.');
- if(dot)
+ char *dot = strchr (bal, '.');
+ if ( dot )
  {
   *dot = result;
  }
- SEGGER_RTT_printf(0, "Balance: %s\r\n", bal);
+ SEGGER_RTT_printf (0, "Balance: %s\r\n", bal);
  ok = true;
 
- result = str10_to_word(bal);
+ result = str10_to_word (bal);
  FREE(buf);
  return result;
 }
 
-char* GSM::extract_sms_body(char *message)
+char*
+GSM::extract_sms_body (char *message)
 {
  const char delimeter[] = "\r\n";
- char *token = strtok(message, delimeter);
+ char *token = strtok (message, delimeter);
  while (token)
  {
   //TODO: extract telnum, date, etc
-  if (!strstr(token, "+CMGR") && *token != 'O')
+  if ( !strstr (token, "+CMGR") && *token != 'O' )
   {
    //here we've got sms encoded in UCS2
-   return ucs2ascii(token);
+   return ucs2ascii (token);
   }
-  token = strtok(NULL, delimeter);
+  token = strtok (NULL, delimeter);
  }
  FREE(message);
  return nullptr;
 }
 
-bool GSM::delete_all_sms(void)
+bool
+GSM::delete_all_sms (void)
 {
- rawcmd(CMD::CMGD, CMDMODE::SET, "1,4");
- if (!wait_for_reply(CMD::CMGD, AT_OK))
+ rawcmd (CMD::CMGD, CMDMODE::SET, "1,4");
+ if ( !wait_for_reply (CMD::CMGD, AT_OK) )
  {
   return false;
  }
  return true;
 }
 
-word GSM::get_sms_amount(void)
+word
+GSM::get_sms_amount (void)
 {
  for (word i = 1; i < 50; ++i)
  {
-  char *sms = get_sms_by_index(i);
-  if (!sms)
+  char *sms = get_sms_by_index (i);
+  if ( !sms )
   {
    FREE(sms);
    return i - 1;
@@ -230,40 +240,46 @@ word GSM::get_sms_amount(void)
  return 0;
 }
 
-void GSM::restart(void)
+void
+GSM::restart (void)
 {
- rawcmd(CMD::CFUN, CMDMODE::SET, "1,1");
+ rawcmd (CMD::CFUN, CMDMODE::SET, "1,1");
 }
 
-void GSM::turn_off(void)
+void
+GSM::turn_off (void)
 {
- rawcmd(CMD::CPOWD, CMDMODE::SET, 1);
+ rawcmd (CMD::CPOWD, CMDMODE::SET, 1);
 }
 
-bool GSM::get(CMD::ATCMD cmd)
+bool
+GSM::get (CMD::ATCMD cmd)
 {
- return wait_for_reply(cmd, AT_OK);
+ return wait_for_reply (cmd, AT_OK);
 }
 
-bool GSM::set(CMD::ATCMD cmd, const char* value)
+bool
+GSM::set (CMD::ATCMD cmd, const char* value)
 {
- rawcmd(cmd, CMDMODE::SET, value);
- return wait_for_reply(cmd, AT_OK);
+ rawcmd (cmd, CMDMODE::SET, value);
+ return wait_for_reply (cmd, AT_OK);
 }
 
-bool GSM::is_supported(CMD::ATCMD cmd)
+bool
+GSM::is_supported (CMD::ATCMD cmd)
 {
- rawcmd(cmd, CMDMODE::CHECK, nullptr);
- return wait_for_reply(cmd, AT_OK);
+ rawcmd (cmd, CMDMODE::CHECK, nullptr);
+ return wait_for_reply (cmd, AT_OK);
 }
 
-bool GSM::get_cc_info()
+bool
+GSM::get_cc_info ()
 {
- rawcmd(CMD::CREG, CMDMODE::CHECK, nullptr);
- bool result = wait_for_reply(CMD::CREG, AT_OK);
- if (result)
+ rawcmd (CMD::CREG, CMDMODE::CHECK, nullptr);
+ bool result = wait_for_reply (CMD::CREG, AT_OK);
+ if ( result )
  {
-  SEGGER_RTT_printf(0, "CELL ID: %s\r\n", modembuf);
+  SEGGER_RTT_printf (0, "CELL ID: %s\r\n", modembuf);
  }
  return result;
 }

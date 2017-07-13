@@ -69,19 +69,19 @@ namespace
 
  static const command cmd_list[] =
  {
-   { "ver", &ver_func },
-   { "cls", &cls_func },
-   { "free", &free_func },
-   { "reset", &reset_func },
-   { "dihalt", &dihalt_func },
-   { "date", &date_func },
-   { "color", &color_func },
-   { "help", &help_func },
-   { "led", &led_func },
-   { "dump", &memdump_func },
-   { "fatal", &fault_func },
-   { "exit", &exit_func },
-   { nullptr, nullptr } };
+ { "ver", &ver_func },
+ { "cls", &cls_func },
+ { "free", &free_func },
+ { "reset", &reset_func },
+ { "dihalt", &dihalt_func },
+ { "date", &date_func },
+ { "color", &color_func },
+ { "help", &help_func },
+ { "led", &led_func },
+ { "dump", &memdump_func },
+ { "fatal", &fault_func },
+ { "exit", &exit_func },
+ { nullptr, nullptr } };
 
  /************************************************************************/
 
@@ -92,11 +92,11 @@ namespace
  led_func (Console *self)
  {
   CHECK_ARGS1;
-  if (!strcmp (arg1, "on"))
+  if ( !strcmp (arg1, "on") )
   {
    PIN_HI(LED);
   }
-  else if (!strcmp (arg1, "off"))
+  else if ( !strcmp (arg1, "off") )
   {
    PIN_LOW(LED);
   }
@@ -182,13 +182,13 @@ namespace
  static void
  color_func (Console *self)
  {
-  if (arg1)
+  if ( arg1 )
   {
    self->foreground (str10_to_word (arg1));
    FREE(arg1);
   }
 
-  if (arg2)
+  if ( arg2 )
   {
    self->background (str10_to_word (arg2));
    FREE(arg2);
@@ -201,17 +201,17 @@ namespace
   self->cls ();
  }
 
-	static void
-	date_func (Console *self)
-	{
+ static void
+ date_func (Console *self)
+ {
 
-		if (arg1)
-			{
+  if ( arg1 )
+  {
 
-				FREE(arg1);
-			}
+   FREE(arg1);
+  }
 
-	}
+ }
 }
 /*******************************************************************/
 
@@ -221,7 +221,7 @@ Console::worker ()
  char res = 0;
  while (!isdone)
  {
-  if (0 == QueueGet (&res))
+  if ( 0 == QueueGet (&res) )
   {
    log (res);
   }
@@ -234,11 +234,11 @@ Console::log (char c)
  {
   case '\r':
    crlf ();
-   if (!*conbuf)
+   if ( !*conbuf )
    {
     break;
    }
-   else if (!parse ())
+   else if ( !parse () )
    {
     xprintf ("command not found [%s]\r\n", conbuf);
    }
@@ -250,7 +250,7 @@ Console::log (char c)
    break;
   default:
   {
-   if (strlen (conbuf) + 1 >= sizeof conbuf)
+   if ( strlen (conbuf) + 1 >= sizeof conbuf )
     break;
    //I'm too lazy
    char str[2] =
@@ -271,33 +271,33 @@ Console::parse ()
  token = strtok (conbuf, delim);
  for (int count = 0; token != NULL; ++count)
  {
-  if (0 == count)
+  if ( 0 == count )
   {
    //check for a command here, should be the 1st
    for (int i = 0; cmd_list[i].cmd; ++i)
    {
-    if (0 == strcmp (cmd_list[i].cmd, token))
+    if ( 0 == strcmp (cmd_list[i].cmd, token) )
     {
      cmdptr = cmd_list[i].funcptr;
      result = true;
     }
    }
-   if (!result)
+   if ( !result )
     break;
   }
-  else if (1 == count)
+  else if ( 1 == count )
   {
    arg1 = (char *) stalloc (strlen (token) + 1);
    strcpy (arg1, token);
   }
-  else if (2 == count)
+  else if ( 2 == count )
   {
    arg2 = (char *) stalloc (strlen (token) + 1);
    strcpy (arg2, token);
   }
   token = strtok (NULL, delim);
  }
- if (result)
+ if ( result )
  {
   cmdptr (self);
  }
@@ -353,7 +353,7 @@ Console::print (int num)
 
  int sign;
  memset (strbuf, 0, sizeof strbuf);
- if ((sign = num) < 0)
+ if ( (sign = num) < 0 )
  {
   num = -num;
  }
@@ -363,7 +363,7 @@ Console::print (int num)
   strbuf[i++] = num % 10 + '0';
  }
  while ((num /= 10) > 0);
- if (sign < 0)
+ if ( sign < 0 )
  {
   strbuf[i++] = '-';
  }

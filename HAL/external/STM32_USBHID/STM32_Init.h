@@ -21,7 +21,10 @@
 #ifndef __STM32_INIT_H
 #define __STM32_INIT_H
 
-extern void         stm32_Init     (void);
-extern unsigned int stm32_GetPCLK1 (void);
-extern unsigned int stm32_GetPCLK2 (void);
+extern void
+stm32_Init (void);
+extern unsigned int
+stm32_GetPCLK1 (void);
+extern unsigned int
+stm32_GetPCLK2 (void);
 #endif

@@ -22,13 +22,13 @@ class Console
 {
 public:
  Console(class IODriver *_io)
-{
+ {
   memset(conbuf, 0, sizeof conbuf);
   io = _io;
   self = this;
   outptr = nullptr;
   isdone = false;
-}
+ }
 
  template<typename T>
  Console& operator<<(T arg)
@@ -55,7 +55,7 @@ public:
  void cls(void)
  {
   print("\x1B[2J\x1B[H"); //clear terminal
-  print("\033[3J"); //PuTTY 0.59+, clears the real scroll back ;)
+  print("\033[3J");//PuTTY 0.59+, clears the real scroll back ;)
  }
 
  void cursor(bool state = true)
@@ -84,7 +84,7 @@ public:
 
  bool isdone;
 private:
- void xvprintf (const char*	fmt,va_list arp	);
+ void xvprintf (const char* fmt,va_list arp );
  void log(char c);
  bool parse(void);
  char *outptr;

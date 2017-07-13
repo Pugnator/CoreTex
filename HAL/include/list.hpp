@@ -346,7 +346,6 @@ struct {								\
 #define	XSIMPLEQ_EMPTY(head)	    (XSIMPLEQ_FIRST(head) == XSIMPLEQ_END(head))
 #define	XSIMPLEQ_NEXT(head, elm, field)    XSIMPLEQ_XOR(head, ((elm)->field.sqx_next))
 
-
 #define XSIMPLEQ_FOREACH(var, head, field)				\
 	for ((var) = XSIMPLEQ_FIRST(head);				\
 	    (var) != XSIMPLEQ_END(head);				\
@@ -400,7 +399,6 @@ struct {								\
 		    XSIMPLEQ_XOR(head, &(elm)->field.sqx_next);		\
 } while (0)
 
-
 /*
  * Tail queue definitions.
  */
@@ -443,7 +441,6 @@ struct {								\
 	    (var) != TAILQ_END(head) &&					\
 	    ((tvar) = TAILQ_NEXT(var, field), 1);			\
 	    (var) = (tvar))
-
 
 #define TAILQ_FOREACH_REVERSE(var, head, headname, field)		\
 	for((var) = TAILQ_LAST(head, headname);				\

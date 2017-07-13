@@ -19,26 +19,31 @@
 #include <global.hpp>
 #include <string.h>
 
-volatile word __attribute__((section (".vectorsSection"))) HARDWARE_TABLE[76] = { 0 };
+volatile word __attribute__((section (".vectorsSection"))) HARDWARE_TABLE[76] =
+{ 0 };
 
-inline bool is_in_interrupt()
+inline bool
+is_in_interrupt ()
 {
  return (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) != 0;
 }
 
-void remap_vector_table(void)
+void
+remap_vector_table (void)
 {
  //VTOR is 0 on startup, so we change VTOR only once
- if (SCB->VTOR) return;
- memcpy((void*) HARDWARE_TABLE, (void*) SCB->VTOR, sizeof HARDWARE_TABLE);
- __disable_irq();
- SCB->VTOR = (uint32_t)(HARDWARE_TABLE); //Set VTOR offset
- __DSB(); //Complete all memory requests
- __enable_irq();
- __ISB();
+ if ( SCB->VTOR )
+  return;
+ memcpy ((void*) HARDWARE_TABLE, (void*) SCB->VTOR, sizeof HARDWARE_TABLE);
+ __disable_irq ();
+ SCB->VTOR = (uint32_t) (HARDWARE_TABLE); //Set VTOR offset
+ __DSB (); //Complete all memory requests
+ __enable_irq ();
+ __ISB ();
 }
 
-void hardware_manager_init(void)
+void
+hardware_manager_init (void)
 {
- memset((void*) HARDWARE_TABLE, 0, sizeof HARDWARE_TABLE);
+ memset ((void*) HARDWARE_TABLE, 0, sizeof HARDWARE_TABLE);
 }

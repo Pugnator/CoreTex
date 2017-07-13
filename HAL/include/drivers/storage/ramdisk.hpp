@@ -1,1 +1,2 @@
-void ramdisk_init();
+void
+ramdisk_init ();

@@ -22,14 +22,15 @@ void swo_print(const char *msg)
  for (; *msg; ++msg)
  {
   __asm__ ("mov r1,%0; mov r0,$3; BKPT 0xAB" :
-                                             : "r" (msg)
-                                             : "r0", "r1" );
+    : "r" (msg)
+    : "r0", "r1" );
  }
 }
 #else
-void swo_print(const char *msg)
+void
+swo_print (const char *msg)
 {
-  //TODO: Add something here
+ //TODO: Add something here
 }
 #endif
 

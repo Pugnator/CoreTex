@@ -21,36 +21,39 @@
 
 #define TEMP A,0,SPEED_10MHz
 
-void Adc::init(void)
-  {
-    PIN_INPUT_ANALOG(TEMP);
-    RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
-    RCC->CFGR |= RCC_CFGR_ADCPRE;
-    RCC->CFGR |= RCC_CFGR_ADCPRE_DIV8;
+void
+Adc::init (void)
+{
+ PIN_INPUT_ANALOG(TEMP);
+ RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
+ RCC->CFGR |= RCC_CFGR_ADCPRE;
+ RCC->CFGR |= RCC_CFGR_ADCPRE_DIV8;
 
-    ADC1->CR2 |= ADC_CR2_CAL;
-    while (!(ADC1->CR2 & ADC_CR2_CAL))
-      ;
+ ADC1->CR2 |= ADC_CR2_CAL;
+ while (!(ADC1->CR2 & ADC_CR2_CAL))
+  ;
 
-    ADC1->SQR2 |= ADC_SQR2_SQ12_0;
+ ADC1->SQR2 |= ADC_SQR2_SQ12_0;
 
-    ADC1->CR2 |= (ADC_CR2_EXTSEL_0 | ADC_CR2_EXTSEL_1 | ADC_CR2_EXTSEL_2
-        | ADC_CR2_EXTTRIG);
-    ADC1->CR2 |= ADC_CR2_ADON;
-    delay_ms(100);
-  }
+ ADC1->CR2 |= (ADC_CR2_EXTSEL_0 | ADC_CR2_EXTSEL_1 | ADC_CR2_EXTSEL_2
+   | ADC_CR2_EXTTRIG);
+ ADC1->CR2 |= ADC_CR2_ADON;
+ delay_ms (100);
+}
 
-uint16_t Adc::sample(void)
-  {
-    ADC1->CR2 |= ADC_CR2_SWSTART;
-    while (!(ADC1->SR & ADC_SR_EOC))
-      ;
-    uint16_t result = ADC1->DR & 0xFFFF;
-    ADC1->SR = 0;
-    return result;
-  }
+uint16_t
+Adc::sample (void)
+{
+ ADC1->CR2 |= ADC_CR2_SWSTART;
+ while (!(ADC1->SR & ADC_SR_EOC))
+  ;
+ uint16_t result = ADC1->DR & 0xFFFF;
+ ADC1->SR = 0;
+ return result;
+}
 
-uint16_t Adc::voltage(void)
-  {
-    return sample() / 4096 * 3;
-  }
+uint16_t
+Adc::voltage (void)
+{
+ return sample () / 4096 * 3;
+}

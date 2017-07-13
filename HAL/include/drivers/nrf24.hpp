@@ -8,10 +8,10 @@
  **      *
  *       *
  *********
-GND-VCC
-CE-CSN
-CLK-MOSI
-MISO-IRQ
+ GND-VCC
+ CE-CSN
+ CLK-MOSI
+ MISO-IRQ
  */
 
 #define NRFCE A,8,SPEED_50MHz
@@ -65,30 +65,39 @@ typedef enum CMD
  NOP = 0xFF,
 } CMD;
 
-class Nrf24: public Spi
+class Nrf24 : public Spi
 {
 public:
- Nrf24(char ch)
-: Spi::Spi(ch)
+ Nrf24 (char ch) :
+   Spi::Spi (ch)
  {
   PIN_OUT_PP(NRFCE);
-  nrfinit();
+  nrfinit ();
  }
 
- uint8_t status(void);
+ uint8_t
+ status (void);
  //single byte
- void regw(REGISTER reg, uint8_t value);
+ void
+ regw (REGISTER reg, uint8_t value);
  //multibyte
- void regw(REGISTER reg, uint8_t *in, word size);
+ void
+ regw (REGISTER reg, uint8_t *in, word size);
  //single byte
- uint8_t regr(REGISTER reg);
+ uint8_t
+ regr (REGISTER reg);
  //multibyte
- void regr(REGISTER reg, uint8_t *out, word size);
+ void
+ regr (REGISTER reg, uint8_t *out, word size);
  //chip init
- void nrfinit();
- void debug(void);
- void flushtx(void);
- void flushrx(void);
+ void
+ nrfinit ();
+ void
+ debug (void);
+ void
+ flushtx (void);
+ void
+ flushrx (void);
 
 protected:
 };

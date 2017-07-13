@@ -5,11 +5,13 @@
 class IIC : private IODriver
 {
 public:
- IIC(char ch);
- ~IIC(void);
+ IIC (char ch);
+ ~IIC (void);
 
- short read(short data);
- virtual void isr(void);
+ short
+ read (short data);
+ virtual void
+ isr (void);
 
 protected:
  int channel;

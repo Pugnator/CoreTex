@@ -23,10 +23,8 @@
 
 #include "demo.h"
 
-
 BYTE HID_Protocol;
 BYTE HID_IdleTime[HID_REPORT_NUM];
-
 
 /*
  *  HID Get Report Request Callback
@@ -35,24 +33,26 @@ BYTE HID_IdleTime[HID_REPORT_NUM];
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-BOOL HID_GetReport (void) {
+BOOL
+HID_GetReport (void)
+{
 
-  /* ReportID = SetupPacket.wValue.WB.L; */
-  switch (SetupPacket.wValue.WB.H) {
-    case HID_REPORT_INPUT:
-      GetInReport();
-      EP0Buf[0] = InReport;
-      break;
-    case HID_REPORT_OUTPUT:
-      return (FALSE);          /* Not Supported */
-    case HID_REPORT_FEATURE:
-      /* EP0Buf[] = ...; */
-      /* break; */
-      return (FALSE);          /* Not Supported */
-  }
-  return (TRUE);
+ /* ReportID = SetupPacket.wValue.WB.L; */
+ switch (SetupPacket.wValue.WB.H)
+ {
+  case HID_REPORT_INPUT:
+   GetInReport ();
+   EP0Buf[0] = InReport;
+   break;
+  case HID_REPORT_OUTPUT:
+   return (FALSE); /* Not Supported */
+  case HID_REPORT_FEATURE:
+   /* EP0Buf[] = ...; */
+   /* break; */
+   return (FALSE); /* Not Supported */
+ }
+ return (TRUE);
 }
-
 
 /*
  *  HID Set Report Request Callback
@@ -61,22 +61,24 @@ BOOL HID_GetReport (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-BOOL HID_SetReport (void) {
+BOOL
+HID_SetReport (void)
+{
 
-  /* ReportID = SetupPacket.wValue.WB.L; */
-  switch (SetupPacket.wValue.WB.H) {
-    case HID_REPORT_INPUT:
-      return (FALSE);          /* Not Supported */
-    case HID_REPORT_OUTPUT:
-      OutReport = EP0Buf[0];
-      SetOutReport();
-      break;
-    case HID_REPORT_FEATURE:
-      return (FALSE);          /* Not Supported */
-  }
-  return (TRUE);
+ /* ReportID = SetupPacket.wValue.WB.L; */
+ switch (SetupPacket.wValue.WB.H)
+ {
+  case HID_REPORT_INPUT:
+   return (FALSE); /* Not Supported */
+  case HID_REPORT_OUTPUT:
+   OutReport = EP0Buf[0];
+   SetOutReport ();
+   break;
+  case HID_REPORT_FEATURE:
+   return (FALSE); /* Not Supported */
+ }
+ return (TRUE);
 }
-
 
 /*
  *  HID Get Idle Request Callback
@@ -85,12 +87,13 @@ BOOL HID_SetReport (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-BOOL HID_GetIdle (void) {
+BOOL
+HID_GetIdle (void)
+{
 
-  EP0Buf[0] = HID_IdleTime[SetupPacket.wValue.WB.L];
-  return (TRUE);
+ EP0Buf[0] = HID_IdleTime[SetupPacket.wValue.WB.L];
+ return (TRUE);
 }
-
 
 /*
  *  HID Set Idle Request Callback
@@ -99,16 +102,17 @@ BOOL HID_GetIdle (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-BOOL HID_SetIdle (void) {
+BOOL
+HID_SetIdle (void)
+{
 
-  HID_IdleTime[SetupPacket.wValue.WB.L] = SetupPacket.wValue.WB.H;
+ HID_IdleTime[SetupPacket.wValue.WB.L] = SetupPacket.wValue.WB.H;
 
-  /* Idle Handling if needed */
-  /* ... */
+ /* Idle Handling if needed */
+ /* ... */
 
-  return (TRUE);
+ return (TRUE);
 }
-
 
 /*
  *  HID Get Protocol Request Callback
@@ -117,12 +121,13 @@ BOOL HID_SetIdle (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-BOOL HID_GetProtocol (void) {
+BOOL
+HID_GetProtocol (void)
+{
 
-  EP0Buf[0] = HID_Protocol;
-  return (TRUE);
+ EP0Buf[0] = HID_Protocol;
+ return (TRUE);
 }
-
 
 /*
  *  HID Set Protocol Request Callback
@@ -131,12 +136,14 @@ BOOL HID_GetProtocol (void) {
  *    Return Value:    TRUE - Success, FALSE - Error
  */
 
-BOOL HID_SetProtocol (void) {
+BOOL
+HID_SetProtocol (void)
+{
 
-  HID_Protocol = SetupPacket.wValue.WB.L;
+ HID_Protocol = SetupPacket.wValue.WB.L;
 
-  /* Protocol Handling if needed */
-  /* ... */
+ /* Protocol Handling if needed */
+ /* ... */
 
-  return (TRUE);
+ return (TRUE);
 }

@@ -11,7 +11,7 @@ typedef struct smsctx
 {
  bool read;
  char message[SMS_MAX_SIZE];
-}smsctx;
+} smsctx;
 
 namespace CMD
 {
@@ -107,21 +107,14 @@ namespace CMDMODE
 {
  typedef enum MODE
  {
-  SET,
-  GET,
-  CHECK,
-  EXEC,
-  RAW
+  SET, GET, CHECK, EXEC, RAW
  } MODE;
 }
 
 typedef enum OPERATOR
 {
- BEELINE,
- MEGAFON,
- MTS,
- TELE2
-}CELLULAR_OP;
+ BEELINE, MEGAFON, MTS, TELE2
+} CELLULAR_OP;
 
 typedef enum ATRESPONSE
 {
@@ -141,11 +134,11 @@ typedef enum ATRESPONSE
  AT_READY
 } ATRESPONSE;
 
-class ATMODEM: public USART
+class ATMODEM : public USART
 {
 public:
- ATMODEM(short ch, word bd)
-: USART::USART(ch, bd, this)
+ ATMODEM (short ch, word bd) :
+   USART::USART (ch, bd, this)
  {
   ok = false;
   go = false;
@@ -153,20 +146,29 @@ public:
   crlf_end = true;
  }
 
- void rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, const char* arg = nullptr);
- void rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, word argument);
- bool wait_for_reply(CMD::ATCMD cmd, ATRESPONSE expected, word timeout = 1000);
- bool wait_for_reply_noend(CMD::ATCMD cmd, ATRESPONSE expected, word timeout = 1000);
- const char *get_cmd_str(CMD::ATCMD cmd);
- void use_ending(bool mode);
+ void
+ rawcmd (CMD::ATCMD cmd, CMDMODE::MODE mode, const char* arg = nullptr);
+ void
+ rawcmd (CMD::ATCMD cmd, CMDMODE::MODE mode, word argument);
+ bool
+ wait_for_reply (CMD::ATCMD cmd, ATRESPONSE expected, word timeout = 1000);
+ bool
+ wait_for_reply_noend (CMD::ATCMD cmd, ATRESPONSE expected,
+                       word timeout = 1000);
+ const char *
+ get_cmd_str (CMD::ATCMD cmd);
+ void
+ use_ending (bool mode);
 
- virtual void isr(word address);
+ virtual void
+ isr (word address);
  char modembuf[MODEM_IN_BUFFER_SIZE + 1];
  short buflen;
  bool ok;
 protected:
  char replystr[MODEM_IN_BUFFER_SIZE + 1];
- void reset(void);
+ void
+ reset (void);
  bool crlf_end;
  bool go;
 };

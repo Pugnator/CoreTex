@@ -20,7 +20,12 @@
 
 typedef enum NMEAERR
 {
- NMEA_ERROR_OK = 0, NMEA_GENERIC_ERROR, NMEA_NOT_READY, NMEA_UNKNOWN_TALKER, NMEA_NOT_BEGINNING, NMEA_EMPTY_FIELD,
+ NMEA_ERROR_OK = 0,
+ NMEA_GENERIC_ERROR,
+ NMEA_NOT_READY,
+ NMEA_UNKNOWN_TALKER,
+ NMEA_NOT_BEGINNING,
+ NMEA_EMPTY_FIELD,
  NMEA_DIAGNOSTIC_MSG
 } NMEAERR;
 
@@ -74,36 +79,48 @@ typedef struct nmeactx
  float course;
  bool isvalid;
  word nmeaerr;
- word sect; 
+ word sect;
  char* fp;
  uint8_t checksum;
  bool sumdone;
  bool nmeaok;
 } nmeactx;
 
-class Gps: public USART
+class Gps : public USART
 {
 public:
- Gps(short ch, word bd) :
-  USART::USART(ch, bd, this)
+ Gps (short ch, word bd) :
+   USART::USART (ch, bd, this)
  {
   gsv = 0;
-  reset();
+  reset ();
  }
- void rttprint();
- NMEAERR prepare(void);
- virtual void isr(word address);
- void reset(void);
+ void
+ rttprint ();
+ NMEAERR
+ prepare (void);
+ virtual void
+ isr (word address);
+ void
+ reset (void);
  char nmeastr[NMEA_MAX_LEN + 1];
  volatile uint8_t nmeastr_len;
- coord getlat();
- coord getlon();
- word get_utc();
- double get_dec_lat();
- double get_dec_lon();
- UTM coord2utm (coord coord);
- bool ok();
- bool correct_rtc();
+ coord
+ getlat ();
+ coord
+ getlon ();
+ word
+ get_utc ();
+ double
+ get_dec_lat ();
+ double
+ get_dec_lon ();
+ UTM
+ coord2utm (coord coord);
+ bool
+ ok ();
+ bool
+ correct_rtc ();
 
  word gsv;
 
@@ -111,18 +128,28 @@ private:
  bool correct;
  volatile bool ready;
 
- void latlon2crd(const char* str, coord* c);
+ void
+ latlon2crd (const char* str, coord* c);
 
- bool ckecknmea(uint8_t sum, char* string);
- NMEATYPE get_nmea_sent_type(const char* field);
- NMEATALKER get_nmea_talker(const char* field);
- NMEAERR parse(char c);
+ bool
+ ckecknmea (uint8_t sum, char* string);
+ NMEATYPE
+ get_nmea_sent_type (const char* field);
+ NMEATALKER
+ get_nmea_talker (const char* field);
+ NMEAERR
+ parse (char c);
 
- void fillGGActx(int sect, const char* field);
- void fillVTGctx(int sect, const char* field);
- void fillRMCctx(int sect, const char* field);
- void fillGLLctx(int sect, const char* field);
- void fillGSVctx(int sect, const char* field);
+ void
+ fillGGActx (int sect, const char* field);
+ void
+ fillVTGctx (int sect, const char* field);
+ void
+ fillRMCctx (int sect, const char* field);
+ void
+ fillGLLctx (int sect, const char* field);
+ void
+ fillGSVctx (int sect, const char* field);
 
  nmeactx nmea;
  NMEATYPE type;

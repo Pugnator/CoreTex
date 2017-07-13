@@ -16,7 +16,6 @@
 #ifndef __USBDESC_H__
 #define __USBDESC_H__
 
-
 #define WBVAL(x) (x & 0xFF),((x >> 8) & 0xFF)
 
 #define USB_DEVICE_DESC_SIZE        (sizeof(USB_DEVICE_DESCRIPTOR))
@@ -34,6 +33,5 @@ extern const BYTE USB_StringDescriptor[];
 
 extern const BYTE HID_ReportDescriptor[];
 extern const WORD HID_ReportDescSize;
-
 
 #endif  /* __USBDESC_H__ */

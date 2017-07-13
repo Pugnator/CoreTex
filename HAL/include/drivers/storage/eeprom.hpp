@@ -12,14 +12,19 @@
 class Eeprom
 {
 public:
-  Eeprom()
-  {
-    erase();
-  }
-  void write(uint16_t cell, uint8_t value);
-  uint8_t read(uint16_t cell);
+ Eeprom ()
+ {
+  erase ();
+ }
+ void
+ write (uint16_t cell, uint8_t value);
+ uint8_t
+ read (uint16_t cell);
 private:
-  void erase();
-  void unlock();
-  void lock();
+ void
+ erase ();
+ void
+ unlock ();
+ void
+ lock ();
 };

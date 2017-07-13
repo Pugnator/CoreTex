@@ -56,6 +56,8 @@ static const char GPX_FOOTER[] = "\
     </trk>\
 </gpx>";
 
+#define MAX_WAYPOINT_PER_TRACK 10000
+
 bool
 GPX::create (const char* filename, word mode)
 {
@@ -145,7 +147,7 @@ GPX::commit ()
 bool
 GPX::set_point (void)
 {
- if ( 100 == wpt_count )
+ if ( MAX_WAYPOINT_PER_TRACK == wpt_count )
  {
   wpt_count = 0;
   commit ();

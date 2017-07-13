@@ -1,6 +1,7 @@
 #include <drivers/storage/fatdisk.hpp>
 #include <drivers/storage/ffconf.hpp>
 #include <drivers/storage/integer.hpp>
+#include <core/rtc.hpp>
 #include <log.hpp>
 #include <sys/_stdint.h>
 #include <config.hpp>
@@ -20,7 +21,8 @@ FATdisk::FATdisk (uint8_t channel) :
 DWORD
 FATdisk::get_fattime (void)
 {
- return 0;
+ Rtc r;
+ return r.get();
 }
 
 DSTATUS

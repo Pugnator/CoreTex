@@ -53,8 +53,12 @@ typedef enum NMEAFORMAT
  TYPE , LAT, LATD, LON, LOND, FIXUTC, CS, END
 } NMEAFORMAT;
 
-void Gps::fillGLLctx(int sect, const char* field)
+void Gps::fillGSActx(int sect, const char* field)
 {
+ if(!*field)
+ {
+	 return;
+ }
 	switch (sect)
 	{
 		default:

@@ -46,6 +46,8 @@ creator=\"Tracker\"\
 static const char GPX_TRACK_POINT[] =
     "\
         <trkpt lat=\"%u.%u\" lon=\"%u.%u\">\"\
+	        <alt>%u</alt>\
+          <spd>%u</spd>\
           <time>%u</time>\
           <nmea>%s</nmea>\
     			<gsv>%u</gsv>\
@@ -166,7 +168,7 @@ GPX::set_point (void)
 	UTM lonutm = gps->coord2utm (lon);
 	char *text = (char*)stalloc(256);
 	xsprintf (text, GPX_TRACK_POINT, latutm.deg, latutm.fract, lonutm.deg,
-	          lonutm.fract, gps->get_utc(), gps->nmeastr, gps->gsv);
+	          lonutm.fract, gps->get_alt(), gps->get_speed(), gps->get_utc(), gps->nmeastr, gps->gsv);
 
 	SEGGER_RTT_printf (0, "GPS: %s\r\n", text);
 	unsigned written = 0;

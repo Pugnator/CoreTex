@@ -69,16 +69,17 @@ typedef struct nmeactx
  coord lon;
  word msl;
  char fstr[16];
- double knots;
- double kmh;
+ word knots;
+ word kmh;
  float course;
+ int alt;
  bool isvalid;
  word nmeaerr;
  word sect; 
  char* fp;
- uint8_t checksum;
  bool sumdone;
  bool nmeaok;
+ uint8_t checksum;
 } nmeactx;
 
 class Gps: public USART
@@ -99,12 +100,14 @@ public:
  coord getlat();
  coord getlon();
  word get_utc();
+ int get_alt();
+ word get_speed();
  double get_dec_lat();
  double get_dec_lon();
  UTM coord2utm (coord coord);
  bool ok();
  bool correct_rtc();
-
+ word speed;
  word gsv;
 
 private:

@@ -199,6 +199,27 @@ Gps::get_utc ()
 	return nmea.utc;
 }
 
+word
+Gps::get_speed ()
+{
+ speed = 0;
+  if(nmea.knots)
+   {
+  	speed = ceil(nmea.knots / 1.852);
+   }
+  if (nmea.kmh)
+   {
+  	speed = nmea.kmh > speed ? nmea.kmh : speed;
+   }
+	return speed;
+}
+
+int
+Gps::get_alt ()
+{
+	return nmea.alt;
+}
+
 double
 Gps::get_dec_lat ()
 {

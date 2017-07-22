@@ -9,7 +9,11 @@
 #include <math.h>
 #include <string.h>
 
-#define RTT_DEBUG_CHANNEL 0
+#ifdef GPS_DEBUG
+#define DEBUG_LOG SEGGER_RTT_printf
+#else
+#define DEBUG_LOG(...)
+#endif
 
 const NMEATYPESTRUCT nmeatypesstr[] =
 {
@@ -62,14 +66,14 @@ Gps::get_nmea_sent_type (const char* field)
   {
    return nmeatypesstr[i].type;
   }
- SEGGER_RTT_printf (0, "Sender type '%s'\r\n", field);
+ DEBUG_LOG (0, "Sender type '%s'\r\n", field);
  return WRONG;
 }
 
 NMEATALKER
 Gps::get_nmea_talker (const char* field)
 {
- SEGGER_RTT_printf (0, "GPS sender: '%s'\r\n", field);
+ DEBUG_LOG (0, "GPS sender: '%s'\r\n", field);
  if ( !strncmp (field + 1, "PMTK", 4) )
  {
   return PMTK;
@@ -150,12 +154,12 @@ Gps::rttprint ()
   }
  }
  SEGGER_RTT_WriteString (0, nmeastr);
- SEGGER_RTT_printf (0, "Checksum [%X]: %s\n", nmea.checksum,
+ DEBUG_LOG (0, "Checksum [%X]: %s\n", nmea.checksum,
                     nmea.nmeaok ? "OK" : "ERROR");
- SEGGER_RTT_printf (0, "UTC: %6u\n", nmea.utc);
- SEGGER_RTT_printf (0, "LAT:%3u.%2u\'%2u\" %c\n", nmea.lat.deg, nmea.lat.min,
+ DEBUG_LOG (0, "UTC: %6u\n", nmea.utc);
+ DEBUG_LOG (0, "LAT:%3u.%2u\'%2u\" %c\n", nmea.lat.deg, nmea.lat.min,
                     nmea.lat.sec, nmea.lat.dir);
- SEGGER_RTT_printf (0, "LON:%3u.%2u\'%2u\" %c\n", nmea.lon.deg, nmea.lon.min,
+ DEBUG_LOG (0, "LON:%3u.%2u\'%2u\" %c\n", nmea.lon.deg, nmea.lon.min,
                     nmea.lon.sec, nmea.lon.dir);
  reset ();
 }
@@ -168,7 +172,7 @@ Gps::prepare (void)
   return NMEA_NOT_READY;
  }
  NMEAERR err = NMEA_ERROR_OK;
- //SEGGER_RTT_printf(0, "NMEA: %s\r\n", nmeastr);
+ //DEBUG_LOG(0, "NMEA: %s\r\n", nmeastr);
  for (int i = 0; i < nmeastr_len; ++i)
  {
   err = parse (nmeastr[i]);
@@ -203,7 +207,7 @@ Gps::get_utc ()
 word
 Gps::get_speed ()
 {
- speed = 0;
+ word speed = 0;
   if(nmea.knots)
    {
   	speed = ceil(nmea.knots / 1.852);
@@ -241,7 +245,7 @@ Gps::coord2utm (coord c)
  double fract = ((c.sec / 60.0) + c.min) / 60.0;
  double dummy;
  result.fract = (word) round (fabs (modf (fract, &dummy)) * 1e9);
- SEGGER_RTT_printf (0, "%u.%u.%u = %u.%u\r\n", c.deg, c.min, (word) c.sec,
+ DEBUG_LOG (0, "%u.%u.%u = %u.%u\r\n", c.deg, c.min, (word) c.sec,
                     result.deg, result.fract);
  return result;
 }
@@ -267,7 +271,7 @@ Gps::correct_rtc ()
  if ( nmea.utc - r.get () > 5 && nmea.utc < MAX_UNIX_TIMESTAMP )
  {
   r.init (nmea.utc);
-  SEGGER_RTT_printf (0, "New RTC value is %u\r\n", r.get ());
+  DEBUG_LOG (0, "New RTC value is %u\r\n", r.get ());
  }
  return true;
 }

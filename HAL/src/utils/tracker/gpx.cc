@@ -24,6 +24,12 @@
 #include <core/rtc.hpp>
 #include "gpx.hpp"
 
+#ifdef GPX_DEBUG
+#define DEBUG_LOG DEBUG_LOG
+#else
+#define DEBUG_LOG(...)
+#endif
+
 static const char GPX_HEADER[] =
   "\
 <?xml version=\"1.0\"?>\
@@ -63,7 +69,7 @@ GPX::create (const char* filename, word mode)
 {
  track_type = mode;
  result = mount (&filesystem, "0:", 1);
- SEGGER_RTT_printf (0, "Disk result: %s\r\n", result_to_str (result));
+ DEBUG_LOG (0, "Disk result: %s\r\n", result_to_str (result));
  if ( FR_OK != result )
  {
   return false;
@@ -90,11 +96,11 @@ GPX::create (const char* filename, word mode)
  Rtc r;
  xsprintf (trackname, "%u.gpx", r.get ());
 
- SEGGER_RTT_printf (0, "Creating track: %s/%s\r\n", filename, trackname);
+ DEBUG_LOG (0, "Creating track: %s/%s\r\n", filename, trackname);
  result = open (&gpx, trackname, FA_CREATE_ALWAYS | FA_WRITE);
  if ( result != FR_OK )
  {
-  SEGGER_RTT_printf (0, "Failed to open the file: %s\r\n",
+  DEBUG_LOG (0, "Failed to open the file: %s\r\n",
                      result_to_str (result));
   return false;
  }
@@ -122,11 +128,11 @@ GPX::create ()
  { 0 };
  Rtc r;
  xsprintf (trackname, "%u.gpx", r.get ());
- SEGGER_RTT_printf (0, "Creating track: %s\r\n", trackname);
+ DEBUG_LOG (0, "Creating track: %s\r\n", trackname);
  result = open (&gpx, trackname, FA_CREATE_ALWAYS | FA_WRITE);
  if ( result != FR_OK )
  {
-  SEGGER_RTT_printf (0, "Failed to open the file: %s\r\n",
+  DEBUG_LOG (0, "Failed to open the file: %s\r\n",
                      result_to_str (result));
   return false;
  }
@@ -175,13 +181,13 @@ GPX::set_point (void)
  xsprintf (text, GPX_TRACK_POINT, latutm.deg, latutm.fract, lonutm.deg,
            lonutm.fract, gps->get_utc (), gps->nmeastr, gps->gsv);
 
- SEGGER_RTT_printf (0, "GPS: %s\r\n", text);
+ DEBUG_LOG (0, "GPS: %s\r\n", text);
  unsigned written = 0;
  result = f_write (&gpx, text, strlen (text), &written);
  stfree (text);
  if ( result != FR_OK )
  {
-  SEGGER_RTT_printf (0, "Failed to write to the file: %s\r\n",
+  DEBUG_LOG (0, "Failed to write to the file: %s\r\n",
                      result_to_str (result));
   return false;
  }

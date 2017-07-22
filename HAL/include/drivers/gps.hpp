@@ -76,6 +76,7 @@ typedef struct nmeactx
  char fstr[16];
  double knots;
  double kmh;
+ int alt;
  float course;
  bool isvalid;
  word nmeaerr;
@@ -121,6 +122,10 @@ public:
  ok ();
  bool
  correct_rtc ();
+ word
+ get_speed();
+ int
+ get_alt();
 
  word gsv;
 
@@ -150,6 +155,8 @@ private:
  fillGLLctx (int sect, const char* field);
  void
  fillGSVctx (int sect, const char* field);
+ void
+ fillGSActx(int sect, const char* field);
 
  nmeactx nmea;
  NMEATYPE type;

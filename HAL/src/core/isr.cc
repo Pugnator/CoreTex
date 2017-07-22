@@ -58,14 +58,14 @@ extern "C"
  void
  SPI2_IRQHandler (void)
  {
-  if ( SPI1->SR & SPI_SR_RXNE ) //receive
+  if ( SPI2->SR & SPI_SR_RXNE ) //receive
   {
-   short c = SPI1->DR;
-   SPI1->SR &= ~SPI_SR_RXNE;
+   short c = SPI2->DR;
+   SPI2->SR &= ~SPI_SR_RXNE;
   }
-  else if ( SPI1->SR & SPI_SR_TXE ) //transfer
+  else if ( SPI2->SR & SPI_SR_TXE ) //transfer
   {
-   SPI1->SR &= ~SPI_SR_TXE;
+   SPI2->SR &= ~SPI_SR_TXE;
   }
  }
 

@@ -57,7 +57,7 @@ class Rtc : public IODriver
 public:
  Rtc (word epoch = 0)
  {
-
+	curdate = {0};
  }
  ~Rtc ()
  {
@@ -89,8 +89,6 @@ public:
  set (word epoch);
  void
  clear (void);
- word
- state (void);
 private:
  word State;
  datetime_t curdate;

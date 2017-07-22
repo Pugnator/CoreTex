@@ -8,7 +8,7 @@ public:
  GPX (Gps* g) :
    FATdisk (1), filesystem (
    { 0 }), result (FR_OK), gpx (
-   { 0 }), gps (g), wpt_count (0), track_type (0)
+   { 0 }), gps (g), wpt_count (0), track_type (0), track_count (0)
  {
 
  }

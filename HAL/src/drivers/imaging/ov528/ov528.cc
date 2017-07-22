@@ -257,7 +257,7 @@ ov528::start_transfer (void)
 
  volatile uint8_t image[1100] =
  { 0 };
- imageblk = image;
+ imageblk = image; //-V507
  docmd (cmd);
 
  DEBUG_LOG (0, "Starting transfer\r\n");

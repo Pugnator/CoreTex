@@ -135,7 +135,7 @@ Gps::reset (void)
  nmea.nmeaerr = 0;
  nmea.checksum = 0;
  nmea.lat.valid = false;
- nmea.lat.valid = false;
+ nmea.lon.valid = false;
  nmeastr_len = 0;
  nmea.fp = nmea.fstr;
  memset (nmeastr, 0, NMEA_MAX_LEN + 1);
@@ -228,13 +228,13 @@ Gps::get_alt ()
 double
 Gps::get_dec_lat ()
 {
- return nmea.lat.deg + (nmea.lat.min / 60) + (nmea.lat.sec / 3600);
+ return nmea.lat.deg + (double)(nmea.lat.min / 60.0) + (double)(nmea.lat.sec / 3600.0);
 }
 
 double
 Gps::get_dec_lon ()
 {
- return nmea.lon.deg + (nmea.lon.min / 60) + (nmea.lon.sec / 3600);
+ return nmea.lon.deg + (double)(nmea.lon.min / 60.0) + (double)(nmea.lon.sec / 3600.0);
 }
 
 UTM

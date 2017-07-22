@@ -175,10 +175,3 @@ Rtc::get_date_string()
                     getd (), geth (), getm (), gets ());
  return str;
 }
-
-word
-Rtc::state (void)
-{
- return State;
-}
-

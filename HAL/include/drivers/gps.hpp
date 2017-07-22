@@ -93,6 +93,7 @@ public:
    USART::USART (ch, bd, this)
  {
   gsv = 0;
+  type = WRONG;
   reset ();
  }
  void

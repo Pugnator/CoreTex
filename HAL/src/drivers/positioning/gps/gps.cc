@@ -222,7 +222,7 @@ Gps::get_speed ()
 int
 Gps::get_alt ()
 {
-	return nmea.alt;
+	return nmea.msl;
 }
 
 double
@@ -264,14 +264,20 @@ Gps::correct_rtc ()
 
  if ( !nmea.utc )
  {
+  DEBUG_LOG (0, "No correct UTC in NEA string\r\n");
   return false;
  }
 
  Rtc r;
- if ( nmea.utc - r.get () > 5 && nmea.utc < MAX_UNIX_TIMESTAMP )
+ if ( (int)(nmea.utc - r.get()) > 15 && nmea.utc < MAX_UNIX_TIMESTAMP )
  {
+  DEBUG_LOG (0, "Old RTC value is %u\r\n", r.get ());
   r.init (nmea.utc);
   DEBUG_LOG (0, "New RTC value is %u\r\n", r.get ());
+ }
+ else
+ {
+   DEBUG_LOG (0, "Nothing to correct in RTC\r\n");
  }
  return true;
 }

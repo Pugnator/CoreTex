@@ -18,7 +18,7 @@ public:
  }
 
  bool
- create (const char* filename, word mode);
+ create (word mode);
  bool
  create (void);
  bool
@@ -36,5 +36,5 @@ private:
  Gps *gps;
  word wpt_count;
  word track_type;
- word current_track;
+ word track_count;
 };

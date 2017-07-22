@@ -17,6 +17,8 @@
 
 #include <core/rtc.hpp>
 #include <core/stm32f10x.hpp>
+#include <xprintf.h>
+#include <core/vmmu.hpp>
 #include <log.hpp>
 #include <global.hpp>
 #include <stdlib.h>
@@ -140,11 +142,38 @@ Rtc::gets ()
  epoch_to_date (&curdate, get ());
  return curdate.second;
 }
+
 void
 Rtc::print ()
 {
  SEGGER_RTT_printf (0, "%04u/%02u/%02u %02u:%02u:%02u\n", gety (), getmn (),
                     getd (), geth (), getm (), gets ());
+}
+
+char*
+Rtc::get_string()
+{
+ char *str = (char*)ALLOC(20);
+ if(!str)
+ {
+   return nullptr;
+ }
+ xsprintf (str, "%04u/%02u/%02u %02u:%02u:%02u", gety (), getmn (),
+                    getd (), geth (), getm (), gets ());
+ return str;
+}
+
+char*
+Rtc::get_date_string()
+{
+ char *str = (char*)ALLOC(20);
+ if(!str)
+ {
+   return nullptr;
+ }
+ xsprintf (str, "%04u-%02u-%02u", gety (), getmn (),
+                    getd (), geth (), getm (), gets ());
+ return str;
 }
 
 word

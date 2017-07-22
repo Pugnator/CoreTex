@@ -79,6 +79,10 @@ public:
  gets ();
  void
  print ();
+ char*
+ get_string();
+ char*
+ get_date_string();
  void
  init (word epoch = 0);
  void

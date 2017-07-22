@@ -72,11 +72,10 @@ typedef struct nmeactx
  word utc;
  coord lat;
  coord lon;
- word msl;
+ int msl;
  char fstr[16];
  double knots;
  double kmh;
- int alt;
  float course;
  bool isvalid;
  word nmeaerr;

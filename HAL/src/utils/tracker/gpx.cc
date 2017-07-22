@@ -25,7 +25,7 @@
 #include "gpx.hpp"
 
 #ifdef GPX_DEBUG
-#define DEBUG_LOG DEBUG_LOG
+#define DEBUG_LOG SEGGER_RTT_printf
 #else
 #define DEBUG_LOG(...)
 #endif
@@ -64,9 +64,12 @@ static const char GPX_FOOTER[] = "\
 
 #define MAX_WAYPOINT_PER_TRACK 10000
 
+#define TRACKS_DIR "tracks"
+
 bool
-GPX::create (const char* filename, word mode)
+GPX::create (word mode)
 {
+ track_count = 0;
  track_type = mode;
  result = mount (&filesystem, "0:", 1);
  DEBUG_LOG (0, "Disk result: %s\r\n", result_to_str (result));
@@ -75,28 +78,42 @@ GPX::create (const char* filename, word mode)
   return false;
  }
 
- mkdir ("tracks");
- if ( FR_OK != chdir ("tracks") )
+ result = mkdir (TRACKS_DIR);
+ if ( FR_OK != result && FR_EXIST != result )
+  {
+   DEBUG_LOG (0, "Failed to create dir %s\r\n", TRACKS_DIR);
+   return false;
+  }
+
+ if ( FR_OK != chdir (TRACKS_DIR) )
  {
+  DEBUG_LOG (0, "Failed to change to %s dir\r\n", TRACKS_DIR);
   return false;
  }
 
- if ( FR_OK != mkdir (filename) )
+ char trackdir[8] =
+ { 0 };
+ Rtc r;
+ xsprintf (trackdir, "%04u%02u%02u", r.gety(), r.getmn(), r.getd());
+
+ result = mkdir (trackdir);
+ if ( FR_OK != result && FR_EXIST != result )
  {
+  DEBUG_LOG (0, "Failed to create dir %s\r\n", trackdir);
   return false;
  }
 
- if ( FR_OK != chdir (filename) )
+ if ( FR_OK != chdir (trackdir) )
  {
+  DEBUG_LOG (0, "Failed to change to %s dir\r\n", trackdir);
   return false;
  }
 
  char trackname[8] =
  { 0 };
- Rtc r;
- xsprintf (trackname, "%u.gpx", r.get ());
+ xsprintf (trackname, "%u.gpx", ++track_count);
 
- DEBUG_LOG (0, "Creating track: %s/%s\r\n", filename, trackname);
+ DEBUG_LOG (0, "Creating track: %s/%s\r\n", trackdir, trackname);
  result = open (&gpx, trackname, FA_CREATE_ALWAYS | FA_WRITE);
  if ( result != FR_OK )
  {
@@ -126,8 +143,7 @@ GPX::create ()
 {
  char trackname[8] =
  { 0 };
- Rtc r;
- xsprintf (trackname, "%u.gpx", r.get ());
+ xsprintf (trackname, "%u.gpx", ++track_count);
  DEBUG_LOG (0, "Creating track: %s\r\n", trackname);
  result = open (&gpx, trackname, FA_CREATE_ALWAYS | FA_WRITE);
  if ( result != FR_OK )

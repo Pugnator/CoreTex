@@ -2,6 +2,8 @@
 #include <drivers/storage/fatdisk.hpp>
 #include <drivers/gps.hpp>
 
+namespace Tracker
+{
 class GPX : public FATdisk
 {
 public:
@@ -38,3 +40,4 @@ private:
  word track_type;
  word track_count;
 };
+}

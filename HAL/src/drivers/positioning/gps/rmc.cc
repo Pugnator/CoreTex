@@ -67,6 +67,8 @@ Gps::fillRMCctx (int sect, const char* field)
    *strchr (field, '.') = 0;
    nmea.utc = str10_to_word (field);
    break;
+  case DATE:
+    break;
   case LONG:
    latlon2crd (field, &nmea.lon);
    break;

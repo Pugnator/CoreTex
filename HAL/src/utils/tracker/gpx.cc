@@ -66,6 +66,9 @@ static const char GPX_FOOTER[] = "\
 
 #define TRACKS_DIR "tracks"
 
+namespace Tracker
+{
+
 bool
 GPX::create (word mode)
 {
@@ -212,4 +215,5 @@ GPX::set_point (void)
  wpt_count++;
  gps->reset ();
  return FR_OK == result;
+}
 }

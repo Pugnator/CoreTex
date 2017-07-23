@@ -3,15 +3,6 @@
 #include <core/usart.hpp>
 #include <stdlib.h>
 
-/*
- 1 - +3.3
- 2 - VBAT
- 3 - GND
- 4 - TX (out)
- 5 - RX (in)
- 6 - GND
- */
-
 #pragma GCC diagnostic ignored "-Wswitch"
 
 #define NMEA_MAX_LEN 82

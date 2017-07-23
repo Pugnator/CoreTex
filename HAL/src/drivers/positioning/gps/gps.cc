@@ -242,7 +242,7 @@ Gps::coord2utm (coord c)
 {
  UTM result;
  result.deg = c.deg;
- double fract = ((c.sec / 60.0) + c.min) / 60.0;
+ double fract = (double)((double)(c.sec / 60.0) + c.min) / 60.0;
  double dummy;
  result.fract = (word) round (fabs (modf (fract, &dummy)) * 1e9);
  DEBUG_LOG (0, "%u.%u.%u = %u.%u\r\n", c.deg, c.min, (word) c.sec,

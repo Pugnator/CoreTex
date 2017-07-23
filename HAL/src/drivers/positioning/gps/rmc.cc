@@ -54,6 +54,8 @@ typedef enum NMEAFORMAT
  END
 } NMEAFORMAT;
 
+namespace GPS
+{
 void
 Gps::fillRMCctx (int sect, const char* field)
 {
@@ -67,8 +69,6 @@ Gps::fillRMCctx (int sect, const char* field)
    *strchr (field, '.') = 0;
    nmea.utc = str10_to_word (field);
    break;
-  case DATE:
-    break;
   case LONG:
    latlon2crd (field, &nmea.lon);
    break;
@@ -88,4 +88,5 @@ Gps::fillRMCctx (int sect, const char* field)
   case END:
    break;
  }
+}
 }

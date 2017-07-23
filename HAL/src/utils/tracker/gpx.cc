@@ -51,8 +51,10 @@ creator=\"Tracker\"\
 
 static const char GPX_TRACK_POINT[] =
   "\
-        <trkpt lat=\"%u.%u\" lon=\"%u.%u\">\"\
+        <trkpt lat=\"%d.%u\" lon=\"%d.%u\">\"\
           <time>%u</time>\
+          <speed>%u</speed>\
+          <msl>%d</msl>\
           <nmea>%s</nmea>\
     			<gsv>%u</gsv>\
         </trkpt>";
@@ -68,7 +70,7 @@ static const char GPX_FOOTER[] = "\
 
 namespace Tracker
 {
-
+using namespace GPS;
 bool
 GPX::create (word mode)
 {
@@ -198,7 +200,7 @@ GPX::set_point (void)
  UTM lonutm = gps->coord2utm (lon);
  char *text = (char*) stalloc (256);
  xsprintf (text, GPX_TRACK_POINT, latutm.deg, latutm.fract, lonutm.deg,
-           lonutm.fract, gps->get_utc (), gps->nmeastr, gps->gsv);
+           lonutm.fract, gps->get_utc(), gps->get_speed(), gps->get_alt(), gps->nmeastr, gps->gsv);
 
  DEBUG_LOG (0, "GPS: %s\r\n", text);
  unsigned written = 0;

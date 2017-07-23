@@ -30,6 +30,8 @@ typedef enum NMEATYPE
  GGA = 1, GSV, VTG, RMC, GSA, GLL, WRONG
 } NMEATYPE;
 
+namespace GPS
+{
 typedef struct NMEATYPESTRUCT
 {
  NMEATYPE type;
@@ -61,6 +63,9 @@ typedef struct
 typedef struct nmeactx
 {
  word utc;
+ char year;
+ char month;
+ char day;
  coord lat;
  coord lon;
  int msl;
@@ -152,4 +157,4 @@ private:
  nmeactx nmea;
  NMEATYPE type;
 };
-
+}

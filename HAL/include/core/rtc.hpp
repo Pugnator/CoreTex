@@ -92,6 +92,8 @@ public:
 private:
  word State;
  datetime_t curdate;
+ word
+ date_to_epoch(datetime_t* date_time);
  void
  epoch_to_date (datetime_t* date_time, word epoch = 0);
 };

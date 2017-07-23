@@ -71,6 +71,18 @@ Rtc::get (void)
  return (RTC->CNTH << 16) | (RTC->CNTL & 0xFFFF);
 }
 
+word Rtc::date_to_epoch(datetime_t* date_time)
+{
+    word second = date_time->second;  // 0-59
+    word minute = date_time->minute;  // 0-59
+    word hour   = date_time->hour;    // 0-23
+    word day    = date_time->day-1;   // 0-30
+    word month  = date_time->month-1; // 0-11
+    word year   = date_time->year;    // 0-99
+    return (((year/4*(365*4+1)+days[year%4][month]+day)*24+hour)*60+minute)*60+second;
+}
+
+
 void
 Rtc::epoch_to_date (datetime_t* date_time, word epoch)
 {

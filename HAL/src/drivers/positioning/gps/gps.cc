@@ -15,6 +15,8 @@
 #define DEBUG_LOG(...)
 #endif
 
+namespace GPS
+{
 const NMEATYPESTRUCT nmeatypesstr[] =
 {
 { GGA, "GGA" },
@@ -210,13 +212,13 @@ Gps::get_speed ()
  word speed = 0;
   if(nmea.knots)
    {
-  	speed = ceil(nmea.knots / 1.852);
+  	speed = ceil(nmea.knots * 1.852);
    }
   if (nmea.kmh)
    {
   	speed = nmea.kmh > speed ? nmea.kmh : speed;
    }
-	return speed;
+	return speed > 5 ? speed : 0;
 }
 
 int
@@ -280,4 +282,5 @@ Gps::correct_rtc ()
    DEBUG_LOG (0, "Nothing to correct in RTC\r\n");
  }
  return true;
+}
 }

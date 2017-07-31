@@ -24,11 +24,10 @@
 
 jmp_buf ex_buf__;
 
-extern "C" void
-SystemInit (void)
+extern "C" void SystemInit(void)
 {
- vmmu_init ();
- hardware_manager_init ();
+ vmmu_init();
+ hardware_manager_init();
  //remap_vector_table();
 
  RCC->CR |= 0x00000001;
@@ -44,10 +43,10 @@ SystemInit (void)
  RCC->CIR = 0x009F0000;
 
  RCC->APB2ENR |=
- RCC_APB2ENR_IOPAEN |
- RCC_APB2ENR_IOPBEN |
- RCC_APB2ENR_IOPCEN |
- RCC_APB2ENR_AFIOEN;
+   RCC_APB2ENR_IOPAEN |
+   RCC_APB2ENR_IOPBEN |
+   RCC_APB2ENR_IOPCEN |
+   RCC_APB2ENR_AFIOEN;
 
  /* System timer config */
  SysTick->LOAD = TIMERTICK;
@@ -57,17 +56,17 @@ SystemInit (void)
  SCB->SHCSR |= 0x00070000; // enable Usage Fault, Bus Fault, and MMU Fault
 
  SysTick->CTRL =
- SysTick_CTRL_CLKSOURCE_Msk |
- SysTick_CTRL_TICKINT_Msk |
- SysTick_CTRL_ENABLE_Msk;
+   SysTick_CTRL_CLKSOURCE_Msk |
+   SysTick_CTRL_TICKINT_Msk |
+   SysTick_CTRL_ENABLE_Msk;
 
- /*  AFIO->EXTICR[0] &= ~AFIO_EXTICR1_EXTI0_PA;
-  AFIO->EXTICR[0] |= AFIO_EXTICR1_EXTI0_PA;
-  EXTI->RTSR |= EXTI_RTSR_TR0;
-  EXTI->FTSR |= EXTI_FTSR_TR0;
-  EXTI->IMR |= EXTI_IMR_MR0;
-  NVIC_EnableIRQ ( ( IRQn_Type ) EXTI0_IRQn );
-  NVIC_SetPriority ( ( IRQn_Type ) EXTI0_IRQn, 15 );*/
+//   AFIO->EXTICR[0] &= ~AFIO_EXTICR1_EXTI0_PA;
+//     AFIO->EXTICR[0] |= AFIO_EXTICR1_EXTI0_PA;
+//     EXTI->RTSR |= EXTI_RTSR_TR0;
+//     EXTI->FTSR |= EXTI_FTSR_TR0;
+//     EXTI->IMR |= EXTI_IMR_MR0;
+//     NVIC_EnableIRQ ( ( IRQn_Type ) EXTI0_IRQn );
+//     NVIC_SetPriority ( ( IRQn_Type ) EXTI0_IRQn, 15 );
  PIN_OUT_PP(LED);
  PIN_LOW(LED);
 }

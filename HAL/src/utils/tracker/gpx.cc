@@ -24,6 +24,10 @@
 #include <core/rtc.hpp>
 #include "gpx.hpp"
 
+#define GPX_AUTHOR
+#define GPX_NAME
+#define GPX_DESCR
+
 static const char GPX_HEADER[] =
   "\
 <?xml version=\"1.0\"?>\

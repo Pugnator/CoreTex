@@ -22,7 +22,7 @@
 
 #define CR_DS_MASK               ((uint32_t)0xFFFFFFFC)
 #define CR_PLS_MASK              ((uint32_t)0xFFFFFF1F)
-static uint32_t seed = 2463534242;
+static uint32_t seed=2463534242;
 
 enum
 {
@@ -35,13 +35,12 @@ enum
  TYPE_OF_ADDRESS_NATIONAL_SUBSCRIBER = 0xC8,
 
  SMS_DELIVER_ONE_MESSAGE = 0x04,
- SMS_SUBMIT = 0x11,
+ SMS_SUBMIT              = 0x11,
 
- SMS_MAX_7BIT_TEXT_LENGTH = 160,
+ SMS_MAX_7BIT_TEXT_LENGTH  = 160,
 };
 
-word
-str16_to_word (const char* str)
+word str16_to_word(const char* str)
 {
  word res = 0;
  char c = 0;
@@ -55,10 +54,9 @@ str16_to_word (const char* str)
  return res;
 }
 
-word
-str10_to_word (const char* str)
+word str10_to_word(const char* str)
 {
- if ( !str )
+ if (!str)
  {
   return 0;
  }
@@ -66,11 +64,11 @@ str10_to_word (const char* str)
  char ch = *str;
  while (ch)
  {
-  if ( (ch >= '0') && (ch <= '9') )
+  if ((ch >= '0') && (ch <= '9'))
   {
    res = (res * 10) + ((ch) - '0');
   }
-  else if ( ',' == ch || '.' == ch )
+  else if (',' == ch || '.' == ch)
   {
    break;
   }
@@ -86,83 +84,83 @@ void delay_ms(word ms)
  while (tickcounter);
 }
 #else
-void
-delay_ms (word ms)
+void delay_us(word us)
 {
- word us = ms * 1000;
- asm volatile ( "MOV R0,%[loops]\n\t"
-   "1: \n\t"
-   "SUB R0, #1\n\t"
-   "CMP R0, #0\n\t"
-   "BNE 1b \n\t" : : [loops] "r" (us) : "memory"
+ asm volatile (  "MOV R0,%[loops]\n\t"\
+                 "1: \n\t"\
+                 "SUB R0, #1\n\t"\
+                 "CMP R0, #0\n\t"\
+                 "BNE 1b \n\t" : : [loops] "r" (us) : "memory"\
  );
+}
+
+void delay_ms(word ms)
+{
+ word us = 1000 * ms;
+ asm volatile (  "MOV R0,%[loops]\n\t"\
+                  "1: \n\t"\
+                  "SUB R0, #1\n\t"\
+                  "CMP R0, #0\n\t"\
+                  "BNE 1b \n\t" : : [loops] "r" (us) : "memory"\
+  );
+}
+
+void delay(word s)
+{
+ word ms = s * 1000;
+ while(ms--)
+ {
+  delay_ms(ms);
+ }
 }
 #endif
 
-void
-delay (word s)
+char *strclone(const char *msg)
 {
- delay_ms (s * 1000);
-}
-
-void
-_delay_us (word us)
-{
-
-}
-
-char *
-strclone (const char *msg)
-{
- char *str = (char *) ALLOC(strlen (msg) + 1);
- if ( !str )
+ char *str = (char *)ALLOC(strlen(msg)+1);
+ if(!str)
   return nullptr;
- strcpy (str, msg);
+ strcpy(str,msg);
  return str;
 }
 
-char *
-ucs2ascii (const char *ucs2)
+char *ucs2ascii (const char *ucs2)
 {
- word size = strlen (ucs2);
- char *ascii = (char*) ALLOC(size + 1);
- if ( !ascii )
+ word size = strlen(ucs2);
+ char *ascii = (char*)ALLOC(size+1);
+ if(!ascii)
   return nullptr;
- memset (ascii, 0, size + 1);
+ memset(ascii, 0, size+1);
  char *p = ascii;
- char s[3] =
- { 0 };
- for (word i = 2; i < size; i += 4)
+ char s[3]={0};
+ for(word i=2; i<size; i+=4)
  {
   s[0] = ucs2[i];
-  s[1] = ucs2[i + 1];
-  *p++ = str16_to_word ((const char*) &s);
+  s[1] = ucs2[i+1];
+  *p++ = str16_to_word((const char*)&s);
  }
  return ascii;
 }
 
-void
-ascii2ucs2 (const char *ascii)
+void ascii2ucs2( const char *ascii )
 {
  const char *ptr = ascii;
- while (*ptr)
+ while( *ptr )
  {
   /* if( *ptr < 127 ) modem2u16( *ptr );
-   else if ( *ptr == 168 ) modem2u16( 0x0401 );
-   else if ( *ptr == 184 ) modem2u16( 0x0451 );
-   else modem2u16( (*ptr-192+1040) );*/
+    else if ( *ptr == 168 ) modem2u16( 0x0401 );
+    else if ( *ptr == 184 ) modem2u16( 0x0451 );
+    else modem2u16( (*ptr-192+1040) );*/
   ++ptr;
  }
 }
 
-int
-ascii2ucs2 (const char* sms_text, uint8_t* output_buffer, int buffer_size)
+int ascii2ucs2(const char* sms_text, uint8_t* output_buffer, int buffer_size)
 {
  return 0;
 }
 
-uint32_t
-xorshift ()
+uint32_t xorshift()
 {
  seed ^= (seed << 13);
  seed ^= (seed >> 17);
@@ -170,14 +168,13 @@ xorshift ()
  return seed;
 }
 
-void
-__assert (int condition, const char *file, int line)
+void __assert(int condition, const char *file, int line)
 {
- if ( condition )
+ if(condition)
  {
   return;
  }
- SEGGER_RTT_printf (0, "assertion failed at %u in %s\r\n", line, file);
+ SEGGER_RTT_printf(0, "assertion failed at %u in %s\r\n", line, file);
 
  uint32_t tmpreg = 0;
  tmpreg = PWR->CR;
@@ -185,14 +182,13 @@ __assert (int condition, const char *file, int line)
  tmpreg |= 1;
  PWR->CR = tmpreg;
  SCB->SCR |= SCB_SCR_SLEEPDEEP;
- SCB->SCR &= (uint32_t) ~((uint32_t)SCB_SCR_SLEEPDEEP);
- __WFI ();
+ SCB->SCR &= (uint32_t)~((uint32_t)SCB_SCR_SLEEPDEEP);
+ __WFI();
 }
 
-int
-isprint (char c)
+int isprint(char c)
 {
- if ( c >= ' ' && c <= '~' )
+ if(c >= ' ' && c <= '~')
  {
   return 1;
  }

@@ -2,8 +2,9 @@
 #include <stdint.h>
 #include <global.hpp>
 
-void delay_ms (uint32_t ms);
-void delay (uint32_t s);
+void delay_us (word us);
+void delay_ms (word ms);
+void delay (word s);
 void tsprintf (			/* Put a formatted string to the memory */
 	char* buff,			/* Pointer to the output buffer */
 	const char*	fmt,	/* Pointer to the format string */

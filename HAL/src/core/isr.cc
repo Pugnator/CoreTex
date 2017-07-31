@@ -136,42 +136,48 @@ extern "C"
 	RTC_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	FLASH_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	RCC_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	EXTI0_IRQHandler (void)
 	{
+	 SEGGER_RTT_WriteString (0, "EXTI0 triggered\r\n");
+	 EXTI->PR |= EXTI_PR_PR0;
 	}
-	;
+
 	void
 	EXTI1_IRQHandler (void)
 	{
+	 EXTI->PR |= EXTI_PR_PR0;
 	}
-	;
+
 	void
 	EXTI2_IRQHandler (void)
 	{
+	 EXTI->PR |= EXTI_PR_PR0;
 	}
-	;
+
 	void
 	EXTI3_IRQHandler (void)
 	{
+	 EXTI->PR |= EXTI_PR_PR0;
 	}
-	;
+
 	void
 	EXTI4_IRQHandler (void)
 	{
+	 EXTI->PR |= EXTI_PR_PR0;
 	}
-	;
+
 	void
 	DMA1_Channel1_IRQHandler (void)
 	{
@@ -180,102 +186,102 @@ extern "C"
 			DMA1->IFCR |= DMA_ISR_TCIF4;
 		}
 	}
-	;
+
 	void
 	DMA1_Channel2_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	DMA1_Channel3_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	DMA1_Channel4_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	DMA1_Channel5_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	DMA1_Channel6_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	DMA1_Channel7_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	ADC1_2_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	USB_HP_CAN1_TX_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	USB_LP_CAN1_RX0_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	CAN1_RX1_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	CAN1_SCE_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	EXTI9_5_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	TIM1_BRK_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	TIM1_UP_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	TIM1_TRG_COM_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	TIM1_CC_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	TIM2_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	TIM3_IRQHandler (void)
 	{
 	}
-	;
+
 	void
 	TIM4_IRQHandler (void)
 	{
 	}
-	;
+
 
 //TO USE: addr2line -e ./bin/program.elf -a 0x8002327 [GDB: p/x pc when it hit for(;;)]
 	USED void

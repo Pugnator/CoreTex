@@ -183,7 +183,7 @@ Gps::prepare (void)
 }
 
 coord
-Gps::getlat ()
+Gps::getlat()
 {
  return nmea.lat;
 }
@@ -195,15 +195,15 @@ Gps::getlon ()
 }
 
 word
-Gps::get_utc ()
+Gps::get_utc()
 {
  return nmea.utc;
 }
 
 word
-Gps::get_speed ()
+Gps::get_speed()
 {
- speed = 0;
+ word speed = 0;
   if(nmea.knots)
    {
   	speed = ceil(nmea.knots / 1.852);
@@ -216,7 +216,7 @@ Gps::get_speed ()
 }
 
 int
-Gps::get_alt ()
+Gps::get_alt()
 {
 	return nmea.alt;
 }

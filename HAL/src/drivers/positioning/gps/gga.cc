@@ -60,7 +60,7 @@ Gps::fillGGActx (int sect, const char* field)
    nmea.lat.dir = *field;
    break;
   case MSL:
-   nmea.msl = str10_to_word (field);
+   nmea.alt = str10_to_word (field);
    break;
   case END:
    break;

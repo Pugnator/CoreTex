@@ -72,7 +72,7 @@ typedef struct nmeactx
  word utc;
  coord lat;
  coord lon;
- word msl;
+ int alt;
  char fstr[16];
  double knots;
  double kmh;
@@ -105,6 +105,10 @@ public:
  reset (void);
  char nmeastr[NMEA_MAX_LEN + 1];
  volatile uint8_t nmeastr_len;
+ word
+ get_speed();
+ int
+ get_alt();
  coord
  getlat ();
  coord
@@ -150,6 +154,8 @@ private:
  fillGLLctx (int sect, const char* field);
  void
  fillGSVctx (int sect, const char* field);
+ void
+ fillGSActx(int sect, const char* field);
 
  nmeactx nmea;
  NMEATYPE type;

@@ -78,6 +78,8 @@
  $GPZTG - UTC & Time to Destination Waypoint
  */
 
+namespace GPS
+{
 NMEAERR
 Gps::parse (char c)
 {
@@ -148,4 +150,5 @@ Gps::parse (char c)
    }
  }
  return NMEA_ERROR_OK;
+}
 }

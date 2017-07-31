@@ -188,8 +188,6 @@ Sdc::get_card_capacity ()
  {
   uint32_t card_capacity = (SD_csd.DeviceSize + 1);
   card_capacity *= (1 << (SD_csd.DeviceSizeMul + 2));
-  card_capacity = (SD_csd.DeviceSize + 1);
-  card_capacity *= (1 << (SD_csd.DeviceSizeMul + 2));
   card_block_size = 1 << (SD_csd.RdBlockLen);
   card_capacity *= card_block_size;
   DEBUG_LOG(0,"CardCapacity = %u [%u]\r\n", card_capacity, card_block_size);

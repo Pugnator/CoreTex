@@ -155,6 +155,10 @@ protected:
  validate (void* obj);
 
 public:
+ WCHAR ff_wtoupper(WCHAR unicode);
+ //ff_convert(unsigned short, unsigned int);
+
+public:
  const char *
  result_to_str (FRESULT r);
  const char *

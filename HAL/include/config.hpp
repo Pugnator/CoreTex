@@ -26,4 +26,6 @@
 
 #define POOL_SIZE 1 * 2048
 
-#define FATDISK_DEBUG
+#define GPX_DEBUG
+
+#define GPS_DEBUG

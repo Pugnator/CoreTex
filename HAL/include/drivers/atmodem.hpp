@@ -142,6 +142,8 @@ public:
  {
   ok = false;
   go = false;
+  memset(modembuf, 0, sizeof modembuf);
+  memset(replystr, 0, sizeof replystr);
   buflen = 0;
   crlf_end = true;
  }

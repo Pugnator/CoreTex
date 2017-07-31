@@ -17,6 +17,8 @@
 #include <drivers/gps.hpp>
 #include <common.hpp>
 
+namespace GPS
+{
 typedef enum NMEAFORMAT
 {
  TYPE,
@@ -65,4 +67,5 @@ Gps::fillGGActx (int sect, const char* field)
   case END:
    break;
  }
+}
 }

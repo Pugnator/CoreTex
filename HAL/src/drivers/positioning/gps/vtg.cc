@@ -22,6 +22,8 @@ typedef enum NMEAFORMAT
  TYPE, TDEGR, TTRUE, TDEGR2, MAGNETIC, SPEEDKN, KNOTS, SPEEDKM, KMH, CS, END
 } NMEAFORMAT;
 
+namespace GPS
+{
 void
 Gps::fillVTGctx (int sect, const char* field)
 {
@@ -37,4 +39,5 @@ Gps::fillVTGctx (int sect, const char* field)
   case END:
    break;
  }
+}
 }

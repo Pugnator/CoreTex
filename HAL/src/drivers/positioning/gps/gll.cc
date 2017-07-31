@@ -49,7 +49,8 @@
  hhmmss.ss = UTC of position
  A = status: A = valid data
  */
-
+namespace GPS
+{
 typedef enum NMEAFORMAT
 {
  TYPE, LAT, LATD, LON, LOND, FIXUTC, CS, END
@@ -63,4 +64,5 @@ Gps::fillGLLctx (int sect, const char* field)
   default:
    break;
  }
+}
 }

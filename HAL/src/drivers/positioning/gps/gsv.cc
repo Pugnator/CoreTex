@@ -42,7 +42,8 @@
  12-15= Information about third SV, same as field 4-7
  16-19= Information about fourth SV, same as field 4-7
  */
-
+namespace GPS
+{
 typedef enum NMEAFORMAT
 {
  TYPE,
@@ -80,4 +81,5 @@ Gps::fillGSVctx (int sect, const char* field)
   default:
    break;
  }
+}
 }

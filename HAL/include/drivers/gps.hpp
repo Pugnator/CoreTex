@@ -3,15 +3,6 @@
 #include <core/usart.hpp>
 #include <stdlib.h>
 
-/*
- 1 - +3.3
- 2 - VBAT
- 3 - GND
- 4 - TX (out)
- 5 - RX (in)
- 6 - GND
- */
-
 #pragma GCC diagnostic ignored "-Wswitch"
 
 #define NMEA_MAX_LEN 82
@@ -39,6 +30,8 @@ typedef enum NMEATYPE
  GGA = 1, GSV, VTG, RMC, GSA, GLL, WRONG
 } NMEATYPE;
 
+namespace GPS
+{
 typedef struct NMEATYPESTRUCT
 {
  NMEATYPE type;
@@ -70,9 +63,12 @@ typedef struct
 typedef struct nmeactx
 {
  word utc;
+ char year;
+ char month;
+ char day;
  coord lat;
  coord lon;
- int alt;
+ int msl;
  char fstr[16];
  double knots;
  double kmh;
@@ -93,6 +89,7 @@ public:
    USART::USART (ch, bd, this)
  {
   gsv = 0;
+  type = WRONG;
   reset ();
  }
  void
@@ -105,10 +102,6 @@ public:
  reset (void);
  char nmeastr[NMEA_MAX_LEN + 1];
  volatile uint8_t nmeastr_len;
- word
- get_speed();
- int
- get_alt();
  coord
  getlat ();
  coord
@@ -125,6 +118,10 @@ public:
  ok ();
  bool
  correct_rtc ();
+ word
+ get_speed();
+ int
+ get_alt();
 
  word gsv;
 
@@ -160,4 +157,4 @@ private:
  nmeactx nmea;
  NMEATYPE type;
 };
-
+}

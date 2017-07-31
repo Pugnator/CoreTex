@@ -47,7 +47,7 @@ Where:
      *39      the checksum data, always begins with *
  *
  */
-
+namespace GPS{
 typedef enum NMEAFORMAT
 {
  TYPE , LAT, LATD, LON, LOND, FIXUTC, CS, END
@@ -64,4 +64,5 @@ void Gps::fillGSActx(int sect, const char* field)
 		default:
 			break;
 	}
+}
 }

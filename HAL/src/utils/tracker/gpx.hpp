@@ -2,13 +2,15 @@
 #include <drivers/storage/fatdisk.hpp>
 #include <drivers/gps.hpp>
 
+namespace Tracker
+{
 class GPX : public FATdisk
 {
 public:
- GPX (Gps* g) :
+ GPX (GPS::Gps* g) :
    FATdisk (1), filesystem (
    { 0 }), result (FR_OK), gpx (
-   { 0 }), gps (g), wpt_count (0), track_type (0)
+   { 0 }), gps (g), wpt_count (0), track_type (0), track_count (0)
  {
 
  }
@@ -18,7 +20,7 @@ public:
  }
 
  bool
- create (const char* filename, word mode);
+ create (word mode);
  bool
  create (void);
  bool
@@ -33,8 +35,9 @@ private:
  FATFS filesystem;
  FRESULT result;
  FIL gpx;
- Gps *gps;
+ GPS::Gps *gps;
  word wpt_count;
  word track_type;
- word current_track;
+ word track_count;
 };
+}

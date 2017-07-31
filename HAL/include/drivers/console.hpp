@@ -28,6 +28,7 @@ public:
   self = this;
   outptr = nullptr;
   isdone = false;
+  memset(strbuf,0,sizeof strbuf);
  }
 
  template<typename T>

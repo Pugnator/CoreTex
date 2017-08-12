@@ -140,7 +140,8 @@ char
 Rtc::geth ()
 {
  epoch_to_date (&curdate, get ());
- return curdate.hour + ZONE_CHARLIE;
+ char h = curdate.hour + ZONE_CHARLIE;
+ return h >= 24 ? h - 24 : h;
 }
 char
 Rtc::getm ()

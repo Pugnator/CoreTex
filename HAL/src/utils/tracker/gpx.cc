@@ -64,13 +64,20 @@ static const char GPX_FOOTER[] = "\
     </trk>\
 </gpx>";
 
-#define MAX_WAYPOINT_PER_TRACK 10000
+#define MAX_WAYPOINT_PER_TRACK 100000
 
 #define TRACKS_DIR "tracks"
 
 namespace Tracker
 {
 using namespace GPS;
+
+void
+GPX::validate_tracks()
+{
+
+}
+
 bool
 GPX::create (word mode)
 {
@@ -114,9 +121,13 @@ GPX::create (word mode)
   return false;
  }
 
- char trackname[8] =
- { 0 };
+ char trackname[8] = {0};
+ FILINFO fno;
+ do
+ {
  xsprintf (trackname, "%u.gpx", ++track_count);
+ result = stat(trackname, &fno);
+ } while(FR_OK == result);
 
  DEBUG_LOG (0, "Creating track: %s/%s\r\n", trackdir, trackname);
  result = open (&gpx, trackname, FA_CREATE_ALWAYS | FA_WRITE);

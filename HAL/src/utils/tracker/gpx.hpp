@@ -27,6 +27,8 @@ public:
  commit (void);
  bool
  set_point (void);
+ void
+ validate_tracks(void);
 
 private:
  bool

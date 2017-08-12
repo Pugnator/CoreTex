@@ -18,11 +18,26 @@ FATdisk::FATdisk (uint8_t channel) :
  SDCstat = 0;
 }
 
+/*
+Bits Contents
+0-4 Second divided by 2
+5-10 Minute (0-59)
+11-15 Hour (0-23 on a 24-hour clock)
+16-20 Day of the month (1-31)
+21-24 Month (1 = January, 2 = February, etc.)
+25-31 Year offset from 1980
+*/
+
 DWORD
 FATdisk::get_fattime (void)
 {
  Rtc r;
- return r.get();
+ return ((DWORD)(r.gety() - 1980) << 25)
+             | ((DWORD)r.getmn() << 21)
+             | ((DWORD)r.getd() << 16)
+             | ((DWORD)r.geth() << 11)
+             | ((DWORD)r.getm() << 5)
+             | ((DWORD)r.gets() >> 1);
 }
 
 DSTATUS

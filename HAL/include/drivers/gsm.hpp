@@ -28,6 +28,8 @@ public:
  char* ussd(const char *request);
  word get_account_debet(CELLULAR_OP op);
  bool get_cc_info();
+ bool go_online();
+ char* get_ICCID();
 private:
  char* extract_sms_body(char *message);
  void parse_sms(char *message);

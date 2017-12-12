@@ -23,7 +23,9 @@ static const char *RESPONSE_TEXT_CRLF[] =
   "\r\nNORMAL POWER DOWN\r\n",
   "",
   "\r\n>",
-  "\r\nREADY\r\n"
+  "\r\nREADY\r\n",
+  "\r\n+CME ERROR: operation not allowed\r\n",
+  "\r\nSHUT OK\r\n"
 };
 
 static const char *RESPONSE_TEXT[] =
@@ -41,7 +43,9 @@ static const char *RESPONSE_TEXT[] =
   "NORMAL POWER DOWN",
   "",
   ">",
-  "READY"
+  "READY",
+  "+CME ERROR: operation not allowed",
+  "SHUT OK"
 };
 
 static const char *ATCMD_TEXT[] =
@@ -96,11 +100,12 @@ void ATMODEM::rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, const char* arg)
   case CMDMODE::CHECK:
    writestr("?");
    break;
-  case CMDMODE::SET:
+  case CMDMODE::WRITE:
    write('=');
    writestr(arg);
    break;
-  case CMDMODE::GET:
+  case CMDMODE::READ:
+   writestr("=?");
    break;
   case CMDMODE::EXEC:
    break;
@@ -152,6 +157,14 @@ bool ATMODEM::wait_for_reply(CMD::ATCMD cmd, ATRESPONSE expected, word timeout)
    ok = false;
    return ok;
   }
+
+  if (strstr(buf, RESPONSE_TEXT_PTR[CME_ERROR]))
+  {
+   SEGGER_RTT_WriteString(0, "CME ERROR\r\n");
+   ok = false;
+   return ok;
+  }
+
   //do we hit the response we expect?
   else if (strstr(buf, RESPONSE_TEXT_PTR[expected]))
   {

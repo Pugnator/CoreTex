@@ -41,7 +41,7 @@ void GSM::sync_speed(void)
 char* GSM::ussd(const char *request)
 {
  ok = false;
- rawcmd(CMD::CUSD, CMDMODE::SET, "1,\"#102#\"");
+ rawcmd(CMD::CUSD, CMDMODE::WRITE, "1,\"#102#\"");
  if (!wait_for_reply(CMD::CUSD, AT_OK))
  {
   go = false;
@@ -113,12 +113,17 @@ bool GSM::setup(void)
  {
   return false;
  }
+
+ if (!set(CMD::CGREG, "1"))
+ {
+  return false;
+ }
  return true;
 }
 
 bool GSM::send_sms(const char* number, const char* text)
 {
- rawcmd(CMD::CMGS, CMDMODE::SET, number);
+ rawcmd(CMD::CMGS, CMDMODE::WRITE, number);
 
  if (!wait_for_reply(CMD::CMGS, AT_INPUT_PROMPT))
  {
@@ -132,7 +137,7 @@ bool GSM::send_sms(const char* number, const char* text)
 
 char* GSM::get_sms_by_index(word num)
 {
- rawcmd(CMD::CMGR, CMDMODE::SET, num);
+ rawcmd(CMD::CMGR, CMDMODE::WRITE, num);
  if (!wait_for_reply(CMD::CPMS, AT_OK))
  {
   SEGGER_RTT_printf(0, "No reply\r\n");
@@ -207,7 +212,7 @@ char* GSM::extract_sms_body(char *message)
 
 bool GSM::delete_all_sms(void)
 {
- rawcmd(CMD::CMGD, CMDMODE::SET, "1,4");
+ rawcmd(CMD::CMGD, CMDMODE::WRITE, "1,4");
  if (!wait_for_reply(CMD::CMGD, AT_OK))
  {
   return false;
@@ -232,12 +237,12 @@ word GSM::get_sms_amount(void)
 
 void GSM::restart(void)
 {
- rawcmd(CMD::CFUN, CMDMODE::SET, "1,1");
+ rawcmd(CMD::CFUN, CMDMODE::WRITE, "1,1");
 }
 
 void GSM::turn_off(void)
 {
- rawcmd(CMD::CPOWD, CMDMODE::SET, 1);
+ rawcmd(CMD::CPOWD, CMDMODE::WRITE, 1);
 }
 
 bool GSM::get(CMD::ATCMD cmd)
@@ -247,7 +252,7 @@ bool GSM::get(CMD::ATCMD cmd)
 
 bool GSM::set(CMD::ATCMD cmd, const char* value)
 {
- rawcmd(cmd, CMDMODE::SET, value);
+ rawcmd(cmd, CMDMODE::WRITE, value);
  return wait_for_reply(cmd, AT_OK);
 }
 
@@ -259,11 +264,52 @@ bool GSM::is_supported(CMD::ATCMD cmd)
 
 bool GSM::get_cc_info()
 {
- rawcmd(CMD::CREG, CMDMODE::CHECK, nullptr);
- bool result = wait_for_reply(CMD::CREG, AT_OK);
+ rawcmd(CMD::CFUN, CMDMODE::WRITE, "0");
+ bool result = wait_for_reply(CMD::CFUN, AT_OK);
  if (result)
  {
   SEGGER_RTT_printf(0, "CELL ID: %s\r\n", modembuf);
  }
  return result;
+}
+
+bool GSM::go_online()
+{
+ rawcmd(CMD::CIPSHUT, CMDMODE::EXEC, nullptr);
+ bool result = wait_for_reply(CMD::CIPSHUT, SHUT_OK);
+ if(!result)
+ {
+	return false;
+ }
+ SEGGER_RTT_printf(0, "GPRS off\r\n");
+
+ rawcmd(CMD::CSTT, CMDMODE::WRITE, "\"internet.beeline.ru\", \"beeline\", \"beeline\"");
+  result = wait_for_reply(CMD::CSTT, AT_OK);
+  if(!result)
+  {
+ 	return false;
+  }
+
+  rawcmd(CMD::SAPBR, CMDMODE::WRITE, "2,1");
+         result = wait_for_reply(CMD::SAPBR, AT_OK);
+         if(!result)
+         {
+        	return false;
+         }
+
+         rawcmd(CMD::CIPSTART, CMDMODE::WRITE, "\"TCP\", \"mail.ru\", \"80\"");
+          result = wait_for_reply(CMD::CIPSTART, AT_OK);
+          if(!result)
+          {
+         	return false;
+          }
+
+ SEGGER_RTT_printf(0, "GPRS started\r\n");
+
+ return true;
+}
+
+char* GSM::get_ICCID()
+{
+ return nullptr;
 }

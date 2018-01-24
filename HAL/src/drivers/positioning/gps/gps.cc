@@ -214,9 +214,9 @@ Gps::get_speed()
    {
   	speed = ceil(nmea.knots * 1.852);
    }
-  if (nmea.kmh)
+  else if (nmea.kmh)
    {
-  	speed = nmea.kmh > speed ? nmea.kmh : speed;
+  	speed = nmea.kmh;
    }
 	return speed > 5 ? speed : 0;
 }
@@ -271,7 +271,7 @@ Gps::correct_rtc ()
  }
 
  Rtc r;
- if ( (int)(nmea.utc - r.get()) > 15 && nmea.utc < MAX_UNIX_TIMESTAMP )
+ if ( (int)abs(nmea.utc - r.get()) > 15 && nmea.utc < MAX_UNIX_TIMESTAMP )
  {
   DEBUG_LOG (0, "Old RTC value is %u\r\n", r.get ());
   r.init (nmea.utc);

@@ -46,7 +46,6 @@ Gps::fillGGActx (int sect, const char* field)
  switch (sect)
  {
   case UTC:
-   *strchr (field, '.') = 0;
    nmea.utc = str10_to_word (field);
    break;
   case LONG:

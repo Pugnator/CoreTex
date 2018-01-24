@@ -127,18 +127,22 @@ char *strclone(const char *msg)
 char *ucs2ascii (const char *ucs2)
 {
  word size = strlen(ucs2);
- char *ascii = (char*)ALLOC(size+1);
+ /* UCS2 hexstring, 4 hex chars per ucs2 char*/
+ if( !size || (size & (4-1)) )
+  return nullptr;
+ /* actual ascii string size = ucs2_hexstring_len / 4  + zero */
+ char *ascii = (char*)ALLOC((size>>2)+1);
  if(!ascii)
   return nullptr;
- memset(ascii, 0, size+1);
  char *p = ascii;
  char s[3]={0};
- for(word i=2; i<size; i+=4)
+ for(word i=0; i<size; i+=4)
  {
-  s[0] = ucs2[i];
-  s[1] = ucs2[i+1];
+  s[0] = ucs2[i+2];
+  s[1] = ucs2[i+3];
   *p++ = str16_to_word((const char*)&s);
  }
+ *p = '\0';
  return ascii;
 }
 

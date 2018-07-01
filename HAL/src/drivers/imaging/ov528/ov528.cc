@@ -13,8 +13,7 @@
 
 class ov528 *ov528::self = nullptr;
 
-void
-ov528::ov528isr (void)
+void ov528::ov528isr (void)
 {
 	if (self->Reg->SR & USART_SR_RXNE) //receive
 	{

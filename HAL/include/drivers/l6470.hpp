@@ -1,3 +1,8 @@
+#pragma once
+
+#include <core/spi.hpp>
+#include <common.hpp>
+
 #define CONFIG_OSC_SEL                 0x000F // Mask for this bit field.
 #define CONFIG_INT_16MHZ               0x0000 // Internal 16MHz, no output
 #define CONFIG_INT_16MHZ_OSCOUT_2MHZ   0x0008 // Default; internal 16MHz, 2MHz output
@@ -83,5 +88,28 @@
 class l6470: public Spi
 {
 public:
+ l6470(short ch): Spi(ch)
+{
+	 PIN_OUT_PP(DSRST_PIN);
+	 PIN_LOW(DSRST_PIN);
+	 delay_ms(500);
+	 PIN_HI(DSRST_PIN);
+	 delay_ms(500);
+	 read(dSPIN_SET_PARAM | 0x18);
+	 read(CONFIG_PWM_DIV_1 | CONFIG_PWM_MUL_2 | CONFIG_SR_290V_us| CONFIG_OC_SD_DISABLE | CONFIG_VS_COMP_DISABLE | CONFIG_SW_HARD_STOP | CONFIG_INT_16MHZ);
 
+	 read(dSPIN_SET_PARAM | 0x0A);
+	 read(0xFF);
+
+	 read(dSPIN_RUN | 1);
+	 uint32_t spd = calc(25.173);
+	 read(spd >> 16);
+	 read(spd >> 8);
+	 read(spd & 0xFF);
+};
+ ~l6470(){};
+
+ void run(float speed);
+private:
+ uint32_t calc(float stepsPerSec);
 };

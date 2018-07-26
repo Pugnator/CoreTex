@@ -85,7 +85,8 @@ DRIVERSSRC:=\
 	$(DRIVERS)/wireless/modem/atcmd.cc \
 	$(DRIVERS)/wireless/modem/bc417.cc \
 	$(DRIVERS)/wireless/modem/gsm.cc \
-	$(DRIVERS)/wireless/nrf24l01/nrf24.cc
+	$(DRIVERS)/wireless/nrf24l01/nrf24.cc \
+	$(DRIVERS)/steppers/l6470.cc
 
 ifeq ($(__USE_CONSOLE), 1)
 DRIVERSSRC+=\

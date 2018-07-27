@@ -2,6 +2,7 @@
 
 #include <core/spi.hpp>
 #include <common.hpp>
+#include <math.h>
 
 #define CONFIG_OSC_SEL                 0x000F // Mask for this bit field.
 #define CONFIG_INT_16MHZ               0x0000 // Internal 16MHz, no output
@@ -85,6 +86,12 @@
 
 #define DSRST_PIN A,3,SPEED_50MHz
 
+enum
+{
+ REVERSE = 0,
+ FORWARD = 1
+};
+
 class l6470: public Spi
 {
 public:
@@ -97,19 +104,26 @@ public:
 	 delay_ms(500);
 	 read(dSPIN_SET_PARAM | 0x18);
 	 read(CONFIG_PWM_DIV_1 | CONFIG_PWM_MUL_2 | CONFIG_SR_290V_us| CONFIG_OC_SD_DISABLE | CONFIG_VS_COMP_DISABLE | CONFIG_SW_HARD_STOP | CONFIG_INT_16MHZ);
-
+	 delay_ms(500);
+	 uint8_t p = 0xFF;
+	 read(dSPIN_SET_PARAM | 0x09);
+	 read(p);
 	 read(dSPIN_SET_PARAM | 0x0A);
-	 read(0xFF);
-
-	 read(dSPIN_RUN | 1);
-	 uint32_t spd = calc(25.173);
-	 read(spd >> 16);
-	 read(spd >> 8);
-	 read(spd & 0xFF);
+	 read(p);
+	 read(dSPIN_SET_PARAM | 0x0B);
+	 read(p);
+	 read(dSPIN_SET_PARAM | 0x0C);
+	 read(p);
+	 delay_ms(500);
+	 uint8_t OCValue = (uint8_t)floor(1000 / 375);
+	 read(dSPIN_SET_PARAM | 0x13);
+	 read(OCValue < 0x0F ? OCValue : 0x0F);
 };
  ~l6470(){};
 
- void run(float speed);
+ void go(float speed, uint8_t forward);
+ void stop(bool force = false);
+ void hiz(bool force = false);
 private:
  uint32_t calc(float stepsPerSec);
 };

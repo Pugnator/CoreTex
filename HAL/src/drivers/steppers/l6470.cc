@@ -1,10 +1,39 @@
 #include <drivers/l6470.hpp>
+#include <log.hpp>
+
+#ifdef L6470_DEBUG
+#define DEBUG_LOG SEGGER_RTT_printf
+#else
+#define DEBUG_LOG(...)
+#endif
+
 /*
 01A red
 01B yellow
 02A brown
 02B blue
 */
+
+l6470::l6470(short ch): Spi(ch)
+{
+	 PIN_OUT_PP(DSRST_PIN);
+	 PIN_LOW(DSRST_PIN);
+	 delay_ms(500);
+	 PIN_HI(DSRST_PIN);
+	 delay_ms(500);
+
+	 if(conncheck())
+	 {
+		 DEBUG_LOG (0, "L6470 OK\r\n");
+		 setup();
+	 }
+	 else
+	 {
+		 DEBUG_LOG (0, "L6470 communication failure\r\n");
+		 SEGGER_RTT_WriteString (0, "Ended\r\n");
+	 }
+};
+
 uint32_t l6470::calc(float stepsPerSec)
 {
  //6250 steps per 1 deg
@@ -41,4 +70,56 @@ void l6470::stop(bool force)
 void l6470::hiz(bool force)
 {
  read(force ? dSPIN_HARD_HIZ : dSPIN_SOFT_HIZ);
+}
+
+void l6470::reset(bool force)
+{
+	if(force)
+	{
+		 PIN_LOW(DSRST_PIN);
+		 delay_ms(500);
+		 PIN_HI(DSRST_PIN);
+	}
+	else
+	{
+		read(dSPIN_RESET_DEVICE);
+	}
+}
+
+bool l6470::conncheck()
+{
+	read(dSPIN_GET_PARAM | 0x18);
+	uint16_t config = (read() << 8) | read();
+	return config == 0x2E88;
+}
+
+void l6470::setup()
+{
+	read(dSPIN_SET_PARAM | 0x18);
+	read(CONFIG_PWM_DIV_1 |
+		 CONFIG_PWM_MUL_2 |
+		 CONFIG_SR_290V_us|
+		 CONFIG_OC_SD_DISABLE |
+		 CONFIG_VS_COMP_DISABLE |
+		 CONFIG_SW_HARD_STOP |
+		 CONFIG_INT_16MHZ);
+
+	 delay_ms(500);
+	 uint8_t p = 0xFF;
+	 read(dSPIN_SET_PARAM | 0x09);
+	 read(p);
+	 delay_ms(500);
+	 read(dSPIN_SET_PARAM | 0x0A);
+	 read(p);
+	 delay_ms(500);
+	 read(dSPIN_SET_PARAM | 0x0B);
+	 read(p);
+	 delay_ms(500);
+	 read(dSPIN_SET_PARAM | 0x0C);
+	 read(p);
+	 delay_ms(500);
+
+	 uint8_t OCValue = (uint8_t)floor(375 / 375);
+	 read(dSPIN_SET_PARAM | 0x13);
+	 read(OCValue < 0x0F ? OCValue : 0x0F);
 }

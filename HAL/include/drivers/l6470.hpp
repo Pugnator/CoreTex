@@ -95,35 +95,15 @@ enum
 class l6470: public Spi
 {
 public:
- l6470(short ch): Spi(ch)
-{
-	 PIN_OUT_PP(DSRST_PIN);
-	 PIN_LOW(DSRST_PIN);
-	 delay_ms(500);
-	 PIN_HI(DSRST_PIN);
-	 delay_ms(500);
-	 read(dSPIN_SET_PARAM | 0x18);
-	 read(CONFIG_PWM_DIV_1 | CONFIG_PWM_MUL_2 | CONFIG_SR_290V_us| CONFIG_OC_SD_DISABLE | CONFIG_VS_COMP_DISABLE | CONFIG_SW_HARD_STOP | CONFIG_INT_16MHZ);
-	 delay_ms(500);
-	 uint8_t p = 0xFF;
-	 read(dSPIN_SET_PARAM | 0x09);
-	 read(p);
-	 read(dSPIN_SET_PARAM | 0x0A);
-	 read(p);
-	 read(dSPIN_SET_PARAM | 0x0B);
-	 read(p);
-	 read(dSPIN_SET_PARAM | 0x0C);
-	 read(p);
-	 delay_ms(500);
-	 uint8_t OCValue = (uint8_t)floor(1000 / 375);
-	 read(dSPIN_SET_PARAM | 0x13);
-	 read(OCValue < 0x0F ? OCValue : 0x0F);
-};
+ l6470(short ch);
  ~l6470(){};
 
  void go(float speed, uint8_t forward);
  void stop(bool force = false);
  void hiz(bool force = false);
+ void reset(bool force = false);
+ bool conncheck();
 private:
+ void setup(void);
  uint32_t calc(float stepsPerSec);
 };

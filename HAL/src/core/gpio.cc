@@ -14,3 +14,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * 2015
  *******************************************************************************/
+
+#include <core/gpio.hpp>
+
+namespace IO
+{
+GPIO::GPIO(IOPORT _port)
+{
+ port = _port;
+}
+
+GPIO::~GPIO()
+{
+}
+}

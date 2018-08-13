@@ -6,5 +6,7 @@
 
 #define LOGGING_CHANNEL 0
 
+#define Print(x) SEGGER_RTT_WriteString(LOGGING_CHANNEL, x)
+#define PrintF(...) SEGGER_RTT_printf(LOGGING_CHANNEL, ##__VA_ARGS__)
 
 void swo_print(const char *msg);

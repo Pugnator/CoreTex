@@ -17,7 +17,7 @@
 
 #include <drivers/mfrc522.hpp>
 #include <common.hpp>
-#include<log.hpp>
+#include <log.hpp>
 
 namespace MIFARE
 {
@@ -27,13 +27,22 @@ namespace MIFARE
 	PIN_OUT_PP(MFC522RST_PIN);
 	PIN_LOW(MFC522RST_PIN);
 	PIN_HI(MFC522RST_PIN);
-	reset();
+	reset ();
 	current_tag_type = MIFARE_ULTRALIGHT;
  }
 
- uint8_t RFID::version ()
+ MIF_VER RFID::version ()
  {
-	return regr (VERSIONREG);
+	uint8_t ver = regr (VERSIONREG);
+	switch (ver)
+	{
+	 case VER_0_0:
+	 case VER_1_0:
+	 case VER_2_0:
+	 case VER_FM17522:
+		return (MIF_VER) ver;
+	}
+	return VER_UNKNOWN;
  }
 
  uint8_t RFID::regr (MIF_REG reg)
@@ -56,16 +65,16 @@ namespace MIFARE
 
  MI_ERROR RFID::is_tag_available ()
  {
-	regw(BITFRAMINGREG, 0x07);
-	payload.clear();
-	payload.push_back(MF1_REQIDL);
+	regw (BITFRAMINGREG, 0x07);
+	payload.clear ();
+	payload.push_back (MF1_REQIDL);
 	uint16_t bnum = 0;
-	MI_ERROR status = tag_command(TRANSCEIVE_CMD, &bnum);
+	MI_ERROR status = tag_command (TRANSCEIVE_CMD, &bnum);
 	PrintF("Usable bits: %u\n", bnum);
 
 	if ((status != MI_OK) || (bnum != 0x10))
 	{
-	  status = MI_ERR;
+	 status = MI_ERR;
 	}
 	return status;
  }
@@ -163,7 +172,7 @@ namespace MIFARE
 	 // Reading the recieved data from FIFO.
 	 for (word i = 0; i < n; i++)
 	 {
-		result.push_back(regr(FIFODATAREG));
+		result.push_back (regr (FIFODATAREG));
 	 }
 	}
 	return status;
@@ -181,23 +190,50 @@ namespace MIFARE
 	regw (reg, res & (~mask));
  }
 
- void RFID::reset()
+ void RFID::reset ()
  {
-	regw(COMMANDREG, SOFTRESET_CMD);
-			// The datasheet does not mention how long the SoftRest command takes to complete.
-			// But the MFRC522 might have been in soft power-down mode (triggered by bit 4 of CommandReg)
-			// Section 8.8.2 in the datasheet says the oscillator start-up time is the start up time of the crystal + 37,74us. Let us be generous: 50ms.
-			delay_ms(50);
-			while ((regr(COMMANDREG) & (1<<4)) != 0)
-			{
-				// PCD still restarting - unlikely after waiting 50ms, but better safe than sorry.
-			}
+	regw (COMMANDREG, SOFTRESET_CMD);
+	// The datasheet does not mention how long the SoftRest command takes to complete.
+	// But the MFRC522 might have been in soft power-down mode (triggered by bit 4 of CommandReg)
+	// Section 8.8.2 in the datasheet says the oscillator start-up time is the start up time of the crystal + 37,74us. Let us be generous: 50ms.
+	delay_ms (50);
+	while ((regr (COMMANDREG) & (1 << 4)) != 0)
+	{
+	 // PCD still restarting - unlikely after waiting 50ms, but better safe than sorry.
+	}
  }
 
- bool RFID::selftest()
+ bool RFID::selftest ()
  {
-	reset();
-	regw(FIFOLEVELREG, 0x80);
+	reset ();
+	PrintF("Firmware version: 0x%X\n", version ());
+
+	regw (FIFOLEVELREG, 0x80);
+	for (uint8_t i = 0; i < 25; ++i)
+	{
+	 regw (FIFODATAREG, 0);
+	}
+	regw (COMMANDREG, MEM_CMD);
+
+	regw (AUTOTESTREG, 0x09);
+
+	regw (FIFODATAREG, 0);
+
+	regw (COMMANDREG, CALCCRC_CMD);
+
+	uint8_t n = 0;
+	for (uint8_t i = 0; i < 0xFF; ++i)
+	{
+	 if (regr (FIFOLEVELREG) >= 64)
+	 {
+		break;
+	 }
+	}
+
+	for (uint8_t i = 0; i < 64; i++)
+	{
+	 PrintF("0x%X ", regr (FIFODATAREG));
+	}
 	return true;
  }
 

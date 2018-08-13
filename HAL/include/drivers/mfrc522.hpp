@@ -8,6 +8,15 @@ namespace MIFARE
 
  typedef enum
  {
+	VER_UNKNOWN = 0,
+	VER_FM17522 = 0x88,
+	VER_0_0 = 0x90,
+	VER_1_0 = 0x91,
+	VER_2_0 = 0x92
+ } MIF_VER;
+
+ typedef enum
+ {
 	IDLE_CMD = 0x00, // NO action; Cancel the current command
 	MEM_CMD = 0x01, // Store 25 byte into the internal buffer.
 	GENID_CMD = 0x02, // Generates a 10 byte random ID number.
@@ -18,7 +27,7 @@ namespace MIFARE
 	TRANSCEIVE_CMD = 0x0C, // Transmit and receive data,
 	AUTHENT_CMD = 0x0E, // Authentication Key
 	SOFTRESET_CMD = 0x0F // Reset
- }MIF_CMD;
+ } MIF_CMD;
 
  typedef enum
  {
@@ -35,7 +44,7 @@ namespace MIFARE
 	MF1_RESTORE = 0xC2,      // transfer block data to the buffer
 	MF1_TRANSFER = 0xB0,      // save the data in the buffer
 	MF1_HALT = 0x50      // Sleep
- }TAG_CMD;
+ } TAG_CMD;
 
  typedef enum
  {
@@ -135,16 +144,16 @@ namespace MIFARE
 	;
 
  public:
-	void reset();
-	uint8_t version ();
+	void reset ();
+	MIF_VER version ();
 	bool check ();
-	bool selftest();
+	bool selftest ();
 	MI_ERROR is_tag_available ();
 	MI_ERROR tag_command (MIF_CMD cmd, uint16_t *bits_num);
 
  private:
-	void reg_mask(MIF_REG reg, uint8_t mask);
-	void reg_unmask(MIF_REG reg, uint8_t mask);
+	void reg_mask (MIF_REG reg, uint8_t mask);
+	void reg_unmask (MIF_REG reg, uint8_t mask);
 	uint8_t regr (MIF_REG reg);
 	void regw (MIF_REG reg, uint8_t data);
 	MIFARE_TYPE current_tag_type;

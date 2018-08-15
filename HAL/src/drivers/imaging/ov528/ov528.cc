@@ -17,7 +17,6 @@ void ov528::ov528isr (void)
 {
 	if (self->Reg->SR & USART_SR_RXNE) //receive
 	{
-		BLINK;
 		short tmp = self->Reg->DR;
 		self->Reg->SR &= ~USART_SR_RXNE;
 		if (!self->pictransfer && self->buf_size < sizeof self->buf)

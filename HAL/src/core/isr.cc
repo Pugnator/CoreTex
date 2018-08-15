@@ -347,12 +347,6 @@ extern "C"
 		}
 		d.close (&dump);
 #endif
-		/* When the following line is hit, the variables contain the register values. */
-		for (;;)
-		{
-			delayus_asm(300000L);
-			BLINK;
-		}
 	}
 
 	void

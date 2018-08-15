@@ -121,7 +121,7 @@ morse_dit (void)
 {
   for (int i = 0; i < DOTLEN; i++)
     {
-      PIN_TOGGLE(SWEEP);
+      //PIN_TOGGLE(SWEEP);
       delay_ms (1);
     }
   delay_ms (500);
@@ -132,7 +132,7 @@ morse_dash ()
 {
   for (int i = 0; i < 3 * DOTLEN; i++)
     {
-      PIN_TOGGLE(SWEEP);
+      //PIN_TOGGLE(SWEEP);
       delay_ms (1);
     }
   delay_ms ( DOTLEN);

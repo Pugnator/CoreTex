@@ -206,6 +206,7 @@ namespace MIFARE
  bool RFID::selftest ()
  {
 	reset ();
+	delay_ms(500);
 	PrintF("Firmware version: 0x%X\n", version ());
 
 	regw (FIFOLEVELREG, 0x80);

@@ -19,12 +19,54 @@
 
 namespace IO
 {
-GPIO::GPIO(IOPORT _port)
-{
- port = _port;
-}
 
-GPIO::~GPIO()
-{
-}
+ GPIO_pin::GPIO_pin (PINCFG conf)
+ {
+	switch (conf.speed)
+	{
+	 case IOSPEED_10MHz:
+		break;
+	 case IOSPEED_20MHz:
+		break;
+	 case IOSPEED_50MHz:
+		break;
+	 default:
+		break;
+	}
+
+	switch (conf.mode)
+	{
+	 case IN_PD:
+		break;
+	 case IN_PU:
+		break;
+	 case IN_FLT:
+		break;
+	 case IN_ANALOG:
+		break;
+	 case OUT_PP:
+		break;
+	 case OUT_OD:
+		break;
+	 case OUT_ALT_PP:
+		break;
+	 case OUT_ALT_OD:
+		break;
+	 default:
+		break;
+	}
+ }
+
+ GPIO_pin::~GPIO_pin ()
+ {
+ }
+
+ GPIO::GPIO (IOPORT _port)
+ {
+	port = _port;
+ }
+
+ GPIO::~GPIO ()
+ {
+ }
 }

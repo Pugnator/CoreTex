@@ -67,6 +67,5 @@ extern "C" void SystemInit(void)
      EXTI->IMR |= EXTI_IMR_MR0;
      NVIC_EnableIRQ ( ( IRQn_Type ) EXTI0_IRQn );
      NVIC_SetPriority ( ( IRQn_Type ) EXTI0_IRQn, 15 );*/
- PIN_OUT_PP(LED);
- PIN_LOW(LED);
+
 }

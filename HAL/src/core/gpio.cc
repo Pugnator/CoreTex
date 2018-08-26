@@ -16,49 +16,98 @@
  *******************************************************************************/
 
 #include <core/gpio.hpp>
+#include <common.hpp>
+#include <log.hpp>
 
 namespace IO
 {
 
  GPIO_pin::GPIO_pin (PINCFG conf)
  {
-	switch (conf.speed)
+	config = conf;
+	//Let headers to configure it according to MCU type by itself
+	switch (conf.port)
 	{
-	 case IOSPEED_10MHz:
+	 case PORTA:
+		pbase = GPIOA;
 		break;
-	 case IOSPEED_20MHz:
+	 case PORTB:
+		pbase = GPIOB;
 		break;
-	 case IOSPEED_50MHz:
+	 case PORTC:
+		pbase = GPIOC;
+		break;
+	 case PORTD:
+		pbase = GPIOD;
+		break;
+	 case PORTE:
+		pbase = GPIOE;
 		break;
 	 default:
+		Print("Wrong port provided\n");
+		__assert (!conf.port, __FILE__, __LINE__);
 		break;
 	}
 
-	switch (conf.mode)
+	((uint32_t*) pbase)[config.index >> 3u] &= ~(0x0Fu << ((config.index % 8u) << 2u));
+	switch (config.mode)
 	{
 	 case IN_PD:
+		((uint32_t*) pbase)[config.index >> 3u] |= (0x08u | 0) << ((config.index % 8u) << 2u);
+		pbase->BRR = (1u << config.index);
 		break;
 	 case IN_PU:
+		((uint32_t*) pbase)[config.index >> 3u] |= (0x08u | 0) << ((config.index % 8u) << 2u);
+		pbase->BSRR = (1u << config.index);
 		break;
 	 case IN_FLT:
+		((uint32_t*) pbase)[config.index >> 3u] |= (0x04u | config.speed) << ((config.index % 8u) << 2u);
 		break;
 	 case IN_ANALOG:
+		((uint32_t*) pbase)[config.index >> 3u] |= (0 | config.speed) << ((config.index % 8u) << 2u);
 		break;
 	 case OUT_PP:
+		((uint32_t*) pbase)[config.index >> 3u] |= (0x00u | config.speed) << ((config.index % 8u) << 2u);
 		break;
 	 case OUT_OD:
+		((uint32_t*) pbase)[config.index >> 3u] |= (0x04u | config.speed) << ((config.index % 8u) << 2u);
 		break;
 	 case OUT_ALT_PP:
+		((uint32_t*) pbase)[config.index >> 3u] |= (0x08u | config.speed) << ((config.index % 8u) << 2u);
 		break;
 	 case OUT_ALT_OD:
+		((uint32_t*) pbase)[config.index >> 3u] |= (0x0Cu | config.speed) << ((config.index % 8u) << 2u);
 		break;
 	 default:
+		Print("Wrong pin mode provided\n");
+		__assert (!conf.port, __FILE__, __LINE__);
 		break;
 	}
  }
 
  GPIO_pin::~GPIO_pin ()
  {
+ }
+
+ void GPIO_pin::low ()
+ {
+	pbase->BRR = (1u << config.index);
+ }
+
+ void GPIO_pin::hi ()
+ {
+	pbase->BSRR = (1u << config.index);
+ }
+
+ void GPIO_pin::toggle ()
+ {
+	pbase->BSRR =
+	  (pbase->ODR & (1u << config.index)) ? ((1u << config.index) << 16u) : (1u << config.index);
+ }
+
+ PINSTATE GPIO_pin::get_state()
+ {
+	return pbase->IDR & (1u << config.index) == (1u << config.index) ? SET : RESET;
  }
 
  GPIO::GPIO (IOPORT _port)

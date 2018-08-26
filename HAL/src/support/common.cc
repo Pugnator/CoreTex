@@ -165,7 +165,7 @@ void __assert(int condition, const char *file, int line)
   {
    return;
   }
-  SEGGER_RTT_printf(0, "assertion failed at %u in %s\r\n", line, file);
+  PrintF(0, "assertion failed at %u in %s\r\n", line, file);
 
   uint32_t tmpreg = 0;
   tmpreg = PWR->CR;

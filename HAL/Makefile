@@ -131,6 +131,7 @@ SUPPORTSRC:=\
 	$(SUPPORT)/compat.cc \
 	$(SUPPORT)/log.cc \
 	$(SUPPORT)/make_error.cc \
+	$(SUPPORT)/queue.cc \
 	$(SUPPORT)/morse.cc
 
 XPRINTFSRC:=\

@@ -21,7 +21,6 @@
 #include <global.hpp>
 #include <queue.hpp>
 #include <log.hpp>
-#include <list.hpp>
 
 #ifdef UART_DEBUG
 #define DEBUG_LOG SEGGER_RTT_printf

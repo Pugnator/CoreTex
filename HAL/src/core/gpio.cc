@@ -18,6 +18,7 @@
 #include <core/gpio.hpp>
 #include <common.hpp>
 #include <log.hpp>
+#include <core/isr_helper.hpp>
 
 namespace IO
 {
@@ -83,10 +84,20 @@ namespace IO
 		__assert (!conf.port, __FILE__, __LINE__);
 		break;
 	}
+
+	HARDWARE_TABLE[EXTI0_HANDLER] = (word) this;
+	//int irqnum = USART1_IRQn - 1;
+	//NVIC_EnableIRQ((IRQn_Type) irqnum);
+	//NVIC_SetPriority((IRQn_Type) irqnum, 3);
  }
 
  GPIO_pin::~GPIO_pin ()
  {
+ }
+
+ void GPIO_pin::isr(word address)
+ {
+
  }
 
  void GPIO_pin::low ()
@@ -107,7 +118,7 @@ namespace IO
 
  PINSTATE GPIO_pin::get_state()
  {
-	return pbase->IDR & (1u << config.index) == (1u << config.index) ? SET : RESET;
+	return pbase->IDR & (1u << config.index) ? SET : RESET;
  }
 
  GPIO::GPIO (IOPORT _port)

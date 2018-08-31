@@ -101,7 +101,7 @@ Gps::latlon2crd (const char* str, coord* c)
 	//Find and extract fraction of minutes
 	while (*p++ != '.');
 
-	word minute_fr = str10_to_word (p);
+	int minute_fr = str10_to_word (p);
 	int secDigits = floor (log10 (abs (minute_fr))) + 1;
 	double secPower = pow (10, secDigits);
 	c->sec = minute_fr / secPower;

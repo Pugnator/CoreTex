@@ -20,8 +20,7 @@
 #include <log.hpp>
 #include <core/io_macro.hpp>
 #include <core/isr_helper.hpp>
-#include <drivers/storage/fatdisk.hpp>
-#include <xprintf.h>
+#include <core/gpio.hpp>
 
 volatile word tickcounter = 0;
 volatile word timerms = 0;
@@ -150,6 +149,12 @@ extern "C"
 	void
 	EXTI0_IRQHandler (void)
 	{
+	  IO::GPIO_pin* i = (IO::GPIO_pin*) HARDWARE_TABLE[EXTI0_HANDLER];
+	      if (i)
+	      {
+	        i->isr (0);
+	        return;
+	      }
 	}
 	;
 	void

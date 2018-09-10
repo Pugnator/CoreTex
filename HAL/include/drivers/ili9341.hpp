@@ -37,7 +37,7 @@
 #define ILI9341_INTERFACE			0xF6
 #define ILI9341_PRC				    0xF7
 
-namespace TFT
+namespace GLCD
 {
  typedef enum
  {
@@ -70,9 +70,6 @@ namespace TFT
 
 	void set_cursor (uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 	void set_pixel (uint16_t x, uint16_t y);
-
-	void line (uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-	void circle(uint16_t x0, uint16_t y0, uint16_t r);
 
  protected:
 	uint32_t reg_read (uint8_t command, uint8_t parameter);

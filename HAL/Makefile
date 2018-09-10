@@ -88,9 +88,9 @@ DRIVERSSRC:=\
 	$(DRIVERS)/wireless/nrf24l01/nrf24.cc \
 	$(DRIVERS)/userio/access/mfrc522/mfrc522.cc \
 	$(DRIVERS)/userio/display/ili9341/hal.cc \
-	$(DRIVERS)/userio/display/ili9341/draw.cc \
-	$(DRIVERS)/userio/display/ili9341/font.cc \
-	$(DRIVERS)/userio/display/ili9341/windows.cc \
+	$(DRIVERS)/userio/display/gfx/draw.cc \
+	$(DRIVERS)/userio/display/gfx/font.cc \
+	$(DRIVERS)/userio/display/gfx/windows.cc \
 	$(DRIVERS)/steppers/l6470.cc
 
 ifeq ($(__USE_CONSOLE), 1)

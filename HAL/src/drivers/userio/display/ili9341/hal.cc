@@ -12,11 +12,11 @@
 #include <common.hpp>
 #include <log.hpp>
 
-namespace TFT
+namespace GLCD
 {
 
  /**********************************************************************************************//**
-  * \fn	uint8_t TFT::send (TFT_MODE mode, uint8_t data)
+  * \fn	uint8_t send (TFT_MODE mode, uint8_t data)
   *
   * \brief	Send the data to the display
   *
@@ -35,6 +35,34 @@ namespace TFT
 	 PIN_HI(DC);
 	}
 	return read (data);
+ }
+ 
+ void TFT::set_color (uint16_t color)
+ {
+	current_color = color;
+ }
+
+ void TFT::set_cursor (uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
+ {
+	send (CMD, ILI9341_COLUMN_ADDR);
+	send (DATA, x1 >> 8);
+	send (DATA, x1 & 0xFF);
+	send (DATA, x2 >> 8);
+	send (DATA, x2 & 0xFF);
+
+	send (CMD, ILI9341_PAGE_ADDR);
+	send (DATA, y1 >> 8);
+	send (DATA, y1 & 0xFF);
+	send (DATA, y2 >> 8);
+	send (DATA, y2 & 0xFF);
+ }
+
+ void TFT::set_pixel (uint16_t x, uint16_t y)
+ {
+	set_cursor (x, y, x, y);
+	send (CMD, ILI9341_GRAM);
+	send (DATA, current_color >> 8);
+	send (DATA, current_color & 0xFF);
  }
 
  void TFT::configure ()

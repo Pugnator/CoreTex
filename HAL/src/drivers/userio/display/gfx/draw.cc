@@ -8,42 +8,14 @@
  *
  */
 
-#include <drivers/ili9341.hpp>
+#include "gfx.hpp"
 #include <common.hpp>
 #include <log.hpp>
 #include <cstdlib>
 
-namespace TFT
+namespace Graphics
 {
- void TFT::set_color (uint16_t color)
- {
-	current_color = color;
- }
-
- void TFT::set_cursor (uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
- {
-	send (CMD, ILI9341_COLUMN_ADDR);
-	send (DATA, x1 >> 8);
-	send (DATA, x1 & 0xFF);
-	send (DATA, x2 >> 8);
-	send (DATA, x2 & 0xFF);
-
-	send (CMD, ILI9341_PAGE_ADDR);
-	send (DATA, y1 >> 8);
-	send (DATA, y1 & 0xFF);
-	send (DATA, y2 >> 8);
-	send (DATA, y2 & 0xFF);
- }
-
- void TFT::set_pixel (uint16_t x, uint16_t y)
- {
-	set_cursor (x, y, x, y);
-	send (CMD, ILI9341_GRAM);
-	send (DATA, current_color >> 8);
-	send (DATA, current_color & 0xFF);
- }
-
- void TFT::line (uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
+ void GFX::line (uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
  {
 	int32_t deltax = std::abs (x1 - x0);
 	int32_t deltay = std::abs (y1 - y0);
@@ -72,7 +44,7 @@ namespace TFT
 	}
  }
 
- void TFT::circle (uint16_t x0, uint16_t y0, uint16_t r)
+ void GFX::circle (uint16_t x0, uint16_t y0, uint16_t r)
  {
 	int x = 0;
 	int y = r;

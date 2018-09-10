@@ -7,6 +7,7 @@
 #include <drivers/gps.hpp>
 #include <log.hpp>
 #include <math.h>
+#include <cstdlib>
 #include <string.h>
 
 #define RTT_DEBUG_CHANNEL 0
@@ -102,7 +103,7 @@ Gps::latlon2crd (const char* str, coord* c)
 	while (*p++ != '.');
 
 	int minute_fr = str10_to_word (p);
-	int secDigits = floor (log10 (abs (minute_fr))) + 1;
+	int secDigits = floor (log10 (std::abs (minute_fr))) + 1;
 	double secPower = pow (10, secDigits);
 	c->sec = minute_fr / secPower;
 	c->sec *= 60.0;

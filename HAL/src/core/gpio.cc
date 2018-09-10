@@ -26,6 +26,7 @@ namespace IO
  GPIO_pin::GPIO_pin (PINCFG conf)
  {
 	config = conf;
+	Reg = nullptr;
 	//Let headers to configure it according to MCU type by itself
 	switch (conf.port)
 	{

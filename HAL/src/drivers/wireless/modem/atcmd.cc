@@ -58,7 +58,7 @@ const char *ATMODEM::get_cmd_str(CMD::ATCMD cmd)
  return ATCMD_TEXT[cmd];
 }
 
-void ATMODEM::isr(word address)
+void ATMODEM::isr(uint32_t address)
 {
  volatile uint16_t __SR = Reg->SR;
  if (__SR & USART_SR_RXNE)
@@ -130,7 +130,7 @@ void ATMODEM::rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, const char* arg)
 
 }
 
-void ATMODEM::rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, word arg)
+void ATMODEM::rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, uint32_t arg)
 {
  //XXX: fix it
  char result[2] =
@@ -141,7 +141,7 @@ void ATMODEM::rawcmd(CMD::ATCMD cmd, CMDMODE::MODE mode, word arg)
  rawcmd(cmd, mode, result);
 }
 
-bool ATMODEM::wait_for_reply(CMD::ATCMD cmd, ATRESPONSE expected, word timeout)
+bool ATMODEM::wait_for_reply(CMD::ATCMD cmd, ATRESPONSE expected, uint32_t timeout)
 {
  ok = false;
  char buf[MODEM_IN_BUFFER_SIZE + 1] = {0};

@@ -30,7 +30,7 @@ const NMEATALKERSTRUCT nmeatalkerstr[] =
 { (NMEATALKER) 0, NULL }, };
 
 void
-Gps::isr (word address)
+Gps::isr (uint32_t address)
 {
 	if (Reg->SR & USART_SR_RXNE)
 	{
@@ -194,7 +194,7 @@ Gps::getlon ()
 	return nmea.lon;
 }
 
-word
+uint32_t
 Gps::get_utc ()
 {
 	return nmea.utc;
@@ -219,8 +219,8 @@ Gps::coord2utm (coord c)
 	result.deg = c.deg;
 	double fract = ((c.sec / 60.0) + c.min)/60.0;
 	fract *= 1000000UL;
-	result.fract = (word) fract;
-	SEGGER_RTT_printf(0, "%u.%u.%u = %u.%u\r\n", c.deg, c.min, (word)c.sec, result.deg, result.fract);
+	result.fract = (uint32_t) fract;
+	SEGGER_RTT_printf(0, "%u.%u.%u = %u.%u\r\n", c.deg, c.min, (uint32_t)c.sec, result.deg, result.fract);
 	return result;
 }
 

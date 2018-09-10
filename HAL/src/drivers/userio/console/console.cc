@@ -111,8 +111,8 @@ namespace
  memdump_func (Console *self)
  {
   CHECK_ARGS2;
-  word address = str16_to_word (arg1);
-  word len = str10_to_word (arg2);
+  uint32_t address = str16_to_uint32_t (arg1);
+  uint32_t len = str10_to_uint32_t (arg2);
   self->put_dump ((const void*) address, address, len, 1);
   FREE(arg1);
   FREE(arg2);
@@ -142,7 +142,7 @@ namespace
  static void
  fault_func (Console *self)
  {
-  volatile word a = 10 / 0;
+  volatile uint32_t a = 10 / 0;
  }
 #pragma GCC diagnostic pop
  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -184,13 +184,13 @@ namespace
  {
   if (arg1)
   {
-   self->foreground (str10_to_word (arg1));
+   self->foreground (str10_to_uint32_t (arg1));
    FREE(arg1);
   }
 
   if (arg2)
   {
-   self->background (str10_to_word (arg2));
+   self->background (str10_to_uint32_t (arg2));
    FREE(arg2);
   }
  }
@@ -383,11 +383,11 @@ Console::print (int num)
 }
 
 void
-Console::print (word num)
+Console::print (uint32_t num)
 {
 
  memset (strbuf, 0, sizeof strbuf);
- word i = 0;
+ uint32_t i = 0;
  do
  {
   strbuf[i++] = num % 10 + '0';

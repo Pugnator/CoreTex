@@ -14,7 +14,7 @@
 class USART : private IODriver
 {
 public:
- USART (word ch, word bd, USART *isrptr = nullptr);
+ USART (uint32_t ch, uint32_t bd, USART *isrptr = nullptr);
  ~USART(void);
 
  virtual void write (char c);
@@ -23,14 +23,14 @@ public:
  virtual const char* name();
  void dma_on (void);
  void dma_off (void);
- void dmatx_go(word size);
- void dmarx_go(word size);
+ void dmatx_go(uint32_t size);
+ void dmarx_go(uint32_t size);
  void disable (void);
  USART* next;
  /* ISRs */
- virtual void isr (word address);
- virtual void dmarx (word address);
- virtual void dmatx (word address);
+ virtual void isr (uint32_t address);
+ virtual void dmarx (uint32_t address);
+ virtual void dmatx (uint32_t address);
  uint8_t *get_rx_buf();
  uint8_t *get_tx_buf();
 protected:
@@ -39,8 +39,8 @@ protected:
  void signout();
  uint8_t outbuf[32];
  uint8_t inbuf[32];
- void init (char channel, word baud);
- word channel;
+ void init (char channel, uint32_t baud);
+ uint32_t channel;
  USART_TypeDef* Reg;
  USART* extirq;
 };

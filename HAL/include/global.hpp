@@ -10,12 +10,10 @@
 #define OFF false
 #define ON true
 
-typedef uint32_t word;
-
 #define CONSOLE_SPEED 9600
 extern jmp_buf ex_buf__;
-extern volatile word tickcounter;
-extern volatile word timerms;
+extern volatile uint32_t tickcounter;
+extern volatile uint32_t timerms;
 
 #define WAIT_FOR(ms) tickcounter=ms
 #define STILL_WAIT tickcounter
@@ -37,7 +35,7 @@ extern volatile word timerms;
 		delayus_asm(1000);\
 } while(0)
 
-extern volatile word __attribute__((section (".vectorsSection"))) HARDWARE_TABLE[76];
+extern volatile uint32_t __attribute__((section (".vectorsSection"))) HARDWARE_TABLE[76];
 
 /* Interrupt vector table enumerators */
 typedef enum ISR_VECTOR

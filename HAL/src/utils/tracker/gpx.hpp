@@ -31,5 +31,5 @@ private:
 	FIL gpx;
 	Gps *gps;
 	unsigned written;
-	word track_count;
+	uint32_t track_count;
 };

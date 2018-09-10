@@ -6,7 +6,7 @@
 class GSM: public ATMODEM
 {
 public:
- GSM(short ch, word bd)
+ GSM(short ch, uint32_t bd)
 : ATMODEM::ATMODEM(ch, bd)
  {
   ok = false;
@@ -22,11 +22,11 @@ public:
  void turn_off(void);
 
  bool send_sms(const char* number, const char* text);
- char* get_sms_by_index(word num);
+ char* get_sms_by_index(uint32_t num);
  bool delete_all_sms(void);
- word get_sms_amount(void);
+ uint32_t get_sms_amount(void);
  char* ussd(const char *request);
- word get_account_debet(CELLULAR_OP op);
+ uint32_t get_account_debet(CELLULAR_OP op);
  bool get_cc_info();
  bool go_online();
  char* get_ICCID();
@@ -36,6 +36,6 @@ private:
  void sync_speed(void);
 
 private:
- word cellid;
- word lac;
+ uint32_t cellid;
+ uint32_t lac;
 };

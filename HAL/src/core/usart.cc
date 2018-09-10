@@ -34,7 +34,7 @@
 #define _SR Reg->SR
 #define _DR Reg->DR
 
-USART::USART(word ch, word bd, USART *isrptr)
+USART::USART(uint32_t ch, uint32_t bd, USART *isrptr)
 {
  __disable_irq();
  channel = ch;
@@ -60,15 +60,15 @@ USART::~USART(void)
 void USART::dma_on()
 {
  __disable_irq();
- //HARDWARE_TABLE[DMA1_Channel4_IRQn + IRQ0_EX] = (word) &dmatx;
- //HARDWARE_TABLE[DMA1_Channel5_IRQn + IRQ0_EX] = (word) &dmarx;
+ //HARDWARE_TABLE[DMA1_Channel4_IRQn + IRQ0_EX] = (uint32_t) &dmatx;
+ //HARDWARE_TABLE[DMA1_Channel5_IRQn + IRQ0_EX] = (uint32_t) &dmarx;
 
  RCC->AHBENR |= RCC_AHBENR_DMA1EN;
 
  //Transmit
  DMA1_Channel4->CCR  &= ~DMA_CCR4_EN;
- DMA1_Channel4->CPAR  =  (word)&Reg->DR;
- DMA1_Channel4->CMAR  =  (word)&outbuf[0];
+ DMA1_Channel4->CPAR  =  (uint32_t)&Reg->DR;
+ DMA1_Channel4->CMAR  =  (uint32_t)&outbuf[0];
  DMA1_Channel4->CNDTR =  sizeof outbuf;
 
 
@@ -90,8 +90,8 @@ void USART::dma_on()
 
  //Receive
  DMA1_Channel5->CCR  &= ~DMA_CCR5_EN;
- DMA1_Channel5->CPAR  =  (word)&Reg->DR;
- DMA1_Channel5->CMAR  =  (word)&inbuf[0];
+ DMA1_Channel5->CPAR  =  (uint32_t)&Reg->DR;
+ DMA1_Channel5->CMAR  =  (uint32_t)&inbuf[0];
  DMA1_Channel5->CNDTR =  sizeof inbuf;
 
 
@@ -126,7 +126,7 @@ bool USART::is_dma_on()
  return RCC->AHBENR & RCC_AHBENR_DMA1EN;
 }
 
-void USART::dmatx_go(word size)
+void USART::dmatx_go(uint32_t size)
 {
  DMA1_Channel4->CCR  &= ~DMA_CCR4_EN;
  DMA1_Channel4->CNDTR =  size;
@@ -134,7 +134,7 @@ void USART::dmatx_go(word size)
  DMA1_Channel4->CCR  |=  DMA_CCR4_EN;
 }
 
-void USART::dmarx_go(word size)
+void USART::dmarx_go(uint32_t size)
 {
  DMA1_Channel5->CCR  &= ~DMA_CCR5_EN;
  DMA1_Channel5->CNDTR =  size;
@@ -188,7 +188,7 @@ char USART::read()
  return Reg->DR;
 }
 
-void USART::dmarx(word address)
+void USART::dmarx(uint32_t address)
 {
  if(DMA1->ISR & DMA_ISR_TCIF4)
  {
@@ -204,7 +204,7 @@ void USART::dmarx(word address)
  }
 }
 
-void USART::dmatx(word address)
+void USART::dmatx(uint32_t address)
 {
 	if(DMA1->ISR & DMA_ISR_GIF5)
 	{
@@ -224,7 +224,7 @@ void USART::dmatx(word address)
  }
 }
 
-void USART::isr(word address)
+void USART::isr(uint32_t address)
 {
 	if(address)
 	{
@@ -294,7 +294,7 @@ void USART::isr(word address)
  }
 }
 
-void USART::init(char channel, word baud)
+void USART::init(char channel, uint32_t baud)
 {
  switch (channel)
  {
@@ -356,19 +356,19 @@ void USART::signup()
 	USART* i = (USART*)HARDWARE_TABLE[USART1_HANDLER + channel - 1];
 	if(i)
 	{
-		DEBUG_LOG(0, "Another instance of UART is registered 0x%X, adding myself 0x%X\r\n", (word)i,(word)this);
+		DEBUG_LOG(0, "Another instance of UART is registered 0x%X, adding myself 0x%X\r\n", (uint32_t)i,(uint32_t)this);
 		i->isr(this);
 	}
 	else
 	{
-		DEBUG_LOG(0, "First UART handler registration 0x%X\r\n", (word)this);
-		HARDWARE_TABLE[USART1_HANDLER + channel - 1] = extirq ? (word)extirq : (word)this;
+		DEBUG_LOG(0, "First UART handler registration 0x%X\r\n", (uint32_t)this);
+		HARDWARE_TABLE[USART1_HANDLER + channel - 1] = extirq ? (uint32_t)extirq : (uint32_t)this;
 	}
 }
 
 void USART::signout()
 {
-	HARDWARE_TABLE[USART1_HANDLER + channel - 1] = next ? (word)next : 0;
+	HARDWARE_TABLE[USART1_HANDLER + channel - 1] = next ? (uint32_t)next : 0;
 }
 
 uint8_t *USART::get_rx_buf()

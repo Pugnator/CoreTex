@@ -15,7 +15,7 @@
 class xmodem: public USART
 {
 public:
- xmodem(short ch, word bd)
+ xmodem(short ch, uint32_t bd)
 : USART::USART(ch, bd, this)
  {
   ok = false;
@@ -25,18 +25,18 @@ public:
   self = this;
  }
 
- void send_data(uint8_t *data, word size);
- bool block_tx(uint8_t *data, word blockn);
+ void send_data(uint8_t *data, uint32_t size);
+ bool block_tx(uint8_t *data, uint32_t blockn);
 protected:
  volatile bool ok;
  volatile bool ack;
  volatile bool nack;
  void end(void);
  bool wait(void);
- bool send_header(char *filename, word filesize, word blockn = 0);
+ bool send_header(char *filename, uint32_t filesize, uint32_t blockn = 0);
  static class xmodem *self;
  static void xmodemisr(void);
  bool txmode;
- uint16_t crc16(uint8_t *data, word size);
+ uint16_t crc16(uint8_t *data, uint32_t size);
 };
 

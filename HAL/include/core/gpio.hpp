@@ -51,7 +51,7 @@ namespace IO
     void low ();
     void hi ();
     PINSTATE get_state ();
-    virtual void isr(word address);
+    virtual void isr(uint32_t address);
   public:
     PINCFG get_config ();
   protected:

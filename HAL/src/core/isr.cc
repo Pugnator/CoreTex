@@ -22,8 +22,8 @@
 #include <core/isr_helper.hpp>
 #include <core/gpio.hpp>
 
-volatile word tickcounter = 0;
-volatile word timerms = 0;
+volatile uint32_t tickcounter = 0;
+volatile uint32_t timerms = 0;
 
 extern "C"
 {
@@ -284,7 +284,7 @@ extern "C"
 
 //TO USE: addr2line -e ./bin/program.elf -a 0x8002327 [GDB: p/x pc when it hit for(;;)]
 	USED void
-	memory_dump (word* stackAddress)
+	memory_dump (uint32_t* stackAddress)
 	{
 #ifdef __USE_MEMORY_DUMP
 		/*
@@ -293,17 +293,17 @@ extern "C"
 		 values of the variables, make them global my moving their declaration outside
 		 of this function.
 		 */
-		volatile word r0 = stackAddress[0];
-		volatile word r1 = stackAddress[1];
-		volatile word r2 = stackAddress[2];
-		volatile word r3 = stackAddress[3];
-		volatile word r12 = stackAddress[4];
+		volatile uint32_t r0 = stackAddress[0];
+		volatile uint32_t r1 = stackAddress[1];
+		volatile uint32_t r2 = stackAddress[2];
+		volatile uint32_t r3 = stackAddress[3];
+		volatile uint32_t r12 = stackAddress[4];
 		/* Link register. */
-		volatile word lr = stackAddress[5];
+		volatile uint32_t lr = stackAddress[5];
 		/* Program counter. */
-		volatile word pc = stackAddress[6];
+		volatile uint32_t pc = stackAddress[6];
 		/* Program status register. */
-		volatile word psr = stackAddress[7];
+		volatile uint32_t psr = stackAddress[7];
 		FATdisk d (1);
 		FATFS filesystem;
 		FIL dump;
@@ -313,7 +313,7 @@ extern "C"
 
 		d.open (&dump, "REGISTERS.TXT", FA_CREATE_ALWAYS | FA_WRITE);
 		char registers[128];
-		word written;
+		uint32_t written;
 		xsprintf (
 				registers,
 				"R0:  0x%08X\nR1:  0x%08X\nR2:  0x%08X\nR3:  0x%08X\nR12: 0x%08X\r\n",
@@ -326,9 +326,9 @@ extern "C"
 
 		SEGGER_RTT_printf (0, "Dumping RAM...\r\n");
 		d.open (&dump, "RAM.DMP", FA_CREATE_ALWAYS | FA_WRITE);
-		for (word a = 0x20000000U; a < 0x20000000 + 20480; a += 512)
+		for (uint32_t a = 0x20000000U; a < 0x20000000 + 20480; a += 512)
 		{
-			result = d.f_write (&dump, *((word*) a), 512, &written);
+			result = d.f_write (&dump, *((uint32_t*) a), 512, &written);
 			if (FR_OK != result)
 			{
 				SEGGER_RTT_printf (0, "Failed to write the file...\r\n");
@@ -340,9 +340,9 @@ extern "C"
 
 		SEGGER_RTT_printf (0, "Dumping FLASH...\r\n");
 		d.open (&dump, "FLASH.DMP", FA_CREATE_ALWAYS | FA_WRITE);
-		for (word a = 0x08000000; a < 0x08000000 + 65536; a += 512)
+		for (uint32_t a = 0x08000000; a < 0x08000000 + 65536; a += 512)
 		{
-			result = d.f_write (&dump, *((word*) a), 512, &written);
+			result = d.f_write (&dump, *((uint32_t*) a), 512, &written);
 			if (FR_OK != result)
 			{
 				SEGGER_RTT_printf (0, "Failed to write the file...\r\n");

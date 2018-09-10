@@ -79,11 +79,11 @@ public:
  //single byte
  void regw(REGISTER reg, uint8_t value);
  //multibyte
- void regw(REGISTER reg, uint8_t *in, word size);
+ void regw(REGISTER reg, uint8_t *in, uint32_t size);
  //single byte
  uint8_t regr(REGISTER reg);
  //multibyte
- void regr(REGISTER reg, uint8_t *out, word size);
+ void regr(REGISTER reg, uint8_t *out, uint32_t size);
  //chip init
  void nrfinit();
  void debug(void);

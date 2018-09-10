@@ -19,7 +19,7 @@
 #include <global.hpp>
 #include <string.h>
 
-volatile word __attribute__((section (".vectorsSection"))) HARDWARE_TABLE[76] = { 0 };
+volatile uint32_t __attribute__((section (".vectorsSection"))) HARDWARE_TABLE[76] = { 0 };
 
 inline bool is_in_interrupt()
 {

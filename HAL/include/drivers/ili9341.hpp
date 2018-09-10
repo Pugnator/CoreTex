@@ -47,34 +47,34 @@ namespace GLCD
  class TFT : public Spi
  {
  public:
-	TFT (char channel)
+	TFT(char channel)
 		: Spi (channel)
 	{
 	 lowspeed ();
 	 configure ();
-	 highspeed();
+	 highspeed ();
 	 current_color = 0xFFFF; // white by default
 	}
 	;
-	~TFT ()
+	~TFT()
 	{
 	}
 	;
 
  public:
-	bool check ();
-	void sleep ();
+	bool check();
+	void sleep();
 
  public:
 	void set_color(uint16_t color);
 
-	void set_cursor (uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-	void set_pixel (uint16_t x, uint16_t y);
+	void set_cursor(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
+	void set_pixel(uint16_t x, uint16_t y);
 
  protected:
-	uint32_t reg_read (uint8_t command, uint8_t parameter);
-	void configure ();
-	uint8_t send (TFT_MODE mode, uint8_t data);
+	uint32_t reg_read(uint8_t command, uint8_t parameter);
+	void configure();
+	uint8_t send(TFT_MODE mode, uint8_t data);
 
 	uint16_t current_color;
  };

@@ -218,8 +218,8 @@ SD_Error Sdc::get_response(SD_Error expected_r1, SD_RESPONSE_TYPE type)
 {
  DEBUG_LOG("%sExpecting response 0x%X%s\r\n", RTT_CTRL_BG_BRIGHT_BLUE, expected_r1, RTT_CTRL_RESET);
  ok = false;
- word count;
- word MAX_R1_RETRY_COUNT = 10;
+ uint32_t count;
+ uint32_t MAX_R1_RETRY_COUNT = 10;
  for(count = 0; count < MAX_R1_RETRY_COUNT; ++count)
  {
   response = read();
@@ -322,7 +322,7 @@ SD_Error Sdc::init_sdhc()
   isSDCv2 = true;
  }
 
- word cap = get_card_capacity();
+ uint32_t cap = get_card_capacity();
  return SD_RESPONSE_NO_ERROR;
 }
 

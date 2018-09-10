@@ -49,7 +49,7 @@ public:
  void print(char ch);
  void print(char const* str);
  void print(int num);
- void print(word num);
+ void print(uint32_t num);
  void crlf(void);
 
  void cls(void)
@@ -79,7 +79,7 @@ public:
  void xputs(const char* str);
  void xprintf(const char* fmt, ...);
  void xsprintf(char* buff, const char* fmt, ...);
- void put_dump(const void* buff, word addr, word len, word width);
+ void put_dump(const void* buff, uint32_t addr, uint32_t len, uint32_t width);
  void worker(void);
 
  bool isdone;

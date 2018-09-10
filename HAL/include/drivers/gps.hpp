@@ -48,8 +48,8 @@ typedef struct NMEATALKERSTRUCT
 
 typedef struct coord
 {
- word deg;
- word min;
+ uint32_t deg;
+ uint32_t min;
  double sec;
  char dir;
  bool valid;
@@ -57,24 +57,24 @@ typedef struct coord
 
 typedef struct
 {
- word deg;
- word fract;
+ uint32_t deg;
+ uint32_t fract;
 } UTM;
 
 //TODO: describe the fields
 typedef struct nmeactx
 {
- word utc;
+ uint32_t utc;
  coord lat;
  coord lon;
- word msl;
+ uint32_t msl;
  char fstr[16];
  double knots;
  double kmh;
  float course;
  bool isvalid;
- word nmeaerr;
- word sect; 
+ uint32_t nmeaerr;
+ uint32_t sect;
  char* fp;
  uint8_t checksum;
  bool sumdone;
@@ -84,7 +84,7 @@ typedef struct nmeactx
 class Gps: public USART
 {
 public:
- Gps(short ch, word bd) :
+ Gps(short ch, uint32_t bd) :
   USART::USART(ch, bd, this)
  {
   gsv = 0;
@@ -92,20 +92,20 @@ public:
  }
  void rttprint();
  NMEAERR prepare(void);
- virtual void isr(word address);
+ virtual void isr(uint32_t address);
  void reset(void);
  char nmeastr[NMEA_MAX_LEN + 1];
  volatile uint8_t nmeastr_len;
  coord getlat();
  coord getlon();
- word get_utc();
+ uint32_t get_utc();
  double get_dec_lat();
  double get_dec_lon();
  UTM coord2utm (coord coord);
  bool ok();
  bool correct_rtc();
 
- word gsv;
+ uint32_t gsv;
 
 private:
  bool correct;

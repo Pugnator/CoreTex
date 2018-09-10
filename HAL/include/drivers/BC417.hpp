@@ -18,7 +18,7 @@ typedef enum BAUD_RATE
 class BC417: public ATMODEM
 {
 public:
- BC417(short ch, word bd)
+ BC417(short ch, uint32_t bd)
 : ATMODEM::ATMODEM(ch, bd)
  {
 	connected = false;

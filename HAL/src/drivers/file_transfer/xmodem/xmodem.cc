@@ -18,9 +18,9 @@
 #include <common.hpp>
 #include <drivers/xmodem.hpp>
 
-word write_word(word val, uint8_t *buf)
+uint32_t write_uint32_t(uint32_t val, uint8_t *buf)
 {
- word ci = 0;
+ uint32_t ci = 0;
  if (val == 0) {
   // If already zero then just return zero
   buf[ci++] = '0';
@@ -76,13 +76,13 @@ void xmodem::xmodemisr(void)
  }
 }
 
-uint16_t xmodem::crc16(uint8_t *buf, word size)
+uint16_t xmodem::crc16(uint8_t *buf, uint32_t size)
 {
  uint16_t crc = 0;
- for (word i = 0; i < size; ++i)
+ for (uint32_t i = 0; i < size; ++i)
  {
   crc ^= (uint16_t) *buf++ << 8;
-  for (word i = 0; i < 8; ++i)
+  for (uint32_t i = 0; i < 8; ++i)
   {
    if (crc & 0x8000)
    {
@@ -96,7 +96,7 @@ uint16_t xmodem::crc16(uint8_t *buf, word size)
  }
  return crc;
 }
-bool xmodem::block_tx(uint8_t *data, word blockn)
+bool xmodem::block_tx(uint8_t *data, uint32_t blockn)
 {
  txmode = true;
  ack = false;
@@ -105,7 +105,7 @@ bool xmodem::block_tx(uint8_t *data, word blockn)
  write(SOH); //SOH for 128byte and STX for 1k
  write(blockn & 0xFF);
  write(~blockn & 0xFF);
- for (word i = 0; i < PACKET_SIZE; ++i)
+ for (uint32_t i = 0; i < PACKET_SIZE; ++i)
  {
   if(0 == data[i])
   {
@@ -132,7 +132,7 @@ void xmodem::end(void)
  write(EOT);
 }
 
-bool xmodem::send_header(char *filename, word filesize, word blockn)
+bool xmodem::send_header(char *filename, uint32_t filesize, uint32_t blockn)
 {
  txmode = true;
  ack = false;
@@ -145,7 +145,7 @@ bool xmodem::send_header(char *filename, word filesize, word blockn)
  write(SOH); //SOH for 128byte and STX for 1k
  write(blockn & 0xff);
  write(~blockn & 0xFF);
- for (word i = 0; i < PACKET_SIZE; ++i)
+ for (uint32_t i = 0; i < PACKET_SIZE; ++i)
  {
   write(header[i]);
  }
@@ -164,11 +164,11 @@ bool xmodem::send_header(char *filename, word filesize, word blockn)
  return false;
 }
 
-void xmodem::send_data(uint8_t *data, word size)
+void xmodem::send_data(uint8_t *data, uint32_t size)
 {
  wait();
  uint8_t bn = 1;
- word curp = 0;
+ uint32_t curp = 0;
  while(curp + PACKET_SIZE  < size)
  {
   block_tx(data + curp, bn++);

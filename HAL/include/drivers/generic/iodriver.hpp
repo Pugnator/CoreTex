@@ -59,17 +59,17 @@ public:
 
  }
 
- virtual void isr (word address)
+ virtual void isr (uint32_t address)
  {
 
  }
 
- virtual void dmatx (word address)
+ virtual void dmatx (uint32_t address)
  {
 
  }
 
- virtual void dmarx (word address)
+ virtual void dmarx (uint32_t address)
  {
 
  }

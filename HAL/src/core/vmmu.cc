@@ -19,10 +19,10 @@
 #define DEBUG_LOG(...)
 #endif
 
-typedef word Align;
+typedef uint32_t Align;
 
-word alloc_counter = 0;
-word free_counter = 0;
+uint32_t alloc_counter = 0;
+uint32_t free_counter = 0;
 
 union mem_header_union
 {
@@ -34,7 +34,7 @@ union mem_header_union
 
     // Size of the block (in quantas of sizeof(mem_header_t))
     //
-    word size;
+    uint32_t size;
   } s;
 
   // Used to align headers in memory to a boundary
@@ -55,7 +55,7 @@ static mem_header_t* freep = 0;
 // Static pool for new allocations
 //
 static uint8_t pool[POOL_SIZE];
-static word pool_free_pos = 0;
+static uint32_t pool_free_pos = 0;
 
 void vmmu_init()
 {
@@ -82,7 +82,7 @@ void print_memstat()
 
   while (p < (mem_header_t*) (pool + pool_free_pos))
   {
-    DEBUG_LOG(0,"  * Addr: 0x%8X; Size: %8X\n", p, (word) p->s.size);
+    DEBUG_LOG(0,"  * Addr: 0x%8X; Size: %8X\n", p, (uint32_t) p->s.size);
 
     p += p->s.size;
   }
@@ -96,7 +96,7 @@ void print_memstat()
     for(;;)
     {
       DEBUG_LOG(0,"  * Addr: 0x%8X; Size: %8lu; Next: 0x%8X\n", p,
-                (word) p->s.size, p->s.next);
+                (uint32_t) p->s.size, p->s.next);
 
       p = p->s.next;
 
@@ -112,9 +112,9 @@ void print_memstat()
 #endif // DEBUG_MEMMGR_SUPPORT_STATS
 }
 
-static mem_header_t* get_mem_from_pool(word nquantas)
+static mem_header_t* get_mem_from_pool(uint32_t nquantas)
 {
-  word total_req_size;
+  uint32_t total_req_size;
 
   mem_header_t* h;
 
@@ -145,7 +145,7 @@ static mem_header_t* get_mem_from_pool(word nquantas)
 // The pointer returned to the user points to the free space within the block,
 // which begins one quanta after the header.
 //
-void* stalloc(word nbytes)
+void* stalloc(uint32_t nbytes)
 {
   if(!nbytes)
     return nullptr;
@@ -160,7 +160,7 @@ void* stalloc(word nbytes)
   // the requested bytes, plus the header. The -1 and +1 are there to make sure
   // that if nbytes is a multiple of nquantas, we don't allocate too much
   //
-  word nquantas =
+  uint32_t nquantas =
       (nbytes + sizeof(mem_header_t) - 1) / sizeof(mem_header_t) + 1;
 
   // First alloc call, and no free list yet ? Use 'base' for an initial
@@ -275,7 +275,7 @@ void stfree(void* ap)
   ap = nullptr;
 }
 
-word get_free_memory(void)
+uint32_t get_free_memory(void)
 {
   return POOL_SIZE - pool_free_pos;
 }

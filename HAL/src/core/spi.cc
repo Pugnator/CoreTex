@@ -38,7 +38,7 @@ Spi::Spi(char ch)
 	{
 	case 1:
 		Reg = (SPI_TypeDef*) SPI1_BASE;
-		HARDWARE_TABLE[SPI1_IRQn + IRQ0_EX] = (word) this;
+		HARDWARE_TABLE[SPI1_IRQn + IRQ0_EX] = (uint32_t) this;
 		RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
 		PORT_ENABLE_CLOCK_START()
 		/* enable all clock */
@@ -57,7 +57,7 @@ Spi::Spi(char ch)
 		break;
 	case 2:
 		Reg = (SPI_TypeDef*) SPI2_BASE;
-		HARDWARE_TABLE[SPI2_IRQn + IRQ0_EX] = (word) this;
+		HARDWARE_TABLE[SPI2_IRQn + IRQ0_EX] = (uint32_t) this;
 		break;
 	default:
 		//ERROR
@@ -73,10 +73,10 @@ Spi::~Spi(void)
 	switch (channel)
 	{
 	case 1:
-		HARDWARE_TABLE[SPI1_IRQn + IRQ0_EX] = (word) this;
+		HARDWARE_TABLE[SPI1_IRQn + IRQ0_EX] = (uint32_t) this;
 		break;
 	case 2:
-		HARDWARE_TABLE[SPI2_IRQn + IRQ0_EX] = (word) this;
+		HARDWARE_TABLE[SPI2_IRQn + IRQ0_EX] = (uint32_t) this;
 		break;
 	default:
 		//ERROR
@@ -86,7 +86,7 @@ Spi::~Spi(void)
 	__ISB();
 }
 
-void Spi::isr(word address)
+void Spi::isr(uint32_t address)
 {
 	if (Reg->SR & SPI_SR_RXNE)
 	{

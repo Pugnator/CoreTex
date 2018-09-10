@@ -152,7 +152,7 @@ protected:
  SD_Error init_sdhc(void);
 protected:
  uint8_t response;
- word ocr;
+ uint32_t ocr;
  bool isSDCv2;
  uint32_t card_capacity;
  uint32_t card_block_size;

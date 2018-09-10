@@ -10,8 +10,8 @@ void tsprintf (			/* Put a formatted string to the memory */
 	...					/* Optional arguments */
 );
 int ascii2ucs2(const char* sms_text, uint8_t* output_buffer, int buffer_size);
-word str16_to_word (const char* str);
-word str10_to_word (const char* str);
+uint32_t str16_to_word (const char* str);
+uint32_t str10_to_word (const char* str);
 char *num2str(int i);
 char *strclone(const char *msg);
 char *ucs2ascii (const char *ucs2);

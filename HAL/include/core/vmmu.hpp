@@ -44,7 +44,7 @@
 //
 // MIN_POOL_ALLOC_QUANTAS
 //    Internally, the memory manager allocates memory in
-//    quantas roughly the size of two word objects. To
+//    quantas roughly the size of two uint32_t objects. To
 //    minimize pool fragmentation in case of multiple allocations
 //    and deallocations, it is advisable to not allocate
 //    blocks that are too small.
@@ -77,7 +77,7 @@ void vmmu_init();
 
 // 'malloc' clone
 //
-void* stalloc(word nbytes);
+void* stalloc(uint32_t nbytes);
 
 // 'free' clone
 //
@@ -89,4 +89,4 @@ void stfree(void* ap);
 void print_memstat(void);
 
 //How much memory left
-word get_free_memory(void);
+uint32_t get_free_memory(void);

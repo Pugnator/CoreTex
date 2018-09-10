@@ -135,7 +135,7 @@ bool GSM::send_sms(const char* number, const char* text)
  return true;
 }
 
-char* GSM::get_sms_by_index(word num)
+char* GSM::get_sms_by_index(uint32_t num)
 {
  rawcmd(CMD::CMGR, CMDMODE::WRITE, num);
  if (!wait_for_reply(CMD::CPMS, AT_OK))
@@ -149,7 +149,7 @@ char* GSM::get_sms_by_index(word num)
  return sms;
 }
 
-word GSM::get_account_debet(CELLULAR_OP op)
+uint32_t GSM::get_account_debet(CELLULAR_OP op)
 {
  ok = false;
  char *buf = nullptr;
@@ -171,7 +171,7 @@ word GSM::get_account_debet(CELLULAR_OP op)
    return 0;
  }
  char *bal = strstr(buf, " r.");
- word result = 0;
+ uint32_t result = 0;
  if(!bal)
  {
   return result;
@@ -220,9 +220,9 @@ bool GSM::delete_all_sms(void)
  return true;
 }
 
-word GSM::get_sms_amount(void)
+uint32_t GSM::get_sms_amount(void)
 {
- for (word i = 1; i < 50; ++i)
+ for (uint32_t i = 1; i < 50; ++i)
  {
   char *sms = get_sms_by_index(i);
   if (!sms)

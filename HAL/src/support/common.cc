@@ -40,9 +40,9 @@ enum
 	SMS_MAX_7BIT_TEXT_LENGTH  = 160,
 };
 
-word str16_to_word(const char* str)
+uint32_t str16_to_word(const char* str)
 {
-	word res = 0;
+	uint32_t res = 0;
 	char c = 0;
 	while (*str)
 	{
@@ -54,13 +54,13 @@ word str16_to_word(const char* str)
 	return res;
 }
 
-word str10_to_word(const char* str)
+uint32_t str10_to_word(const char* str)
 {
   if (!str)
   {
    return 0;
   }
-	word res = 0;
+	uint32_t res = 0;
 	char ch = *str;
 	while (ch)
 	{
@@ -78,15 +78,15 @@ word str10_to_word(const char* str)
 }
 
 #ifdef USE_IRQ_DELAY
-void delay_ms(word ms)
+void delay_ms(uint32_t ms)
 {
 	tickcounter = ms;
 	while (tickcounter);
 }
 #else
-void delay_ms(word ms)
+void delay_ms(uint32_t ms)
 {
- word us = ms * 1000;
+ uint32_t us = ms * 1000;
  asm volatile (  "MOV R0,%[loops]\n\t"\
          "1: \n\t"\
          "SUB R0, #1\n\t"\
@@ -96,12 +96,12 @@ void delay_ms(word ms)
 }
 #endif
 
-void delay(word s)
+void delay(uint32_t s)
 {
 	delay_ms(s * 1000);
 }
 
-void _delay_us(word us)
+void _delay_us(uint32_t us)
 {
 
 }
@@ -117,14 +117,14 @@ char *strclone(const char *msg)
 
 char *ucs2ascii (const char *ucs2)
   {
-    word size = strlen(ucs2);
+    uint32_t size = strlen(ucs2);
     char *ascii = (char*)ALLOC(size+1);
     if(!ascii)
       return nullptr;
     memset(ascii, 0, size+1);
     char *p = ascii;
     char s[3]={0};
-    for(word i=2; i<size; i+=4)
+    for(uint32_t i=2; i<size; i+=4)
       {
         s[0] = ucs2[i];
         s[1] = ucs2[i+1];

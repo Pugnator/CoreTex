@@ -170,7 +170,7 @@ namespace MIFARE
 	 }
 
 	 // Reading the recieved data from FIFO.
-	 for (word i = 0; i < n; i++)
+	 for (uint32_t i = 0; i < n; i++)
 	 {
 		result.push_back (regr (FIFODATAREG));
 	 }

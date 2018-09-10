@@ -34,23 +34,23 @@ public:
  bool request_picture(void);
  void start_transfer(void);
  bool default_setup(void);
- uint8_t* next_block(word *size);
- word get_block_size();
+ uint8_t* next_block(uint32_t *size);
+ uint32_t get_block_size();
  static class ov528 *self;
  static void ov528isr(void);
 
 private:
- volatile word imageblk_size;
+ volatile uint32_t imageblk_size;
  volatile uint8_t *imageblk;
  volatile bool pictransfer;
  volatile uint8_t buf_size;
- volatile word pic_size;
- word expected_pic_size;
+ volatile uint32_t pic_size;
+ uint32_t expected_pic_size;
  volatile uint8_t buf[16];
  FATdisk& disk;
 
 
- void wait_reply(word expected = 0);
+ void wait_reply(uint32_t expected = 0);
  void buf_reset(void);
  void docmd(uint8_t *cmd);
  void ack(void);

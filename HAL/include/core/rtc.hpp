@@ -55,13 +55,13 @@
  class Rtc : public IODriver
  {
  public:
-  Rtc (word epoch = 0)
+  Rtc (uint32_t epoch = 0)
   {
 
   }
   ~Rtc(){}
  public:
-  word get();
+  uint32_t get();
   short gety();
   char getd();
   char getmn();
@@ -69,12 +69,12 @@
   char getm();
   char gets();
   void print();
-  void init(word epoch = 0);
-  void set(word epoch);
+  void init(uint32_t epoch = 0);
+  void set(uint32_t epoch);
   void clear(void);
-  word state(void);
+  uint32_t state(void);
  private:
-  word State;
+  uint32_t State;
   datetime_t curdate;
-  void epoch_to_date(datetime_t* date_time, word epoch = 0);
+  void epoch_to_date(datetime_t* date_time, uint32_t epoch = 0);
  };

@@ -31,21 +31,21 @@ void Nrf24::regw(REGISTER reg, uint8_t value)
  (void) read(value);
 }
 
-void Nrf24::regw(REGISTER reg, uint8_t *in, word size)
+void Nrf24::regw(REGISTER reg, uint8_t *in, uint32_t size)
 {
  (void) read(W_REGISTER | (REGISTER_MASK & reg));
  uint8_t *p = in;
- for (word i = 0; i < size; ++i)
+ for (uint32_t i = 0; i < size; ++i)
  {
   read(*p++);
  }
 }
 
-void Nrf24::regr(REGISTER reg, uint8_t *out, word size)
+void Nrf24::regr(REGISTER reg, uint8_t *out, uint32_t size)
 {
  (void) read(W_REGISTER | (REGISTER_MASK & reg));
  uint8_t *p = out;
- for (word i = 0; i < size; ++i)
+ for (uint32_t i = 0; i < size; ++i)
  {
   *p++ = read(0xff);
  }

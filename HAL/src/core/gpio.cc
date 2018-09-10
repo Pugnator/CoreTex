@@ -86,7 +86,7 @@ namespace IO
 		break;
 	}
 
-	HARDWARE_TABLE[EXTI0_HANDLER] = (word) this;
+	HARDWARE_TABLE[EXTI0_HANDLER] = (uint32_t) this;
 	//int irqnum = USART1_IRQn - 1;
 	//NVIC_EnableIRQ((IRQn_Type) irqnum);
 	//NVIC_SetPriority((IRQn_Type) irqnum, 3);
@@ -96,7 +96,7 @@ namespace IO
  {
  }
 
- void GPIO_pin::isr(word address)
+ void GPIO_pin::isr(uint32_t address)
  {
 
  }

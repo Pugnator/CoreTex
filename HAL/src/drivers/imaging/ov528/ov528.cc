@@ -54,7 +54,7 @@ ov528::docmd (uint8_t *cmd)
 }
 
 void
-ov528::wait_reply (word expected)
+ov528::wait_reply (uint32_t expected)
 {
 	WAIT_FOR(500);
 	do
@@ -74,7 +74,7 @@ ov528::wakeup (void)
 	{ 0xaa, 0x0d, 0, 0, 0, 0 };
 	uint8_t ack[] =
 	{ 0xaa, 0x0e, 0x0d, 0, 0, 0 };
-	for (word i = 0; i < WAKEUP_RETRY_COUNT; ++i)
+	for (uint32_t i = 0; i < WAKEUP_RETRY_COUNT; ++i)
 	{
 		DEBUG_LOG (0, "Waking camera up...\r\n");
 		docmd (wake);
@@ -83,7 +83,7 @@ ov528::wakeup (void)
 		if (0 == memcmp ((void *) buf, ack, sizeof ack))
 		{
 			DEBUG_LOG (0, "Camera answered\r\n");
-			for (word j = 0; j < sizeof ack; j++)
+			for (uint32_t j = 0; j < sizeof ack; j++)
 			{
 				write (ack[j]);
 			}
@@ -171,7 +171,7 @@ ov528::request_picture (void)
 	if (0 == memcmp ((void *) buf, ack, sizeof ack))
 	{
 		DEBUG_LOG (0, "Image request OK, waiting for data to be prepared\r\n");
-		for (word i = 0; i < 10; ++i)
+		for (uint32_t i = 0; i < 10; ++i)
 		{
 			buf_reset ();
 			//wait for snapshot to complete, can take up to several minutes
@@ -260,11 +260,11 @@ ov528::start_transfer (void)
 	docmd (cmd);
 
 	DEBUG_LOG (0, "Starting transfer\r\n");
-	word blocksn =
+	uint32_t blocksn =
 	    expected_pic_size % 1024 ?
 	        expected_pic_size / 1024 + 1 : expected_pic_size / 1024;
 	DEBUG_LOG (0, "Blocks to read: %u\r\n", blocksn);
-	for (word i = 0; i < blocksn; ++i)
+	for (uint32_t i = 0; i < blocksn; ++i)
 	{
 		imageblk_size = 0;
 		cmd[4] = i;
@@ -272,7 +272,7 @@ ov528::start_transfer (void)
 
 		for (;;)
 		{
-			word tmp = imageblk_size;
+			uint32_t tmp = imageblk_size;
 			delay_ms (25);
 			if (tmp == imageblk_size)
 			{
@@ -281,9 +281,9 @@ ov528::start_transfer (void)
 		}
 
 		/* TRANSFER */
-		word id = (imageblk[1] << 8) | (imageblk[0] & 0xFF);
-		word size = (imageblk[3] << 8) | (imageblk[2] & 0xFF);
-		word crc = imageblk[imageblk_size - 1];
+		uint32_t id = (imageblk[1] << 8) | (imageblk[0] & 0xFF);
+		uint32_t size = (imageblk[3] << 8) | (imageblk[2] & 0xFF);
+		uint32_t crc = imageblk[imageblk_size - 1];
 		DEBUG_LOG (0, "Writing image block, ID:%u Size:%u CRC: 0x%X\r\n", id, size,
 		           crc);
 		unsigned written = 0;
@@ -302,7 +302,7 @@ ov528::start_transfer (void)
 }
 
 uint8_t*
-ov528::next_block (word *size)
+ov528::next_block (uint32_t *size)
 {
 	*size = imageblk_size - 6;
 	return nullptr;

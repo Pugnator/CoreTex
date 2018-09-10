@@ -74,7 +74,7 @@ uint8_t Eeprom::read(uint16_t cell)
 
 void Eeprom::erase()
 {
-  DEBUG_LOG(0, "Erasing flash page 0x%X\r\n", reinterpret_cast<word>(EEPROM_DATA));
+  DEBUG_LOG(0, "Erasing flash page 0x%X\r\n", reinterpret_cast<uint32_t>(EEPROM_DATA));
   unlock();
   while (FLASH->SR & FLASH_SR_BSY);
   if (FLASH->SR & FLASH_SR_EOP)
@@ -82,7 +82,7 @@ void Eeprom::erase()
     FLASH->SR = FLASH_SR_EOP;
   }
   FLASH->CR |= FLASH_CR_PER; //Page Erase Set
-  FLASH->AR =  reinterpret_cast<word>(EEPROM_DATA);//Page Address
+  FLASH->AR =  reinterpret_cast<uint32_t>(EEPROM_DATA);//Page Address
   FLASH->CR |= FLASH_CR_STRT; //Start Page Erase
   while(!(FLASH->SR & FLASH_SR_EOP));
   FLASH->SR = FLASH_SR_EOP;

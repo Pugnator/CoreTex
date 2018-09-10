@@ -21,7 +21,7 @@
 #include <global.hpp>
 #include <stdlib.h>
 
-void Rtc::init(word epoch)
+void Rtc::init(uint32_t epoch)
 {
 	RCC->APB1ENR |= RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN;
 	PWR->CR |= PWR_CR_DBP;
@@ -55,18 +55,18 @@ void Rtc::init(word epoch)
 		;
 }
 
-void Rtc::set(word epoch)
+void Rtc::set(uint32_t epoch)
 {
 	RTC->CNTH = (epoch >> 16) & 0xFFFF;
 	RTC->CNTL = epoch & 0xFFFF;
 }
 
-word Rtc::get(void)
+uint32_t Rtc::get(void)
 {
 	return (RTC->CNTH << 16) | (RTC->CNTL & 0xFFFF);
 }
 
-void Rtc::epoch_to_date(datetime_t* date_time, word epoch)
+void Rtc::epoch_to_date(datetime_t* date_time, uint32_t epoch)
 {
 	date_time->second = epoch % 60;
 	epoch /= 60;
@@ -75,17 +75,17 @@ void Rtc::epoch_to_date(datetime_t* date_time, word epoch)
 	date_time->hour = epoch % 24;
 	epoch /= 24;
 
-	word years = epoch / (365 * 4 + 1) * 4;
+	uint32_t years = epoch / (365 * 4 + 1) * 4;
 	epoch %= 365 * 4 + 1;
 
-	word year;
+	uint32_t year;
 	for (year = 3; year > 0; year--)
 	{
 		if (epoch >= days[year][0])
 			break;
 	}
 
-	word month;
+	uint32_t month;
 	for (month = 11; month > 0; month--)
 	{
 		if (epoch >= days[year][month])
@@ -136,7 +136,7 @@ void Rtc::print()
 			gety(), getmn(), getd(), geth(), getm(), gets());
 }
 
-word Rtc::state(void)
+uint32_t Rtc::state(void)
 {
 	return State;
 }

@@ -8,7 +8,7 @@ class Flash
 {
 public:
 	void mass_erase(void);
-	void erase_page(word page);
-	void write_page(word page, uint8_t *buffer);
-	void write_buffer(word page, uint8_t *buffer, word size, word offset);
+	void erase_page(uint32_t page);
+	void write_page(uint32_t page, uint8_t *buffer);
+	void write_buffer(uint32_t page, uint8_t *buffer, uint32_t size, uint32_t offset);
 };

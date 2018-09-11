@@ -28,9 +28,10 @@ namespace Graphics
  public:
 	/* Basic */
 	void line(pixel p0, pixel p1);
-	void circle(pixel p0, uint16_t r);
-	void point(pixel p0, uint16_t r);
+	void circle(pixel p0, uint16_t r);  
+  void ellipse(pixel p0, uint16_t w, uint16_t h);	
 	void arc(pixel p0, uint16_t r, uint16_t a1, uint16_t a2);
+  void rect(pixel p0, uint16_t w, uint16_t h);
 	void polygon(points pts);
 
  private:

@@ -77,6 +77,46 @@ namespace Graphics
 	 delta += 2 * (++x - y--);
 	}
  }
+ 
+ void GFX::ellipse(pixel p0, uint16_t width, uint16_t height);	
+{
+    uint16_t xc = p0.first;
+    uint16_t yc = p0.second;
+    uint16_t a2 = width * width;
+    uint16_t b2 = height * height;
+    uint16_t fa2 = 4 * a2, fb2 = 4 * b2;
+    uint16_t x, y, sigma;
+
+    /* first half */
+    for (x = 0, y = height, sigma = 2*b2+a2*(1-2*height); b2*x <= a2*y; x++)
+    {
+        set_pixel (xc + x, yc + y);
+        set_pixel (xc - x, yc + y);
+        set_pixel (xc + x, yc - y);
+        set_pixel (xc - x, yc - y);
+        if (sigma >= 0)
+        {
+            sigma += fa2 * (1 - y);
+            y--;
+        }
+        sigma += b2 * ((4 * x) + 6);
+    }
+
+    /* second half */
+    for (x = width, y = 0, sigma = 2*a2+b2*(1-2*width); a2*y <= b2*x; y++)
+    {
+        set_pixel (xc + x, yc + y);
+        set_pixel (xc - x, yc + y);
+        set_pixel (xc + x, yc - y);
+        set_pixel (xc - x, yc - y);
+        if (sigma >= 0)
+        {
+            sigma += fb2 * (1 - x);
+            x--;
+        }
+        sigma += a2 * ((4 * y) + 6);
+    }
+}
 
  void GFX::polygon(points pts)
  {

@@ -7,3 +7,8 @@
  * @brief Window class
  *
  */
+
+namespace Graphics
+{
+
+}

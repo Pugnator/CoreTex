@@ -12,7 +12,7 @@
 #include <common.hpp>
 #include <log.hpp>
 
-namespace TFT
+namespace Graphics
 {
 
 }

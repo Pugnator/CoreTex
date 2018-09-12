@@ -15,8 +15,6 @@ namespace Graphics
 	GFX(char channel)
 		: GLCD::TFT (channel)
 	{
-	 max_x = 240;
-	 max_y = 320;
 	 brush = 1;
 	}
 	;
@@ -27,16 +25,14 @@ namespace Graphics
 
  public:
 	/* Basic */
-	void line(pixel p0, pixel p1);
-	void circle(pixel p0, uint16_t r);  
-  void ellipse(pixel p0, uint16_t w, uint16_t h);	
-	void arc(pixel p0, uint16_t r, uint16_t a1, uint16_t a2);
-  void rect(pixel p0, uint16_t w, uint16_t h);
-	void polygon(points pts);
+	void plot_line(pixel p0, pixel p1);
+	void plot_circle(pixel p0, uint16_t r);  
+  void plot_ellipse(pixel p0, uint16_t w, uint16_t h);	
+	void plot_arc(pixel p0, uint16_t r, uint16_t a1, uint16_t a2);
+  void plot_rect(pixel p0, uint16_t w, uint16_t h);
+	void plot_polygon(points pts);
 
  private:
-	uint16_t max_x;
-	uint16_t max_y;
 	uint8_t brush;
  };
 }

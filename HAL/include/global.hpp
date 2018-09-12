@@ -120,7 +120,7 @@ typedef enum ISR_VECTOR
  IRQ67_EX
 }ISR_VECTOR;
 
-typedef enum
+enum
 {
   CHANNEL_1 = 1, CHANNEL_2, CHANNEL_3, CHANNEL_4
 };

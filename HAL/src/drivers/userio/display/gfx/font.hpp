@@ -12,13 +12,7 @@
 #include <common.hpp>
 #include <log.hpp>
 
-namespace Graphics
+namespace FONT
 {
-  class Font
-  {
-    public:
-    Font(){};
-    ~Font(){};
-    private:
-  };
+
 }

@@ -12,7 +12,7 @@
 #include <common.hpp>
 #include <log.hpp>
 
-namespace Graphics
+namespace FONT
 {
 
 }

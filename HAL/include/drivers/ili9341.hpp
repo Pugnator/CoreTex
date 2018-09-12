@@ -1,13 +1,18 @@
 #pragma once
 #include "core/spi.hpp"
 
+namespace GLCD
+{
+
 #define LED A,1,SPEED_50MHz
 #define RESET A,3,SPEED_50MHz
 #define DC A,2,SPEED_50MHz
 
 //Commands
 #define ILI9341_RESET				0x01
+#define ILI9341_READ_STATUS				0x09
 #define ILI9341_SLEEP_OUT			0x11
+#define ILI9341_NORMAL_MODE			0x13
 #define ILI9341_GAMMA				0x26
 #define ILI9341_DISPLAY_OFF			0x28
 #define ILI9341_DISPLAY_ON			0x29
@@ -37,8 +42,6 @@
 #define ILI9341_INTERFACE			0xF6
 #define ILI9341_PRC				    0xF7
 
-namespace GLCD
-{
  typedef enum
  {
 	CMD, DATA
@@ -48,12 +51,18 @@ namespace GLCD
  {
  public:
 	TFT(char channel)
-		: Spi (channel)
+		: Spi(channel)
 	{
-	 lowspeed ();
-	 configure ();
-	 highspeed ();
+	 max_x = 240;
+	 max_y = 320;
+	 PIN_OUT_PP(LED);
+	 PIN_OUT_PP(RESET);
+	 PIN_OUT_PP(DC);
+	 lowspeed();
+	 configure();
+	 highspeed();
 	 current_color = 0xFFFF; // white by default
+	 backlight(true);
 	}
 	;
 	~TFT()
@@ -63,19 +72,25 @@ namespace GLCD
 
  public:
 	bool check();
-	void sleep();
+	uint32_t status();
+	void sleep(bool on);
 
  public:
 	void set_color(uint16_t color);
+	void clear_display();
+	void fill_display(uint16_t color);
+	void set_frame(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
+	void plot_pixel(uint16_t x, uint16_t y);
 
-	void set_cursor(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-	void set_pixel(uint16_t x, uint16_t y);
+	void backlight(bool enable);
 
  protected:
 	uint32_t reg_read(uint8_t command, uint8_t parameter);
 	void configure();
 	uint8_t send(TFT_MODE mode, uint8_t data);
 
+	uint16_t max_x;
+	uint16_t max_y;
 	uint16_t current_color;
  };
 }

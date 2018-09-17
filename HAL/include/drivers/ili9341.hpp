@@ -58,9 +58,9 @@ namespace GLCD
 	 PIN_OUT_PP(LED);
 	 PIN_OUT_PP(RESET);
 	 PIN_OUT_PP(DC);
-	 lowspeed();
+	 //external_nss();
+	 //highspeed();
 	 configure();
-	 highspeed();
 	 current_color = 0xFFFF; // white by default
 	 backlight(true);
 	}

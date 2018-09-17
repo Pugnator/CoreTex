@@ -17,10 +17,10 @@ public:
  USART (uint32_t ch, uint32_t bd, USART *isrptr = nullptr);
  ~USART(void);
 
- virtual void write (char c);
- virtual void writestr(const char* str);
- virtual char read(void);
- virtual const char* name();
+ virtual void write (char c) override;
+ virtual void writestr(const char* str) override;
+ virtual char read(void) override;
+ virtual const char* name() override;
  void dma_on (void);
  void dma_off (void);
  void dmatx_go(uint32_t size);
@@ -28,15 +28,15 @@ public:
  void disable (void);
  USART* next;
  /* ISRs */
- virtual void isr (uint32_t address);
- virtual void dmarx (uint32_t address);
- virtual void dmatx (uint32_t address);
+ virtual void isr (uint32_t address) override;
+ virtual void dmarx (uint32_t address) override;
+ virtual void dmatx (uint32_t address) override;
  uint8_t *get_rx_buf();
  uint8_t *get_tx_buf();
 protected:
  bool is_dma_on();
- void signup();
- void signout();
+ void signup() override;
+ void signout() override;
  uint8_t outbuf[32];
  uint8_t inbuf[32];
  void init (char channel, uint32_t baud);

@@ -15,14 +15,6 @@
  * 2015, 2016
  *******************************************************************************/
 
-#ifndef __USE_CONSOLE
-#define __USE_CONSOLE 1
-#endif
-
-#ifndef __DEBUG
-#define __DEBUG 1
-#endif
-
 #define POOL_SIZE 1 * 2048
 
 #define OV528_DEBUG
@@ -30,6 +22,8 @@
 #define FATDISK_DEBUG
 
 #define UART_DEBUG
+
+#define SPI_DEBUG
 
 #define EEPROM_DEBUG
 

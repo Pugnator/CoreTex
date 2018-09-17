@@ -13,10 +13,10 @@ public:
  Spi(char ch);
  ~Spi(void);
 
- virtual uint16_t read(uint16_t data = 0xFF);
- virtual void multiread(uint8_t *buff, uint32_t size);
- virtual void multiwrite(const uint8_t *buff, uint32_t size);
- virtual void isr(uint32_t address);
+ virtual uint16_t read(uint16_t data = 0xFF) override;
+ virtual void multiread(uint8_t *buff, uint32_t size) override;
+ virtual void multiwrite(const uint8_t *buff, uint32_t size) override;
+ virtual void isr(uint32_t address) override;
  void lowspeed(void);
  void highspeed(void);
  void go8bit(void) ;
@@ -24,10 +24,16 @@ public:
  void disable(void);
  void enable(void);
  void assert(void);
+ void external_nss(bool enable = true);
+ void signup() override;
+ void signout() override;
+ Spi *next;
 protected:
+ bool ext_nss;
  void init(void);
  int channel;
  SPI_TypeDef* Reg;
+ Spi* extirq;
 };
 
 

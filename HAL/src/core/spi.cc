@@ -34,7 +34,6 @@ Spi::Spi(char ch)
  DEBUG_LOG(0,"SPI%u activated\r\n", ch);
  __disable_irq();
  channel = ch;
- ext_nss = false;
  next = nullptr;
  switch (channel)
  {
@@ -43,10 +42,7 @@ Spi::Spi(char ch)
 	 RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
 	 PORT_ENABLE_CLOCK_START()
 	 /* enable all clock */
-	 PORT_ENABLE_CLOCK_ENTRY(SPI1SCK_PIN)
-	 PORT_ENABLE_CLOCK_ENTRY(SPI1MOSI_PIN)
-	 PORT_ENABLE_CLOCK_ENTRY(SPI1MISO_PIN)
-	 PORT_ENABLE_CLOCK_ENTRY(SPI1NSS_PIN)
+	 PORT_ENABLE_CLOCK_ENTRY(SPI1SCK_PIN)PORT_ENABLE_CLOCK_ENTRY(SPI1MOSI_PIN)PORT_ENABLE_CLOCK_ENTRY(SPI1MISO_PIN)PORT_ENABLE_CLOCK_ENTRY(SPI1NSS_PIN)
 
 	 PORT_ENABLE_CLOCK_END()
 
@@ -137,7 +133,7 @@ void Spi::init(void)
  /* SPI MODE by default */
  /* SPI_CR1_CPHA | SPI_CR1_CPOL*/
 
- /* NSS control by software ( only used in slave mode ? ) */
+ /* NSS control by software */
  tmp_cr1 |= SPI_CR1_SSM;
 
  /* /32 */
@@ -155,19 +151,37 @@ void Spi::init(void)
  enable();
 }
 
-void Spi::external_nss(bool enable)
+void Spi::nss_hi()
 {
- ext_nss = enable;
+ PIN_HI(SPI1NSS_PIN);
+}
+
+void Spi::nss_low()
+{
+ PIN_LOW(SPI1NSS_PIN);
 }
 
 uint16_t Spi::read(uint16_t data)
 {
  PIN_LOW(SPI1NSS_PIN);
- while(!(Reg->SR & SPI_SR_TXE));
+ while (!(Reg->SR & SPI_SR_TXE))
+	;
  Reg->DR = data;
- while(!(Reg->SR & SPI_SR_RXNE));
+ while (!(Reg->SR & SPI_SR_RXNE))
+	;
  volatile uint16_t tmp = Reg->DR;
  PIN_HI(SPI1NSS_PIN);
+ return tmp;
+}
+
+uint16_t Spi::read_no_nss(uint16_t data)
+{
+ while (!(Reg->SR & SPI_SR_TXE))
+	;
+ Reg->DR = data;
+ while (!(Reg->SR & SPI_SR_RXNE))
+	;
+ volatile uint16_t tmp = Reg->DR;
  return tmp;
 }
 

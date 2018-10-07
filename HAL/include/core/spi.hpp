@@ -14,6 +14,7 @@ public:
  ~Spi(void);
 
  virtual uint16_t read(uint16_t data = 0xFF) override;
+ uint16_t read_no_nss(uint16_t data);
  virtual void multiread(uint8_t *buff, uint32_t size) override;
  virtual void multiwrite(const uint8_t *buff, uint32_t size) override;
  virtual void isr(uint32_t address) override;
@@ -24,12 +25,12 @@ public:
  void disable(void);
  void enable(void);
  void assert(void);
- void external_nss(bool enable = true);
+ void nss_low();
+ void nss_hi();
  void signup() override;
  void signout() override;
  Spi *next;
 protected:
- bool ext_nss;
  void init(void);
  int channel;
  SPI_TypeDef* Reg;

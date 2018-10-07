@@ -23,10 +23,12 @@ namespace GLCD
  void TFT::fill_display(uint16_t color)
  {
 	set_color(color);
-	set_frame(0, 239, 0, 319);
-	for (uint16_t i = 0; i < 38400; i++)
+	for (uint16_t x = 0; x < 240; ++x)
 	{
-	 send(DATA, color);
+	 for (uint16_t y = 0; y < 320; ++y)
+	 {
+		plot_pixel(x, y);
+	 }
 	}
  }
 
@@ -43,17 +45,15 @@ namespace GLCD
  {
 	if (CMD == mode)
 	{
+	 PIN_HI(DC);
 	 PIN_LOW(DC);
 	}
 	else
 	{
+	 PIN_LOW(DC);
 	 PIN_HI(DC);
 	}
-	uint8_t retval = read(data);
-	if (CMD == mode)
-	{
-	 delay_ms(1);
-	}
+	uint8_t retval = read_no_nss(data);
 	return retval;
  }
 
@@ -78,22 +78,24 @@ namespace GLCD
  {
 	send(CMD, ILI9341_COLUMN_ADDR);
 	send(DATA, x1 >> 8);
-	send(DATA, x1 & 0x00ff);
+	send(DATA, x1 & 0xff);
 	send(DATA, x2 >> 8);
-	send(DATA, x2 & 0x00ff);
+	send(DATA, x2 & 0xff);
 	send(CMD, ILI9341_PAGE_ADDR);
 	send(DATA, y1 >> 8);
-	send(DATA, y1 & 0x00ff);
+	send(DATA, y1 & 0xff);
 	send(DATA, y2 >> 8);
-	send(DATA, y2 & 0x00ff);
+	send(DATA, y2 & 0xff);
  }
 
  void TFT::plot_pixel(uint16_t x, uint16_t y)
  {
+	nss_low();
 	set_frame(x, y, x, y);
 	send(CMD, ILI9341_GRAM);
 	send(DATA, current_color >> 8);
 	send(DATA, current_color & 0xFF);
+	nss_hi();
  }
 
  void TFT::configure()
@@ -101,6 +103,8 @@ namespace GLCD
 	PIN_LOW(RESET);
 	delay_ms(500);
 	PIN_HI(RESET);
+
+	nss_low();
 	send(CMD, ILI9341_RESET);
 	delay_ms(100);
 
@@ -108,20 +112,32 @@ namespace GLCD
 	send(DATA, 0x48);
 	send(CMD, ILI9341_PIXEL_FORMAT);
 	send(DATA, 0x55);
+	send(CMD, ILI9341_COLUMN_ADDR);
+	send(DATA, 0);
+	send(DATA, 0);
+	send(DATA, 0);
+	send(DATA, 0xFF);
+	send(CMD, ILI9341_PAGE_ADDR);
+	send(DATA, 0);
+	send(DATA, 0);
+	send(DATA, 0);
+	send(DATA, 0xFF);
 	send(CMD, ILI9341_SLEEP_OUT);
 
 	delay_ms(100);
 	send(CMD, ILI9341_DISPLAY_ON);
 	send(CMD, ILI9341_GRAM);
+	nss_hi();
  }
 
  uint32_t TFT::reg_read(uint8_t command, uint8_t parameter)
  {
+	nss_low();
 	send(CMD, 0xd9);
 	send(DATA, 0x10 + parameter);
 	send(CMD, command);
 	uint16_t res = send(DATA, 0);
-	PrintF("reg val: %x\n", res);
+	nss_hi();
 	return res;
  }
 
@@ -132,7 +148,9 @@ namespace GLCD
 
  void TFT::sleep(bool on)
  {
+	nss_low();
 	send(CMD, on ? 0x10 : 0x11);
+	nss_hi();
  }
 
  uint32_t TFT::status()

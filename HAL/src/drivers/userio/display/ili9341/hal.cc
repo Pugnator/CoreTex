@@ -9,6 +9,7 @@
  */
 
 #include <drivers/ili9341.hpp>
+#include "../gfx/font.hpp"
 #include <common.hpp>
 #include <log.hpp>
 
@@ -17,7 +18,9 @@ namespace GLCD
 
  void TFT::clear_display()
  {
+	uint8_t cc = current_color;
 	fill_display(0);
+	set_color(cc);
  }
 
  void TFT::fill_display(uint16_t color)
@@ -95,6 +98,25 @@ namespace GLCD
 	send(CMD, ILI9341_GRAM);
 	send(DATA, current_color >> 8);
 	send(DATA, current_color & 0xFF);
+	nss_hi();
+ }
+
+ void TFT::plot_char(char c, uint8_t x0, uint8_t y0)
+ {
+	uint8_t row = 0;
+	for (uint8_t y = 0; y < 8; ++y)
+	{
+	 uint8_t line = font8x8_basic[(uint8_t) c][row];
+	 for (uint8_t x = 0; x < 8; ++x)
+	 {
+		if (line & 0x01)
+		{
+		 plot_pixel(x0 + x, y0 + y);
+		}
+		line >>= 1;
+	 }
+	 row++;
+	}
 	nss_hi();
  }
 

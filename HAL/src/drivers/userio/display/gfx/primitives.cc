@@ -22,6 +22,16 @@ namespace Graphics
 	uint16_t y0 = p0.second;
 	uint16_t x1 = p1.first;
 	uint16_t y1 = p1.second;
+
+	if(x0 == x1)
+	{
+	 plot_vline(p0, p1);
+	}
+	else if(y0 == y1)
+	{
+	 plot_hline(p0, p1);
+	}
+
 	int32_t deltax = std::abs(x1 - x0);
 	int32_t deltay = std::abs(y1 - y0);
 	int32_t error = 0;
@@ -46,6 +56,28 @@ namespace Graphics
 		y = y + diry;
 		error = error - deltax;
 	 }
+	}
+ }
+
+ void GFX::plot_hline(pixel p0, pixel p1)
+ {
+	uint16_t x0 = p0.first;
+	uint16_t y0 = p0.second;
+	uint16_t x1 = p1.first;
+	for(uint16_t x = x0; x <= x1; ++x)
+	{
+	 plot_pixel(x, y0);
+	}
+ }
+
+ void GFX::plot_vline(pixel p0, pixel p1)
+ {
+	uint16_t x0 = p0.first;
+	uint16_t y0 = p0.second;
+	uint16_t y1 = p1.second;
+	for(uint16_t y = y0; y <= y1; ++y)
+	{
+	 plot_pixel(x0, y);
 	}
  }
 

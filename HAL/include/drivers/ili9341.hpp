@@ -58,8 +58,7 @@ namespace GLCD
 	 PIN_OUT_PP(LED);
 	 PIN_OUT_PP(RESET);
 	 PIN_OUT_PP(DC);
-	 //external_nss();
-	 //highspeed();
+	 highspeed();
 	 configure();
 	 current_color = 0xFFFF; // white by default
 	 backlight(true);
@@ -81,6 +80,7 @@ namespace GLCD
 	void fill_display(uint16_t color);
 	void set_frame(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 	void plot_pixel(uint16_t x, uint16_t y);
+	void plot_char(char c, uint8_t x0, uint8_t y0);
 
 	void backlight(bool enable);
 

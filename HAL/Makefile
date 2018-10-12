@@ -181,7 +181,7 @@ STMLIBSRC:=\
 ####################################################
 
 ifeq ($(__BUILDTYPE), DEBUG)
-	CXXFLAGS:=-flto -Og -g3 -D__DEBUG=1
+	CXXFLAGS:=-flto -O1 -g3 -D__DEBUG=1
 else
 	CXXFLAGS:=-flto -Os -s -D__DEBUG=0
 endif

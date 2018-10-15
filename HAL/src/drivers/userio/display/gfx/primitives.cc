@@ -8,13 +8,24 @@
  *
  */
 
+#include <drivers/ili9341.hpp>
 #include "gfx.hpp"
 #include <common.hpp>
 #include <log.hpp>
 #include <cstdlib>
+#include <algorithm>
 
 namespace Graphics
 {
+
+ void GFX::plot_pixel(uint16_t x, uint16_t y)
+ {
+	nss_low();
+	set_frame(x, y, x, y);
+	send(GLCD::CMD, ILI9341_GRAM);
+	send(GLCD::DATA, current_color);
+	nss_hi();
+ }
 
  void GFX::plot_line(pixel p0, pixel p1)
  {
@@ -23,11 +34,11 @@ namespace Graphics
 	uint16_t x1 = p1.first;
 	uint16_t y1 = p1.second;
 
-	if(x0 == x1)
+	if (x0 == x1)
 	{
 	 plot_vline(p0, p1);
 	}
-	else if(y0 == y1)
+	else if (y0 == y1)
 	{
 	 plot_hline(p0, p1);
 	}
@@ -61,30 +72,46 @@ namespace Graphics
 
  void GFX::plot_hline(pixel p0, pixel p1)
  {
-	uint16_t x0 = p0.first;
-	uint16_t y0 = p0.second;
+	nss_low();
+	uint16_t x0 = p0.X;
+	uint16_t y0 = p0.Y;
 	uint16_t x1 = p1.first;
-	for(uint16_t x = x0; x <= x1; ++x)
+	if (x0 > x1)
 	{
-	 plot_pixel(x, y0);
+	 std::swap(x0, x1);
 	}
+	set_frame(x0, y0, x1, y0);
+	send(GLCD::CMD, ILI9341_GRAM);
+	for (uint16_t x = x0; x <= x1; ++x)
+	{
+	 send(GLCD::DATA, current_color);
+	}
+	nss_hi();
  }
 
  void GFX::plot_vline(pixel p0, pixel p1)
  {
-	uint16_t x0 = p0.first;
-	uint16_t y0 = p0.second;
-	uint16_t y1 = p1.second;
-	for(uint16_t y = y0; y <= y1; ++y)
+	nss_low();
+	uint16_t x0 = p0.X;
+	uint16_t y0 = p0.Y;
+	uint16_t y1 = p1.Y;
+	if (y0 > y1)
 	{
-	 plot_pixel(x0, y);
+	 std::swap(y0, y1);
 	}
+	set_frame(x0, y0, x0, y1);
+	send(GLCD::CMD, ILI9341_GRAM);
+	for (uint16_t y = y0; y <= y1; ++y)
+	{
+	 send(GLCD::DATA, current_color);
+	}
+	nss_hi();
  }
 
  void GFX::plot_circle(pixel p0, uint16_t r)
  {
-	uint16_t x0 = p0.first;
-	uint16_t y0 = p0.second;
+	uint16_t x0 = p0.X;
+	uint16_t y0 = p0.Y;
 
 	int x = 0;
 	int y = r;
@@ -121,33 +148,18 @@ namespace Graphics
 	pixel f, s;
 	for (points::iterator it = pts.begin(); it != pts.end();)
 	{
-	 plot_line(s, *it);
-	 f = *it;
-	 ++it;
-	 if (it != pts.end())
-	 {
-		s = *it;
-	 }
-	 else
-	 {
-		plot_pixel(f.first, f.second);
-		break;
-	 }
-	 plot_line(f, s);
 	}
  }
 
  void GFX::plot_rect(pixel p0, uint16_t w, uint16_t h)
  {
-	for (uint16_t x = p0.first; x < p0.first + w; ++x)
-	{
-	 plot_pixel(x, p0.second);
-	 plot_pixel(x, p0.second + h);
-	}
-	for (uint16_t y = p0.second; y < p0.second + h; ++y)
-	{
-	 plot_pixel(p0.first, y);
-	 plot_pixel(p0.first + w, y);
-	}
+	pixel p1 = std::make_pair(p0.X + w, p0.Y);
+	pixel p2 = std::make_pair(p0.X + w, p0.Y + h);
+	pixel p3 = std::make_pair(p0.X, p0.Y + h);
+
+	plot_line(p0, p1);
+	plot_line(p1, p2);
+	plot_line(p2, p3);
+	plot_line(p3, p0);
  }
 }

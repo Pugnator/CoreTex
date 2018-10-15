@@ -1,6 +1,9 @@
 #pragma once
 #include "core/spi.hpp"
 
+#define X first
+#define Y second
+
 namespace GLCD
 {
 
@@ -60,6 +63,7 @@ namespace GLCD
 	 PIN_OUT_PP(DC);
 	 highspeed();
 	 configure();
+	 go16bit();
 	 current_color = 0xFFFF; // white by default
 	 backlight(true);
 	}
@@ -79,15 +83,13 @@ namespace GLCD
 	void clear_display();
 	void fill_display(uint16_t color);
 	void set_frame(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-	void plot_pixel(uint16_t x, uint16_t y);
-	void plot_char(char c, uint8_t x0, uint8_t y0);
 
 	void backlight(bool enable);
 
  protected:
 	uint32_t reg_read(uint8_t command, uint8_t parameter);
 	void configure();
-	uint8_t send(TFT_MODE mode, uint8_t data);
+	uint8_t send(TFT_MODE mode, uint16_t data);
 
 	uint16_t max_x;
 	uint16_t max_y;

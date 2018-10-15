@@ -26,13 +26,17 @@ namespace GLCD
  void TFT::fill_display(uint16_t color)
  {
 	set_color(color);
+	nss_low();
+	set_frame(0, 0, 239, 319);
+	send(CMD, ILI9341_GRAM);
 	for (uint16_t x = 0; x < 240; ++x)
 	{
 	 for (uint16_t y = 0; y < 320; ++y)
 	 {
-		plot_pixel(x, y);
+		send(DATA, color);
 	 }
 	}
+	nss_hi();
  }
 
  /**********************************************************************************************//**
@@ -44,7 +48,7 @@ namespace GLCD
   * \param [in]	data	If non-null, the name.
   **************************************************************************************************/
 
- uint8_t TFT::send(TFT_MODE mode, uint8_t data)
+ uint8_t TFT::send(TFT_MODE mode, uint16_t data)
  {
 	if (CMD == mode)
 	{
@@ -80,44 +84,11 @@ namespace GLCD
  void TFT::set_frame(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
  {
 	send(CMD, ILI9341_COLUMN_ADDR);
-	send(DATA, x1 >> 8);
-	send(DATA, x1 & 0xff);
-	send(DATA, x2 >> 8);
-	send(DATA, x2 & 0xff);
+	send(DATA, x1);
+	send(DATA, x2);
 	send(CMD, ILI9341_PAGE_ADDR);
-	send(DATA, y1 >> 8);
-	send(DATA, y1 & 0xff);
-	send(DATA, y2 >> 8);
-	send(DATA, y2 & 0xff);
- }
-
- void TFT::plot_pixel(uint16_t x, uint16_t y)
- {
-	nss_low();
-	set_frame(x, y, x, y);
-	send(CMD, ILI9341_GRAM);
-	send(DATA, current_color >> 8);
-	send(DATA, current_color & 0xFF);
-	nss_hi();
- }
-
- void TFT::plot_char(char c, uint8_t x0, uint8_t y0)
- {
-	uint8_t row = 0;
-	for (uint8_t y = 0; y < 8; ++y)
-	{
-	 uint8_t line = font8x8_basic[(uint8_t) c][row];
-	 for (uint8_t x = 0; x < 8; ++x)
-	 {
-		if (line & 0x01)
-		{
-		 plot_pixel(x0 + x, y0 + y);
-		}
-		line >>= 1;
-	 }
-	 row++;
-	}
-	nss_hi();
+	send(DATA, y1);
+	send(DATA, y2);
  }
 
  void TFT::configure()

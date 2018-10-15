@@ -9,9 +9,9 @@
  */
 
 #include "gfx.hpp"
+#include <drivers/ili9341.hpp>
 #include <common.hpp>
 #include <log.hpp>
-#include <map>
 
 uint8_t font8x8_basic[128][8] =
 {
@@ -147,11 +147,39 @@ uint8_t font8x8_basic[128][8] =
 
 namespace Graphics
 {
+ void GFX::plot_char(char c, uint8_t x0, uint8_t y0)
+ {
+	uint8_t row = 0;
+	nss_low();
+	set_frame(x0, y0, x0 + 8, y0 + 8);
+	send(GLCD::CMD, ILI9341_GRAM);
+	uint8_t *bitmap = font8x8_basic[(uint8_t) c];
+
+	for (uint8_t column = 0; column < 8; ++column)
+	{
+	 for (uint8_t row = 0; row < 8; ++row)
+	 {
+		if ((bitmap[row] >> column) & 0x01)
+		{
+		 send(GLCD::DATA, current_color >> 8);
+		 send(GLCD::DATA, current_color & 0xFF);
+		}
+		else
+		{
+		 send(GLCD::DATA, 0);
+		 send(GLCD::DATA, 0);
+		}
+
+	 }
+	}
+	nss_hi();
+ }
+
  void GFX::print(const char* text, uint8_t x0, uint8_t y0)
  {
 	const char *p = text;
 	uint8_t offset = 0;
-	while(*p)
+	while (*p)
 	{
 	 plot_char(*p, x0 + offset, y0);
 	 p++;

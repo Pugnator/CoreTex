@@ -9,6 +9,8 @@ void tsprintf (			/* Put a formatted string to the memory */
 	const char*	fmt,	/* Pointer to the format string */
 	...					/* Optional arguments */
 );
+
+bool isNthBitSet(uint8_t c, uint8_t n);
 int ascii2ucs2(const char* sms_text, uint8_t* output_buffer, int buffer_size);
 uint32_t str16_to_word (const char* str);
 uint32_t str10_to_word (const char* str);

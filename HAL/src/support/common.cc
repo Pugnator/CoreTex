@@ -40,6 +40,13 @@ enum
 	SMS_MAX_7BIT_TEXT_LENGTH  = 160,
 };
 
+bool isNthBitSet(uint8_t c, uint8_t n)
+{
+ static uint8_t mask[] =
+ { 128, 64, 32, 16, 8, 4, 2, 1 };
+ return ((c & mask[n]) != 0);
+}
+
 uint32_t str16_to_word(const char* str)
 {
 	uint32_t res = 0;

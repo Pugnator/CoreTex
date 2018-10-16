@@ -149,28 +149,25 @@ namespace Graphics
 {
  void GFX::plot_char(char c, uint8_t x0, uint8_t y0)
  {
-	uint8_t row = 0;
 	nss_low();
-	set_frame(x0, y0, x0 + 8, y0 + 8);
+	set_frame(x0, y0, x0 + 7, y0 + 7);
 	send(GLCD::CMD, ILI9341_GRAM);
-	uint8_t *bitmap = font8x8_basic[(uint8_t) c];
-
-	for (uint8_t column = 0; column < 8; ++column)
+	for (uint8_t y = 0; y < 8; ++y)
 	{
-	 for (uint8_t row = 0; row < 8; ++row)
+	 for (uint8_t x = 0; x < 8; ++x)
 	 {
-		if ((bitmap[row] >> column) & 0x01)
+		if (isNthBitSet(font8x8_basic[(uint8_t) c][y], 7 - x))
 		{
-		 send(GLCD::DATA, current_color >> 8);
-		 send(GLCD::DATA, current_color & 0xFF);
+		 PrintF("*");
+		 send(GLCD::DATA, current_color);
 		}
 		else
 		{
-		 send(GLCD::DATA, 0);
-		 send(GLCD::DATA, 0);
+		 PrintF(" ");
+		 send(GLCD::DATA, BLACK);
 		}
-
 	 }
+	 PrintF("\n");
 	}
 	nss_hi();
  }

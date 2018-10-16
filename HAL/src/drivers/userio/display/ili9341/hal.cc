@@ -125,12 +125,14 @@ namespace GLCD
 
  uint32_t TFT::reg_read(uint8_t command, uint8_t parameter)
  {
+	go8bit();
 	nss_low();
 	send(CMD, 0xd9);
 	send(DATA, 0x10 + parameter);
 	send(CMD, command);
 	uint16_t res = send(DATA, 0);
 	nss_hi();
+	go16bit();
 	return res;
  }
 

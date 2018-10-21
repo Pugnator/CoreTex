@@ -100,7 +100,6 @@ DRIVERSSRC+=\
 endif
 
 CORESRC:=\
-	$(CORELIB)/adc.cc \
 	$(CORELIB)/core.cc \
 	$(CORELIB)/gpio.cc \
 	$(CORELIB)/iic.cc \

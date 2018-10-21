@@ -50,11 +50,22 @@ namespace IO
     void toggle ();
     void low ();
     void hi ();
+    /* PWM */
+    void pwm(bool enable);
+    void pwm_invert(bool invert);
+    void pwm_duty(uint16_t duty);
+    /* ADC */
+    void adc(bool enable);
+    uint16_t adc_sample();
+    double adc_voltage();
+
     PINSTATE get_state ();
     virtual void isr(uint32_t address);
   public:
     PINCFG get_config ();
   protected:
+    bool pwm_enabled;
+    bool adc_enabled;
     EXTI_TypeDef* Reg;
     PINCFG config;
     GPIO_TypeDef* pbase;

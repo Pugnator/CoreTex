@@ -4,12 +4,17 @@
 #define X first
 #define Y second
 
+#define BLACK                       0x0000
+#define BLUE                        0x001F
+#define RED                         0xF800
+#define GREEN                       0x07E0
+#define CYAN                        0x07FF
+#define MAGENTA                     0xF81F
+#define YELLOW                      0xFFE0
+#define WHITE                       0xFFFF
+
 namespace GLCD
 {
-
-#define LED A,1,SPEED_50MHz
-#define RESET A,3,SPEED_50MHz
-#define DC A,2,SPEED_50MHz
 
 //Commands
 #define ILI9341_RESET				0x01
@@ -45,6 +50,8 @@ namespace GLCD
 #define ILI9341_INTERFACE			0xF6
 #define ILI9341_PRC				    0xF7
 
+ using namespace IO;
+
  typedef enum
  {
 	CMD, DATA
@@ -56,16 +63,21 @@ namespace GLCD
 	TFT(char channel)
 		: Spi(channel)
 	{
+	 lowspeed();
 	 max_x = 240;
 	 max_y = 320;
-	 PIN_OUT_PP(LED);
-	 PIN_OUT_PP(RESET);
-	 PIN_OUT_PP(DC);
+
+
+	 LED_pin.reset(new GPIO_pin({ PORTA, P1, IOSPEED_10MHz, OUT_ALT_PP }));
+	 RST_pin.reset(new GPIO_pin({ PORTA, P3, IOSPEED_50MHz, OUT_PP }));
+	 DC_pin.reset(new GPIO_pin({ PORTA, P2, IOSPEED_50MHz, OUT_PP }));
+
+
 	 highspeed();
 	 configure();
 	 go16bit();
-	 current_color = 0xFFFF; // white by default
-	 backlight(true);
+	 current_color = WHITE; // white by default
+	 backlight(80);
 	}
 	;
 	~TFT()
@@ -84,15 +96,20 @@ namespace GLCD
 	void fill_display(uint16_t color);
 	void set_frame(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 
-	void backlight(bool enable);
+	void backlight(uint8_t brightness);
 
  protected:
 	uint32_t reg_read(uint8_t command, uint8_t parameter);
 	void configure();
-	uint8_t send(TFT_MODE mode, uint16_t data);
+	uint8_t send16(TFT_MODE mode, uint16_t data);
+	uint8_t send8(TFT_MODE mode, uint8_t data);
 
 	uint16_t max_x;
 	uint16_t max_y;
 	uint16_t current_color;
+
+	std::unique_ptr<IO::GPIO_pin> LED_pin;
+	std::unique_ptr<IO::GPIO_pin> RST_pin;
+	std::unique_ptr<IO::GPIO_pin> DC_pin;
  };
 }

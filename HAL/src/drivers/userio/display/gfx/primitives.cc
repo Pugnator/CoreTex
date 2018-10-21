@@ -22,8 +22,8 @@ namespace Graphics
  {
 	nss_low();
 	set_frame(x, y, x, y);
-	send(GLCD::CMD, ILI9341_GRAM);
-	send(GLCD::DATA, current_color);
+	send8(GLCD::CMD, ILI9341_GRAM);
+	send16(GLCD::DATA, current_color);
 	nss_hi();
  }
 
@@ -43,29 +43,27 @@ namespace Graphics
 	 plot_hline(p0, p1);
 	}
 
-	int32_t deltax = std::abs(x1 - x0);
-	int32_t deltay = std::abs(y1 - y0);
-	int32_t error = 0;
-	int32_t deltaerr = deltay;
-	int32_t y = y0;
-	int32_t diry = y1 - y0;
-	if (diry > 0)
-	{
-	 diry = 1;
-	}
-	if (diry < 0)
-	{
-	 diry = -1;
-	}
+	int dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+	int dy = abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+	int err = (dx > dy ? dx : -dy) / 2, e2;
 
-	for (int x = x0; x <= x1; ++x)
+	for (;;)
 	{
-	 plot_pixel(x, y);
-	 error = error + deltaerr;
-	 if (2 * error >= deltax)
+	 plot_pixel(x0, y0);
+	 if (x0 == x1 && y0 == y1)
 	 {
-		y = y + diry;
-		error = error - deltax;
+		break;
+	 }
+	 e2 = err;
+	 if (e2 > -dx)
+	 {
+		err -= dy;
+		x0 += sx;
+	 }
+	 if (e2 < dy)
+	 {
+		err += dx;
+		y0 += sy;
 	 }
 	}
  }
@@ -81,10 +79,10 @@ namespace Graphics
 	 std::swap(x0, x1);
 	}
 	set_frame(x0, y0, x1, y0);
-	send(GLCD::CMD, ILI9341_GRAM);
+	send16(GLCD::CMD, ILI9341_GRAM);
 	for (uint16_t x = x0; x <= x1; ++x)
 	{
-	 send(GLCD::DATA, current_color);
+	 send16(GLCD::DATA, current_color);
 	}
 	nss_hi();
  }
@@ -100,10 +98,10 @@ namespace Graphics
 	 std::swap(y0, y1);
 	}
 	set_frame(x0, y0, x0, y1);
-	send(GLCD::CMD, ILI9341_GRAM);
+	send16(GLCD::CMD, ILI9341_GRAM);
 	for (uint16_t y = y0; y <= y1; ++y)
 	{
-	 send(GLCD::DATA, current_color);
+	 send16(GLCD::DATA, current_color);
 	}
 	nss_hi();
  }

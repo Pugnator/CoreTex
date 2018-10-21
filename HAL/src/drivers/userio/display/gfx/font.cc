@@ -151,37 +151,42 @@ namespace Graphics
  {
 	nss_low();
 	set_frame(x0, y0, x0 + 7, y0 + 7);
-	send(GLCD::CMD, ILI9341_GRAM);
+	send16(GLCD::CMD, ILI9341_GRAM);
 	for (uint8_t y = 0; y < 8; ++y)
 	{
 	 for (uint8_t x = 0; x < 8; ++x)
 	 {
 		if (isNthBitSet(font8x8_basic[(uint8_t) c][y], 7 - x))
 		{
-		 PrintF("*");
-		 send(GLCD::DATA, current_color);
+		 send16(GLCD::DATA, current_color);
 		}
 		else
 		{
-		 PrintF(" ");
-		 send(GLCD::DATA, BLACK);
+		 send16(GLCD::DATA, BLACK);
 		}
 	 }
-	 PrintF("\n");
 	}
 	nss_hi();
  }
 
  void GFX::print(const char* text, uint8_t x0, uint8_t y0)
  {
+	nss_low();
+	uint16_t sz = strlen(text);
+	set_frame(x0, y0, x0 + (7 * sz), y0 + 7);
+	send16(GLCD::CMD, ILI9341_GRAM);
 	const char *p = text;
-	uint8_t offset = 0;
-	while (*p)
+	uint16_t offset = 0;
+	for (uint8_t y = 0; y < 8; ++y)
 	{
-	 plot_char(*p, x0 + offset, y0);
-	 p++;
-	 offset += 8 + char_offset;
+	 while (*p)
+	 {
+		plot_char(*p, x0 + offset, y0);
+		p++;
+		offset += 8 + char_offset;
+	 }
 	}
+	nss_hi();
  }
 
  void GFX::set_char_offset(uint8_t offset)

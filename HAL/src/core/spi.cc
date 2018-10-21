@@ -17,9 +17,9 @@
 #include <stdint.h>
 #include <common.hpp>
 #include <log.hpp>
-#include <core/io_macro.hpp>
 #include <core/isr_helper.hpp>
 #include <core/spi.hpp>
+#include <core/gpio.hpp>
 #include <core/stm32f10x.hpp>
 #include <global.hpp>
 
@@ -29,36 +29,42 @@
 #define DEBUG_LOG(...)
 #endif
 
+using namespace IO;
+
 Spi::Spi(char ch)
 {
- DEBUG_LOG(0,"SPI%u activated\r\n", ch);
+ DEBUG_LOG("SPI%u activated\r\n", ch);
  __disable_irq();
  channel = ch;
  next = nullptr;
- switch (channel)
+
+ if (1 == channel)
  {
-	case 1:
-	 Reg = (SPI_TypeDef*) SPI1_BASE;
-	 RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
-	 PORT_ENABLE_CLOCK_START()
-	 /* enable all clock */
-	 PORT_ENABLE_CLOCK_ENTRY(SPI1SCK_PIN)PORT_ENABLE_CLOCK_ENTRY(SPI1MOSI_PIN)PORT_ENABLE_CLOCK_ENTRY(SPI1MISO_PIN)PORT_ENABLE_CLOCK_ENTRY(SPI1NSS_PIN)
-
-	 PORT_ENABLE_CLOCK_END()
-
-	 PIN_OUT_ALT_PP(SPI1SCK_PIN);
-	 PIN_OUT_ALT_PP(SPI1MOSI_PIN);
-	 PIN_OUT_PP(SPI1NSS_PIN);
-	 PIN_HI(SPI1NSS_PIN);
-	 PIN_INPUT_FLOATING(SPI1MISO_PIN);
-	 break;
-	case 2:
-	 Reg = (SPI_TypeDef*) SPI2_BASE;
-	 break;
-	default:
-	 //ERROR
-	 ;
+	Reg = (SPI_TypeDef*) SPI1_BASE;
+	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
+	SCK_pin.reset(new GPIO_pin(
+	{ PORTA, P5, IOSPEED_50MHz, OUT_ALT_PP }));
+	MISO_pin.reset(new GPIO_pin(
+	{ PORTA, P6, IOSPEED_50MHz, IN_FLT }));
+	MOSI_pin.reset(new GPIO_pin(
+	{ PORTA, P7, IOSPEED_50MHz, OUT_ALT_PP }));
  }
+ else if (2 == channel)
+ {
+	Reg = (SPI_TypeDef*) SPI2_BASE;
+	RCC->APB1ENR |= RCC_APB1ENR_SPI2EN;
+ }
+
+ NSS_pin.reset(new GPIO_pin(
+ { PORTA, P4, IOSPEED_50MHz, OUT_PP }));
+
+ NSS_pin->hi();
+
+ std::unique_ptr<GPIO_pin> pin;
+
+ pin.reset(new GPIO_pin(
+ { PORTA, P6, IOSPEED_50MHz, IN_FLT }));
+
  signup();
  init();
  __enable_irq();
@@ -153,24 +159,24 @@ void Spi::init(void)
 
 void Spi::nss_hi()
 {
- PIN_HI(SPI1NSS_PIN);
+ NSS_pin->hi();
 }
 
 void Spi::nss_low()
 {
- PIN_LOW(SPI1NSS_PIN);
+ NSS_pin->low();
 }
 
 uint16_t Spi::read(uint16_t data)
 {
- PIN_LOW(SPI1NSS_PIN);
+ NSS_pin->low();
  while (!(Reg->SR & SPI_SR_TXE))
 	;
  Reg->DR = data;
  while (!(Reg->SR & SPI_SR_RXNE))
 	;
  volatile uint16_t tmp = Reg->DR;
- PIN_HI(SPI1NSS_PIN);
+ NSS_pin->hi();
  return tmp;
 }
 
@@ -190,18 +196,18 @@ void Spi::multiread(uint8_t *buf, uint32_t size)
  if (1 == size)
  {
 	go8bit();
-	PIN_LOW(SPI1NSS_PIN);
+	NSS_pin->low();
 	Reg->DR = 0xFF;
 	while (Reg->SR & SPI_SR_BSY)
 	 ;
 	buf[0] = Reg->DR;
-	PIN_HI(SPI1NSS_PIN);
+	NSS_pin->hi();
 	return;
  }
 
  go16bit();
  volatile uint16_t dr = 0;
- PIN_LOW(SPI1NSS_PIN);
+ NSS_pin->low();
  for (uint32_t i = 0; i < size / 2; ++i)
  {
 	Reg->DR = 0xFFFF;
@@ -212,7 +218,7 @@ void Spi::multiread(uint8_t *buf, uint32_t size)
 	buf[0] = dr >> 8;
 	buf += 2;
  }
- PIN_HI(SPI1NSS_PIN);
+ NSS_pin->hi();
 }
 
 void Spi::multiwrite(const uint8_t *buf, uint32_t size)
@@ -221,7 +227,7 @@ void Spi::multiwrite(const uint8_t *buf, uint32_t size)
 	return;
 
  go16bit();
- PIN_LOW(SPI1NSS_PIN);
+ NSS_pin->low();
  for (uint32_t i = 0; i < size / 2; ++i)
  {
 	Reg->DR = buf[0] << 8 | buf[1];
@@ -230,12 +236,12 @@ void Spi::multiwrite(const uint8_t *buf, uint32_t size)
 	volatile uint16_t dr = Reg->DR;
 	buf += 2;
  }
- PIN_HI(SPI1NSS_PIN);
+ NSS_pin->hi();
 }
 
 void Spi::go8bit(void)
 {
- DEBUG_LOG(0,"Spi::go8bit\r\n");
+ DEBUG_LOG("Spi::go8bit\r\n");
  //SPI module must be disabled
  disable();
  Reg->CR1 &= ~SPI_CR1_DFF;
@@ -244,7 +250,7 @@ void Spi::go8bit(void)
 
 void Spi::go16bit(void)
 {
- DEBUG_LOG(0,"Spi::go16bit\r\n");
+ DEBUG_LOG("Spi::go16bit\r\n");
  //SPI module must be disabled
  disable();
  Reg->CR1 |= SPI_CR1_DFF;
@@ -253,23 +259,23 @@ void Spi::go16bit(void)
 
 void Spi::disable(void)
 {
- DEBUG_LOG(0,"Spi::disable\r\n");
+ DEBUG_LOG("Spi::disable\r\n");
  Reg->CR1 &= ~SPI_CR1_SPE;
 }
 
 void Spi::enable(void)
 {
- DEBUG_LOG(0,"Spi::enable\r\n");
+ DEBUG_LOG("Spi::enable\r\n");
  Reg->CR1 |= SPI_CR1_SPE;
 }
 
 void Spi::assert(void)
 {
- DEBUG_LOG(0,"Spi::assert\r\n");
- PIN_HI(SPI1NSS_PIN);
+ DEBUG_LOG("Spi::assert\r\n");
+ NSS_pin->hi();
  delay_ms(100);
- PIN_LOW(SPI1NSS_PIN);
- PIN_HI(SPI1NSS_PIN);
+ NSS_pin->low();
+ NSS_pin->hi();
 }
 
 void Spi::lowspeed(void)
@@ -283,7 +289,6 @@ void Spi::highspeed(void)
 {
  DEBUG_LOG("Spi::highspeed\r\n");
  Reg->CR1 &= ~SPI_CR1_BR;
-
 }
 
 void Spi::signup()

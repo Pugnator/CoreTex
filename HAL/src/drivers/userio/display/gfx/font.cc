@@ -169,7 +169,20 @@ namespace Graphics
 	nss_hi();
  }
 
- void GFX::print(const char* text, uint8_t x0, uint8_t y0)
+ void GFX::lineclear(uint16_t y0)
+ {
+	nss_low();
+	set_frame(0, y0, max_x, y0 + 7);
+	send16(GLCD::CMD, ILI9341_GRAM);
+	uint16_t offset = 0;
+	for (uint32_t i = 0; i < max_x * 7; ++i)
+	{
+	 send16(GLCD::DATA, BLACK);
+	}
+	nss_hi();
+ }
+
+ void GFX::print(const char* text, uint16_t x0, uint16_t y0)
  {
 	nss_low();
 	uint16_t sz = strlen(text);

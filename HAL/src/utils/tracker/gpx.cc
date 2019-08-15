@@ -61,7 +61,7 @@ bool
 GPX::create (const char* filename)
 {
 	result = mount (&filesystem, "0:", 1);
-	SEGGER_RTT_printf (0, "Disk result: %s\r\n", result_to_str (result));
+	PrintF( "Disk result: %s\r\n", result_to_str (result));
 	if (FR_OK != result)
 	{
 	 return false;
@@ -75,7 +75,7 @@ GPX::create (const char* filename)
 	result = open (&gpx, filename, FA_CREATE_ALWAYS | FA_WRITE);
 	if (result != FR_OK)
 	{
-		SEGGER_RTT_printf (0, "Failed to open the file: %s\r\n",
+		PrintF( "Failed to open the file: %s\r\n",
 		                   result_to_str (result));
 		return false;
 	}
@@ -111,13 +111,13 @@ GPX::set_point (void)
 	xsprintf (text, GPX_TRACK_POINT, latutm.deg, latutm.fract, lonutm.deg,
 	          lonutm.fract, gps->get_utc(), gps->nmeastr, gps->gsv);
 
-	SEGGER_RTT_printf (0, "GPS: %s\r\n", text);
+	PrintF( "GPS: %s\r\n", text);
 
 	result = f_write (&gpx, text, strlen (text), &written);
 	stfree(text);
 	if (result != FR_OK)
 	{
-		SEGGER_RTT_printf (0, "Failed to write to the file: %s\r\n",
+		PrintF( "Failed to write to the file: %s\r\n",
 		                   result_to_str (result));
 		return false;
 	}

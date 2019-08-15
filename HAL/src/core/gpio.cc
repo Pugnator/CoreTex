@@ -162,6 +162,10 @@ namespace IO
 		TIM2->CR1 &= ~TIM_CR1_CEN;
 	 }
 	}
+	else if (GPIOB == pbase)
+	{
+
+	}
  }
 
  void GPIO_pin::pwm_invert(bool invert)
@@ -203,7 +207,9 @@ namespace IO
 	while (!(ADC1->CR2 & ADC_CR2_CAL))
 	 ;
 
-	ADC1->SQR2 |= ADC_SQR2_SQ12_0;
+	ADC1->SQR1 = 0;
+	ADC1->SQR2 = 0;
+	ADC1->SQR3 = ADC_SQR3_SQ1_0 | ADC_SQR3_SQ1_3;
 
 	ADC1->CR2 |= (ADC_CR2_EXTSEL_0 | ADC_CR2_EXTSEL_1 | ADC_CR2_EXTSEL_2 | ADC_CR2_EXTTRIG);
 	ADC1->CR2 |= ADC_CR2_ADON;

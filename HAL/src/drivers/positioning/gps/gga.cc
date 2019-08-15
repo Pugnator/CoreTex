@@ -61,6 +61,9 @@ void Gps::fillGGActx(int sect, const char* field)
   case MSL:
    nmea.msl = str10_to_word(field);
    break;
+  case QUAL:
+   fix = str10_to_word(field) > 0 ? true : false;
+   break;
   case END:
    break;
  }

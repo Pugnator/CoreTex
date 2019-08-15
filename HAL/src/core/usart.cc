@@ -22,13 +22,13 @@
 #include <queue.hpp>
 #include <log.hpp>
 
-#ifdef UART_DEBUG
+#ifdef USART_DEBUG
 #define DEBUG_LOG PrintF
 #else
 #define DEBUG_LOG(...)
 #endif
 
-/* UART class */
+/* USART class */
 
 #define UARTirq (USART1_IRQn - 1)
 #define _SR Reg->SR

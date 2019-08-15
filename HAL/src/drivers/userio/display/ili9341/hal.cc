@@ -24,6 +24,11 @@ namespace GLCD
 	set_color(cc);
  }
 
+ void TFT::rotate(uint32_t orientation)
+ {
+
+ }
+
  void TFT::fill_display(uint16_t color)
  {
 	set_color(color);
@@ -107,7 +112,7 @@ namespace GLCD
 	send16(DATA, y2);
  }
 
- void TFT::configure()
+ void TFT::configure(uint32_t orientation)
  {
 	RST_pin->low();
 	delay_ms(500);
@@ -118,7 +123,7 @@ namespace GLCD
 	delay_ms(100);
 
 	send16(CMD, ILI9341_MAC);
-	send16(DATA, 0x48);
+	send16(DATA, orientation);
 	send16(CMD, ILI9341_PIXEL_FORMAT);
 	send16(DATA, 0x55);
 

@@ -69,8 +69,7 @@ typedef struct nmeactx
  coord lon;
  uint32_t msl;
  char fstr[16];
- double knots;
- double kmh;
+ uint32_t kmh;
  float course;
  bool isvalid;
  uint32_t nmeaerr;
@@ -87,7 +86,6 @@ public:
  Gps(short ch, uint32_t bd) :
   USART::USART(ch, bd, this)
  {
-  gsv = 0;
   reset();
  }
  void rttprint();
@@ -99,6 +97,7 @@ public:
  coord getlat();
  coord getlon();
  uint32_t get_utc();
+ uint32_t get_speed();
  double get_dec_lat();
  double get_dec_lon();
  UTM coord2utm (coord coord);
@@ -110,6 +109,7 @@ public:
 private:
  bool correct;
  volatile bool ready;
+ bool fix;
 
  void latlon2crd(const char* str, coord* c);
 

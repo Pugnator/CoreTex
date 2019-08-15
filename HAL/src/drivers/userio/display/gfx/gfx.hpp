@@ -12,8 +12,8 @@ namespace Graphics
  class GFX : public GLCD::TFT
  {
  public:
-	GFX(char channel)
-		: GLCD::TFT(channel)
+	GFX(char channel, uint32_t orientation)
+		: GLCD::TFT(channel, orientation)
 	{
 	 brush = 1;
 	 char_offset = 0;
@@ -25,6 +25,8 @@ namespace Graphics
 	;
 
  public:
+	uint16_t get_max_x();
+	uint16_t get_max_y();
 	/* Basic */
 	void plot_pixel(uint16_t x, uint16_t y);
 	void plot_line(pixel p0, pixel p1);
@@ -37,7 +39,8 @@ namespace Graphics
 	void plot_polygon(points pts);
 	/* Fonts */
 	void plot_char(char c, uint8_t x0, uint8_t y0);
-	void print(const char* text, uint8_t x0, uint8_t y0);
+	void lineclear(uint16_t y0);
+	void print(const char* text, uint16_t x0, uint16_t y0);
 	void set_char_offset(uint8_t offset);
  private:
 	uint8_t brush;

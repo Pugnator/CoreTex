@@ -16,6 +16,8 @@
  *******************************************************************************/
 #include <drivers/gps.hpp>
 #include <common.hpp>
+#include <log.hpp>
+#include <math.h>
 
 /*
  RMC
@@ -58,26 +60,27 @@ void Gps::fillRMCctx(int sect, const char* field)
 {
  switch (sect)
  {
-  case UTC:
-   *strchr(field, '.') = 0;
-   nmea.utc = str10_to_word(field);
-   break;
-  case LONG:
-   latlon2crd(field, &nmea.lon);
-   break;
-  case LONGDIR:
-   nmea.lon.dir = *field;
-   break;
-  case LAT:
-   latlon2crd(field, &nmea.lat);
-   break;
-  case LATDIR:
-   nmea.lat.dir = *field;
-   break;
-  case KNOTS:
-   //nmea.knots = strtod ( field, NULL );
-   break;
-  case END:
-   break;
+	case UTC:
+	 *strchr(field, '.') = 0;
+	 nmea.utc = str10_to_word(field);
+	 break;
+	case LONG:
+	 latlon2crd(field, &nmea.lon);
+	 break;
+	case LONGDIR:
+	 nmea.lon.dir = *field;
+	 break;
+	case LAT:
+	 latlon2crd(field, &nmea.lat);
+	 break;
+	case LATDIR:
+	 nmea.lat.dir = *field;
+	 break;
+	case KNOTS:
+	 nmea.kmh = round(1.852 * strtod(field, NULL));
+	 PrintF("Speed = %s * 1.852 = %u\r\n", field, nmea.kmh);
+	 break;
+	case END:
+	 break;
  }
 }

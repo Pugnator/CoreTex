@@ -13,6 +13,11 @@
 #define YELLOW                      0xFFE0
 #define WHITE                       0xFFFF
 
+#define ORIENTATION_1 0x28
+#define ORIENTATION_2 0x48
+#define ORIENTATION_3 0xE8
+#define ORIENTATION_4 0x88
+
 namespace GLCD
 {
 
@@ -60,7 +65,7 @@ namespace GLCD
  class TFT : public Spi
  {
  public:
-	TFT(char channel)
+	TFT(char channel, uint32_t orientation)
 		: Spi(channel)
 	{
 	 lowspeed();
@@ -68,13 +73,13 @@ namespace GLCD
 	 max_y = 320;
 
 
-	 LED_pin.reset(new GPIO_pin({ PORTA, P1, IOSPEED_10MHz, OUT_ALT_PP }));
+	 LED_pin.reset(new GPIO_pin({ PORTA, P1, IOSPEED_50MHz, OUT_ALT_PP }));
 	 RST_pin.reset(new GPIO_pin({ PORTA, P3, IOSPEED_50MHz, OUT_PP }));
 	 DC_pin.reset(new GPIO_pin({ PORTA, P2, IOSPEED_50MHz, OUT_PP }));
 
 
 	 highspeed();
-	 configure();
+	 configure(orientation);
 	 go16bit();
 	 current_color = WHITE; // white by default
 	 backlight(80);
@@ -93,6 +98,7 @@ namespace GLCD
  public:
 	void set_color(uint16_t color);
 	void clear_display();
+	void rotate(uint32_t orientation);
 	void fill_display(uint16_t color);
 	void set_frame(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 
@@ -100,7 +106,7 @@ namespace GLCD
 
  protected:
 	uint32_t reg_read(uint8_t command, uint8_t parameter);
-	void configure();
+	void configure(uint32_t orientation);
 	uint8_t send16(TFT_MODE mode, uint16_t data);
 	uint8_t send8(TFT_MODE mode, uint8_t data);
 

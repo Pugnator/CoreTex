@@ -18,11 +18,21 @@
 namespace Graphics
 {
 
+ uint16_t GFX::get_max_x()
+ {
+	return max_x;
+ }
+
+ uint16_t GFX::get_max_y()
+ {
+	return max_y;
+ }
+
  void GFX::plot_pixel(uint16_t x, uint16_t y)
  {
 	nss_low();
 	set_frame(x, y, x, y);
-	send8(GLCD::CMD, ILI9341_GRAM);
+	send16(GLCD::CMD, ILI9341_GRAM);
 	send16(GLCD::DATA, current_color);
 	nss_hi();
  }

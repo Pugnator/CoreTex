@@ -10,7 +10,11 @@
 #include <cstdlib>
 #include <string.h>
 
-#define RTT_DEBUG_CHANNEL 0
+#ifdef GPS_DEBUG
+#define DEBUG_LOG PrintF
+#else
+#define DEBUG_LOG(...)
+#endif
 
 const NMEATYPESTRUCT nmeatypesstr[] =
 {
@@ -29,221 +33,219 @@ const NMEATALKERSTRUCT nmeatalkerstr[] =
 { GL, "GL" },
 { (NMEATALKER) 0, NULL }, };
 
-void
-Gps::isr (uint32_t address)
+void Gps::isr(uint32_t address)
 {
-	if (Reg->SR & USART_SR_RXNE)
+ if (Reg->SR & USART_SR_RXNE)
+ {
+	short ch = Reg->DR;
+	Reg->SR &= ~USART_SR_RXNE;
+	if (ready)
 	{
-		short ch = Reg->DR;
-		Reg->SR &= ~USART_SR_RXNE;
-		if (ready)
-		{
-			return;
-		}
-
-		if (0 == nmeastr_len && '$' != ch)
-		{
-			return;
-		}
-		else if ('\n' == ch || NMEA_MAX_LEN <= nmeastr_len + 1)
-		{
-			nmeastr[nmeastr_len] = ch;
-			ready = true;
-			return;
-		}
-		nmeastr[nmeastr_len++] = ch;
+	 return;
 	}
-}
 
-NMEATYPE
-Gps::get_nmea_sent_type (const char* field)
-{
-	for (int i = 0; nmeatypesstr[i].str; ++i)
-		if (!strncmp (field + 3, nmeatypesstr[i].str, 3))
-		{
-			return nmeatypesstr[i].type;
-		}
-	SEGGER_RTT_printf (0, "Sender type '%s'\r\n", field);
-	return WRONG;
-}
-
-NMEATALKER
-Gps::get_nmea_talker (const char* field)
-{
-  SEGGER_RTT_printf (0, "GPS sender: '%s'\r\n", field);
-	if (!strncmp (field + 1, "PMTK", 4))
+	if (0 == nmeastr_len && '$' != ch)
 	{
-		return PMTK;
+	 return;
 	}
-	for (int i = 0; nmeatalkerstr[i].str; ++i)
+	else if ('\n' == ch || NMEA_MAX_LEN <= nmeastr_len + 1)
 	{
-		if (!strncmp (field + 1, nmeatalkerstr[i].str, 2))
-		{
-			return nmeatalkerstr[i].type;
-		}
+	 nmeastr[nmeastr_len] = ch;
+	 DEBUG_LOG(nmeastr);
+	 ready = true;
+	 return;
 	}
-	return GP;
+	nmeastr[nmeastr_len++] = ch;
+ }
 }
 
-void
-Gps::latlon2crd (const char* str, coord* c)
+NMEATYPE Gps::get_nmea_sent_type(const char* field)
 {
-	c->valid = false;
-	if(strlen(str) < 7)
+ for (int i = 0; nmeatypesstr[i].str; ++i)
+	if (!strncmp(field + 3, nmeatypesstr[i].str, 3))
 	{
-		return;
+	 return nmeatypesstr[i].type;
 	}
-	//Check for valid string here
-	//XXXYY.ZZ or XXYY.ZZ
-	char latlon[16] =
-	{ 0 };
-	strcpy (latlon, str);
-	char* p = latlon;
-	//Find and extract fraction of minutes
-	while (*p++ != '.');
-
-	int minute_fr = str10_to_word (p);
-	int secDigits = floor (log10 (std::abs (minute_fr))) + 1;
-	double secPower = pow (10, secDigits);
-	c->sec = minute_fr / secPower;
-	c->sec *= 60.0;
-	*--p = 0;
-	//Go on with minutes
-	c->min = str10_to_word (p - 2);
-	p -= 2;
-	*p = 0;
-	c->deg = str10_to_word (latlon);
-	c->valid = true;
+ DEBUG_LOG("Sender type '%s'\r\n", field);
+ return WRONG;
 }
 
-bool
-Gps::ckecknmea (uint8_t sum, char* string)
+NMEATALKER Gps::get_nmea_talker(const char* field)
 {
-	return str16_to_word (string) == sum;
-}
-
-void
-Gps::reset (void)
-{
-	nmea.sect = 0;
-	nmea.sumdone = false;
-	nmea.nmeaok = false;
-	nmea.nmeaerr = 0;
-	nmea.checksum = 0;
-	nmea.lat.valid = false;
-	nmea.lat.valid = false;
-	nmeastr_len = 0;
-	nmea.fp = nmea.fstr;
-	memset (nmeastr, 0, NMEA_MAX_LEN + 1);
-	correct = false;
-	ready = false;
-}
-
-void
-Gps::rttprint ()
-{
-	if (!nmea.nmeaok)
+ DEBUG_LOG("GPS sender: '%s'\r\n", field);
+ if (!strncmp(field + 1, "PMTK", 4))
+ {
+	return PMTK;
+ }
+ for (int i = 0; nmeatalkerstr[i].str; ++i)
+ {
+	if (!strncmp(field + 1, nmeatalkerstr[i].str, 2))
 	{
-		if (NMEA_ERROR_OK != prepare ())
-		{
-			return;
-		}
+	 return nmeatalkerstr[i].type;
 	}
-	SEGGER_RTT_WriteString (0, nmeastr);
-	SEGGER_RTT_printf (0, "Checksum [%X]: %s\n", nmea.checksum,
-	                   nmea.nmeaok ? "OK" : "ERROR");
-	SEGGER_RTT_printf (0, "UTC: %6u\n", nmea.utc);
-	SEGGER_RTT_printf (0, "LAT:%3u.%2u\'%2u\" %c\n", nmea.lat.deg, nmea.lat.min,
-	                   nmea.lat.sec, nmea.lat.dir);
-	SEGGER_RTT_printf (0, "LON:%3u.%2u\'%2u\" %c\n", nmea.lon.deg, nmea.lon.min,
-	                   nmea.lon.sec, nmea.lon.dir);
-	reset ();
+ }
+ return GP;
 }
 
-NMEAERR
-Gps::prepare (void)
+void Gps::latlon2crd(const char* str, coord* c)
 {
-	if (!ready)
+ c->valid = false;
+ if (strlen(str) < 7)
+ {
+	return;
+ }
+ //Check for valid string here
+ //XXXYY.ZZ or XXYY.ZZ
+ char latlon[16] =
+ { 0 };
+ strcpy(latlon, str);
+ char* p = latlon;
+ //Find and extract fraction of minutes
+ while (*p++ != '.')
+	;
+
+ int minute_fr = str10_to_word(p);
+ int secDigits = floor(log10(std::abs(minute_fr))) + 1;
+ double secPower = pow(10, secDigits);
+ c->sec = minute_fr / secPower;
+ c->sec *= 60.0;
+ *--p = 0;
+ //Go on with minutes
+ c->min = str10_to_word(p - 2);
+ p -= 2;
+ *p = 0;
+ c->deg = str10_to_word(latlon);
+ c->valid = true;
+}
+
+bool Gps::ckecknmea(uint8_t sum, char* string)
+{
+ return str16_to_word(string) == sum;
+}
+
+void Gps::reset(void)
+{
+ nmea.sect = 0;
+ nmea.sumdone = false;
+ nmea.nmeaok = false;
+ nmea.nmeaerr = 0;
+ nmea.checksum = 0;
+ nmea.lat.valid = false;
+ nmea.lat.valid = false;
+ nmeastr_len = 0;
+ nmea.fp = nmea.fstr;
+ memset(nmeastr, 0, NMEA_MAX_LEN + 1);
+ correct = false;
+ ready = false;
+ fix = false;
+ gsv = 0;
+}
+
+void Gps::rttprint()
+{
+ if (!nmea.nmeaok)
+ {
+	if (NMEA_ERROR_OK != prepare())
 	{
-		return NMEA_NOT_READY;
+	 return;
 	}
-	NMEAERR err = NMEA_ERROR_OK;
-	//SEGGER_RTT_printf(0, "NMEA: %s\r\n", nmeastr);
-	for (int i = 0; i < nmeastr_len; ++i)
+ }
+ Print(nmeastr);
+ if(!fix)
+ {
+	reset();
+	return;
+ }
+ PrintF("Checksum [%X]: %s\n", nmea.checksum, nmea.nmeaok ? "OK" : "ERROR");
+ PrintF("UTC: %.6u\n", nmea.utc);
+ PrintF("Speed: %u\n", nmea.utc);
+ PrintF("LAT:%3u.%2u\'%2u\"\n", nmea.lat.deg, nmea.lat.min, nmea.lat.sec);
+ PrintF("LON:%3u.%2u\'%2u\"\n", nmea.lon.deg, nmea.lon.min, nmea.lon.sec);
+ reset();
+}
+
+NMEAERR Gps::prepare(void)
+{
+ if (!ready)
+ {
+	return NMEA_NOT_READY;
+ }
+ NMEAERR err = NMEA_ERROR_OK;
+ //SEGGER_RTT_printf(0, "NMEA: %s\r\n", nmeastr);
+ for (int i = 0; i < nmeastr_len; ++i)
+ {
+	err = parse(nmeastr[i]);
+	if (NMEA_ERROR_OK != err)
 	{
-		err = parse (nmeastr[i]);
-		if (NMEA_ERROR_OK != err)
-		{
-			reset ();
-			return err;
-		}
+	 reset();
+	 return err;
 	}
-	correct = true;
-	return err;
+ }
+ correct = true;
+ return err;
 }
 
-coord
-Gps::getlat ()
+uint32_t Gps::get_speed()
 {
-	return nmea.lat;
+ return nmea.kmh;
 }
 
-coord
-Gps::getlon ()
+coord Gps::getlat()
 {
-	return nmea.lon;
+ return nmea.lat;
 }
 
-uint32_t
-Gps::get_utc ()
+coord Gps::getlon()
 {
-	return nmea.utc;
+ return nmea.lon;
 }
 
-double
-Gps::get_dec_lat ()
+uint32_t Gps::get_utc()
 {
-	return nmea.lat.deg + (nmea.lat.min / 60) + (nmea.lat.sec / 3600);
+ return nmea.utc;
 }
 
-double
-Gps::get_dec_lon ()
+double Gps::get_dec_lat()
 {
-	return nmea.lon.deg + (nmea.lon.min / 60) + (nmea.lon.sec / 3600);
+ return nmea.lat.deg + (nmea.lat.min / 60) + (nmea.lat.sec / 3600);
 }
 
-UTM
-Gps::coord2utm (coord c)
+double Gps::get_dec_lon()
 {
-	UTM result;
-	result.deg = c.deg;
-	double fract = ((c.sec / 60.0) + c.min)/60.0;
-	fract *= 1000000UL;
-	result.fract = (uint32_t) fract;
-	SEGGER_RTT_printf(0, "%u.%u.%u = %u.%u\r\n", c.deg, c.min, (uint32_t)c.sec, result.deg, result.fract);
-	return result;
+ return nmea.lon.deg + (nmea.lon.min / 60) + (nmea.lon.sec / 3600);
+}
+
+UTM Gps::coord2utm(coord c)
+{
+ UTM result;
+ result.deg = c.deg;
+ double fract = ((c.sec / 60.0) + c.min) / 60.0;
+ fract *= 1000000UL;
+ result.fract = (uint32_t) fract;
+ SEGGER_RTT_printf(0, "%u.%u.%u = %u.%u\r\n", c.deg, c.min, (uint32_t) c.sec, result.deg, result.fract);
+ return result;
 }
 
 bool Gps::ok()
 {
-	return nmea.lat.valid && nmea.lon.valid;
+ return nmea.lat.valid && nmea.lon.valid;
 }
 
 bool Gps::correct_rtc()
 {
-   while (NMEA_ERROR_OK != prepare())
-     ;
+ while (NMEA_ERROR_OK != prepare())
+	;
 
-   if(!nmea.utc)
-   {
-    return false;
-   }
+ if (!nmea.utc)
+ {
+	return false;
+ }
 
-  Rtc r;
-  if(nmea.utc - r.get() > 5)
-  {
-   r.init(nmea.utc);
-   SEGGER_RTT_printf(0, "New RTC value is %u\r\n", r.get());
-  }
-  return true;
+ Rtc r;
+ if (nmea.utc - r.get() > 5)
+ {
+	r.init(nmea.utc);
+	SEGGER_RTT_printf(0, "New RTC value is %u\r\n", r.get());
+ }
+ return true;
 }

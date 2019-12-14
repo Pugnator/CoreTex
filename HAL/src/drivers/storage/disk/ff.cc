@@ -2626,7 +2626,7 @@ FRESULT FATdisk::dir_register (	/* FR_OK:succeeded, FR_DENIED:no free entry or t
 /* Remove an object from the directory                                   */
 /*-----------------------------------------------------------------------*/
 
-FRESULT dir_remove (	/* FR_OK:Succeeded, FR_DISK_ERR:A disk error */
+FRESULT FATdisk::dir_remove (	/* FR_OK:Succeeded, FR_DISK_ERR:A disk error */
 	DIR* dp					/* Directory object pointing the entry to be removed */
 )
 {
@@ -2856,7 +2856,7 @@ int pattern_matching (	/* 0:not matched, 1:matched */
 /* Pick a top segment and create the object name in directory form       */
 /*-----------------------------------------------------------------------*/
 
-FRESULT create_name (	/* FR_OK: successful, FR_INVALID_NAME: could not create */
+FRESULT FATdisk::create_name (	/* FR_OK: successful, FR_INVALID_NAME: could not create */
 	DIR* dp,					/* Pointer to the directory object */
 	const TCHAR** path			/* Pointer to pointer to the segment in the path string */
 )
@@ -3144,7 +3144,7 @@ FRESULT FATdisk::follow_path (	/* FR_OK(0): successful, !=0: error code */
 /* Get logical drive number from path name                               */
 /*-----------------------------------------------------------------------*/
 
-int get_ldnumber (	/* Returns logical drive number (-1:invalid drive number or null pointer) */
+int FATdisk::get_ldnumber (	/* Returns logical drive number (-1:invalid drive number or null pointer) */
 	const TCHAR** path		/* Pointer to pointer to the path name */
 )
 {

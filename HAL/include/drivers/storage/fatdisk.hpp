@@ -26,8 +26,7 @@ public:
   FRESULT f_write(FIL *fp, const void *buff, UINT btw, UINT *bw);                   /* Write data to a file */
   FRESULT f_forward(FIL *fp, UINT (*func)(const BYTE *, UINT), UINT btf, UINT *bf); /* Forward data to the stream */
   FRESULT f_lseek(FIL *fp, FSIZE_t ofs);                                            /* Move file pointer of a file object */
-  FRESULT f_truncate(FIL *fp);                                                      /* Truncate file */
-  FRESULT f_flush(FIL *fp);                                                         /* Flush cached data of a writing file */
+  FRESULT f_truncate(FIL *fp);                                                      /* Truncate file */  
   FRESULT f_sync(FIL *fp);
   FRESULT f_opendir(DIR *dp, const TCHAR *path);                                       /* Open a directory */
   FRESULT f_closedir(DIR *dp);                                                         /* Close an open directory */

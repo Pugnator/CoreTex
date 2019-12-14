@@ -122,7 +122,7 @@ GPX::set_point (void)
 		return false;
 	}
 
-	result = f_flush(&gpx);
+	result = f_sync(&gpx);
 
 	gps->reset ();
 	return FR_OK == result;

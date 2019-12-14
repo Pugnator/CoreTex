@@ -84,6 +84,7 @@ protected:
   FRESULT dir_read(DIR *dp, int vol);
   FRESULT dir_register(DIR *dp);
   FRESULT dir_clear(FATFS *fs, DWORD clst);
+  FRESULT dir_remove(DIR *dp);
   DWORD find_bitmap(FATFS *fs, DWORD clst, DWORD ncl);
   FRESULT change_bitmap(FATFS *fs, DWORD clst, DWORD ncl, int bv);
   FRESULT fill_first_frag(FFOBJID *obj);

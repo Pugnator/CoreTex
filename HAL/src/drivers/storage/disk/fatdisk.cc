@@ -1,5 +1,5 @@
 #include <drivers/storage/fatdisk.hpp>
-#include <drivers/storage/ffconf.hpp>
+#include <drivers/storage/ffconf.h>
 #include <drivers/storage/integer.hpp>
 #include <log.hpp>
 #include <sys/_stdint.h>
@@ -66,10 +66,10 @@ FATdisk::disk_read (BYTE drv, BYTE* buff, DWORD sector, UINT count)
  /* LBA ==> BA for SDv1*/
  if (!isSDCv2)
  {
-  sector*=_MIN_SS;
+  sector*=FF_MIN_SS;
  }
 
- count*=_MIN_SS;
+ count*=FF_MIN_SS;
 
  DEBUG_LOG(0,"disk_read: Drive=%u, sector=%u, count=%u\r\n", drv, sector, count);
  if(SD_RESPONSE_NO_ERROR == read_block(buff, sector, count ))
@@ -88,10 +88,10 @@ FATdisk::disk_write (BYTE drv, const BYTE* buff, DWORD sector, UINT count)
  /* LBA ==> BA conversion (byte addressing cards) */
  if (!isSDCv2)
  {
-  sector*=_MIN_SS;
+  sector*=FF_MIN_SS;
  }
 
- count*=_MIN_SS;
+ count*=FF_MIN_SS;
  DEBUG_LOG(0,"disk_write: Drive=%u, sector=%u, count=%u\r\n", drv, sector, count);
  if(SD_RESPONSE_NO_ERROR == write_block(buff, sector, count))
  {

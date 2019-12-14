@@ -231,7 +231,7 @@ void
 ov528::start_transfer (void)
 {
 	FIL pic;
-	FRESULT res = disk.open (&pic, "image.jpg", FA_WRITE | FA_CREATE_ALWAYS);
+	FRESULT res = disk.f_open (&pic, "image.jpg", FA_WRITE | FA_CREATE_ALWAYS);
 	if (FR_OK != res)
 	{
 		DEBUG_LOG (0, "Failed to create the file\r\n");
@@ -298,7 +298,7 @@ ov528::start_transfer (void)
 	pictransfer = false;
 	DEBUG_LOG (0, "Transfer completed, %u == %u\r\n", pic_size,
 	           expected_pic_size);
-	disk.close (&pic);
+	disk.f_close (&pic);
 }
 
 uint8_t*

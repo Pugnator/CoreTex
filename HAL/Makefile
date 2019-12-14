@@ -142,7 +142,7 @@ XPRINTFSRC:=\
 
 FATFSSRC:=\
 	$(DRIVERS)/storage/disk/fatdisk.cc \
-	$(DRIVERS)/storage/disk/fatfs.cc
+	$(DRIVERS)/storage/disk/ff.cc
 
 UTILSSRC:=\
 	$(UTILS)/tracker/gpx.cc \

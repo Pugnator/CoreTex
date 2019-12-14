@@ -60,19 +60,19 @@ static const char GPX_FOOTER[] =
 bool
 GPX::create (const char* filename)
 {
-	result = mount (&filesystem, "0:", 1);
+	result = f_mount (&filesystem, "0:", 1);
 	PrintF( "Disk result: %s\r\n", result_to_str (result));
 	if (FR_OK != result)
 	{
 	 return false;
 	}
-	result = mkdir("tracks");
-	result = chdir("tracks");
+	result = f_mkdir("tracks");
+	result = f_chdir("tracks");
 	if (FR_OK != result)
 	{
 	  return false;
 	}
-	result = open (&gpx, filename, FA_CREATE_ALWAYS | FA_WRITE);
+	result = f_open(&gpx, filename, FA_CREATE_ALWAYS | FA_WRITE);
 	if (result != FR_OK)
 	{
 		PrintF( "Failed to open the file: %s\r\n",
@@ -88,7 +88,7 @@ bool
 GPX::commit ()
 {
 	result = f_write (&gpx, GPX_FOOTER, strlen (GPX_FOOTER), &written);
-	close (&gpx);
+	f_close (&gpx);
 	return FR_OK == result;
 }
 
@@ -122,7 +122,7 @@ GPX::set_point (void)
 		return false;
 	}
 
-	result = flush(&gpx);
+	result = f_flush(&gpx);
 
 	gps->reset ();
 	return FR_OK == result;

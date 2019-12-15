@@ -2,12 +2,12 @@
 #include <core/stm32f10x.hpp>
 #include <core/gpio.hpp>
 #include <memory>
-#include "../drivers/generic/iodriver.hpp"
+#include <drivers/generic/iodriver.hpp>
 
 class Spi : public IODriver
 {
 public:
- Spi(char ch);
+ Spi(uint8_t ch);
  ~Spi(void);
 
  virtual uint16_t read(uint16_t data = 0xFF) override;
@@ -29,7 +29,7 @@ public:
  Spi *next;
 protected:
  void init(void);
- int channel;
+ uint8_t channel;
  SPI_TypeDef* Reg;
  Spi* extirq;
 

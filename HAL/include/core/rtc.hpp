@@ -1,5 +1,6 @@
 #pragma once
-#include <drivers/console.hpp>
+
+#include <drivers/generic/iodriver.hpp>
 #include <global.hpp>
  typedef enum RTC_UTC_OFFSET
  {

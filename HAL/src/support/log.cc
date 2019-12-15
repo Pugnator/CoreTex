@@ -15,25 +15,61 @@
  * 2015
  *******************************************************************************/
 
-#ifdef DEBUG
-void swo_print(const char *msg)
-{
- // Manual semi-hosting, because the GCC ARM Embedded's semihosting wasn't working.
- for (; *msg; ++msg)
- {
-  __asm__ ("mov r1,%0; mov r0,$3; BKPT 0xAB" :
-                                             : "r" (msg)
-                                             : "r0", "r1" );
- }
-}
-#else
-void swo_print(const char *msg)
-{
-  //TODO: Add something here
-}
-#endif
+#include <drivers/storage/fatdisk.hpp>
+#include <log.hpp>
+#include <common.hpp>
 
-extern "C"
+namespace LOG
 {
 
+SDcardLog::SDcardLog()
+{
+  open();
 }
+
+bool SDcardLog::open()
+{
+  logdisk.reset(new FATdisk(CHANNEL_1));
+  do
+  {
+    fresult = logdisk->f_mount(&fs, "0:", 1);
+    delay_ms(500);
+  } while (fresult != FR_OK);
+
+  fresult = logdisk->f_open(&logf, "log.txt", FA_OPEN_APPEND | FA_WRITE);
+  if (FR_OK != fresult)
+  {
+    PrintF("Error: %s\r\n", logdisk->result_to_str(fresult));
+    return false;
+  }
+    
+
+  UINT bw = 0;
+  fresult = logdisk->f_write(&logf, "Started\r\n", 9, &bw);
+  if (FR_OK != fresult)
+  {
+    PrintF("Error: %s\r\n", logdisk->result_to_str(fresult));
+    return false;
+  }
+    
+
+  PrintF("Logging started\r\n");
+  return true;
+}
+
+void SDcardLog::close()
+{
+  logdisk->f_sync(&logf);
+  logdisk->f_close(&logf);
+  logdisk->f_mount(nullptr, "0:", 1);
+}
+
+void SDcardLog::write(const char* text)
+{
+  UINT bw = 0;
+  fresult = logdisk->f_write(&logf, text, strlen(text), &bw);
+  if(fresult != FR_OK)
+    PrintF("Error: %s\r\n", logdisk->result_to_str(fresult));
+}
+
+} // namespace LOG

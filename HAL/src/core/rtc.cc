@@ -23,78 +23,78 @@
 
 void Rtc::init(uint32_t epoch)
 {
-	RCC->APB1ENR |= RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN;
-	PWR->CR |= PWR_CR_DBP;
+  RCC->APB1ENR |= RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN;
+  PWR->CR |= PWR_CR_DBP;
 
-	RCC->BDCR |= RCC_BDCR_BDRST;
-	RCC->BDCR &= ~RCC_BDCR_BDRST;
+  RCC->BDCR |= RCC_BDCR_BDRST;
+  RCC->BDCR &= ~RCC_BDCR_BDRST;
 
-	RCC->BDCR &= ~(RCC_BDCR_LSEON | RCC_BDCR_LSEBYP);
-	RCC->BDCR |= RCC_BDCR_LSEON;
-	while (!(RCC->BDCR & RCC_BDCR_LSERDY))
-		;
+  RCC->BDCR &= ~(RCC_BDCR_LSEON | RCC_BDCR_LSEBYP);
+  RCC->BDCR |= RCC_BDCR_LSEON;
+  while (!(RCC->BDCR & RCC_BDCR_LSERDY))
+    ;
 
-	RCC->BDCR |= RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL_0;
-	while (!(RTC->CRL & RTC_CRL_RTOFF))
-		;
-	RTC->CRL |= RTC_CRL_CNF;
-	RTC->PRLH = 0;
-	RTC->PRLL = 32767; //32768 - 1, working from external 32768 quarz
-	if(epoch)
-	{
-		RTC->CNTH = (epoch >> 16) & 0xFFFF;
-		RTC->CNTL = epoch & 0xFFFF;
-	}
+  RCC->BDCR |= RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL_0;
+  while (!(RTC->CRL & RTC_CRL_RTOFF))
+    ;
+  RTC->CRL |= RTC_CRL_CNF;
+  RTC->PRLH = 0;
+  RTC->PRLL = 32767; //32768 - 1, working from external 32768 crystal
+  if (epoch)
+  {
+    RTC->CNTH = (epoch >> 16) & 0xFFFF;
+    RTC->CNTL = epoch & 0xFFFF;
+  }
 
-	//RTC->CRH = RTC_CRH_SECIE;
-	RTC->CRL &= ~RTC_CRL_CNF;
-	while (!(RTC->CRL & RTC_CRL_RTOFF))
-		;
-	PWR->CR &= ~PWR_CR_DBP;
-	while (!(RTC->CRL & RTC_CRL_RTOFF))
-		;
+  //RTC->CRH = RTC_CRH_SECIE;
+  RTC->CRL &= ~RTC_CRL_CNF;
+  while (!(RTC->CRL & RTC_CRL_RTOFF))
+    ;
+  PWR->CR &= ~PWR_CR_DBP;
+  while (!(RTC->CRL & RTC_CRL_RTOFF))
+    ;
 }
 
 void Rtc::set(uint32_t epoch)
 {
-	RTC->CNTH = (epoch >> 16) & 0xFFFF;
-	RTC->CNTL = epoch & 0xFFFF;
+  RTC->CNTH = (epoch >> 16) & 0xFFFF;
+  RTC->CNTL = epoch & 0xFFFF;
 }
 
 uint32_t Rtc::get(void)
 {
-	return (RTC->CNTH << 16) | (RTC->CNTL & 0xFFFF);
+  return (RTC->CNTH << 16) | (RTC->CNTL & 0xFFFF);
 }
 
-void Rtc::epoch_to_date(datetime_t* date_time, uint32_t epoch)
+void Rtc::epoch_to_date(datetime_t *date_time, uint32_t epoch)
 {
-	date_time->second = epoch % 60;
-	epoch /= 60;
-	date_time->minute = epoch % 60;
-	epoch /= 60;
-	date_time->hour = epoch % 24;
-	epoch /= 24;
+  date_time->second = epoch % 60;
+  epoch /= 60;
+  date_time->minute = epoch % 60;
+  epoch /= 60;
+  date_time->hour = epoch % 24;
+  epoch /= 24;
 
-	uint32_t years = epoch / (365 * 4 + 1) * 4;
-	epoch %= 365 * 4 + 1;
+  uint32_t years = epoch / (365 * 4 + 1) * 4;
+  epoch %= 365 * 4 + 1;
 
-	uint32_t year;
-	for (year = 3; year > 0; year--)
-	{
-		if (epoch >= days[year][0])
-			break;
-	}
+  uint32_t year;
+  for (year = 3; year > 0; year--)
+  {
+    if (epoch >= days[year][0])
+      break;
+  }
 
-	uint32_t month;
-	for (month = 11; month > 0; month--)
-	{
-		if (epoch >= days[year][month])
-			break;
-	}
+  uint32_t month;
+  for (month = 11; month > 0; month--)
+  {
+    if (epoch >= days[year][month])
+      break;
+  }
 
-	date_time->year = years + year;
-	date_time->month = month + 1;
-	date_time->day = epoch - days[year][month] + 1;
+  date_time->year = years + year;
+  date_time->month = month + 1;
+  date_time->day = epoch - days[year][month] + 1;
 }
 
 /**
@@ -102,42 +102,40 @@ void Rtc::epoch_to_date(datetime_t* date_time, uint32_t epoch)
  */
 short Rtc::gety()
 {
-	epoch_to_date(&curdate, get());
-	return 1970 + curdate.year;
+  epoch_to_date(&curdate, get());
+  return 1970 + curdate.year;
 }
 char Rtc::getd()
 {
-	epoch_to_date(&curdate, get());
-	return curdate.day;
+  epoch_to_date(&curdate, get());
+  return curdate.day;
 }
 char Rtc::getmn()
 {
-	epoch_to_date(&curdate, get());
-	return curdate.month;
+  epoch_to_date(&curdate, get());
+  return curdate.month;
 }
 char Rtc::geth()
 {
-	epoch_to_date(&curdate, get());
-	return curdate.hour + ZONE_CHARLIE;
+  epoch_to_date(&curdate, get());
+  return curdate.hour + ZONE_CHARLIE;
 }
 char Rtc::getm()
 {
-	epoch_to_date(&curdate, get());
-	return curdate.minute;
+  epoch_to_date(&curdate, get());
+  return curdate.minute;
 }
 char Rtc::gets()
 {
-	epoch_to_date(&curdate, get());
-	return curdate.second;
+  epoch_to_date(&curdate, get());
+  return curdate.second;
 }
 void Rtc::print()
 {
-	SEGGER_RTT_printf(0,"%04u/%02u/%02u %02u:%02u:%02u\n", \
-			gety(), getmn(), getd(), geth(), getm(), gets());
+  PrintF("%04u/%02u/%02u %02u:%02u:%02u\n", gety(), getmn(), getd(), geth(), getm(), gets());
 }
 
 uint32_t Rtc::state(void)
 {
-	return State;
+  return State;
 }
-

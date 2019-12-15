@@ -1,18 +1,19 @@
 #pragma once
 #include <core/stm32f10x.hpp>
 #include "drivers/generic/iodriver.hpp"
+#include <stdint.h>
 
 class IIC : private IODriver
 {
 public:
- IIC(char ch);
+ IIC(uint8_t ch);
  ~IIC(void);
 
- short read(short data);
+ uint16_t read(uint16_t data);
  virtual void isr(void);
 
 protected:
- int channel;
+ uint8_t channel;
  I2C_TypeDef* Reg;
 };
 

@@ -2,7 +2,7 @@
 #include <core/stm32f10x.hpp>
 #include <core/gpio.hpp>
 #include <memory>
-#include "../drivers/generic/iodriver.hpp"
+#include <drivers/generic/iodriver.hpp>
 
 class Spi : public IODriver
 {

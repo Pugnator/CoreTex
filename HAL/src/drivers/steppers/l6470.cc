@@ -1,6 +1,8 @@
 #include <drivers/l6470.hpp>
 #include <log.hpp>
 
+#define L6470_DEBUG 1
+
 #ifdef L6470_DEBUG
 #define DEBUG_LOG SEGGER_RTT_printf
 #else
@@ -90,6 +92,7 @@ bool l6470::conncheck()
 {
 	read(dSPIN_GET_PARAM | 0x18);
 	uint16_t config = (read() << 8) | read();
+  DEBUG_LOG (0, "config = 0x%hX\r\n", config);
 	return config == 0x2E88;
 }
 

@@ -15,42 +15,42 @@
  * 2015
  *******************************************************************************/
 
-#include "../../../../include/drivers/BC417.hpp"
+#include "drivers/BC417.hpp"
 
 #include <global.hpp>
 #include <errors.hpp>
 
 void BC417::is_connected()
 {
- rawcmd(CMD::AT, CMDMODE::RAW);
- if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
- {
-  THROW(ERROR_BC471_COMMTEST_FAILED);
- }
- else
- {
-	 THROW(ERROR_BC471_COMMTEST_OK);
- }
+    rawcmd(CMD::AT, CMDMODE::RAW);
+    if (!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
+    {
+        THROW(ERROR_BC471_COMMTEST_FAILED);
+    }
+    else
+    {
+        THROW(ERROR_BC471_COMMTEST_OK);
+    }
 }
 
 void BC417::set_name(const char *name)
 {
- ok = false;
- rawcmd(CMD::NAME, CMDMODE::RAW, name);
- if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
- {
-  THROW(ERROR_BC471_SET_NAME_FAILED);
- }
- ok = true;
+    ok = false;
+    rawcmd(CMD::NAME, CMDMODE::RAW, name);
+    if (!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
+    {
+        THROW(ERROR_BC471_SET_NAME_FAILED);
+    }
+    ok = true;
 }
 
 void BC417::set_pin(const char *pin)
 {
- ok = false;
- rawcmd(CMD::PIN, CMDMODE::RAW, pin);
- if(!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
- {
-  THROW(ERROR_BC471_SET_PIN_FAILED);
- }
- ok = true;
+    ok = false;
+    rawcmd(CMD::PIN, CMDMODE::RAW, pin);
+    if (!wait_for_reply(CMD::AT, AT_OK, REPLY_TIMEOUT))
+    {
+        THROW(ERROR_BC471_SET_PIN_FAILED);
+    }
+    ok = true;
 }

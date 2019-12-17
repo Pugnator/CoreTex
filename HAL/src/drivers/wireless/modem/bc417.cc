@@ -15,7 +15,7 @@
  * 2015
  *******************************************************************************/
 
-#include "drivers/BC417.hpp"
+#include "drivers/bc417.hpp"
 
 #include <global.hpp>
 #include <errors.hpp>

@@ -65,7 +65,7 @@ void ATMODEM::isr(uint32_t address)
  {
   __SR &= ~USART_SR_RXNE;
   volatile uint16_t a = Reg->DR;
-  SEGGER_RTT_printf(0, "%c", isprint(a) ? a : '?');
+  PrintF("%c", isprint(a) ? a : '?');
   if (!go || buflen >= MODEM_IN_BUFFER_SIZE)
   {
    go = false;
@@ -195,7 +195,7 @@ bool ATMODEM::wait_for_reply(CMD::ATCMD cmd, ATRESPONSE expected, uint32_t timeo
     	char *reply = strstr(modembuf, cmdstr);
     	if (reply)
     	{
-    		SEGGER_RTT_printf(0, "Command echo found: %s\r\n", reply);
+    		PrintF("Command echo found: %s\r\n", reply);
     		reply += strlen(cmdstr);
     		strcpy(buf, reply);
     		strcpy(modembuf, buf);
@@ -206,7 +206,7 @@ bool ATMODEM::wait_for_reply(CMD::ATCMD cmd, ATRESPONSE expected, uint32_t timeo
    }
    else
    {
-    //SEGGER_RTT_printf(0, "ERR [%s]\r\n", buf);
+    //PrintF("ERR [%s]\r\n", buf);
     return !(ok = false);
    }
   }

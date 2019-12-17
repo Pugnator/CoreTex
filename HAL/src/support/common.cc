@@ -20,132 +20,134 @@
 #include <string.h>
 #include <log.hpp>
 
-#define CR_DS_MASK               ((uint32_t)0xFFFFFFFC)
-#define CR_PLS_MASK              ((uint32_t)0xFFFFFF1F)
-static uint32_t seed=2463534242;
+#define CR_DS_MASK ((uint32_t)0xFFFFFFFC)
+#define CR_PLS_MASK ((uint32_t)0xFFFFFF1F)
+static uint32_t seed = 2463534242;
 
 enum
 {
-	BITMASK_7BITS = 0x7F,
-	BITMASK_8BITS = 0xFF,
-	BITMASK_HIGH_4BITS = 0xF0,
-	BITMASK_LOW_4BITS = 0x0F,
+  BITMASK_7BITS = 0x7F,
+  BITMASK_8BITS = 0xFF,
+  BITMASK_HIGH_4BITS = 0xF0,
+  BITMASK_LOW_4BITS = 0x0F,
 
-	TYPE_OF_ADDRESS_INTERNATIONAL_PHONE = 0x91,
-	TYPE_OF_ADDRESS_NATIONAL_SUBSCRIBER = 0xC8,
+  TYPE_OF_ADDRESS_INTERNATIONAL_PHONE = 0x91,
+  TYPE_OF_ADDRESS_NATIONAL_SUBSCRIBER = 0xC8,
 
-	SMS_DELIVER_ONE_MESSAGE = 0x04,
-	SMS_SUBMIT              = 0x11,
+  SMS_DELIVER_ONE_MESSAGE = 0x04,
+  SMS_SUBMIT = 0x11,
 
-	SMS_MAX_7BIT_TEXT_LENGTH  = 160,
+  SMS_MAX_7BIT_TEXT_LENGTH = 160,
 };
 
 bool isNthBitSet(uint8_t c, uint8_t n)
 {
- static uint8_t mask[] =
- { 128, 64, 32, 16, 8, 4, 2, 1 };
- return ((c & mask[n]) != 0);
+  static uint8_t mask[] =
+      {128, 64, 32, 16, 8, 4, 2, 1};
+  return ((c & mask[n]) != 0);
 }
 
-uint32_t str16_to_word(const char* str)
+uint32_t str16_to_word(const char *str)
 {
-	uint32_t res = 0;
-	char c = 0;
-	while (*str)
-	{
-		c = *str;
-		res <<= 4;
-		res += (c > '9') ? (c & 0xDFu) - 0x37u : (c - '0');
-		++str;
-	}
-	return res;
+  uint32_t res = 0;
+  char c = 0;
+  while (*str)
+  {
+    c = *str;
+    res <<= 4;
+    res += (c > '9') ? (c & 0xDFu) - 0x37u : (c - '0');
+    ++str;
+  }
+  return res;
 }
 
-uint32_t str10_to_word(const char* str)
+uint32_t str10_to_word(const char *str)
 {
   if (!str)
   {
-   return 0;
+    return 0;
   }
-	uint32_t res = 0;
-	char ch = *str;
-	while (ch)
-	{
-		if ((ch >= '0') && (ch <= '9'))
-		{
-			res = (res * 10) + ((ch) - '0');
-		}
-		else if (',' == ch || '.' == ch)
-		{
-			break;
-		}
-		ch = *++str;
-	}
-	return res;
+  uint32_t res = 0;
+  char ch = *str;
+  while (ch)
+  {
+    if ((ch >= '0') && (ch <= '9'))
+    {
+      res = (res * 10) + ((ch) - '0');
+    }
+    else if (',' == ch || '.' == ch)
+    {
+      break;
+    }
+    ch = *++str;
+  }
+  return res;
 }
 
 #ifdef USE_IRQ_DELAY
 void delay_ms(uint32_t ms)
 {
-	tickcounter = ms;
-	while (tickcounter);
+  tickcounter = ms;
+  while (tickcounter)
+    ;
 }
 #else
 void delay_ms(uint32_t ms)
 {
- uint32_t us = ms * 1000;
- asm volatile (  "MOV R0,%[loops]\n\t"\
-         "1: \n\t"\
-         "SUB R0, #1\n\t"\
-         "CMP R0, #0\n\t"\
-         "BNE 1b \n\t" : : [loops] "r" (us) : "memory"\
-     );
+  uint32_t us = ms * 1000;
+  asm volatile("MOV R0,%[loops]\n\t"
+               "1: \n\t"
+               "SUB R0, #1\n\t"
+               "CMP R0, #0\n\t"
+               "BNE 1b \n\t"
+               :
+               : [loops] "r"(us)
+               : "memory");
 }
 #endif
 
 void delay(uint32_t s)
 {
-	delay_ms(s * 1000);
+  delay_ms(s * 1000);
 }
 
 void _delay_us(uint32_t us)
 {
-
 }
 
 char *strclone(const char *msg)
 {
-        char *str = (char *)ALLOC(strlen(msg)+1);
-        if(!str)
-          return nullptr;
-        strcpy(str,msg);
-        return str;
+  char *str = (char *)ALLOC(strlen(msg) + 1);
+  if (!str)
+    return nullptr;
+  strcpy(str, msg);
+  return str;
 }
 
-char *ucs2ascii (const char *ucs2)
+char *ucs2ascii(const char *ucs2)
+{
+  uint32_t size = strlen(ucs2);
+  char *ascii = (char *)ALLOC(size + 1);
+  if (!ascii)
+    return nullptr;
+  memset(ascii, 0, size + 1);
+  char *p = ascii;
+  char s[3] = {0};
+  for (uint32_t i = 2; i < size; i += 4)
   {
-    uint32_t size = strlen(ucs2);
-    char *ascii = (char*)ALLOC(size+1);
-    if(!ascii)
-      return nullptr;
-    memset(ascii, 0, size+1);
-    char *p = ascii;
-    char s[3]={0};
-    for(uint32_t i=2; i<size; i+=4)
-      {
-        s[0] = ucs2[i];
-        s[1] = ucs2[i+1];
-        *p++ = str16_to_word((const char*)&s);
-      }
-    return ascii;
+    s[0] = ucs2[i];
+    s[1] = ucs2[i + 1];
+    *p++ = str16_to_word((const char *)&s);
   }
+  return ascii;
+}
 
-void ascii2ucs2( const char *ascii )
+void ascii2ucs2(const char *ascii)
 {
   const char *ptr = ascii;
-  while( *ptr )
+  while (*ptr)
   {
-   /* if( *ptr < 127 ) modem2u16( *ptr );
+    /* if( *ptr < 127 ) modem2u16( *ptr );
     else if ( *ptr == 168 ) modem2u16( 0x0401 );
     else if ( *ptr == 184 ) modem2u16( 0x0451 );
     else modem2u16( (*ptr-192+1040) );*/
@@ -153,9 +155,9 @@ void ascii2ucs2( const char *ascii )
   }
 }
 
-int ascii2ucs2(const char* sms_text, uint8_t* output_buffer, int buffer_size)
+int ascii2ucs2(const char *sms_text, uint8_t *output_buffer, int buffer_size)
 {
-	return 0;
+  return 0;
 }
 
 uint32_t xorshift()
@@ -168,9 +170,9 @@ uint32_t xorshift()
 
 void __assert(int condition, const char *file, int line)
 {
-  if(condition)
+  if (condition)
   {
-   return;
+    return;
   }
   PrintF(0, "assertion failed at %u in %s\r\n", line, file);
 
@@ -180,23 +182,23 @@ void __assert(int condition, const char *file, int line)
   tmpreg |= 1;
   PWR->CR = tmpreg;
   SCB->SCR |= SCB_SCR_SLEEPDEEP;
-  SCB->SCR &= (uint32_t)~((uint32_t)SCB_SCR_SLEEPDEEP);
+  SCB->SCR &= (uint32_t) ~((uint32_t)SCB_SCR_SLEEPDEEP);
   __WFI();
 }
 
 int isprint(char c)
 {
-  if(c >= ' ' && c <= '~')
+  if (c >= ' ' && c <= '~')
   {
-   return 1;
+    return 1;
   }
   switch (c)
   {
-   case '\r':
-   case '\n':
-   case '\t':
+  case '\r':
+  case '\n':
+  case '\t':
     return 1;
-   default:
+  default:
     return 0;
   }
 }

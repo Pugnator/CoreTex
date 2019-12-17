@@ -42,7 +42,6 @@ bool SDcardLog::open()
     PrintF("Error: %s\r\n", logdisk->result_to_str(fresult));
     return false;
   }
-    
 
   UINT bw = 0;
   fresult = logdisk->f_write(&logf, "Started\r\n", 9, &bw);
@@ -51,7 +50,6 @@ bool SDcardLog::open()
     PrintF("Error: %s\r\n", logdisk->result_to_str(fresult));
     return false;
   }
-    
 
   PrintF("Logging started\r\n");
   return true;
@@ -64,11 +62,11 @@ void SDcardLog::close()
   logdisk->f_mount(nullptr, "0:", 1);
 }
 
-void SDcardLog::write(const char* text)
+void SDcardLog::write(const char *text)
 {
   UINT bw = 0;
   fresult = logdisk->f_write(&logf, text, strlen(text), &bw);
-  if(fresult != FR_OK)
+  if (fresult != FR_OK)
     PrintF("Error: %s\r\n", logdisk->result_to_str(fresult));
 }
 

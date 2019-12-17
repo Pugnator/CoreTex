@@ -23,7 +23,7 @@
 #include <config.hpp>
 
 #ifdef FATDISK_DEBUG
-#define DEBUG_LOG SEGGER_RTT_printf
+#define DEBUG_LOG PrintF
 #else
 #define DEBUG_LOG(...)
 #endif

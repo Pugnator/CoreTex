@@ -21,33 +21,33 @@ uint8_t QueueIn, QueueOut;
 
 void QueueInit(void)
 {
-    QueueIn = QueueOut = 0;
+  QueueIn = QueueOut = 0;
 }
 
 int QueuePut(char toadd)
 {
-    if(QueueIn == (( QueueOut - 1 + QUEUE_SIZE) % QUEUE_SIZE))
-    {
-        return -1; /* Queue Full*/
-    }
+  if (QueueIn == ((QueueOut - 1 + QUEUE_SIZE) % QUEUE_SIZE))
+  {
+    return -1; /* Queue Full*/
+  }
 
-    Queue[QueueIn] = toadd;
+  Queue[QueueIn] = toadd;
 
-    QueueIn = (QueueIn + 1) % QUEUE_SIZE;
+  QueueIn = (QueueIn + 1) % QUEUE_SIZE;
 
-    return 0; // No errors
+  return 0; // No errors
 }
 
 int QueueGet(char *old)
 {
-    if(QueueIn == QueueOut)
-    {
-        return -1; /* Queue Empty - nothing to get*/
-    }
+  if (QueueIn == QueueOut)
+  {
+    return -1; /* Queue Empty - nothing to get*/
+  }
 
-    *old = Queue[QueueOut];
+  *old = Queue[QueueOut];
 
-    QueueOut = (QueueOut + 1) % QUEUE_SIZE;
+  QueueOut = (QueueOut + 1) % QUEUE_SIZE;
 
-    return 0; // No errors
+  return 0; // No errors
 }

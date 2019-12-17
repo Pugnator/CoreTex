@@ -1,7 +1,7 @@
 #include <drivers/storage/flash.hpp>
 
 #ifdef FLASH_DEBUG
-#define DEBUG_LOG SEGGER_RTT_printf
+#define DEBUG_LOG PrintF
 #else
 #define DEBUG_LOG(...)
 #endif

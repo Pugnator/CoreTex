@@ -164,7 +164,7 @@ void GPIO_pin::toggle()
       (pbase->ODR & (1u << config.index)) ? ((1u << config.index) << 16u) : (1u << config.index);
 }
 
-void GPIO_pin::pwm(bool enable)
+void GPIO_pin::pwm_out(bool enable)
 {
   pwm_enabled = enable;
   if (GPIOA == pbase)
@@ -211,19 +211,19 @@ void GPIO_pin::pwm(bool enable)
   }
 }
 
-void GPIO_pin::pwm_invert(bool invert)
+void GPIO_pin::pwm_out_invert(bool invert)
 {
   if (!pwm_enabled)
   {
-    pwm(true);
+    pwm_out(true);
   }
 }
 
-void GPIO_pin::pwm_duty(uint16_t duty)
+void GPIO_pin::pwm_out_duty(uint16_t duty)
 {
   if (!pwm_enabled)
   {
-    pwm(true);
+    pwm_out(true);
   }
   if (GPIOA == pbase)
   {

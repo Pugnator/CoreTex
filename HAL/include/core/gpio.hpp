@@ -81,11 +81,12 @@ public:
   void low();
   void hi();
   /* PWM */
-  void pwm(bool enable);
-  void pwm_invert(bool invert);
-  void pwm_duty(uint16_t duty);
+  void pwm_out(bool enable);
+  void pwm_out_invert(bool invert);
+  void pwm_out_duty(uint16_t duty);
   /* ADC */
   void adc(bool enable);
+  void adc_setup();
   uint16_t adc_sample();
   double adc_voltage();
 

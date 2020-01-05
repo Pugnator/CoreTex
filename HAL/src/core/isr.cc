@@ -25,6 +25,7 @@
 
 volatile uint32_t tickcounter = 0;
 volatile uint32_t timerms = 0;
+volatile uint32_t uscounter = 0;
 
 extern "C"
 {
@@ -162,7 +163,6 @@ extern "C"
   void DMA1_Channel7_IRQHandler(void){};
   void ADC1_IRQHandler(void)
   {
-    
   }
   void ADC1_2_IRQHandler(void)
   {
@@ -172,11 +172,11 @@ extern "C"
       i->isr(0);
       return;
     }
-    Print("ADC1_2_IRQHandler\r\n");
+
     if (ADC1->SR & ADC_SR_EOC)
     {
       uint16_t result = ADC1->DR & 0xFFFF;
-	    ADC1->SR = 0;      
+      ADC1->SR = 0;
     }
   }
   void USB_HP_CAN1_TX_IRQHandler(void){};
@@ -188,7 +188,19 @@ extern "C"
   void TIM1_UP_IRQHandler(void){};
   void TIM1_TRG_COM_IRQHandler(void){};
   void TIM1_CC_IRQHandler(void){};
-  void TIM2_IRQHandler(void){};
+  void TIM2_IRQHandler(void)
+  {
+    if (TIM2->SR & TIM_SR_UIF)
+    {
+      if(uscounter + 1 == ~0)
+      {
+        TIM2->CR1 &= ~(TIM_CR1_CEN);
+      }      
+      uscounter++;
+      TIM2->SR &= ~(TIM_SR_UIF);     
+    }
+    
+  };
   void TIM3_IRQHandler(void){};
   void TIM4_IRQHandler(void){};
 

@@ -14,6 +14,7 @@
 extern jmp_buf ex_buf__;
 extern volatile uint32_t tickcounter;
 extern volatile uint32_t timerms;
+extern volatile uint32_t uscounter;
 
 #define WAIT_FOR(ms) tickcounter = ms
 #define STILL_WAIT tickcounter

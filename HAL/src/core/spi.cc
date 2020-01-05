@@ -45,14 +45,14 @@ Spi::Spi(uint8_t ch)
     RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
     SCK_pin.reset(new GPIO_pin({PORTA, P5, IOSPEED_50MHz, OUT_ALT_PP}));
     MISO_pin.reset(new GPIO_pin({PORTA, P6, IOSPEED_50MHz, IN_FLT}));
-    MOSI_pin.reset(new GPIO_pin({PORTA, P7, IOSPEED_50MHz, OUT_ALT_PP}));    
+    MOSI_pin.reset(new GPIO_pin({PORTA, P7, IOSPEED_50MHz, OUT_ALT_PP}));
     break;
   case CHANNEL_2:
     Reg = (SPI_TypeDef *)SPI2_BASE;
     RCC->APB1ENR |= RCC_APB1ENR_SPI2EN;
     SCK_pin.reset(new GPIO_pin({PORTB, P13, IOSPEED_50MHz, OUT_ALT_PP}));
     MISO_pin.reset(new GPIO_pin({PORTB, P14, IOSPEED_50MHz, IN_FLT}));
-    MOSI_pin.reset(new GPIO_pin({PORTB, P15, IOSPEED_50MHz, OUT_ALT_PP}));    
+    MOSI_pin.reset(new GPIO_pin({PORTB, P15, IOSPEED_50MHz, OUT_ALT_PP}));
     break;
   case CHANNEL_3:
   case CHANNEL_4:

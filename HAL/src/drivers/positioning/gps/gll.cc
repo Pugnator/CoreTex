@@ -52,14 +52,21 @@ A = status: A = valid data
 
 typedef enum NMEAFORMAT
 {
- TYPE , LAT, LATD, LON, LOND, FIXUTC, CS, END
+  TYPE,
+  LAT,
+  LATD,
+  LON,
+  LOND,
+  FIXUTC,
+  CS,
+  END
 } NMEAFORMAT;
 
-void Gps::fillGLLctx(int sect, const char* field)
+void Gps::fillGLLctx(int sect, const char *field)
 {
-	switch (sect)
-	{
-		default:
-			break;
-	}
+  switch (sect)
+  {
+  default:
+    break;
+  }
 }

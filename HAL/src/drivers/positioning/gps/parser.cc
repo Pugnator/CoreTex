@@ -79,7 +79,7 @@
 */
 
 NMEAERR
-Gps::parse (char c)
+Gps::parse(char c)
 {
   if (nmea.nmeaerr && '$' != c)
   {
@@ -87,65 +87,65 @@ Gps::parse (char c)
   }
   switch (c)
   {
-    case '$':
-      *nmea.fp++ = c;
-      break;
-    case '*':
-      nmea.sumdone = true;
-      nmea.sect++;
-      memset (nmea.fstr, 0, sizeof nmea.fstr);
-      nmea.fp = nmea.fstr;
-      break;
-    case '\n':
-      break;
-    case '\r':
-      nmea.nmeaok = ckecknmea (nmea.checksum, nmea.fstr);
-      break;
-    case ',':
+  case '$':
+    *nmea.fp++ = c;
+    break;
+  case '*':
+    nmea.sumdone = true;
+    nmea.sect++;
+    memset(nmea.fstr, 0, sizeof nmea.fstr);
+    nmea.fp = nmea.fstr;
+    break;
+  case '\n':
+    break;
+  case '\r':
+    nmea.nmeaok = ckecknmea(nmea.checksum, nmea.fstr);
+    break;
+  case ',':
+    nmea.checksum ^= c;
+    if (0 == nmea.sect)
+    {
+      if (PMTK == get_nmea_talker(nmea.fstr))
+      {
+        return NMEA_DIAGNOSTIC_MSG;
+      }
+      type = get_nmea_sent_type(nmea.fstr);
+    }
+    //TODO: make some kind of specialized template here based on NMEATYPE
+    if (*nmea.fstr)
+    {
+      switch (type)
+      {
+      case GGA:
+        fillGGActx(nmea.sect, nmea.fstr);
+        break;
+      case VTG:
+        fillVTGctx(nmea.sect, nmea.fstr);
+        break;
+      case RMC:
+        fillRMCctx(nmea.sect, nmea.fstr);
+        break;
+      case GLL:
+        fillGLLctx(nmea.sect, nmea.fstr);
+        break;
+      case GSV:
+        fillGSVctx(nmea.sect, nmea.fstr);
+        break;
+      default:
+        return NMEA_UNKNOWN_TALKER;
+        break;
+      }
+    }
+    nmea.sect++;
+    memset(nmea.fstr, 0, sizeof nmea.fstr);
+    nmea.fp = nmea.fstr;
+    break;
+  default:
+    *nmea.fp++ = c;
+    if (!nmea.sumdone)
+    {
       nmea.checksum ^= c;
-      if (0 == nmea.sect)
-      {
-        if (PMTK == get_nmea_talker (nmea.fstr))
-        {
-          return NMEA_DIAGNOSTIC_MSG;
-        }
-        type = get_nmea_sent_type (nmea.fstr);
-      }
-      //TODO: make some kind of specialized template here based on NMEATYPE
-      if (*nmea.fstr)
-      {
-        switch (type)
-        {
-          case GGA:
-            fillGGActx (nmea.sect, nmea.fstr);
-            break;
-          case VTG:
-            fillVTGctx (nmea.sect, nmea.fstr);
-            break;
-          case RMC:
-            fillRMCctx (nmea.sect, nmea.fstr);
-            break;
-          case GLL:
-            fillGLLctx (nmea.sect, nmea.fstr);
-            break;
-          case GSV:
-            fillGSVctx (nmea.sect, nmea.fstr);
-            break;
-          default:
-            return NMEA_UNKNOWN_TALKER;
-            break;
-        }
-      }
-      nmea.sect++;
-      memset (nmea.fstr, 0, sizeof nmea.fstr);
-      nmea.fp = nmea.fstr;
-      break;
-    default:
-      *nmea.fp++ = c;
-      if (!nmea.sumdone)
-      {
-        nmea.checksum ^= c;
-      }
+    }
   }
   return NMEA_ERROR_OK;
 }

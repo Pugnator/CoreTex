@@ -14,7 +14,7 @@
 #include <log.hpp>
 
 #ifdef MEMORY_ALLOC_DEBUG
-#define DEBUG_LOG SEGGER_RTT_printf
+#define DEBUG_LOG PrintF
 #else
 #define DEBUG_LOG(...)
 #endif
@@ -24,13 +24,12 @@ typedef uint32_t Align;
 uint32_t alloc_counter = 0;
 uint32_t free_counter = 0;
 
-union mem_header_union
-{
+union mem_header_union {
   struct
   {
     // Pointer to the next block in the free list
     //
-    union mem_header_union* next;
+    union mem_header_union *next;
 
     // Size of the block (in quantas of sizeof(mem_header_t))
     //
@@ -50,7 +49,7 @@ static mem_header_t base;
 
 // Start of free list
 //
-static mem_header_t* freep = 0;
+static mem_header_t *freep = 0;
 
 // Static pool for new allocations
 //
@@ -59,7 +58,7 @@ static uint32_t pool_free_pos = 0;
 
 void vmmu_init()
 {
-  DEBUG_LOG(0,"Memory pool size: %u\r\n", POOL_SIZE);
+  DEBUG_LOG("Memory pool size: %u\r\n", POOL_SIZE);
   memset(pool, 0, sizeof pool);
   base.s.next = 0;
   base.s.size = 0;
@@ -70,63 +69,65 @@ void vmmu_init()
 void print_memstat()
 {
 #ifdef DEBUG_MEMMGR_SUPPORT_STATS
-  mem_header_t* p;
+  mem_header_t *p;
 
-  DEBUG_LOG(0,"------ Memory manager stats ------\n\n");
-  DEBUG_LOG(0,"Pool: free_pos = %lu (%lu bytes left)\n\n", pool_free_pos,
+  DEBUG_LOG("------ Memory manager stats ------\n\n");
+  DEBUG_LOG("Pool: free_pos = %lu (%lu bytes left)\n\n", pool_free_pos,
             POOL_SIZE - pool_free_pos);
 
-  DEBUG_LOG(0,"Allocated %lu times, freed %lu times\n", alloc_counter, free_counter);
+  DEBUG_LOG("Allocated %lu times, freed %lu times\n", alloc_counter, free_counter);
 
-  p = (mem_header_t*) pool;
+  p = (mem_header_t *)pool;
 
-  while (p < (mem_header_t*) (pool + pool_free_pos))
+  while (p < (mem_header_t *)(pool + pool_free_pos))
   {
-    DEBUG_LOG(0,"  * Addr: 0x%8X; Size: %8X\n", p, (uint32_t) p->s.size);
+    DEBUG_LOG("  * Addr: 0x%8X; Size: %8X\n", p, (uint32_t)p->s.size);
 
     p += p->s.size;
   }
 
-  DEBUG_LOG(0,"\nFree list:\n\n");
+  DEBUG_LOG("\nFree list:\n\n");
 
   if (freep)
   {
     p = freep;
 
-    for(;;)
+    for (;;)
     {
-      DEBUG_LOG(0,"  * Addr: 0x%8X; Size: %8lu; Next: 0x%8X\n", p,
-                (uint32_t) p->s.size, p->s.next);
+      DEBUG_LOG("  * Addr: 0x%8X; Size: %8lu; Next: 0x%8X\n", p,
+                (uint32_t)p->s.size, p->s.next);
 
       p = p->s.next;
 
-      if (p == freep) break;
+      if (p == freep)
+        break;
     }
   }
   else
   {
-    DEBUG_LOG(0,"Empty\n");
+    DEBUG_LOG("Empty\n");
   }
 
-  DEBUG_LOG(0,"\n");
+  DEBUG_LOG("\n");
 #endif // DEBUG_MEMMGR_SUPPORT_STATS
 }
 
-static mem_header_t* get_mem_from_pool(uint32_t nquantas)
+static mem_header_t *get_mem_from_pool(uint32_t nquantas)
 {
   uint32_t total_req_size;
 
-  mem_header_t* h;
+  mem_header_t *h;
 
-  if (nquantas < MIN_POOL_ALLOC_QUANTAS) nquantas = MIN_POOL_ALLOC_QUANTAS;
+  if (nquantas < MIN_POOL_ALLOC_QUANTAS)
+    nquantas = MIN_POOL_ALLOC_QUANTAS;
 
   total_req_size = nquantas * sizeof(mem_header_t);
 
   if (pool_free_pos + total_req_size <= POOL_SIZE)
   {
-    h = (mem_header_t*) (pool + pool_free_pos);
+    h = (mem_header_t *)(pool + pool_free_pos);
     h->s.size = nquantas;
-    stfree((void*) (h + 1));
+    stfree((void *)(h + 1));
     pool_free_pos += total_req_size;
   }
   else
@@ -145,16 +146,16 @@ static mem_header_t* get_mem_from_pool(uint32_t nquantas)
 // The pointer returned to the user points to the free space within the block,
 // which begins one quanta after the header.
 //
-void* stalloc(uint32_t nbytes)
+void *stalloc(uint32_t nbytes)
 {
-  if(!nbytes)
+  if (!nbytes)
     return nullptr;
 #ifdef MEMORY_ALLOC_DEBUG
-  SEGGER_RTT_printf(0,"ALLOC from 0x%X\n", __builtin_return_address(0));
+  PrintF("ALLOC from 0x%X\n", __builtin_return_address(0));
   alloc_counter++;
 #endif
-  mem_header_t* p;
-  mem_header_t* prevp;
+  mem_header_t *p;
+  mem_header_t *prevp;
 
   // Calculate how many quantas are required: we need enough to house all
   // the requested bytes, plus the header. The -1 and +1 are there to make sure
@@ -193,7 +194,7 @@ void* stalloc(uint32_t nbytes)
       }
 
       freep = prevp;
-      return (void*) (p + 1);
+      return (void *)(p + 1);
     }
     // Reached end of free list ?
     // Try to allocate the block from the pool. If that succeeds,
@@ -218,19 +219,19 @@ void* stalloc(uint32_t nbytes)
 // list. In any case, if the block being freed is adjacent to either neighbor,
 // the adjacent blocks are combined.
 //
-void stfree(void* ap)
+void stfree(void *ap)
 {
-  if(!ap)
+  if (!ap)
     return;
 #ifdef MEMORY_ALLOC_DEBUG
-  DEBUG_LOG(0, "FREE from 0x%X\n", __builtin_return_address(0));
+  DEBUG_LOG("FREE from 0x%X\n", __builtin_return_address(0));
   free_counter++;
 #endif
-  mem_header_t* block;
-  mem_header_t* p;
+  mem_header_t *block;
+  mem_header_t *p;
 
   // acquire pointer to block header
-  block = ((mem_header_t*) ap) - 1;
+  block = ((mem_header_t *)ap) - 1;
 #ifdef MEMORY_ALLOC_DEBUG
   memset(ap, 0, block->s.size);
 #endif
@@ -244,7 +245,8 @@ void stfree(void* ap)
     // This condition checks if the block should be actually
     // inserted between them
     //
-    if (p >= p->s.next && (block > p || block < p->s.next)) break;
+    if (p >= p->s.next && (block > p || block < p->s.next))
+      break;
   }
 
   // Try to combine with the higher neighbor

@@ -24,7 +24,7 @@
 #include <drivers/storage/eeprom.hpp>
 
 #ifdef EEPROM_DEBUG
-#define DEBUG_LOG SEGGER_RTT_printf
+#define DEBUG_LOG PrintF
 #else
 #define DEBUG_LOG(...)
 #endif

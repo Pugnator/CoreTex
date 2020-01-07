@@ -35,7 +35,6 @@ namespace IO
 GPIO_pin::GPIO_pin(PINCFG conf, GPIO_pin *isrptr)
 {
   extirq = isrptr;
-  signup();
   config = conf;
   Reg = nullptr;
   pwm_enabled = false;
@@ -107,7 +106,7 @@ GPIO_pin::GPIO_pin(PINCFG conf, GPIO_pin *isrptr)
 
 GPIO_pin::~GPIO_pin()
 {
-  signout();
+  
 }
 
 void GPIO_pin::isr(uint32_t address)
@@ -124,28 +123,6 @@ void GPIO_pin::isr(uint32_t address)
     uint16_t result = ADC1->DR & 0xFFFF;
     ADC1->SR = 0;
   }
-}
-
-void GPIO_pin::signup()
-{
-  Reg = (ADC_TypeDef *)ADC1_BASE;
-
-  GPIO_pin *i = (GPIO_pin *)HARDWARE_TABLE[GPIO_HANDLER];
-  if (i)
-  {
-    DEBUG_LOG("Another instance of GPIO is registered 0x%X, adding myself 0x%X\r\n", (uint32_t)i, (uint32_t)this);
-    i->isr(this);
-  }
-  else
-  {
-    DEBUG_LOG("First GPIO handler registration 0x%X\r\n", reinterpret_cast<uint32_t>(this));
-    HARDWARE_TABLE[GPIO_HANDLER] = extirq ? reinterpret_cast<uint32_t>(extirq) : reinterpret_cast<uint32_t>(this);
-  }
-}
-
-void GPIO_pin::signout()
-{
-  HARDWARE_TABLE[GPIO_HANDLER] = next ? (uint32_t)next : 0;
 }
 
 void GPIO_pin::low()
@@ -237,47 +214,6 @@ void GPIO_pin::pwm_out_duty(uint16_t duty)
       break;
     }
   }
-}
-
-void GPIO_pin::adc(bool enable)
-{
-  adc_enabled = enable;
-  RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
-  RCC->CFGR |= RCC_CFGR_ADCPRE;
-  RCC->CFGR |= RCC_CFGR_ADCPRE_DIV8;
-
-  ADC1->CR2 |= ADC_CR2_CAL;
-  while (!(ADC1->CR2 & ADC_CR2_CAL))
-    ;
-
-  ADC1->SQR1 = ADC_SQR3_SQ1_0;
-  ADC1->SQR2 = 0;
-  ADC1->SQR3 = 1; //ADC_SQR3_SQ1_0 | ADC_SQR3_SQ1_3;
-
-  ADC1->CR2 |= (ADC_CR2_EXTSEL_0 | ADC_CR2_EXTSEL_1 | ADC_CR2_EXTSEL_2 | ADC_CR2_EXTTRIG);
-  ADC1->CR1 = ADC_CR1_EOCIE; // Enable interrupt form End Of Conversion
-  NVIC_EnableIRQ(ADC1_2_IRQn);
-  ADC1->CR2 |= ADC_CR2_ADON | ADC_CR2_CONT | ADC_CR2_SWSTART;
-}
-
-uint16_t GPIO_pin::adc_sample()
-{
-  if (!adc_enabled)
-  {
-    adc(true);
-  }
-  ADC1->CR2 |= ADC_CR2_SWSTART;
-  while (!(ADC1->SR & ADC_SR_EOC))
-    ;
-  uint16_t result = ADC1->DR & 0xFFFF;
-  ADC1->SR = 0;
-  return 0;
-  return result;
-}
-
-double GPIO_pin::adc_voltage()
-{
-  return adc_sample() / 4096 * 3;
 }
 
 PINSTATE GPIO_pin::get_state()

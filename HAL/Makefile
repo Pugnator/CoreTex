@@ -101,6 +101,7 @@ endif
 
 CORESRC:=\
 	$(CORELIB)/core.cc \
+	$(CORELIB)/adc.cc \
 	$(CORELIB)/gpio.cc \
 	$(CORELIB)/iic.cc \
 	$(CORELIB)/isr.cc \

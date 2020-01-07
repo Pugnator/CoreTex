@@ -166,7 +166,7 @@ extern "C"
   }
   void ADC1_2_IRQHandler(void)
   {
-    IO::GPIO_pin *i = (IO::GPIO_pin *)HARDWARE_TABLE[GPIO_HANDLER];
+    IO::GPIO_pin *i = (IO::GPIO_pin *)HARDWARE_TABLE[ADC1_2_HANDLER];
     if (i)
     {
       i->isr(0);

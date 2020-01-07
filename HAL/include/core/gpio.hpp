@@ -84,16 +84,8 @@ public:
   void pwm_out(bool enable);
   void pwm_out_invert(bool invert);
   void pwm_out_duty(uint16_t duty);
-  /* ADC */
-  void adc(bool enable);
-  void adc_setup();
-  uint16_t adc_sample();
-  double adc_voltage();
 
   GPIO_pin *next;
-  void signup();
-  void signout();
-
   PINSTATE get_state();
   virtual void isr(uint32_t address);
 
@@ -106,7 +98,7 @@ protected:
   ADC_TypeDef *Reg;
   PINCFG config;
   GPIO_TypeDef *pbase;
-  GPIO_pin* extirq;
+  GPIO_pin *extirq;
 };
 
 /* PORT */

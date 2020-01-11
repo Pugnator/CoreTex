@@ -79,11 +79,7 @@ public:
 public:
   void toggle();
   void low();
-  void hi();
-  /* PWM */
-  void pwm_out(bool enable);
-  void pwm_out_invert(bool invert);
-  void pwm_out_duty(uint16_t duty);
+  void hi(); 
 
   GPIO_pin *next;
   PINSTATE get_state();

@@ -93,12 +93,12 @@ namespace GLCD
  {
 	if (0 < brightness)
 	{
-	 LED_pin->pwm_out(true);
-	 LED_pin->pwm_out_duty(brightness);
+	 //LED_pin->pwm_out(true);
+	 //LED_pin->pwm_out_duty(brightness);
 	}
 	else
 	{
-	 LED_pin->pwm_out(false);
+	 //LED_pin->pwm_out(false);
 	}
  }
 

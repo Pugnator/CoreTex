@@ -1,5 +1,6 @@
 #pragma once
 #include "core/spi.hpp"
+#include <core/pwm.hpp>
 
 #define X first
 #define Y second
@@ -73,7 +74,7 @@ namespace GLCD
 	 max_y = 320;
 
 
-	 LED_pin.reset(new GPIO_pin({ PORTA, P1, IOSPEED_50MHz, OUT_ALT_PP }));
+	 LED_pin.reset(new PWM_pin({ PORTA, P1, IOSPEED_50MHz, OUT_ALT_PP }));
 	 RST_pin.reset(new GPIO_pin({ PORTA, P3, IOSPEED_50MHz, OUT_PP }));
 	 DC_pin.reset(new GPIO_pin({ PORTA, P2, IOSPEED_50MHz, OUT_PP }));
 
@@ -114,7 +115,7 @@ namespace GLCD
 	uint16_t max_y;
 	uint16_t current_color;
 
-	std::unique_ptr<IO::GPIO_pin> LED_pin;
+	std::unique_ptr<IO::PWM_pin> LED_pin;
 	std::unique_ptr<IO::GPIO_pin> RST_pin;
 	std::unique_ptr<IO::GPIO_pin> DC_pin;
  };

@@ -24,21 +24,67 @@
 
 jmp_buf ex_buf__;
 
+void enable_pll()
+{
+  /* Включаем буфер предвыборки FLASH */
+  FLASH->ACR |= FLASH_ACR_PRFTBE;
+
+  /* Конфигурируем Flash на 2 цикла ожидания */
+  /* Это нужно потому, что Flash не может работать на высокой частоте */
+
+  FLASH->ACR &= (uint32_t)((uint32_t)~FLASH_ACR_LATENCY);
+  FLASH->ACR |= (uint32_t)FLASH_ACR_LATENCY_2;
+
+  /* HCLK = SYSCLK */
+  RCC->CFGR |= (uint32_t)RCC_CFGR_HPRE_DIV1;
+
+  /* PCLK2 = HCLK */
+  RCC->CFGR |= (uint32_t)RCC_CFGR_PPRE2_DIV1;
+
+  /* PCLK1 = HCLK */
+  RCC->CFGR |= (uint32_t)RCC_CFGR_PPRE1_DIV2;
+
+  /* Конфигурируем множитель PLL configuration: PLLCLK = HSE * 9 = 72 MHz */
+  /* При условии, что кварц на 8МГц! */
+  /* RCC_CFGR_PLLMULL9 - множитель на 9. Если нужна другая частота, не 72МГц */
+  /* то выбираем другой множитель. */
+  RCC->CFGR &= (uint32_t)((uint32_t) ~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLXTPRE | RCC_CFGR_PLLMULL));
+  RCC->CFGR |= (uint32_t)(RCC_CFGR_PLLSRC_HSE | RCC_CFGR_PLLMULL9);
+
+  /* Включаем PLL */
+  RCC->CR |= RCC_CR_PLLON;
+
+  while (!RCC->CR & RCC_CR_PLLRDY)
+    ;
+
+  RCC->CFGR &= (uint32_t)((uint32_t) ~(RCC_CFGR_SW));
+  RCC->CFGR |= (uint32_t)RCC_CFGR_SW_PLL;
+
+  while ((RCC->CFGR & (uint32_t)RCC_CFGR_SWS) != (uint32_t)0x08)
+    ;
+}
+
 extern "C" void SystemInit(void)
 {
   vmmu_init();
   hardware_manager_init();
-  //remap_vector_table();
+  remap_vector_table();
 
-  RCC->CR |= 0x00000001;
-  /* Reset SW, HPRE, PPRE1, PPRE2, ADCPRE and MCO bits */
-  RCC->CFGR &= 0xF0FF0000;
-  /* Reset HSEON, CSSON and PLLON bits */
-  RCC->CR &= 0xFEF6FFFF;
-  /* Reset HSEBYP bit */
-  RCC->CR &= 0xFFFBFFFF;
-  /* Reset PLLSRC, PLLXTPRE, PLLMUL and USBPRE/OTGFSPRE bits */
-  RCC->CFGR &= 0xFF80FFFF;
+  RCC->CR |= RCC_CR_HSEON;
+  uint32_t timeout = ~0;
+
+  while ((!RCC->CR & RCC_CR_HSERDY) && --timeout)
+    ;
+
+  if (timeout)
+  {
+    enable_pll();
+  }
+  else
+  {
+    //XXX: error out?
+  }
+
   /* Disable all interrupts and clear pending bits  */
   RCC->CIR = 0x009F0000;
 

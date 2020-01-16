@@ -5,19 +5,15 @@
  * @details [long description]
  * @return [description]
  */
-namespace Timer
+class timer
 {
- class timer
- {
- public:
-  timer (void);
-  void
-  on (void);
-  void
-  off (void);
-  void
-  reset (void);
- private:
+public:
+  timer(void);
+  void on(void);
+  void off(void);
+  void reset(void);
+
+private:
   int channel;
- };
-}
+};
+

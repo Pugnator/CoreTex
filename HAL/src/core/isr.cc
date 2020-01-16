@@ -188,19 +188,19 @@ extern "C"
   void TIM1_UP_IRQHandler(void){};
   void TIM1_TRG_COM_IRQHandler(void){};
   void TIM1_CC_IRQHandler(void){};
+
   void TIM2_IRQHandler(void)
   {
     if (TIM2->SR & TIM_SR_UIF)
-    {
-      if(uscounter + 1 == ~0)
+    {      
+      if(!++uscounter)
       {
-        TIM2->CR1 &= ~(TIM_CR1_CEN);
-      }      
-      uscounter++;
-      TIM2->SR &= ~(TIM_SR_UIF);     
+        TIM2->CR1 &= ~(TIM_CR1_CEN);        
+      }
+      TIM2->SR &= ~(TIM_SR_UIF);
     }
-    
   };
+
   void TIM3_IRQHandler(void){};
   void TIM4_IRQHandler(void){};
 

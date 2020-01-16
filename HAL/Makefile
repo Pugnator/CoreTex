@@ -183,9 +183,11 @@ STMLIBSRC:=\
 ####################################################
 
 ifeq ($(__BUILDTYPE), DEBUG)
-	CXXFLAGS:=-flto -O1 -g3 -D__DEBUG=1
+	CXXFLAGS:=-Og -g3 -D__DEBUG=1
+else ifeq ($(__BUILDTYPE), RELEASE)
+	CXXFLAGS:=-flto -Os -s -D__DEBUG=0 -Werror
 else
-	CXXFLAGS:=-flto -Os -s -D__DEBUG=0
+	$(error bad buildtype specified)
 endif
 
 ifeq ($(__USE_MEMORY_DUMP)), 1)

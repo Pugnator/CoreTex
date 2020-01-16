@@ -25,7 +25,7 @@ ADC_pin::ADC_pin(PINCFG conf, ADC_pin *isrptr) : GPIO_pin(conf, isrptr)
   ADC1->SQR1 = ADC_SQR3_SQ1_0;
   ADC1->SQR2 = 0;
   ADC1->SQR3 = 1; //ADC_SQR3_SQ1_0 | ADC_SQR3_SQ1_3;
-
+  ADC1->SMPR1 = 0x4000000;
   ADC1->CR2 |= (ADC_CR2_EXTSEL_0 | ADC_CR2_EXTSEL_1 | ADC_CR2_EXTSEL_2 | ADC_CR2_EXTTRIG);
   ADC1->CR1 = ADC_CR1_EOCIE; // Enable interrupt form End Of Conversion
   NVIC_EnableIRQ(ADC1_2_IRQn);

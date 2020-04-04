@@ -161,9 +161,7 @@ extern "C"
   void DMA1_Channel5_IRQHandler(void){};
   void DMA1_Channel6_IRQHandler(void){};
   void DMA1_Channel7_IRQHandler(void){};
-  void ADC1_IRQHandler(void)
-  {
-  }
+
   void ADC1_2_IRQHandler(void)
   {
     IO::GPIO_pin *i = (IO::GPIO_pin *)HARDWARE_TABLE[ADC1_2_HANDLER];
@@ -196,7 +194,7 @@ extern "C"
       if(!++uscounter)
       {
         TIM2->CR1 &= ~(TIM_CR1_CEN);        
-      }
+      }       
       TIM2->SR &= ~(TIM_SR_UIF);
     }
   };

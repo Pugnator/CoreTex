@@ -310,7 +310,7 @@ $(OBJSDIR)/%.o: %.s
 	$(SIZE) -d --format=berkeley $@
 
 $(FIRMWARE): $(OBJ)	$(PROGOBJ)
-	$(GPP) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	$(GPP) $(CXXFLAGS) -o $@ $^ $(LDFLAGS) $(EXTLIB)
 	$(OCOPY) -O binary $(FIRMWARE) $(FIRMWARE).bin
 	@stat -c "Output size of <%n> is %s" $(FIRMWARE).bin
 	@$(SIZE) --format=berkeley $(FIRMWARE)

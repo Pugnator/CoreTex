@@ -75,6 +75,7 @@ extern "C"
 
   void USART1_IRQHandler(void)
   {
+    Print("USART1_IRQHandler\r\n");
     USART *i = (USART *)HARDWARE_TABLE[USART1_HANDLER];
     if (i)
     {

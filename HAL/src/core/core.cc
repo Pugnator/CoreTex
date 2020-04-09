@@ -64,9 +64,8 @@ void enable_pll()
 
 extern "C" void SystemInit(void)
 {
-  vmmu_init();
-  hardware_manager_init();
-  remap_vector_table();
+  vmmu_init();  
+  //remap_vector_table();
 
   RCC->CR |= RCC_CR_HSEON;
   uint32_t timeout = ~0;

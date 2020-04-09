@@ -63,8 +63,8 @@ void ADC_pin::signup()
   ADC_pin *i = (ADC_pin *)HARDWARE_TABLE[ADC1_2_HANDLER];
   if (i)
   {
-    DEBUG_LOG("Another instance of ADC is registered 0x%X, adding myself 0x%X\r\n", (uint32_t)i, (uint32_t)this);
-    i->isr((uint32_t)this);
+    DEBUG_LOG("Another instance of ADC is registered 0x%X, adding myself 0x%X\r\n", (uint32_t)i, reinterpret_cast<uint32_t>(this));
+    i->isr(reinterpret_cast<uint32_t>(this));
   }
   else
   {
@@ -130,8 +130,8 @@ void ADC_DMA_pin::signup()
   ADC_DMA_pin *i = (ADC_DMA_pin *)HARDWARE_TABLE[ADC1_2_HANDLER];
   if (i)
   {
-    DEBUG_LOG("Another instance of ADC is registered 0x%X, adding myself 0x%X\r\n", (uint32_t)i, (uint32_t)this);
-    i->isr((uint32_t)this);
+    DEBUG_LOG("Another instance of ADC is registered 0x%X, adding myself 0x%X\r\n", (uint32_t)i, reinterpret_cast<uint32_t>(this));
+    i->isr(reinterpret_cast<uint32_t>(this));
   }
   else
   {

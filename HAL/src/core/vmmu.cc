@@ -138,7 +138,7 @@ static mem_header_t *get_mem_from_pool(uint32_t nquantas)
   return freep;
 }
 
-// Allocations are done in 'quantas' of header size.
+// Allocations are done in 'quantas' of header sizer.
 // The search for a free block of adequate size begins at the point 'freep'
 // where the last block was found.
 // If a too-big block is found, it is split and the tail is returned (this

@@ -20,21 +20,14 @@ public:
  virtual void write (char c) override;
  virtual void writestr(const char* str) override;
  virtual char read(void) override;
- virtual const char* name() override;
- void dma_on (void);
- void dma_off (void);
- void dmatx_go(uint32_t size);
- void dmarx_go(uint32_t size);
+ virtual const char* name() override; 
  void disable (void);
  USART* next;
  /* ISRs */
- virtual void isr (uint32_t address) override;
- virtual void dmarx (uint32_t address) override;
- virtual void dmatx (uint32_t address) override;
+ virtual void isr (uint32_t address) override; 
  uint8_t *get_rx_buf();
  uint8_t *get_tx_buf();
 protected:
- bool is_dma_on();
  void signup() override;
  void signout() override;
  uint8_t outbuf[32];

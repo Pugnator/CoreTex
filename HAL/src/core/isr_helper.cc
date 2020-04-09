@@ -30,16 +30,17 @@ void remap_vector_table(void)
 {
   //VTOR is 0 on startup, so we change VTOR only once
   if (SCB->VTOR)
+  {
     return;
+  }
+  #ifdef USE_DEFAULT_ISR     
   memcpy((void *)HARDWARE_TABLE, (void *)SCB->VTOR, sizeof HARDWARE_TABLE);
+  #else
+  memset((void *)HARDWARE_TABLE, 0, sizeof HARDWARE_TABLE);
+  #endif
   __disable_irq();
   SCB->VTOR = (uint32_t)(HARDWARE_TABLE); //Set VTOR offset
   __DSB();                                //Complete all memory requests
   __enable_irq();
   __ISB();
-}
-
-void hardware_manager_init(void)
-{
-  memset((void *)HARDWARE_TABLE, 0, sizeof HARDWARE_TABLE);
 }

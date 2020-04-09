@@ -75,10 +75,10 @@ Spi::~Spi(void)
   switch (channel)
   {
   case CHANNEL_1:
-    HARDWARE_TABLE[SPI1_IRQn + IRQ0_EX] = (uint32_t)this;
+    HARDWARE_TABLE[SPI1_IRQn + IRQ0_EX] = reinterpret_cast<uint32_t>(this);
     break;
   case CHANNEL_2:
-    HARDWARE_TABLE[SPI2_IRQn + IRQ0_EX] = (uint32_t)this;
+    HARDWARE_TABLE[SPI2_IRQn + IRQ0_EX] = reinterpret_cast<uint32_t>(this);
     break;
   default:
       //ERROR
@@ -311,13 +311,13 @@ void Spi::signup()
   Spi *i = (Spi *)HARDWARE_TABLE[SPI1_HANDLER];
   if (i)
   {
-    DEBUG_LOG("Another instance of Spi is registered 0x%X, adding myself 0x%X\r\n", (uint32_t)i, (uint32_t)this);
-    i->isr((uint32_t)this);
+    DEBUG_LOG("Another instance of Spi is registered 0x%X, adding myself 0x%X\r\n", (uint32_t)i, reinterpret_cast<uint32_t>(this));
+    i->isr(reinterpret_cast<uint32_t>(this));
   }
   else
   {
-    DEBUG_LOG("First Spi handler registration 0x%X\r\n", (uint32_t)this);
-    HARDWARE_TABLE[SPI1_HANDLER] = (uint32_t)this;
+    DEBUG_LOG("First Spi handler registration 0x%X\r\n", reinterpret_cast<uint32_t>(this));
+    HARDWARE_TABLE[SPI1_HANDLER] = reinterpret_cast<uint32_t>(this);
     DEBUG_LOG("Handler address 0x%X\r\n", (uint32_t)HARDWARE_TABLE[SPI1_HANDLER]);
   }
 }

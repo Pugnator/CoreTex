@@ -97,7 +97,7 @@ GPIO_pin::GPIO_pin(PINCFG conf, GPIO_pin *isrptr)
     break;
   }
 
-  //HARDWARE_TABLE[EXTI0_HANDLER] = (uint32_t)this;
+  //HARDWARE_TABLE[EXTI0_HANDLER] = reinterpret_cast<uint32_t>(this);
   //int irqnum = USART1_IRQn - 1;
   //NVIC_EnableIRQ((IRQn_Type) irqnum);
   //NVIC_SetPriority((IRQn_Type) irqnum, 3);

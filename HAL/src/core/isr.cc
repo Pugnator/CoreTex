@@ -43,12 +43,6 @@ extern "C"
 
   void SPI1_IRQHandler(void)
   {
-    Spi *i = (Spi *)HARDWARE_TABLE[SPI1_HANDLER];
-    if (i)
-    {
-      i->isr(0);
-      return;
-    }
     if (SPI1->SR & SPI_SR_RXNE) //receive
     {
       short c = SPI1->DR;
@@ -75,14 +69,6 @@ extern "C"
 
   void USART1_IRQHandler(void)
   {
-    Print("USART1_IRQHandler\r\n");
-    USART *i = (USART *)HARDWARE_TABLE[USART1_HANDLER];
-    if (i)
-    {
-      i->isr(0);
-      return;
-    }
-
     if (USART1->SR & USART_SR_RXNE) //receive
     {
       short c = USART1->DR;
@@ -97,12 +83,6 @@ extern "C"
 
   void USART2_IRQHandler(void)
   {
-    USART *i = (USART *)HARDWARE_TABLE[USART2_HANDLER];
-    if (i)
-    {
-      i->isr(0);
-      return;
-    }
     if (USART2->SR & USART_SR_RXNE) //receive
     {
       char c = USART2->DR;
@@ -116,12 +96,6 @@ extern "C"
 
   void USART3_IRQHandler(void)
   {
-    USART *i = (USART *)HARDWARE_TABLE[USART3_HANDLER];
-    if (i)
-    {
-      i->isr(0);
-      return;
-    }
     if (USART3->SR & USART_SR_RXNE) //receive
     {
       char c = USART3->DR;
@@ -136,15 +110,7 @@ extern "C"
   void RTC_IRQHandler(void){};
   void FLASH_IRQHandler(void){};
   void RCC_IRQHandler(void){};
-  void EXTI0_IRQHandler(void)
-  {
-    IO::GPIO_pin *i = (IO::GPIO_pin *)HARDWARE_TABLE[EXTI0_HANDLER];
-    if (i)
-    {
-      i->isr(0);
-      return;
-    }
-  };
+  void EXTI0_IRQHandler(void){};
   void EXTI1_IRQHandler(void){};
   void EXTI2_IRQHandler(void){};
   void EXTI3_IRQHandler(void){};
@@ -165,13 +131,6 @@ extern "C"
 
   void ADC1_2_IRQHandler(void)
   {
-    IO::GPIO_pin *i = (IO::GPIO_pin *)HARDWARE_TABLE[ADC1_2_HANDLER];
-    if (i)
-    {
-      i->isr(0);
-      return;
-    }
-
     if (ADC1->SR & ADC_SR_EOC)
     {
       uint16_t result = ADC1->DR & 0xFFFF;
@@ -191,11 +150,11 @@ extern "C"
   void TIM2_IRQHandler(void)
   {
     if (TIM2->SR & TIM_SR_UIF)
-    {      
-      if(!++uscounter)
+    {
+      if (!++uscounter)
       {
-        TIM2->CR1 &= ~(TIM_CR1_CEN);        
-      }       
+        TIM2->CR1 &= ~(TIM_CR1_CEN);
+      }
       TIM2->SR &= ~(TIM_SR_UIF);
     }
   };

@@ -21,7 +21,6 @@ ADC_pin::ADC_pin(PINCFG conf, ADC_pin *isrptr) : GPIO_pin(conf, isrptr)
   while (!(ADC1->CR2 & ADC_CR2_CAL))
     ;
 
-
   ADC1->SQR1 = ADC_SQR1_L_0;
   ADC1->SQR2 = 0;
   ADC1->SQR3 = 1; //ADC_SQR3_SQ1_0 | ADC_SQR3_SQ1_3;
@@ -30,8 +29,8 @@ ADC_pin::ADC_pin(PINCFG conf, ADC_pin *isrptr) : GPIO_pin(conf, isrptr)
   ADC1->CR1 |= ADC_CR1_AWDCH_0 | ADC_CR1_AWDIE | ADC_CR1_AWDSGL | ADC_CR1_AWDEN;
   ADC1->HTR = 2100; //high threshold AWD
   ADC1->LTR = 2000; //low threshold AWD
-  
-  ADC1->CR2 |= ADC_CR2_ADON | ADC_CR2_CONT | ADC_CR2_SWSTART;  
+
+  ADC1->CR2 |= ADC_CR2_ADON | ADC_CR2_CONT | ADC_CR2_SWSTART;
   NVIC_EnableIRQ(ADC1_2_IRQn);
 }
 
@@ -60,22 +59,14 @@ void ADC_pin::signup()
 {
   Reg = (ADC_TypeDef *)ADC1_BASE;
 
-  ADC_pin *i = (ADC_pin *)HARDWARE_TABLE[ADC1_2_HANDLER];
-  if (i)
-  {
-    DEBUG_LOG("Another instance of ADC is registered 0x%X, adding myself 0x%X\r\n", (uint32_t)i, reinterpret_cast<uint32_t>(this));
-    i->isr(reinterpret_cast<uint32_t>(this));
-  }
-  else
-  {
-    DEBUG_LOG("First ADC handler registration 0x%X\r\n", reinterpret_cast<uint32_t>(this));
-    HARDWARE_TABLE[ADC1_2_HANDLER] = extirq ? reinterpret_cast<uint32_t>(extirq) : reinterpret_cast<uint32_t>(this);
-  }
+  ADC_pin *i = (ADC_pin *)HARDWARE_TABLE[ADC1_2_IRQn];
+  DEBUG_LOG("First ADC handler registration 0x%X\r\n", reinterpret_cast<uint32_t>(this));
+  HARDWARE_TABLE[ADC1_2_IRQn] = extirq ? reinterpret_cast<uint32_t>(extirq) : reinterpret_cast<uint32_t>(this);
 }
 
 void ADC_pin::signout()
 {
-  HARDWARE_TABLE[ADC1_2_HANDLER] = next ? (uint32_t)next : 0;
+  HARDWARE_TABLE[ADC1_2_IRQn] = next ? (uint32_t)next : 0;
 }
 
 void ADC_pin::isr(uint32_t address)
@@ -93,7 +84,6 @@ void ADC_pin::isr(uint32_t address)
     ADC1->SR = 0;
   }
 }
-
 
 /*===========================DMA===========================*/
 
@@ -127,22 +117,15 @@ void ADC_DMA_pin::signup()
 {
   Reg = (ADC_TypeDef *)ADC1_BASE;
 
-  ADC_DMA_pin *i = (ADC_DMA_pin *)HARDWARE_TABLE[ADC1_2_HANDLER];
-  if (i)
-  {
-    DEBUG_LOG("Another instance of ADC is registered 0x%X, adding myself 0x%X\r\n", (uint32_t)i, reinterpret_cast<uint32_t>(this));
-    i->isr(reinterpret_cast<uint32_t>(this));
-  }
-  else
-  {
-    DEBUG_LOG("First ADC handler registration 0x%X\r\n", reinterpret_cast<uint32_t>(this));
-    HARDWARE_TABLE[ADC1_2_HANDLER] = extirq ? reinterpret_cast<uint32_t>(extirq) : reinterpret_cast<uint32_t>(this);
-  }
+  ADC_DMA_pin *i = (ADC_DMA_pin *)HARDWARE_TABLE[ADC1_2_IRQn];
+
+  DEBUG_LOG("First ADC handler registration 0x%X\r\n", reinterpret_cast<uint32_t>(this));
+  HARDWARE_TABLE[ADC1_2_IRQn] = extirq ? reinterpret_cast<uint32_t>(extirq) : reinterpret_cast<uint32_t>(this);
 }
 
 void ADC_DMA_pin::signout()
 {
-  HARDWARE_TABLE[ADC1_2_HANDLER] = next ? (uint32_t)next : 0;
+  HARDWARE_TABLE[ADC1_2_IRQn] = next ? (uint32_t)next : 0;
 }
 
 void ADC_DMA_pin::isr(uint32_t address)
@@ -160,4 +143,4 @@ void ADC_DMA_pin::isr(uint32_t address)
     ADC1->SR = 0;
   }
 }
-}
+} // namespace IO

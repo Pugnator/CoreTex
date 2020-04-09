@@ -24,6 +24,8 @@
 
 jmp_buf ex_buf__;
 
+void remap_vector_table(void);
+
 void enable_pll()
 {
   /* Enable FLASH preselect */
@@ -65,7 +67,7 @@ void enable_pll()
 extern "C" void SystemInit(void)
 {
   vmmu_init();  
-  //remap_vector_table();
+  remap_vector_table();
 
   RCC->CR |= RCC_CR_HSEON;
   uint32_t timeout = ~0;

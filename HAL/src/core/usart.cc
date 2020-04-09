@@ -81,7 +81,6 @@ void USART::disable(void)
 
 void USART::writestr(const char *str)
 {
-  DEBUG_LOG("started sending string '%s'\r\n", str);
   const char *p = str;
   while (*p)
   {
@@ -91,22 +90,16 @@ void USART::writestr(const char *str)
   }
   while (Reg->SR & USART_SR_TC)
     ;
-  DEBUG_LOG("finished sending string '%s'\r\n", str);
 }
 
 void USART::write(char ch)
 {
-  DEBUG_LOG("started sending char '%c'\r\n", ch);
   while (!(Reg->SR & USART_SR_TXE))
     ;
-  DEBUG_LOG("cleared USART_SR_TXE\r\n");
   auto tmp = Reg->SR;
-  DEBUG_LOG("cleared Reg->SR read\r\n");
   Reg->DR = ch;
-  DEBUG_LOG("wrote to Reg->DR\r\n");
   while (Reg->SR & USART_SR_TC)
     ;
-  DEBUG_LOG("finished sending char '%c'\r\n", ch);
 }
 
 char USART::read()
@@ -173,17 +166,17 @@ void USART::init(char channel, uint32_t baud)
   Reg->BRR = (CRYSTAL_CLOCK + baud / 2) / baud;
 
   Reg->CR1 &= ~USART_CR1_M;
-  Reg->CR2 &= ~USART_CR2_STOP;     
+  Reg->CR2 &= ~USART_CR2_STOP;
 
   Reg->CR1 |= USART_CR1_UE |
-      USART_CR1_TE |
-      USART_CR1_RE |
-      USART_CR1_RXNEIE |
-      //USART_CR1_TXEIE |
-      USART_CR1_PEIE;
+              USART_CR1_TE |
+              USART_CR1_RE |
+              USART_CR1_RXNEIE |
+              //USART_CR1_TXEIE |
+              USART_CR1_PEIE;
 
- // NVIC_EnableIRQ((IRQn_Type)irqnum);
- // NVIC_SetPriority((IRQn_Type)irqnum, 3);
+  NVIC_EnableIRQ((IRQn_Type)irqnum);
+  NVIC_SetPriority((IRQn_Type)irqnum, 3);
 }
 
 void USART::signup()
@@ -204,7 +197,11 @@ void USART::signup()
     return;
   }
 
-  USART *i = (USART *)HARDWARE_TABLE[USART1_HANDLER];
+  DEBUG_LOG("First UART handler registration 0x%X\r\n", reinterpret_cast<uint32_t>(this));
+  HARDWARE_TABLE[USART1_IRQn] = extirq ? (uint32_t)extirq : reinterpret_cast<uint32_t>(this);
+
+  /*
+  USART *i = (USART *)HARDWARE_TABLE[USART1_IRQn];
   if (i)
   {
     DEBUG_LOG("Another instance of UART is registered 0x%X, adding myself 0x%X\r\n", (uint32_t)i, reinterpret_cast<uint32_t>(this));
@@ -213,13 +210,14 @@ void USART::signup()
   else
   {
     DEBUG_LOG("First UART handler registration 0x%X\r\n", reinterpret_cast<uint32_t>(this));
-    HARDWARE_TABLE[USART1_HANDLER] = extirq ? (uint32_t)extirq : reinterpret_cast<uint32_t>(this);
+    HARDWARE_TABLE[USART1_IRQn] = extirq ? (uint32_t)extirq : reinterpret_cast<uint32_t>(this);
   }
+  */
 }
 
 void USART::signout()
 {
-  HARDWARE_TABLE[USART1_HANDLER] = next ? (uint32_t)next : 0;
+  HARDWARE_TABLE[USART1_IRQn] = next ? (uint32_t)next : 0;
 }
 
 uint8_t *USART::get_rx_buf()

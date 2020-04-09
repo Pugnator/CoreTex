@@ -21,11 +21,6 @@
 
 volatile uint32_t __attribute__((section(".vectorsSection"))) HARDWARE_TABLE[76] = {0};
 
-inline bool is_in_interrupt()
-{
-  return (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) != 0;
-}
-
 void remap_vector_table(void)
 {
   //VTOR is 0 on startup, so we change VTOR only once
@@ -33,11 +28,9 @@ void remap_vector_table(void)
   {
     return;
   }
-  #ifdef USE_DEFAULT_ISR     
+  
   memcpy((void *)HARDWARE_TABLE, (void *)SCB->VTOR, sizeof HARDWARE_TABLE);
-  #else
-  memset((void *)HARDWARE_TABLE, 0, sizeof HARDWARE_TABLE);
-  #endif
+  
   __disable_irq();
   SCB->VTOR = (uint32_t)(HARDWARE_TABLE); //Set VTOR offset
   __DSB();                                //Complete all memory requests

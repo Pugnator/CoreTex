@@ -53,17 +53,4 @@ public:
   virtual void isr(uint32_t address)
   {
   }
-
-  virtual void dmatx(uint32_t address)
-  {
-  }
-
-  virtual void dmarx(uint32_t address)
-  {
-  }
-
-  virtual const char *name(void)
-  {
-    return GENERIC_DRIVER_DISPLAY_NAME;
-  }
 };

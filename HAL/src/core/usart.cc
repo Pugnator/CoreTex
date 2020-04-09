@@ -39,7 +39,6 @@ USART::USART(uint32_t ch, uint32_t bd, USART *isrptr)
 {
   __disable_irq();
   channel = ch;
-  next = 0;
   extirq = isrptr;
   memset(outbuf, 0, sizeof outbuf);
   memset(inbuf, 0, sizeof inbuf);
@@ -56,11 +55,6 @@ USART::~USART(void)
   signout();
   __enable_irq();
   __ISB();
-}
-
-const char *USART::name()
-{
-  return USART_DRIVER_DISPLAY_NAME;
 }
 
 void USART::disable(void)
@@ -111,13 +105,6 @@ char USART::read()
 
 void USART::isr(uint32_t address)
 {
-  if (address)
-  {
-    DEBUG_LOG("UART IRQ registration: 0x%X\r\n", address);
-    next = (USART *)address;
-    return;
-  }
-
   DEBUG_LOG("UART ISR entered\r\n");
 
   if (_SR & USART_SR_RXNE) //receive
@@ -131,13 +118,6 @@ void USART::isr(uint32_t address)
   {
     _SR &= ~USART_SR_TC;
     DEBUG_LOG("Write completed\r\n");
-  }
-
-  if (next)
-  {
-    DEBUG_LOG("UART ISR chaining\r\n");
-    USART *n = (USART *)next;
-    n->isr(0);
   }
 }
 
@@ -199,33 +179,9 @@ void USART::signup()
 
   DEBUG_LOG("First UART handler registration 0x%X\r\n", reinterpret_cast<uint32_t>(this));
   HARDWARE_TABLE[USART1_IRQn] = extirq ? (uint32_t)extirq : reinterpret_cast<uint32_t>(this);
-
-  /*
-  USART *i = (USART *)HARDWARE_TABLE[USART1_IRQn];
-  if (i)
-  {
-    DEBUG_LOG("Another instance of UART is registered 0x%X, adding myself 0x%X\r\n", (uint32_t)i, reinterpret_cast<uint32_t>(this));
-    i->isr(reinterpret_cast<uint32_t>(this));
-  }
-  else
-  {
-    DEBUG_LOG("First UART handler registration 0x%X\r\n", reinterpret_cast<uint32_t>(this));
-    HARDWARE_TABLE[USART1_IRQn] = extirq ? (uint32_t)extirq : reinterpret_cast<uint32_t>(this);
-  }
-  */
 }
 
 void USART::signout()
 {
-  HARDWARE_TABLE[USART1_IRQn] = next ? (uint32_t)next : 0;
-}
-
-uint8_t *USART::get_rx_buf()
-{
-  return inbuf;
-}
-
-uint8_t *USART::get_tx_buf()
-{
-  return outbuf;
+  HARDWARE_TABLE[USART1_IRQn] = 0;
 }

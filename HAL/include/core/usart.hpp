@@ -19,14 +19,9 @@ public:
 
  virtual void write (char c) override;
  virtual void writestr(const char* str) override;
- virtual char read(void) override;
- virtual const char* name() override; 
- void disable (void);
- USART* next;
- /* ISRs */
+ virtual char read(void) override; 
+ void disable (void);  
  virtual void isr (uint32_t address) override; 
- uint8_t *get_rx_buf();
- uint8_t *get_tx_buf();
 protected:
  void signup() override;
  void signout() override;

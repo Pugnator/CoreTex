@@ -1,6 +1,6 @@
 #pragma once
+
 #include <global.hpp>
-#include <../res/text/drivers/text.hpp>
 
 class IODriver
 {

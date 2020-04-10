@@ -1,5 +1,8 @@
-#Setting file
+#Options file
 DESCRIPTION:=mcu.ini
+
+MAJOR_VERSION := 0
+MINOR_VERSION := 1
 
 ##########################
 CPU:=STM32F103C8
@@ -330,7 +333,7 @@ $(LIBSDIR):
 
 clean:
 	$(RM) -f $(STDLIB)
-	$(RM) -rf $(OUTPUTDIR) $(LIBSDIR)	$(OBJSDIR)
+	$(RM) -rf $(OUTPUTDIR) $(LIBSDIR)	$(OBJSDIR) $(DEPS)
 
 settings:
 	@echo -e "Project settings [$(PROJECTNAME)/$(MCU)]:"

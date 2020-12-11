@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <global.hpp>
 #include <log.hpp>
+#include <cstring>
 
 #ifdef MEMORY_ALLOC_DEBUG
 #define DEBUG_LOG PrintF

@@ -12,6 +12,7 @@
 #include <drivers/ili9341.hpp>
 #include <common.hpp>
 #include <log.hpp>
+#include <cstring>
 
 uint8_t font8x8_basic[128][8] =
 {

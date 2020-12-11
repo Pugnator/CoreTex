@@ -1,5 +1,5 @@
 #pragma once
-#include <core/usart.hpp>
+#include <core/uart.hpp>
 
 #define PACKET_SIZE 128
 
@@ -12,11 +12,11 @@
 #define CAN  0x18
 #define CTRLZ 0x1A
 
-class xmodem: public USART
+class xmodem: public UART
 {
 public:
  xmodem(short ch, uint32_t bd)
-: USART::USART(ch, bd, this)
+: UART::UART(ch, bd, this)
  {
   ok = false;
   ack = false;

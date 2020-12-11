@@ -10,13 +10,11 @@ MCU:=$(shell sed -n '/^family=/ {s///p;q;}' $(DESCRIPTION))
 PROJECTNAME:=$(shell sed -n '/^name=/ {s///p;q;}' $(DESCRIPTION))
 GCCPRFX:=$(shell sed -n '/^arch=/ {s///p;q;}' $(DESCRIPTION))
 RTTVER:=$(shell sed -n '/^JLINK_VERSION=/ {s///p;q;}' $(DESCRIPTION))
-SYSVVER:=$(shell sed -n '/^SYSVIEW_VERSION=/ {s///p;q;}' $(DESCRIPTION))
 
 __USE_FATFS:=$(shell sed -n '/^__USE_FATFS=/ {s///p;q;}' $(DESCRIPTION))
 __USE_TESTS:=$(shell sed -n '/^__USE_TESTS=/ {s///p;q;}' $(DESCRIPTION))
 __USE_STDLIB:=$(shell sed -n '/^__USE_STDLIB=/ {s///p;q;}' $(DESCRIPTION))
 __BUILDTYPE:=$(shell sed -n '/^__BUILDTYPE=/ {s///p;q;}' $(DESCRIPTION))
-__USE_CONSOLE:=$(shell sed -n '/^__USE_CONSOLE=/ {s///p;q;}' $(DESCRIPTION))
 __USE_MEMORY_DUMP:=$(shell sed -n '/^__USE_MEMORY_DUMP=/ {s///p;q;}' $(DESCRIPTION))
 ##########################
 
@@ -53,7 +51,7 @@ SYSVIEWDIR:=\
 	external/SEGGER_SYSTEMVIEW_$(SYSVVER)
 
 RTTDIR:=\
-	external/SEGGER_RTT_$(RTTVER)
+	external/SEGGER_RTT
 
 UTILS:=\
 	src/utils
@@ -96,12 +94,6 @@ DRIVERSSRC:=\
 	$(DRIVERS)/userio/display/gfx/windows.cc \
 	$(DRIVERS)/steppers/l6470.cc
 
-ifeq ($(__USE_CONSOLE), 1)
-DRIVERSSRC+=\
-	$(DRIVERS)/userio/console/console.cc \
-	$(DRIVERS)/userio/console/xprintf.cc
-endif
-
 CORESRC:=\
 	$(CORELIB)/core.cc \
 	$(CORELIB)/adc.cc \
@@ -113,17 +105,13 @@ CORESRC:=\
 	$(CORELIB)/rtc.cc \
 	$(CORELIB)/spi.cc \
 	$(CORELIB)/timers.cc \
-	$(CORELIB)/usart.cc \
+	$(CORELIB)/uart.cc \
 	$(CORELIB)/vmmu.cc
 
 RTTSRC:=\
 	$(RTTDIR)/Syscalls/SEGGER_RTT_Syscalls_GCC.c \
 	$(RTTDIR)/RTT/SEGGER_RTT.c \
 	$(RTTDIR)/RTT/SEGGER_RTT_printf.c	
-
-SYSVIEWSRC:=\
-	$(SYSVIEWDIR)/SEGGER_SYSVIEW.c \
-	$(SYSVIEWDIR)/SEGGER_SYSVIEW_Config_NoOS.c	
 
 STARTUP:=\
 	$(CORELIB)/startup.s
@@ -139,8 +127,7 @@ SUPPORTSRC:=\
 	$(SUPPORT)/compat.cc \
 	$(SUPPORT)/log.cc \
 	$(SUPPORT)/make_error.cc \
-	$(SUPPORT)/queue.cc \
-	$(SUPPORT)/morse.cc
+	$(SUPPORT)/queue.cc	
 
 XPRINTFSRC:=\
 	$(SUPPORT)/xprintf/xprintf.c
@@ -200,26 +187,16 @@ endif
 CXXFLAGS+=\
 	--std=gnu++14 -Wall \
 	-Iinclude -Iinclude/errors -Isrc -Iinclude/support \
-	-Iexternal/stdlib/Libraries/STM32F10x_StdPeriph_Driver/inc \
-	-Iexternal/stdlib/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x \
-	-Iexternal/stdlib/Libraries/CMSIS/CM3/CoreSupport \
 	-D$(MCU) -D_GNU_SOURCE -D__STM32__\
 	-D_REENT_SMALL -D_REENT_GLOBAL_ATEXIT \
 	-Wno-write-strings \
 	-fno-rtti \
 	-fno-exceptions \
-	-Dassert_param="" \
 	-fpermissive \
 	-fno-builtin \
 	-fdata-sections \
 	-ffunction-sections \
 	-mlittle-endian -mthumb -mcpu=cortex-m3 -msoft-float
-
-ifeq ($(__USE_CONSOLE), 0)
-	CXXFLAGS+=-D__USE_CONSOLE=1
-else
-	CXXFLAGS+=-D__USE_CONSOLE=0
-endif
 
 CXXFLAGS+=\
 	-I$(RTTDIR)/RTT \
@@ -263,10 +240,6 @@ endif
 
 ifeq ($(__USE_STDLIB),1)
 OBJ+=$(STMLIBSRC:%.c=$(OBJSDIR)/%.o)
-endif
-
-ifeq ($(__USE_SYSVIEW),1)
-OBJ+=$(SYSVIEWSRC:%.c=$(OBJSDIR)/%.o)
 endif
 
 DEPS := $(OBJ:.o=.d)
@@ -317,7 +290,7 @@ $(FIRMWARE): $(OBJ)	$(PROGOBJ)
 	$(OCOPY) -O binary $(FIRMWARE) $(FIRMWARE).bin
 	@stat -c "Output size of <%n> is %s" $(FIRMWARE).bin
 	@$(SIZE) --format=berkeley $(FIRMWARE)
-	@-$(READELF) -s $@ | $(AWK) '$$3 != "0"' | $(AWK) '$$4 == "OBJECT"' | $(SORT) -k 3 -n -r | head -n 3 | $(CXXFILT)
+	#@-$(READELF) -s $@ | $(AWK) '$$3 != "0"' | $(AWK) '$$4 == "OBJECT"' | $(SORT) -k 3 -n -r | head -n 3 | $(CXXFILT)
 
 
 directories:	$(OUTPUTDIR) $(OBJSDIR) $(LIBSDIR)

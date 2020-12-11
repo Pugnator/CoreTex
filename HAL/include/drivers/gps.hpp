@@ -1,6 +1,6 @@
 #pragma once
 #include <global.hpp>
-#include <core/usart.hpp>
+#include <core/uart.hpp>
 #include <stdlib.h>
 
 /*
@@ -80,11 +80,11 @@ typedef struct nmeactx
  bool nmeaok;
 } nmeactx;
 
-class Gps: public USART
+class Gps: public UART
 {
 public:
  Gps(short ch, uint32_t bd) :
-  USART::USART(ch, bd, this)
+  UART::UART(ch, bd, this)
  {
   reset();
  }

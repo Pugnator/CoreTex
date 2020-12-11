@@ -11,11 +11,11 @@
 #define RX3 B,11,SPEED_50MHz
 #define TX3 B,10,SPEED_50MHz
 
-class USART : private IODriver
+class UART : private IODriver
 {
 public:
- USART (uint32_t ch, uint32_t bd, USART *isrptr = nullptr);
- ~USART(void);
+ UART (uint32_t ch, uint32_t bd, UART *isrptr = nullptr);
+ ~UART(void);
 
  virtual void write (char c) override;
  virtual void writestr(const char* str) override;
@@ -30,5 +30,5 @@ protected:
  void init (char channel, uint32_t baud);
  uint32_t channel;
  USART_TypeDef* Reg;
- USART* extirq;
+ UART* extirq;
 };

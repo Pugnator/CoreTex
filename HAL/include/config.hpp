@@ -20,11 +20,3 @@
 #define USE_IRQ_DELAY
 
 #define POOL_SIZE 1 * 2048
-
-#define OV528_DEBUG
-
-#define GPS_DEBUG
-
-//#define DEBUG_MEMMGR_SUPPORT_STATS
-
-//#define MEMORY_ALLOC_DEBUG

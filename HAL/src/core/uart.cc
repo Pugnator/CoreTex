@@ -17,7 +17,7 @@
 #include <core/core.hpp>
 #include <core/io_macro.hpp>
 #include <core/isr_helper.hpp>
-#include <core/usart.hpp>
+#include <core/uart.hpp>
 #include <global.hpp>
 #include <queue.hpp>
 #include <log.hpp>
@@ -35,7 +35,7 @@
 #define _SR Reg->SR
 #define _DR Reg->DR
 
-USART::USART(uint32_t ch, uint32_t bd, USART *isrptr)
+UART::UART(uint32_t ch, uint32_t bd, UART *isrptr)
 {
   __disable_irq();
   channel = ch;
@@ -49,7 +49,7 @@ USART::USART(uint32_t ch, uint32_t bd, USART *isrptr)
 }
 
 /* In the destructor we assign IRQ to `default one in order to avoid CPU hang */
-USART::~USART(void)
+UART::~UART(void)
 {
   __disable_irq();
   signout();
@@ -57,7 +57,7 @@ USART::~USART(void)
   __ISB();
 }
 
-void USART::disable(void)
+void UART::disable(void)
 {
   switch (channel)
   {
@@ -73,7 +73,7 @@ void USART::disable(void)
   }
 }
 
-void USART::writestr(const char *str)
+void UART::writestr(const char *str)
 {
   const char *p = str;
   while (*p)
@@ -86,7 +86,7 @@ void USART::writestr(const char *str)
     ;
 }
 
-void USART::write(char ch)
+void UART::write(char ch)
 {
   while (!(Reg->SR & USART_SR_TXE))
     ;
@@ -96,14 +96,14 @@ void USART::write(char ch)
     ;
 }
 
-char USART::read()
+char UART::read()
 {
   while (!(Reg->SR & USART_SR_RXNE))
     ;
   return Reg->DR;
 }
 
-void USART::isr(uint32_t address)
+void UART::isr(uint32_t address)
 {
   DEBUG_LOG("UART ISR entered\r\n");
 
@@ -121,7 +121,7 @@ void USART::isr(uint32_t address)
   }
 }
 
-void USART::init(char channel, uint32_t baud)
+void UART::init(char channel, uint32_t baud)
 {
   switch (channel)
   {
@@ -159,7 +159,7 @@ void USART::init(char channel, uint32_t baud)
   NVIC_SetPriority((IRQn_Type)irqnum, 3);
 }
 
-void USART::signup()
+void UART::signup()
 {
   switch (channel)
   {
@@ -181,7 +181,7 @@ void USART::signup()
   HARDWARE_TABLE[USART1_IRQn] = extirq ? (uint32_t)extirq : reinterpret_cast<uint32_t>(this);
 }
 
-void USART::signout()
+void UART::signout()
 {
   HARDWARE_TABLE[USART1_IRQn] = 0;
 }

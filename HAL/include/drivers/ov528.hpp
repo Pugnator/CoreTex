@@ -1,17 +1,17 @@
 #pragma once
 
 #include <global.hpp>
-#include <core/usart.hpp>
+#include <core/uart.hpp>
 #include <drivers/storage/fatdisk.hpp>
 
 #define CMD_SIZE 6
 #define WAKEUP_RETRY_COUNT 100
 
-class ov528 : public USART
+class ov528 : public UART
 {
 public:
   ov528(short ch, FATdisk &_disk)
-      : USART::USART(ch, 115200, this),
+      : UART::UART(ch, 115200, this),
         imageblk_size(0),
         imageblk(nullptr),
         pictransfer(false),

@@ -54,7 +54,7 @@ void enable_pll()
   /* Включаем PLL */
   RCC->CR |= RCC_CR_PLLON;
 
-  while (!RCC->CR & RCC_CR_PLLRDY)
+  while (~RCC->CR & RCC_CR_PLLRDY)
     ;
 
   RCC->CFGR &= static_cast<uint32_t>((static_cast<uint32_t>(~(RCC_CFGR_SW))));
@@ -72,7 +72,7 @@ extern "C" void SystemInit(void)
   RCC->CR |= RCC_CR_HSEON;
   uint32_t timeout = ~0;
 
-  while ((!RCC->CR & RCC_CR_HSERDY) && --timeout)
+  while ((~RCC->CR & RCC_CR_HSERDY) && --timeout)
     ;
 
   if (timeout)

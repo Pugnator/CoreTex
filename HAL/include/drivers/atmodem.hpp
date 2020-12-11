@@ -1,7 +1,7 @@
 #pragma once
 
 #include <global.hpp>
-#include <core/usart.hpp>
+#include <core/uart.hpp>
 #include <drivers/console.hpp>
 
 #define MODEM_IN_BUFFER_SIZE 512
@@ -151,11 +151,11 @@ typedef enum ATRESPONSE
  SHUT_OK
 } ATRESPONSE;
 
-class ATMODEM: public USART
+class ATMODEM: public UART
 {
 public:
  ATMODEM(short ch, uint32_t bd)
-: USART::USART(ch, bd, this)
+: UART::UART(ch, bd, this)
  {
   ok = false;
   go = false;

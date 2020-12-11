@@ -2,7 +2,6 @@
 #include <drivers/console.hpp>
 #include <config.hpp>
 #include <SEGGER_RTT.h>
-#include <SEGGER_SYSVIEW.h>
 #include <memory>
 #include <drivers/storage/ff.h>
 

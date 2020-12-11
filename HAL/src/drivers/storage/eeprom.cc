@@ -16,12 +16,11 @@
  *******************************************************************************/
 #include <common.hpp>
 #include <log.hpp>
-#include <core/vmmu.hpp>
-#include <core/io_macro.hpp>
 #include <core/isr_helper.hpp>
 #include <core/stm32f10x.hpp>
 #include <global.hpp>
 #include <drivers/storage/eeprom.hpp>
+#include <cstring>
 
 #ifdef EEPROM_DEBUG
 #define DEBUG_LOG PrintF
@@ -37,7 +36,7 @@ void Eeprom::write(uint16_t cell, uint8_t value)
     return;
   }
   DEBUG_LOG(0, "Writing to the FLASH, page address: 0x%X [*cell = 0x%X]\r\n", EEPROM_DATA, *((uint16_t*)EEPROM_DATA + cell));
-  uint8_t *backup = reinterpret_cast<uint8_t*> (ALLOC(1024));
+  uint8_t *backup = new uint8_t[1024];
   if(!backup)
   {
     DEBUG_LOG(0, "Failed to allocate 1024 bytes\r\n");
@@ -58,7 +57,7 @@ void Eeprom::write(uint16_t cell, uint8_t value)
   }
   FLASH->CR &= ~FLASH_CR_PG;
   lock();
-  FREE(backup);
+  delete[] backup;
   DEBUG_LOG(0, "Result: 0x%X\r\n", *((uint8_t*)EEPROM_DATA+cell));
 }
 

@@ -168,6 +168,11 @@ uint32_t xorshift()
   return seed;
 }
 
+void asser_param(int condition)
+{
+  
+}
+
 void __assert(int condition, const char *file, int line)
 {
   if (condition)

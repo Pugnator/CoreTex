@@ -37,12 +37,17 @@ LIBSDIR:=libs
 OBJSDIR:=obj
 OUTPUTDIR:=bin
 MRI:=usedlibs.mri
-STDLIB:=external/stdlib/F1X/Libraries/STM32F10x_StdPeriph_Driver/libstd.a
 
 STMSTDLIBDIR:=\
-	external/stdlib/F1X/Libraries/STM32F10x_StdPeriph_Driver
+	external/stdlib/F10X/Libraries/STM32F10x_StdPeriph_Driver
+
+CMSISINC:= external\CMSIS\CMSIS\Core\Include
+
+STDLIBINC:=\
+	external/stdlib/F10X/Libraries/STM32F10x_StdPeriph_Driver/inc
+
 STDLIBSRC:=\
-	external/stdlib/F1X/Libraries/STM32F10x_StdPeriph_Driver/src
+	external/stdlib/F10X/Libraries/STM32F10x_StdPeriph_Driver/src
 
 CORELIB:=\
 	src/core
@@ -101,7 +106,6 @@ CORESRC:=\
 	$(CORELIB)/gpio.cc \
 	$(CORELIB)/iic.cc \
 	$(CORELIB)/isr.cc \
-	$(CORELIB)/isr_helper.cc \
 	$(CORELIB)/rtc.cc \
 	$(CORELIB)/spi.cc \
 	$(CORELIB)/timers.cc \
@@ -186,8 +190,8 @@ endif
 
 CXXFLAGS+=\
 	--std=gnu++14 -Wall \
-	-Iinclude -Iinclude/errors -Isrc -Iinclude/support \
-	-D$(MCU) -D_GNU_SOURCE -D__STM32__\
+	-Iinclude -Iinclude/errors -Isrc -Iinclude/support -Iexternal\STDLIB\F10X -I$(STDLIBINC) -I$(CMSISINC) \
+	-D$(MCU) -D_GNU_SOURCE -D__STM32__ \
 	-D_REENT_SMALL -D_REENT_GLOBAL_ATEXIT \
 	-Wno-write-strings \
 	-fno-rtti \
@@ -228,6 +232,8 @@ OBJ+=$(SUPPORTSRC:%.cc=$(OBJSDIR)/%.o)
 OBJ+=$(RTTSRC:%.c=$(OBJSDIR)/%.o)
 OBJ+=$(XPRINTFSRC:%.c=$(OBJSDIR)/%.o)
 OBJ+=$(UTILSSRC:%.cc=$(OBJSDIR)/%.o)
+OBJ+=$(STMLIBSRC:%.c=$(OBJSDIR)/%.o)
+
 
 
 ifeq ($(__USE_FATFS),1)

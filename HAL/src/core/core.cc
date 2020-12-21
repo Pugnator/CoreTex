@@ -20,11 +20,11 @@
 #include <core/isr_helper.hpp>
 #include <core/vmmu.hpp>
 #include <global.hpp>
-#include <setjmp.h>
+#include <log.hpp>
 
-jmp_buf ex_buf__;
+#include <cstring>
 
-void remap_vector_table(void);
+volatile uint32_t __attribute__((section(".vectorsSection"))) HARDWARE_TABLE[76] = {0};
 
 void enable_pll()
 {
@@ -64,10 +64,27 @@ void enable_pll()
     ;
 }
 
+void remap_vector_table(void)
+{
+  //VTOR is 0 on startup, so we change VTOR only once
+  if (SCB->VTOR)
+  {
+    return;
+  }
+  
+  memcpy((void *)HARDWARE_TABLE, (void *)SCB->VTOR, sizeof HARDWARE_TABLE);
+  
+  __disable_irq();
+  SCB->VTOR = (uint32_t)(HARDWARE_TABLE); //Set VTOR offset
+  __DSB();                                //Complete all memory requests
+  __enable_irq();
+  __ISB();
+}
+
 extern "C" void SystemInit(void)
 {
   vmmu_init();  
-  remap_vector_table();
+  //remap_vector_table();
 
   RCC->CR |= RCC_CR_HSEON;
   uint32_t timeout = ~0;
@@ -77,10 +94,12 @@ extern "C" void SystemInit(void)
 
   if (timeout)
   {
-    enable_pll();
+    enable_pll();    
   }
   else
   {
+    Print("HSE is not ready. Halted.\r\n"); 
+    for(;;);    
     //XXX: error out?
   }
 

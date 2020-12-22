@@ -1,3 +1,3 @@
-[submodule "HAL/external/CMSIS"]
-	path = HAL/external/CMSIS
+[submodule "external/CMSIS"]
+	path = external/CMSIS
 	url = https://github.com/ARM-software/CMSIS_5.git
